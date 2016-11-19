@@ -1,0 +1,32 @@
+{
+  "name": "link-react",
+  "version": "1.0.0",
+  "description": "React extensions for the Link library",
+  "main": "lib/link-react.js",
+  "private": true,
+  "url": "git+ssh://git@bitbucket.org/arguweb/link-lib.git",
+  "scripts": {
+    "build": "WEBPACK_ENV=build webpack && WEBPACK_ENV=dev webpack",
+    "dev": "WEBPACK_ENV=dev webpack --progress --colors --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fletcher91 <thom@argu.co>",
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "link-lib": "git+ssh://git@bitbucket.org/arguweb/link-lib.git"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.8",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "eslint": "^3.10.2",
+    "eslint-loader": "^1.6.1",
+    "react": "^15.4.0",
+    "webpack": "^1.13.3"
+  }
+}
