@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import LinkedRenderStore from 'link-lib';
 
 import PropertyBase from './PropertyBase';
 
@@ -12,7 +11,7 @@ import PropertyBase from './PropertyBase';
  */
 class Property extends PropertyBase {
   getLinkedObjectClass() {
-    return LinkedRenderStore.getRenderClassForProperty(
+    return this.context.linkedRenderStore.getRenderClassForProperty(
       this.context.schemaObject['@type'],
       this.expandedProperty(),
       this.context.topology
@@ -29,6 +28,7 @@ class Property extends PropertyBase {
 }
 
 Property.contextTypes = {
+  linkedRenderStore: PropTypes.object,
   schemaObject: PropTypes.object,
   topology: PropTypes.string,
 };

@@ -23,6 +23,19 @@ var config = {
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
+  externals: [
+    {
+      'link-lib': 'link-lib'
+    },
+    {
+      react: {
+        root: 'React',
+        commonjs2: 'react',
+        commonjs: 'react',
+        amd: 'react'
+      }
+    }
+  ],
   module: {
     loaders: [
       {
