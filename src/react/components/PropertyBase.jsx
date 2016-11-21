@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {
   expandProperty,
-  normalizePropery,
+  flattenProperty,
   propertyIncludes,
   schema
 } from 'link-lib';
@@ -17,8 +17,8 @@ const propTypes = {
 
 function allPropertyTypes(properties) {
   const props = schema['@graph']
-  .filter(obj => propertyIncludes(obj['owl:sameAs'], properties))
-  .map(obj => normalizePropery(obj));
+    .filter(obj => propertyIncludes(obj['owl:sameAs'], properties))
+    .map(obj => flattenProperty(obj));
   return properties.concat(...props);
 }
 
