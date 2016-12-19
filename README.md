@@ -1,7 +1,11 @@
 # Link React
 *A Link to the Web*
 
-Use this to enable Link in React
+Use this to enable Link in React. It provides components to build data-independent
+semantic applications for the human consumption of linked data with React and Redux.
+
+This was built at [Argu](https://argu.co), if you like what we do, these technologies
+or open data, send us [a mail](mailto:info@argu.co).
 
 ## Basic Usage
 
@@ -67,7 +71,7 @@ LinkedRenderStore.registerRenderer(
 );
 ```
 
-## Further  usage
+## Further usage
 
 ### IRI expansion
 Since writing out the entire [IRI](https://www.ietf.org/rfc/rfc3987.txt) every time is quite some work, the system also

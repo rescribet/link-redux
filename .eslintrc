@@ -1,9 +1,8 @@
 {
-  "ecmaFeatures": {
-    "globalReturn": true,
-    "jsx": true,
-    "modules": true
-  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb"
+  ],
   "env": {
     "browser": true,
     "es6": true,
@@ -21,7 +20,18 @@
     "expect": false,
     "sinon": true
   },
-  "parser": "babel-eslint",
-  "plugins": [],
-  "rules": {}
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "globalReturn": true,
+      "jsx": true,
+      "modules": true,
+      "restParams": true,
+      "spread": true
+    }
+  },
+  "plugins": ["react"],
+  "rules": {
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+  }
 }

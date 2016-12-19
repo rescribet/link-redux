@@ -1,22 +1,30 @@
 {
   "name": "link-react",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "React extensions for the Link library",
-  "main": "lib/link-react.js",
-  "private": true,
-  "url": "git+ssh://git@bitbucket.org/arguweb/link-lib.git",
+  "main": "dist/link-react.js",
+  "module": "dist/module.js",
+  "url": "https://github.com/fletcher91/link-react.git",
   "scripts": {
-    "build": "WEBPACK_ENV=build webpack && WEBPACK_ENV=dev webpack",
+    "build": "webpack -p --optimize-minimize",
+    "build:dev": "webpack",
     "dev": "WEBPACK_ENV=dev webpack --progress --colors --watch",
+    "lint": "eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Fletcher91 <thom@argu.co>",
   "license": "LGPL-3.0",
   "dependencies": {
-    "link-lib": "git+ssh://git@bitbucket.org/arguweb/link-lib.git"
+    "es6-promise": "^4.0.5",
+    "immutable": "^3.8.1",
+    "jsonld": "^0.4.11",
+    "link-lib": "^0.1.0",
+    "react-redux": "^4.4.6",
+    "redux": "^3.6.0",
+    "redux-actions": "^1.1.0",
+    "redux-batched-actions": "^0.1.4"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",
@@ -25,8 +33,12 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "eslint": "^3.10.2",
+    "eslint-config-airbnb": "^13.0.0",
     "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "2.2.3",
+    "eslint-plugin-react": "^6.8.0",
     "react": "^15.4.0",
-    "webpack": "^1.13.3"
+    "webpack": "v2.2.0-rc.0"
   }
 }
