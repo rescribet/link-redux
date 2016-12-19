@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { getValueOrID } from 'link-lib';
 
 import PropertyBase from './PropertyBase';
 
@@ -12,18 +13,21 @@ import PropertyBase from './PropertyBase';
 class Property extends PropertyBase {
   getLinkedObjectClass() {
     return this.context.linkedRenderStore.getRenderClassForProperty(
-      this.context.schemaObject['@type'],
+      getValueOrID(this.context.schemaObject['@type']),
       this.expandedProperty(),
       this.context.topology
     );
   }
 
   render() {
+    const obj = this.getLinkedObjectProperty();
+    if (obj === undefined) {
+      return null;
+    }
     const Klass = this.getLinkedObjectClass();
     if (Klass) {
       return <Klass {...this.props} />;
     }
-    const obj = this.getLinkedObjectProperty();
     if (obj) {
       return (<div>{obj}</div>);
     }

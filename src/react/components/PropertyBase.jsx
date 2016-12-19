@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import {
   expandProperty,
   flattenProperty,
+  getValueOrID,
   propertyIncludes,
-  schema
 } from 'link-lib';
 
-const LANG_PREF = ['nl', 'en'];
+const LANG_PREF = ['nl', 'en', 'de'];
 
 const propTypes = {
   label: PropTypes.oneOfType([
@@ -15,15 +15,11 @@ const propTypes = {
   ]),
 };
 
-function allPropertyTypes(properties) {
-  const props = schema['@graph']
+function allPropertyTypes(graph, properties) {
+  const props = graph
     .filter(obj => propertyIncludes(obj['owl:sameAs'], properties))
     .map(obj => flattenProperty(obj));
   return properties.concat(...props);
-}
-
-function getValueOrID(prop) {
-  return prop && (prop['@value'] || prop['@id']);
 }
 
 function getPropBestLang(rawProp) {
@@ -44,7 +40,10 @@ function getPropBestLang(rawProp) {
 
 class PropertyBase extends React.Component {
   getLinkedObjectPropertyRaw(property) {
-    const possibleProperties = allPropertyTypes(this.expandedProperty(property));
+    const possibleProperties = allPropertyTypes(
+      this.context.linkedRenderStore.schema['@graph'],
+      this.expandedProperty(property)
+    );
     for (let i = 0; i < possibleProperties.length; i++) {
       const prop = this.context.schemaObject[possibleProperties[i]];
       if (prop) {
@@ -56,7 +55,7 @@ class PropertyBase extends React.Component {
 
   getLinkedObjectProperty(property) {
     const rawProp = this.getLinkedObjectPropertyRaw(property);
-    if (!rawProp) {
+    if (rawProp === undefined) {
       return undefined;
     }
     const val = getPropBestLang(rawProp);
@@ -83,6 +82,7 @@ class PropertyBase extends React.Component {
 }
 
 PropertyBase.contextTypes = {
+  linkedRenderStore: PropTypes.object,
   schemaObject: PropTypes.object,
 };
 PropertyBase.propTypes = propTypes;
