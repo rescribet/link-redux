@@ -1,5 +1,5 @@
 var path = require('path');
-var libraryName = 'link-react';
+var libraryName = 'link-redux';
 
 module.exports = {
   entry: './src/index.js',

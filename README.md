@@ -15,7 +15,7 @@ Wrap the main React tree with a `LinkedRenderStore`:
 ```jsx
 import configureStore from './configureStore';
 import LinkedRenderStore from './configureRenderStore';
-import { RenderStoreProvider } from 'link-react';
+import { RenderStoreProvider } from 'link-redux';
 
 export default () => (
   <Provider store={configureStore()}>

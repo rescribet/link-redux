@@ -1,8 +1,8 @@
 {
-  "name": "link-react",
+  "name": "link-redux",
   "version": "0.1.0",
-  "description": "React extensions for the Link library",
-  "main": "dist/link-react.js",
+  "description": "React/Redux extensions for the Link library",
+  "main": "dist/link-redux.js",
   "repository": "https://github.com/fletcher91/link-react.git",
   "scripts": {
     "build": "webpack -p --optimize-minimize",
