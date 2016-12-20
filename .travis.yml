@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "6"
+  - "5"
+script:
+  - yarn run lint
+  - yarn run test
+  - yarn run build

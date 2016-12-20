@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "React extensions for the Link library",
   "main": "dist/link-react.js",
-  "module": "dist/module.js",
-  "url": "https://github.com/fletcher91/link-react.git",
+  "repository": "https://github.com/fletcher91/link-react.git",
   "scripts": {
     "build": "webpack -p --optimize-minimize",
     "build:dev": "webpack",
     "dev": "WEBPACK_ENV=dev webpack --progress --colors --watch",
     "lint": "eslint ./src",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Fletcher91 <thom@argu.co>",
