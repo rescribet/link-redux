@@ -1,6 +1,8 @@
 # Link React
 *A Link to the Web*
 
+[![Build Status](https://travis-ci.org/fletcher91/link-react.svg?branch=master)](https://travis-ci.org/fletcher91/link-react)
+
 Use this to enable Link in React. It provides components to build data-independent
 semantic applications for the human consumption of linked data with React and Redux.
 
