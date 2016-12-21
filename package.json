@@ -1,6 +1,6 @@
 {
   "name": "link-redux",
-  "version": "0.1.1",
+  "version": "0.1.2-alpha.1",
   "description": "React/Redux extensions for the Link library",
   "main": "dist/link-redux.js",
   "repository": "https://github.com/fletcher91/link-redux.git",
@@ -18,7 +18,7 @@
     "es6-promise": "^4.0.5",
     "immutable": "^3.8.1",
     "jsonld": "^0.4.11",
-    "link-lib": "^0.1.0",
+    "link-lib": "^0.1.1",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-actions": "^1.1.0",
