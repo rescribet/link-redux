@@ -1,5 +1,5 @@
 import { batchActions } from 'redux-batched-actions';
-import { getValueOrID, LinkedDataAPI } from 'link-lib';
+import { getValueOrID } from 'link-lib';
 
 import {
   FETCH_LINKED_OBJECT,
@@ -20,13 +20,13 @@ const emitJSONLDResult = (ld, next) => {
   return next(batchActions(actions));
 };
 
-function handleFetchLinkedObject(next, action) {
+function handleFetchLinkedObject(lrstore, next, action) {
   const { href: _href } = action.payload;
   const href = getValueOrID(_href);
 
   next(getLinkedObjectAction({}, href));
 
-  return LinkedDataAPI
+  return lrstore
     .getEntity(href, (json) => {
       emitJSONLDResult(json, next);
     });
@@ -40,24 +40,29 @@ function handleFetchLinkedObject(next, action) {
   // }));
 }
 
-function handleGetLinkedObject(next, action) {
+function handleGetLinkedObject(lrstore, next, action) {
   const { iri } = action.payload;
-  return LinkedDataAPI.getObject(iri, next);
+  return lrstore.tryEntity(iri, next);
 }
 
-const linkMiddleware = () => next => (action) => {
+const linkMiddleware = lrstore => () => next => (action) => {
   if (!action.payload || !action.payload.linkedObjectAction) {
     return next(action);
   }
 
   switch (action.type) {
     case FETCH_LINKED_OBJECT:
-      return handleFetchLinkedObject(next, action);
+      return handleFetchLinkedObject(lrstore, next, action);
     case GET_LINKED_OBJECT:
-      return handleGetLinkedObject(next, action);
+      return handleGetLinkedObject(lrstore, next, action);
     default:
       return next(action);
   }
 };
 
-export default linkMiddleware;
+/**
+ * Link middleware creator function.
+ * @param {LinkedRenderStore} lrstore A LinkedRenderStore instance.
+ * @return Redux middleware function for Link-Redux.
+ */
+export default lrstore => linkMiddleware(lrstore);
