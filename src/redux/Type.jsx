@@ -20,7 +20,7 @@ const Type = (props, { linkedRenderStore, schemaObject, topology }) => {
     );
   }
   return (
-    <div>
+    <div className="no-view">
       <Property label="schema:name" />
       <p>{"We currently don't have a view for this"}</p>
     </div>

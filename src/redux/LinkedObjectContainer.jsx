@@ -69,6 +69,8 @@ LinkedObjectContainer.childContextTypes = {
 };
 LinkedObjectContainer.propTypes = propTypes;
 
+export { LinkedObjectContainer };
+
 export default connect(
   (state, ownProps) => {
     assert(ownProps.object, '[LOC] an object must be given');
