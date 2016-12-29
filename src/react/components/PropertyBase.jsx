@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import {
-  expandProperty,
   flattenProperty,
   getValueOrID,
   propertyIncludes,
@@ -67,9 +66,9 @@ class PropertyBase extends React.Component {
   expandedProperty(property) {
     const prop = property || this.props.label;
     if (Array.isArray(prop)) {
-      return prop.map(p => expandProperty(p));
+      return prop.map(p => this.context.linkedRenderStore.expandProperty(p));
     }
-    return [expandProperty(prop)];
+    return [this.context.linkedRenderStore.expandProperty(prop)];
   }
 
   render() {

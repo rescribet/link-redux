@@ -1,4 +1,4 @@
-# Link React
+# Link Redux
 *A Link to the Web*
 
 [![Build Status](https://travis-ci.org/fletcher91/link-redux.svg?branch=master)](https://travis-ci.org/fletcher91/link-redux)
