@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { getValueOrID } from 'link-lib';
+import LRS, { getValueOrID } from 'link-lib';
 import Property from '../react/components/Property';
 
 const propTypes = {
@@ -7,7 +7,7 @@ const propTypes = {
 };
 
 const Type = (props, { linkedRenderStore, schemaObject, topology }) => {
-  const objType = getValueOrID(schemaObject['@type']);
+  const objType = getValueOrID(schemaObject['@type']) || LRS.defaultType;
   if (objType === undefined) {
     return null;
   }
