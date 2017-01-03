@@ -60,7 +60,7 @@ class PropertyBase extends React.Component {
     const val = getPropBestLang(rawProp);
     return val &&
       (Object.keys(val).length !== 0 || val.constructor !== Object) &&
-      (val.href || val.toString());
+      (val.href || getValueOrID(val) || val.toString());
   }
 
   expandedProperty(property) {
