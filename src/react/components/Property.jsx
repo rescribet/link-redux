@@ -3,6 +3,11 @@ import { getValueOrID } from 'link-lib';
 
 import PropertyBase from './PropertyBase';
 
+
+const propTypes = {
+  forceRender: PropTypes.bool,
+};
+
 /**
  * Picks the best view for the given objects' property
  *
@@ -20,8 +25,9 @@ class Property extends PropertyBase {
   }
 
   render() {
+    const { forceRender } = this.props;
     const obj = this.getLinkedObjectProperty();
-    if (obj === undefined) {
+    if (obj === undefined && !forceRender) {
       return null;
     }
     const Klass = this.getLinkedObjectClass();
@@ -40,5 +46,6 @@ Property.contextTypes = {
   schemaObject: PropTypes.object,
   topology: PropTypes.string,
 };
+Property.propTypes = propTypes;
 
 export default Property;
