@@ -6,7 +6,7 @@ import { describe, it } from 'mocha';
 import React from 'react';
 import sinon from 'sinon';
 
-import { generateContext } from '../../test/fixtures';
+import { generateContext } from '../test/utilities';
 import { LinkedObjectContainer } from './LinkedObjectContainer';
 import Type from './Type';
 

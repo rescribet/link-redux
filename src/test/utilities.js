@@ -2,7 +2,7 @@ import LinkedRenderStore from 'link-lib';
 import { PropTypes } from 'react';
 import { applyMiddleware, createStore } from 'redux';
 
-import { linkMiddleware, linkReducer } from '../src/index';
+import { linkMiddleware, linkReducer } from '../index';
 
 const store = createStore(
   linkReducer,

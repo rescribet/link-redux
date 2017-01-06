@@ -5,7 +5,7 @@ import { mount, shallow } from 'enzyme';
 import { describe, it } from 'mocha';
 import React from 'react';
 
-import { generateContext, linkedRenderStore } from '../../../test/fixtures';
+import { generateContext, linkedRenderStore } from '../../test/utilities';
 import Property from './Property';
 
 const context = (so) => generateContext({ linkedRenderStore: true, schemaObject: so || true });
