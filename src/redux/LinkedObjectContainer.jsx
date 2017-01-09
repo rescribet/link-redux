@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { Map } from 'immutable';
-import { connect } from 'react-redux';
 import assert from 'assert';
+import { Map } from 'immutable';
+import { getP } from 'link-lib';
+import { connect } from 'react-redux';
+import React, { Component, PropTypes } from 'react';
 
 import { selectLinkedObject } from './linkedObjects/selectors';
 import { getLinkedObject, fetchLinkedObject } from './linkedObjects/actions';
@@ -12,7 +13,8 @@ const propTypes = {
   data: PropTypes.object,
   fetch: PropTypes.bool,
   loadLinkedObject: PropTypes.func.isRequired,
-  object: PropTypes.any,
+  object: PropTypes.any.isRequired,
+  onError: PropTypes.element,
   topology: PropTypes.string,
 };
 
@@ -42,6 +44,11 @@ class LinkedObjectContainer extends Component {
     }
   }
 
+  onError() {
+    const { linkedRenderStore } = this.context;
+    return this.props.onError || (linkedRenderStore && linkedRenderStore.onError);
+  }
+
   render() {
     const {
       data,
@@ -49,14 +56,18 @@ class LinkedObjectContainer extends Component {
     if (!data || data.loading) {
       return null;
     }
+    const { object: ignored, ...otherProps } = this.props;
+    const ErrComp = this.onError();
+    if (getP(data, 'http://www.w3.org/2011/http#statusCodeValue') >= 400 && ErrComp) {
+      return <ErrComp {...otherProps} />;
+    }
     if (this.props.children) {
       return (
-        <div className="view-overridden">
+        <div className="view-overridden" style={{display: 'inherit'}}>
           {this.props.children}
         </div>
       );
     }
-    const { object: ignored, ...otherProps } = this.props;
     return (
       <Type {...otherProps} />
     );
@@ -66,6 +77,9 @@ class LinkedObjectContainer extends Component {
 LinkedObjectContainer.childContextTypes = {
   schemaObject: PropTypes.object,
   topology: PropTypes.string,
+};
+LinkedObjectContainer.contextTypes = {
+  linkedRenderStore: PropTypes.object,
 };
 LinkedObjectContainer.propTypes = propTypes;
 

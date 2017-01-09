@@ -30,6 +30,7 @@ describe('LinkedObjectContainer component', function () {
     const elem = shallow(
       <LinkedObjectContainer
         data={{ '@type': 'http://schema.org/CreativeWork' }}
+        object={iri}
         loadLinkedObject={llo}
       />
     );
@@ -42,6 +43,7 @@ describe('LinkedObjectContainer component', function () {
     const elem = shallow(
       <LinkedObjectContainer
         data={{ '@type': 'http://schema.org/CreativeWork' }}
+        object={iri}
         loadLinkedObject={llo}
       >
         <span>override</span>
