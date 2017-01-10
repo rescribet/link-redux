@@ -31,7 +31,7 @@ class Property extends PropertyBase {
     }
     const Klass = this.getLinkedObjectClass();
     if (Klass) {
-      return <Klass {...this.props} />;
+      return <Klass linkedProp={obj} {...this.props} />;
     }
     if (obj) {
       return (<div>{obj}</div>);
