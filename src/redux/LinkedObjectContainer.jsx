@@ -48,6 +48,11 @@ class LinkedObjectContainer extends Component {
     return this.props.onError || (linkedRenderStore && linkedRenderStore.onError);
   }
 
+  shouldComponentUpdate(nextProps) {
+    const { data } = this.props;
+    return !(data && getP(data, '@type') === getP(nextProps.data, '@type'));
+  }
+
   render() {
     const {
       data,

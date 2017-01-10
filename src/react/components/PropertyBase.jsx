@@ -41,13 +41,13 @@ function getPropBestLang(rawProp) {
 }
 
 class PropertyBase extends React.Component {
-  getLinkedObjectPropertyRaw(property) {
+  getLinkedObjectPropertyRaw(property, schemaObject) {
     const possibleProperties = allPropertyTypes(
       this.context.linkedRenderStore.schema['@graph'],
       this.expandedProperty(property)
     );
     for (let i = 0; i < possibleProperties.length; i++) {
-      const prop = this.context.schemaObject[possibleProperties[i]];
+      const prop = getP(schemaObject || this.context.schemaObject, possibleProperties[i]);
       if (prop) {
         return prop;
       }
@@ -55,14 +55,16 @@ class PropertyBase extends React.Component {
     return undefined;
   }
 
-  getLinkedObjectProperty(property) {
-    const rawProp = this.getLinkedObjectPropertyRaw(property);
+  getLinkedObjectProperty(property, schemaObject) {
+    if (property === undefined && hasP(this.props, 'linkedProp')) {
+      return this.props.linkedProp;
+    }
+    const rawProp = this.getLinkedObjectPropertyRaw(property, schemaObject);
     if (rawProp === undefined) {
       return undefined;
     }
     const val = getPropBestLang(rawProp);
-    return val &&
-      (Object.keys(val).length !== 0 || val.constructor !== Object) &&
+    return val && val.constructor !== Object &&
       (val.href || getValueOrID(val) || val.toString());
   }
 
@@ -72,6 +74,15 @@ class PropertyBase extends React.Component {
       return prop.map(p => this.context.linkedRenderStore.expandProperty(p));
     }
     return [this.context.linkedRenderStore.expandProperty(prop)];
+  }
+
+  shouldComponentUpdate(nextProps, Ignore, nextContext) {
+    if (nextProps.label === undefined) {
+      return false;
+    }
+    return this.props.label !== nextProps.label ||
+        this.getLinkedObjectProperty(nextProps.label) !==
+          this.getLinkedObjectProperty(nextProps.label, nextContext.schemaObject);
   }
 
   render() {

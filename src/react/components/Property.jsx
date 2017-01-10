@@ -23,6 +23,14 @@ class Property extends PropertyBase {
     );
   }
 
+  shouldComponentUpdate(nextProps, Ignore, nextContext) {
+    return nextProps.label && (
+      this.props.label !== nextProps.label ||
+      getP(this.context.schemaObject, '@type') !== getP(nextContext.schemaObject, '@type') ||
+      getP(this.context.schemaObject, nextProps.label) !== getP(nextContext.schemaObject, nextProps.label)
+    );
+  }
+
   render() {
     const { forceRender } = this.props;
     const obj = this.getLinkedObjectProperty();
