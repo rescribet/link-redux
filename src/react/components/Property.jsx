@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react';
-import { getValueOrID } from 'link-lib';
+import { getP, getValueOrID } from 'link-lib';
 
 import PropertyBase from './PropertyBase';
-
 
 const propTypes = {
   forceRender: PropTypes.bool,
@@ -18,7 +17,7 @@ const propTypes = {
 class Property extends PropertyBase {
   getLinkedObjectClass() {
     return this.context.linkedRenderStore.getRenderClassForProperty(
-      getValueOrID(this.context.schemaObject['@type']),
+      getValueOrID(getP(this.context.schemaObject, '@type')),
       this.expandedProperty(),
       this.context.topology
     );

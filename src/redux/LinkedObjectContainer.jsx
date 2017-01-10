@@ -20,9 +20,8 @@ const propTypes = {
 
 class LinkedObjectContainer extends Component {
   getChildContext() {
-    let data = this.props.data && this.props.data.constructor === Map ? this.props.data.toJS() : this.props.data;
     return {
-      schemaObject: data,
+      schemaObject: this.props.data,
       topology: this.props.topology,
     };
   }
@@ -39,7 +38,7 @@ class LinkedObjectContainer extends Component {
   }
 
   loadLinkedObject(props = this.props) {
-    if (props.data === undefined || typeof props.data.href_url !== 'string') {
+    if (props.data === undefined || typeof getP(props.data, 'href_url') !== 'string') {
       this.props.loadLinkedObject(props.object, props.fetch);
     }
   }
@@ -53,7 +52,7 @@ class LinkedObjectContainer extends Component {
     const {
       data,
     } = this.props;
-    if (!data || data.loading) {
+    if (!data || getP(data, 'loading')) {
       return null;
     }
     const { object: ignored, ...otherProps } = this.props;

@@ -1,9 +1,12 @@
 import React, { PropTypes } from 'react';
 import {
   flattenProperty,
+  getP,
   getValueOrID,
+  hasP,
   propertyIncludes,
 } from 'link-lib';
+import { Iterable, Map } from 'immutable';
 
 const LANG_PREF = ['nl', 'en', 'de'];
 
@@ -22,19 +25,19 @@ function allPropertyTypes(graph, properties) {
 }
 
 function getPropBestLang(rawProp) {
-  if (!Array.isArray(rawProp)) {
+  if (!Array.isArray(rawProp) && (!Iterable.isIterable(rawProp) || Map.isMap(rawProp))) {
     return getValueOrID(rawProp);
   }
   if (rawProp.length === 1) {
     return getValueOrID(rawProp[0]);
   }
   for (let i = 0; i < LANG_PREF.length; i++) {
-    const pIndex = rawProp.findIndex(p => p['@language'] === LANG_PREF[i]);
+    const pIndex = rawProp.findIndex(p => getP(p, '@language') === LANG_PREF[i]);
     if (pIndex >= 0) {
-      return getValueOrID(rawProp[pIndex]);
+      return getValueOrID(getP(rawProp, pIndex));
     }
   }
-  return getValueOrID(rawProp[0]);
+  return getValueOrID(getP(rawProp, 0));
 }
 
 class PropertyBase extends React.Component {
