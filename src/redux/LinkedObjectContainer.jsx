@@ -1,5 +1,3 @@
-import assert from 'assert';
-import { Map } from 'immutable';
 import { getP } from 'link-lib';
 import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
@@ -91,7 +89,9 @@ export { LinkedObjectContainer };
 
 export default connect(
   (state, ownProps) => {
-    assert(ownProps.object, '[LOC] an object must be given');
+    if (!ownProps.object) {
+      throw new Error('[LOC] an object must be given');
+    }
     return {
       data: selectLinkedObject(state, ownProps),
     };
