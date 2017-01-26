@@ -50,14 +50,24 @@ const Thing = () => (
 LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 ```
 ### Custom Property renderer
-To retrieve the correct property value from the state is no easy task, so it is advisable to extend from
-the `PropertyBase` component which provides some useful methods to interact with the underlying properties:
+When using a function to render properties, the attribute is passed as the `linkedProp` property.
 ```jsx
-class Name extends PropertyBase {
+const Name = ({ linkedProp }) => (
+  <Heading size="2">
+    {linkedProp}
+  </Heading>
+);
+```
+
+To retrieve the correct property value from the state is no easy task, so when creating complex 
+components that need raw access to a property, it is advisable to extend from the `PropertyBase`
+component which provides some useful methods to interact with the underlying properties:
+```jsx
+class ComplexName extends PropertyBase {
   render() {
     return (
       <Heading size="2">
-        {this.getLinkedObjectProperty()}
+        {processSpecialName(this.getLinkedObjectPropertyRaw())}
       </Heading>
     );
   }
