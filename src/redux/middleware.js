@@ -16,7 +16,11 @@ const getLinkedObjectAction = (record, href) => ({
 });
 
 const emitJSONLDResult = (ld, next) => {
-  const actions = JSON.parse(ld).map(item => getLinkedObjectAction(item, item['@id']));
+  const actions = (
+    typeof ld === 'string'
+      ? JSON.parse(ld)
+      : ld
+    ).map(item => getLinkedObjectAction(item, item['@id']));
   return next(batchActions(actions));
 };
 
