@@ -2478,9 +2478,9 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-link-lib@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-0.2.0.tgz#a43207b49038f82f145b34f47782f2f184bee0d6"
+link-lib@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-0.3.0.tgz#d4d0c0b069372b7be8ebe2040e8e52ef1fcfa1c9"
   dependencies:
     babel-polyfill "^6.16.0"
     jsonld "^0.4.11"
