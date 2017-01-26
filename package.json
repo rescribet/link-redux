@@ -1,6 +1,6 @@
 {
   "name": "link-redux",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "React/Redux extensions for the Link library",
   "main": "dist/link-redux.js",
   "repository": "https://github.com/fletcher91/link-redux.git",
