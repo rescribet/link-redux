@@ -60,7 +60,8 @@ class LinkedObjectContainer extends Component {
     }
     const { object: ignored, ...otherProps } = this.props;
     const ErrComp = this.onError();
-    if (getP(data, 'http://www.w3.org/2011/http#statusCodeValue') >= 400 && ErrComp) {
+    const statusCode = getP(data, 'http://www.w3.org/2011/http#statusCodeValue');
+    if (statusCode >= 400 && ErrComp && Object.keys(otherProps).length <= 1) {
       return <ErrComp {...otherProps} />;
     }
     if (this.props.children) {
@@ -71,7 +72,10 @@ class LinkedObjectContainer extends Component {
       );
     }
     return (
-      <Type {...otherProps} />
+      <Type
+        responseCode={statusCode}
+        {...otherProps}
+      />
     );
   }
 }
