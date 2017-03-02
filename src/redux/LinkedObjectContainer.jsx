@@ -20,7 +20,7 @@ class LinkedObjectContainer extends Component {
   getChildContext() {
     return {
       schemaObject: this.props.data,
-      topology: this.props.topology,
+      topology: this.props.topology === null ? undefined : this.props.topology || this.context.topology,
     };
   }
 
@@ -86,6 +86,7 @@ LinkedObjectContainer.childContextTypes = {
 };
 LinkedObjectContainer.contextTypes = {
   linkedRenderStore: PropTypes.object,
+  topology: PropTypes.string,
 };
 LinkedObjectContainer.propTypes = propTypes;
 

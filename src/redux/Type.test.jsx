@@ -23,6 +23,7 @@ describe('Type component', function () {
   });
 
   it('renders no view when no class matches', function () {
+    linkedRenderStore.reset();
     const elem = mount(
       <Type />,
       context({ '@type': 'https://argu.co/ns/core#Challenge' })
