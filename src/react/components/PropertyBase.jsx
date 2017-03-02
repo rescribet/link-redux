@@ -15,6 +15,7 @@ const propTypes = {
     PropTypes.arrayOf(PropTypes.string),
     PropTypes.string,
   ]),
+  linkedProp: PropTypes.object,
 };
 
 function allPropertyTypes(graph, properties) {
@@ -56,7 +57,7 @@ class PropertyBase extends React.Component {
   }
 
   getLinkedObjectProperty(property, schemaObject) {
-    if (property === undefined && hasP(this.props, 'linkedProp')) {
+    if (property === undefined && hasP(this.props, 'linkedProp') && this.props.linkedProp !== undefined) {
       return this.props.linkedProp;
     }
     const rawProp = this.getLinkedObjectPropertyRaw(property, schemaObject);
