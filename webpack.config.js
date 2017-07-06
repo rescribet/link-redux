@@ -13,6 +13,7 @@ module.exports = {
     redux: 'redux',
     react: 'react',
     immutable: 'immutable',
+    rdflib: 'rdflib',
     'link-lib': 'link-lib'
   },
   module: {

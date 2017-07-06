@@ -4,7 +4,7 @@ import assert from 'assert';
 import Immutable from 'immutable';
 import { describe, it } from 'mocha';
 
-import { selectLinkedObject, selectLinkedObjectById } from './selectors';
+import { selectLinkedObject, linkedObjectByIRI } from './selectors';
 
 const rawState = {
   linkedObjects: {
@@ -33,9 +33,9 @@ const rawState = {
 const state = Immutable.fromJS(rawState);
 
 describe('linkedObjects selector', () => {
-  describe('selectLinkedObjectById', () => {
+  describe('linkedObjectByIRI', () => {
     it('selects a resource', () => {
-      const obj = selectLinkedObjectById(state, 'http://example.com/resource/1');
+      const obj = linkedObjectByIRI(state, 'http://example.com/resource/1');
       assert.equal('Name', obj.getIn(['http://schema.org/name', '@value']));
     });
   });

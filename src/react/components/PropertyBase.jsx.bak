@@ -1,9 +1,12 @@
+import React, { PropTypes } from 'react';
 import {
   allObjectValues,
+  flattenProperty,
   getP,
   getValueOrID,
+  hasP,
+  propertyIncludes,
 } from 'link-lib';
-import React, { PropTypes } from 'react';
 
 const LANG_PREF = ['nl', 'en', 'de'];
 
@@ -34,23 +37,23 @@ function getPropBestLang(rawProp) {
   return getValueOrID(getP(rawProp, 0));
 }
 
-export function expandedProperty(prop, linkedRenderStore) {
+export function expandedProperty(prop, context) {
   if (Array.isArray(prop)) {
-    return prop.map(p => linkedRenderStore.expandProperty(p));
+    return prop.map(p => context.linkedRenderStore.expandProperty(p));
   }
-  return linkedRenderStore.expandProperty(prop);
+  return context.linkedRenderStore.expandProperty(prop);
 }
 
-export function getLinkedObjectPropertyRaw(property, props, { subject, linkedRenderStore }, term = false) {
-  const exProps = expandedProperty(property || props.label, linkedRenderStore);
+export function getLinkedObjectPropertyRaw(property, props, context, term = false) {
+  const exProps = expandedProperty(property || props.label, context);
   if (Array.isArray(exProps)) {
     for (let i = 0; i < exProps.length; i++) {
-      const values = allObjectValues(linkedRenderStore.tryEntity(subject), exProps[i], term);
+      const values = allObjectValues(context.schemaObject, exProps[i], term);
       if (typeof values !== 'undefined') return values;
     }
     return undefined;
   }
-  return allObjectValues(linkedRenderStore.tryEntity(subject), exProps, term);
+  return allObjectValues(context.schemaObject, exProps, term);
 }
 
 export function getLinkedObjectProperty(property, props, context, term = false) {
@@ -73,7 +76,7 @@ export function getLinkedObjectProperty(property, props, context, term = false) 
 
 export const contextTypes = {
   linkedRenderStore: PropTypes.object,
-  subject: PropTypes.object,
+  schemaObject: PropTypes.object,
 };
 
 class PropertyBase extends React.Component {
@@ -86,7 +89,7 @@ class PropertyBase extends React.Component {
   }
 
   expandedProperty(property) {
-    return expandedProperty(property || this.props.label, this.context.linkedRenderStore);
+    return expandedProperty(property || this.props.label, this.context);
   }
 
   shouldComponentUpdate(nextProps, Ignore, nextContext) {
@@ -107,8 +110,6 @@ class PropertyBase extends React.Component {
     );
   }
 }
-
-// export const PropBaseTwo = (props, context) => <Subscriber channel={} {...props} />;
 
 PropertyBase.contextTypes = contextTypes
 PropertyBase.propTypes = propTypes;

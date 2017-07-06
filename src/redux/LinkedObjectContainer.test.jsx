@@ -66,7 +66,7 @@ describe('LinkedObjectContainer component', function () {
       () => <div className="collectionRendered" />,
       'http://schema.org/CreativeWork',
       RENDER_CLASS_NAME,
-      'collection'
+      'argu:collection'
     );
 
     const llo =  sinon.spy();
@@ -75,7 +75,7 @@ describe('LinkedObjectContainer component', function () {
         data={{ '@type': 'http://schema.org/CreativeWork' }}
         object={iri}
         loadLinkedObject={llo}
-        topology="collection"
+        topology="argu:collection"
       >
         <LinkedObjectContainer
           data={{ '@type': 'http://schema.org/CreativeWork' }}
@@ -107,7 +107,7 @@ describe('LinkedObjectContainer component', function () {
       () => <div className="collectionRendered" />,
       'http://schema.org/CreativeWork',
       RENDER_CLASS_NAME,
-      'collection'
+      'argu:collection'
     );
 
     const llo =  sinon.spy();

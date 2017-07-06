@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import LRS, { getP, getValueOrID } from 'link-lib';
+import LRS, { anyObjectValue } from 'link-lib';
 import Property from '../react/components/Property';
 
 const propTypes = {
@@ -7,14 +7,11 @@ const propTypes = {
 };
 
 const Type = (props, { linkedRenderStore, schemaObject, topology }) => {
-  const objType = getValueOrID(getP(schemaObject, '@type')) || LRS.defaultType;
+  const objType = anyObjectValue(schemaObject, LRS.namespaces.rdf('type')) || LRS.defaultType;
   if (objType === undefined) {
     return null;
   }
-  const Klass = linkedRenderStore.getRenderClassForType(
-    typeof(objType.toJS) === 'function' ? objType.toJS() : objType,
-    topology
-  );
+  const Klass = linkedRenderStore.getRenderClassForType(objType, topology);
   if (Klass !== undefined) {
     return (
       <Klass {...props}>
@@ -35,6 +32,7 @@ Type.contextTypes = {
   schemaObject: PropTypes.object,
   topology: PropTypes.string,
 };
+Type.displayName = 'Type';
 Type.propTypes = propTypes;
 
 export default Type;

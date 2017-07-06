@@ -1,10 +1,11 @@
-import { getP } from 'link-lib';
+import LRS, { anyObjectValue, anyRDFValue } from 'link-lib';
 import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
+import rdf from 'rdflib';
 
-import { selectLinkedObject } from './linkedObjects/selectors';
+import { linkedObjectByIRI, linkedObjectVersionByIRI } from './linkedObjects/selectors';
 import { getLinkedObject, fetchLinkedObject } from './linkedObjects/actions';
-import Type from './Type';
+import Property from '../react/components/Property';
 
 const propTypes = {
   children: PropTypes.any,
@@ -12,7 +13,11 @@ const propTypes = {
   fetch: PropTypes.bool,
   loadLinkedObject: PropTypes.func.isRequired,
   object: PropTypes.any.isRequired,
-  onError: PropTypes.element,
+  onError: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+    PropTypes.undefined,
+  ]),
   topology: PropTypes.string,
 };
 
@@ -20,6 +25,7 @@ class LinkedObjectContainer extends Component {
   getChildContext() {
     return {
       schemaObject: this.props.data,
+      subject: this.context.linkedRenderStore.expandProperty(this.props.object),
       topology: this.props.topology === null ? undefined : this.props.topology || this.context.topology,
     };
   }
@@ -29,16 +35,18 @@ class LinkedObjectContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { data } = nextProps;
-    if (typeof data === 'undefined') {
+    if (this.props.object !== nextProps.object) {
       this.loadLinkedObject(nextProps);
     }
   }
 
-  loadLinkedObject(props = this.props) {
-    if (props.data === undefined || typeof getP(props.data, 'href_url') !== 'string') {
-      this.props.loadLinkedObject(props.object, props.fetch);
-    }
+  shouldComponentUpdate(nextProps) {
+    return !(
+      this.props.data &&
+      this.props.object === nextProps.object &&
+      anyObjectValue(this.props.data, 'http://www.w3.org/2011/http#statusCodeValue') === anyObjectValue(nextProps.data, 'http://www.w3.org/2011/http#statusCodeValue') &&
+      anyObjectValue(this.props.data, LRS.namespaces.rdf('type')) === anyObjectValue(nextProps.data, LRS.namespaces.rdf('type'))
+    );
   }
 
   onError() {
@@ -46,59 +54,89 @@ class LinkedObjectContainer extends Component {
     return this.props.onError || (linkedRenderStore && linkedRenderStore.onError);
   }
 
-  shouldComponentUpdate(nextProps) {
-    const { data } = this.props;
-    return !(data && getP(data, '@type') === getP(nextProps.data, '@type'));
+  onLoad() {
+    return this.props.onLoad || null;
+  }
+
+  loadLinkedObject(props = this.props) {
+    if (props.data === undefined) { // && typeof getP(props.data, 'href_url') !== 'string') {
+      this.props.loadLinkedObject(props.object, props.fetch);
+    }
   }
 
   render() {
     const {
-      data,
+      topology,
     } = this.props;
-    if (!data || getP(data, 'loading')) {
-      return null;
-    }
-    const { object: ignored, ...otherProps } = this.props;
+    // data,
+    const { object: subject } = this.props;
+    const data = this.context.linkedRenderStore.tryEntity(this.context.linkedRenderStore.expandProperty(subject));
     const ErrComp = this.onError();
-    const statusCode = getP(data, 'http://www.w3.org/2011/http#statusCodeValue');
-    if (statusCode >= 400 && ErrComp && Object.keys(otherProps).length <= 1) {
-      return <ErrComp {...otherProps} />;
+    const statusCode = anyRDFValue(data, 'http://www.w3.org/2011/http#statusCodeValue');
+    if (statusCode >= 400 && ErrComp) { // && Object.keys(otherProps).length <= 1
+      return <ErrComp subject={subject} {...this.props} />;
+    }
+    const LoadComp = this.onLoad();
+    if (typeof data === 'undefined' || data.size <= 2) {
+      return LoadComp === null ? null : <LoadComp {...this.props} />;
     }
     if (this.props.children) {
       return (
-        <div className="view-overridden" style={{display: 'inherit'}}>
+        <div className="view-overridden" style={{ display: 'inherit' }}>
           {this.props.children}
         </div>
       );
+      // <Broadcast channel={subject} value={this.props.data}>
+      // </Broadcast>
+    }
+
+    const objType = anyRDFValue(data, LRS.namespaces.rdf('type')) || LRS.defaultType;
+    if (objType === undefined) {
+      return null;
+    }
+    const Klass = this.context.linkedRenderStore.getRenderClassForType(objType, topology);
+    if (Klass !== undefined) {
+      return (
+        <Klass {...this.props} />
+      );
+      // <Broadcast channel={subject} value={this.props.data}>
+      // </Broadcast>
     }
     return (
-      <Type
-        responseCode={statusCode}
-        {...otherProps}
-      />
+      <div className="no-view">
+        <Property label="schema:name" />
+        <p>{"We currently don't have a view for this"}</p>
+      </div>
     );
   }
 }
 
 LinkedObjectContainer.childContextTypes = {
   schemaObject: PropTypes.object,
+  subject: PropTypes.objectOf(rdf.NamedNode),
   topology: PropTypes.string,
 };
 LinkedObjectContainer.contextTypes = {
   linkedRenderStore: PropTypes.object,
   topology: PropTypes.string,
 };
+LinkedObjectContainer.displayName = 'LinkedObjectContainer';
 LinkedObjectContainer.propTypes = propTypes;
 
 export { LinkedObjectContainer };
 
 export default connect(
-  (state, ownProps) => {
-    if (!ownProps.object) {
+  (state, { object: subject }) => {
+    if (!subject) {
       throw new Error('[LOC] an object must be given');
     }
+    // Smushing done by librdf
+    // const normIRI = window.LRS.schema.equivalenceSet.find(
+    //   window.LRS.schema.equivalenceSet.add(subject),
+    // ).value;
     return {
-      data: selectLinkedObject(state, ownProps),
+      data: linkedObjectByIRI(state, `<${new URL(subject).toString()}>`),
+      version: linkedObjectVersionByIRI(state, `<${new URL(subject).toString()}>`),
     };
   },
   dispatch => ({
@@ -106,5 +144,5 @@ export default connect(
       dispatch(fetch === false ?
         getLinkedObject(href) :
         fetchLinkedObject(href)),
-  })
+  }),
 )(LinkedObjectContainer);

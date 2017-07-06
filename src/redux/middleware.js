@@ -1,9 +1,9 @@
-import { batchActions } from 'redux-batched-actions';
 import { getValueOrID } from 'link-lib';
 
 import {
   FETCH_LINKED_OBJECT,
   GET_LINKED_OBJECT,
+  LINKED_GRAPH_UPDATE,
 } from './linkedObjects/actions';
 
 
@@ -16,29 +16,34 @@ const getLinkedObjectAction = (record, href) => ({
 });
 
 const emitJSONLDResult = (ld, next) => {
-  const actions = (
-    typeof ld === 'string'
-      ? JSON.parse(ld)
-      : ld
-    ).map(item => getLinkedObjectAction(item, item['@id']));
-  return next(batchActions(actions));
+  if (typeof ld === 'object') {
+    return next({
+      type: LINKED_GRAPH_UPDATE,
+      payload: ld,
+    });
+  }
+  throw new Error('Unknown object passed');
 };
 
 function handleFetchLinkedObject(lrstore, next, action) {
   const { href: _href } = action.payload;
-  const href = getValueOrID(_href);
+  const href = lrstore.expandProperty(getValueOrID(_href));
 
   next(getLinkedObjectAction({}, href));
 
   return lrstore
-    .getEntity(href, (json) => {
-      emitJSONLDResult(json, next);
-    });
+    .getEntity(href)
+    .then(statements => emitJSONLDResult(statements, next));
+    // .then((json) => {
+    //   console.log(lrstore, json);
+    //   debugger;
+    // });
   // .catch(error => next({
   //   type: FETCH_LINKED_OBJECT,
   //   error: true,
   //   payload: {
   //     message: error.message || 'Something bad happened',
+  //     href,
   //     href,
   //   },
   // }));
