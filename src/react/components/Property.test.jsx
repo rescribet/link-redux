@@ -1,56 +1,68 @@
 /* eslint no-magic-numbers: 0 */
 import 'babel-polyfill';
-import assert from 'assert';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import { defaultNS } from 'link-lib';
 import { describe, it } from 'mocha';
+import rdf from 'rdflib';
 import React from 'react';
 
-import { generateContext, linkedRenderStore } from '../../test/utilities';
-import Property from './Property';
+import * as ctx from '../../test/fixtures';
+import { chai } from '../../test/utilities';
+import { Property } from './Property';
+import { linkedModelTouch } from '../../redux/linkedObjects/actions';
 
-const context = (so) => generateContext({ linkedRenderStore: true, schemaObject: so || true });
+const { expect } = chai;
 
 describe('Property component', function () {
   it('renders null when label is not present', function() {
-    assert.equal(shallow(<Property />, context()).type(), null);
+    expect(mount(<Property />, ctx.empty())).to.be.blank();
   });
 
   it('renders null when the given property is not present', function() {
-    const elem = shallow(
-      <Property label="schema:title"/>,
-      context({ '@type': 'https://argu.co/ns/core#Challenge' })
+    const opts = ctx.fullCW();
+    const elem = mount(
+      <Property label={defaultNS.schema('title')} subject={opts.context.subject} />,
+      opts,
     );
-    assert.equal(elem.type(), null);
+    expect(elem).to.be.blank();
   });
 
   it('renders the value when no view is registered', function() {
     const title = 'The title';
-    const elem = shallow(
-      <Property label="schema:name"/>,
-      context({
-        '@type': 'https://argu.co/ns/core#Challenge',
-        'http://schema.org/name': title
-      })
+    const opts = ctx.name(undefined, title);
+    const elem = mount(
+      <Property label={defaultNS.schema('name')} subject={opts.context.subject} />,
+      opts,
     );
-    assert.equal(elem.first().text(), title);
+    expect(elem.find('div')).to.have.text(title);
   });
 
   it('renders the view', function() {
-    linkedRenderStore.registerRenderer(
-      a => <div className="nameProp" />,
-      'http://schema.org/Thing',
-      'schema:name'
-    );
     const title = 'The title';
-    const elem = mount(
-      <Property label="http://schema.org/name" />,
-      generateContext({
-        linkedRenderStore,
-        schemaObject: {
-        '@type': 'https://argu.co/ns/core#Challenge',
-        'http://schema.org/name': title
-      }})
+    const opts = ctx.name(undefined, title);
+    opts.context.linkedRenderStore.registerRenderer(
+      a => <div className="nameProp" />,
+      defaultNS.schema('Thing'),
+      defaultNS.schema('name'),
     );
-    assert(elem.hasClass('nameProp'));
+    const elem = mount(
+      <Property label={defaultNS.schema('name')} subject={opts.context.subject} />,
+      opts,
+    );
+    expect(elem).to.have.className('nameProp');
+  });
+
+  it('renders a LOC when rendering a NamedNode', function () {
+    const opts = ctx.fullCW(undefined, undefined, true);
+    const action = linkedModelTouch([
+      new rdf.Statement(opts.context.subject, undefined, undefined),
+    ]);
+    opts.context.store.dispatch(action);
+    opts.context.linkedRenderStore.loadingComp = () => <p>loading</p>;
+    const elem = mount(
+      <Property label={defaultNS.schema('author')} subject={opts.context.subject} />,
+      opts,
+    );
+    expect(elem).to.have.text('loading');
   });
 });

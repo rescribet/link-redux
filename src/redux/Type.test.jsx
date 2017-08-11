@@ -1,51 +1,47 @@
 /* eslint no-magic-numbers: 0 */
 import 'babel-polyfill';
-import assert from 'assert';
 import { mount, shallow } from 'enzyme';
+import { defaultNS } from 'link-lib';
 import { describe, it } from 'mocha';
 import React from 'react';
 
-import { generateContext, linkedRenderStore } from '../test/utilities';
+import * as ctx from '../test/fixtures';
+import { chai } from '../test/utilities';
 import Type from './Type';
 
-const context = (so) => generateContext({ linkedRenderStore: true, schemaObject: so || true });
+const { expect } = chai;
 
 describe('Type component', function () {
   it('renders null when type is not present', function() {
-    const d = linkedRenderStore.defaultType;
-    linkedRenderStore.defaultType = undefined;
-    const elem = shallow(
-      <Type />,
-      context()
-    );
-    assert.equal(elem.type(), null);
-    linkedRenderStore.defaultType = d;
+    const opts = ctx.empty();
+    opts.context.linkedRenderStore.defaultType = undefined;
+    const elem = shallow(<Type />, opts);
+    expect(elem).to.be.blank();
   });
 
   it('renders no view when no class matches', function () {
-    linkedRenderStore.reset();
-    const elem = mount(
-      <Type />,
-      context({ '@type': 'https://argu.co/ns/core#Challenge' })
-    );
-    assert(elem.first().hasClass('no-view'));
+    const opts = ctx.empty(undefined, true);
+    const elem = mount(<Type />, opts);
+    expect(elem).to.have.className('no-view');
   });
 
   it('renders default when set', function() {
-    linkedRenderStore.registerRenderer(a => <div className="thing" />, 'schema:Thing');
-    const elem = mount(
-      <Type />,
-      context()
+    const opts = ctx.type(undefined, true);
+    opts.context.linkedRenderStore.registerRenderer(
+      () => <div className="thing" />,
+      defaultNS.schema('Thing')
     );
-    assert(elem.first().hasClass('thing'));
+    const elem = mount(<Type />, opts);
+    expect(elem).to.have.className('thing');
   });
 
   it('renders the registered class', function () {
-    linkedRenderStore.registerRenderer(a => <div className="thing" />, 'schema:CreativeWork');
-    const elem = mount(
-      <Type />,
-      context({ '@type': 'http://schema.org/CreativeWork' })
+    const opts = ctx.type(undefined, true);
+    opts.context.linkedRenderStore.registerRenderer(
+      () => <div className="creativeWork" />,
+      defaultNS.schema('CreativeWork')
     );
-    assert(elem.first().hasClass('thing'));
+    const elem = mount(<Type />, opts);
+    expect(elem).to.have.className('creativeWork');
   });
 });

@@ -1,13 +1,17 @@
 import React, { PropTypes } from 'react';
-import LRS, { anyObjectValue } from 'link-lib';
-import Property from '../react/components/Property';
+import LRS, { anyRDFValue } from 'link-lib';
+
+import linkedSubject from './linkedSubject';
+import linkedVersion from './linkedVersion';
+import { Property } from '../react/components/index';
 
 const propTypes = {
   children: PropTypes.any,
+  subject: PropTypes.object,
 };
 
-const Type = (props, { linkedRenderStore, schemaObject, topology }) => {
-  const objType = anyObjectValue(schemaObject, LRS.namespaces.rdf('type')) || LRS.defaultType;
+const Type = (props, { linkedRenderStore, topology }) => {
+  const objType = anyRDFValue(linkedRenderStore.tryEntity(props.subject), LRS.namespaces.rdf('type')) || LRS.defaultType;
   if (objType === undefined) {
     return null;
   }
@@ -29,10 +33,9 @@ const Type = (props, { linkedRenderStore, schemaObject, topology }) => {
 
 Type.contextTypes = {
   linkedRenderStore: PropTypes.object,
-  schemaObject: PropTypes.object,
   topology: PropTypes.string,
 };
 Type.displayName = 'Type';
 Type.propTypes = propTypes;
 
-export default Type;
+export default linkedSubject(linkedVersion(Type));

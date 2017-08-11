@@ -1,18 +1,26 @@
+import chai from 'chai';
+import chaiEnzyme from 'chai-enzyme';
+import sinonChai from 'sinon-chai';
 import LinkedRenderStore from 'link-lib';
 import { PropTypes } from 'react';
 import { applyMiddleware, createStore } from 'redux';
+import { combineReducers } from 'redux-immutable';
 
 import { linkMiddleware, linkReducer } from '../index';
 
-const store = createStore(
-  linkReducer,
-  applyMiddleware(linkMiddleware),
+chai.use(chaiEnzyme());
+chai.use(sinonChai);
+
+export const generateStore = lrs => createStore(
+  combineReducers({ linkedObjects: linkReducer }),
+  applyMiddleware(linkMiddleware(lrs)),
 );
 
+const lrs = LinkedRenderStore;
 const contextDefaults = {
-  linkedRenderStore: LinkedRenderStore,
+  linkedRenderStore: lrs,
   schemaObject: {},
-  store,
+  store: generateStore(lrs),
 };
 
 function generateContext(properties = {}) {
@@ -33,7 +41,10 @@ function generateContext(properties = {}) {
   return c;
 }
 
+const store = generateStore();
+
 export {
+  chai,
   generateContext,
   LinkedRenderStore as linkedRenderStore,
   store,

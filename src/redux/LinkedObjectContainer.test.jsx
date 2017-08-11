@@ -1,139 +1,144 @@
 /* eslint no-magic-numbers: 0 */
 import 'babel-polyfill';
-import assert from 'assert';
 import { mount, shallow } from 'enzyme';
+import { defaultNS, RENDER_CLASS_NAME } from 'link-lib';
 import { describe, it } from 'mocha';
-import { RENDER_CLASS_NAME } from 'link-lib';
 import React from 'react';
 import sinon from 'sinon';
 
-import { generateContext, linkedRenderStore } from '../test/utilities';
+import { chai } from '../test/utilities';
+import * as ctx from '../test/fixtures';
 import { LinkedObjectContainer } from './LinkedObjectContainer';
-import Type from './Type';
 
-const context = (so) => generateContext({ linkedRenderStore: true, schemaObject: so || true });
+const { expect } = chai;
 
-const iri = 'http://example.com/resources/5';
+const id = 'resources/5';
+const iri = 'http://example.org/' + id;
 
 describe('LinkedObjectContainer component', function () {
   it('renders null when type is not present', function() {
-    const llo =  sinon.spy();
     const elem = shallow(
-      <LinkedObjectContainer
-        loadLinkedObject={llo}
-        object={iri}
-      />,
-      context()
+      <LinkedObjectContainer loadLinkedObject={() => {}} object={iri} />,
+      ctx.empty(id),
     );
-    assert.equal(elem.type(), null);
+    expect(elem).to.have.type(null);
   });
 
-  it('renders the type renderer when an object is present', function () {
-    const llo =  sinon.spy();
-    const elem = shallow(
-      <LinkedObjectContainer
-        data={{ '@type': 'http://schema.org/CreativeWork' }}
-        object={iri}
-        loadLinkedObject={llo}
-      />
+  it('loads the reference when no data is present', function () {
+    const llo = sinon.spy();
+    shallow(
+      <LinkedObjectContainer loadLinkedObject={llo} object={iri} />,
+      ctx.empty(id),
     );
-    assert(llo.calledOnce);
-    assert.equal(elem.first().type(), Type);
+    expect(llo).to.be.calledOnce;
+  });
+
+  it('does not load the reference when data is present', function () {
+    const llo = sinon.spy();
+    shallow(
+      <LinkedObjectContainer object={iri} loadLinkedObject={llo} />,
+      ctx.fullCW(id),
+    );
+    expect(llo).to.not.be.called;
+  });
+
+  it('renders the renderer when an object is present', function () {
+    const opts = ctx.fullCW(id);
+    const Comp = () => <div label="test" />;
+    opts.context.linkedRenderStore.registerRenderer(Comp, defaultNS.schema('Thing'));
+    const elem = mount(
+      <LinkedObjectContainer loadLinkedObject={() => {}} object={iri} />,
+      opts,
+    );
+    expect(elem).to.contain(Comp());
   });
 
   it('renders children when present', function () {
-    const llo =  sinon.spy();
-    const elem = shallow(
+    const elem = mount(
       <LinkedObjectContainer
         data={{ '@type': 'http://schema.org/CreativeWork' }}
+        loadLinkedObject={() => {}}
         object={iri}
-        loadLinkedObject={llo}
       >
         <span>override</span>
-      </LinkedObjectContainer>
+      </LinkedObjectContainer>,
+      ctx.fullCW(id),
     );
-    assert.equal(llo.callCount, 1);
-    assert(elem.first().hasClass('view-overridden'));
+    expect(elem).to.have.className('view-overridden');
   });
 
-  it('passes the topology through children', function() {
-    linkedRenderStore.reset();
-    linkedRenderStore.registerRenderer(
+  it('renders correct topology through children', function() {
+    const opts = ctx.multipleCW(id, { second: { id: 'resources/10' } }, true);
+    opts.context.linkedRenderStore.registerRenderer(
       () => <div className="normalRendered" />,
-      'http://schema.org/CreativeWork'
+      defaultNS.schema('CreativeWork')
     );
-    linkedRenderStore.registerRenderer(
+    opts.context.linkedRenderStore.registerRenderer(
       () => <div className="collectionRendered" />,
-      'http://schema.org/CreativeWork',
+      defaultNS.schema('CreativeWork'),
       RENDER_CLASS_NAME,
-      'argu:collection'
+      defaultNS.argu('collection')
     );
 
-    const llo =  sinon.spy();
     const elem = mount(
       <LinkedObjectContainer
-        data={{ '@type': 'http://schema.org/CreativeWork' }}
+        loadLinkedObject={() => {}}
         object={iri}
-        loadLinkedObject={llo}
-        topology="argu:collection"
+        topology={defaultNS.argu('collection')}
       >
         <LinkedObjectContainer
-          data={{ '@type': 'http://schema.org/CreativeWork' }}
+          loadLinkedObject={() => {}}
           object={iri}
-          loadLinkedObject={llo}
         >
           <LinkedObjectContainer
-            data={{ '@type': 'http://schema.org/CreativeWork' }}
-            object={'http://example.com/resources/10'}
-            loadLinkedObject={llo}
+            loadLinkedObject={() => {}}
+            object={'http://example.org/resources/10'}
           />
         </LinkedObjectContainer>
       </LinkedObjectContainer>,
-      context()
+      opts,
     );
-    assert(elem
-      .children().first()
-      .children().first()
-      .hasClass('collectionRendered'));
+    expect(
+      elem
+        .children().first()
+        .children().first()
+    ).to.have.className('collectionRendered');
   });
 
-  it('passes the topology through children', function() {
-    linkedRenderStore.reset();
-    linkedRenderStore.registerRenderer(
+  it('renders default topology through children', function() {
+    const opts = ctx.multipleCW(id, { second: { id: 'resources/10' } }, true);
+    opts.context.linkedRenderStore.registerRenderer(
       () => <div className="normalRendered" />,
-      'http://schema.org/CreativeWork'
+      defaultNS.schema('CreativeWork')
     );
-    linkedRenderStore.registerRenderer(
+    opts.context.linkedRenderStore.registerRenderer(
       () => <div className="collectionRendered" />,
-      'http://schema.org/CreativeWork',
+      defaultNS.schema('CreativeWork'),
       RENDER_CLASS_NAME,
-      'argu:collection'
+      defaultNS.argu('collection')
     );
 
-    const llo =  sinon.spy();
     const elem = mount(
       <LinkedObjectContainer
-        data={{ '@type': 'http://schema.org/CreativeWork' }}
         object={iri}
-        loadLinkedObject={llo}
+        loadLinkedObject={() => {}}
       >
         <LinkedObjectContainer
-          data={{ '@type': 'http://schema.org/CreativeWork' }}
           object={iri}
-          loadLinkedObject={llo}
+          loadLinkedObject={() => {}}
         >
           <LinkedObjectContainer
-            data={{ '@type': 'http://schema.org/CreativeWork' }}
-            object={'http://example.com/resources/10'}
-            loadLinkedObject={llo}
+            object={'http://example.org/resources/10'}
+            loadLinkedObject={() => {}}
           />
         </LinkedObjectContainer>
       </LinkedObjectContainer>,
-      context()
+      opts,
     );
-    assert(elem
-      .children().first()
-      .children().first()
-      .hasClass('normalRendered'));
+    expect(
+      elem
+        .children().first()
+        .children().first()
+    ).to.have.className('normalRendered');
   });
 });

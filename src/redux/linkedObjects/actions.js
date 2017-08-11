@@ -2,6 +2,7 @@
 export const FETCH_LINKED_OBJECT = 'FETCH_LINKED_OBJECT';
 export const GET_LINKED_OBJECT = 'GET_LINKED_OBJECT';
 export const LINKED_GRAPH_UPDATE = 'LINKED_GRAPH_UPDATE';
+export const LINKED_MODEL_TOUCH = 'LINKED_MODEL_TOUCH';
 
 export const fetchLinkedObject = href => ({
   type: FETCH_LINKED_OBJECT,
@@ -17,6 +18,19 @@ export const getLinkedObject = iri => ({
     linkedObjectAction: true,
     iri,
   },
+});
+
+export const linkedModelTouch = statements => ({
+  type: LINKED_MODEL_TOUCH,
+  payload: statements
+    .reduce(
+      (acc, s) => Object.assign(
+        {},
+        acc,
+        { [s.subject]: Math.random().toString(36).substr(2, 5) },
+      ),
+      {},
+    ),
 });
 
 export default fetchLinkedObject;

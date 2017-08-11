@@ -1,4 +1,6 @@
 import * as testUtilities from './test/utilities';
+import linkedSubject from './redux/linkedSubject';
+import linkedVersion from './redux/linkedVersion';
 
 export * from './react/components';
 
@@ -9,5 +11,10 @@ export { default as linkMiddleware } from './redux/middleware';
 
 export { default as Type } from './redux/Type';
 export { default as LinkedObjectContainer } from './redux/LinkedObjectContainer';
+
+export const lowLevel = {
+  linkedSubject,
+  linkedVersion,
+};
 
 export { testUtilities };

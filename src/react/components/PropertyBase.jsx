@@ -1,7 +1,5 @@
 import {
-  allObjectValues,
-  getP,
-  getValueOrID,
+  allRDFPropertyTriples,
 } from 'link-lib';
 import React, { PropTypes } from 'react';
 
@@ -16,22 +14,23 @@ const propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  version: PropTypes.string,
 };
 
 function getPropBestLang(rawProp) {
   if (!Array.isArray(rawProp)) {
-    return getValueOrID(rawProp);
+    return rawProp.object;
   }
   if (rawProp.length === 1) {
-    return getValueOrID(rawProp[0]);
+    return rawProp[0].object;
   }
   for (let i = 0; i < LANG_PREF.length; i++) {
-    const pIndex = rawProp.findIndex(p => getP(p, '@language') === LANG_PREF[i]);
+    const pIndex = rawProp.findIndex(p => p.object.lang === LANG_PREF[i]);
     if (pIndex >= 0) {
-      return getValueOrID(getP(rawProp, pIndex));
+      return rawProp[pIndex].object;
     }
   }
-  return getValueOrID(getP(rawProp, 0));
+  return rawProp[0].object;
 }
 
 export function expandedProperty(prop, linkedRenderStore) {
@@ -41,34 +40,28 @@ export function expandedProperty(prop, linkedRenderStore) {
   return linkedRenderStore.expandProperty(prop);
 }
 
-export function getLinkedObjectPropertyRaw(property, props, { subject, linkedRenderStore }, term = false) {
-  const exProps = expandedProperty(property || props.label, linkedRenderStore);
-  if (Array.isArray(exProps)) {
-    for (let i = 0; i < exProps.length; i++) {
-      const values = allObjectValues(linkedRenderStore.tryEntity(subject), exProps[i], term);
+export function getLinkedObjectPropertyRaw(property, subject, linkedRenderStore) {
+  const props = linkedRenderStore.tryEntity(subject);
+  if (Array.isArray(property)) {
+    for (let i = 0; i < property.length; i++) {
+      const values = allRDFPropertyTriples(props, property[i], true);
       if (typeof values !== 'undefined') return values;
     }
     return undefined;
   }
-  return allObjectValues(linkedRenderStore.tryEntity(subject), exProps, term);
+  return allRDFPropertyTriples(props, property, true);
 }
 
-export function getLinkedObjectProperty(property, props, context, term = false) {
-  if (property === undefined && typeof props.linkedProp !== 'undefined') {
-    return props.linkedProp;
-  }
-  const rawProp = getLinkedObjectPropertyRaw(property, props, context, term);
+export function getLinkedObjectProperty(property, subject, linkedRenderStore, term = false) {
+  const rawProp = getLinkedObjectPropertyRaw(property, subject, linkedRenderStore, term);
   if (rawProp === undefined) {
     return undefined;
   }
   const val = getPropBestLang(rawProp);
-  if (typeof getValueOrID(val) === 'object') {
-    // debugger;
-  }
 
   if (term) return val;
   return val && val.constructor !== Object &&
-    (val.href || getValueOrID(val) || val.toString());
+    (val.href || val.value || val.toString());
 }
 
 export const contextTypes = {
@@ -78,25 +71,23 @@ export const contextTypes = {
 
 class PropertyBase extends React.Component {
   getLinkedObjectPropertyRaw(property) {
-    return getLinkedObjectPropertyRaw(property, this.props, this.context);
+    return getLinkedObjectPropertyRaw(property || this.props.label, this.props.subject, this.context.linkedRenderStore);
   }
 
   getLinkedObjectProperty(property) {
-    return getLinkedObjectProperty(property, this.props, this.context);
+    if (property === undefined && typeof this.props.linkedProp !== 'undefined') return this.props.linkedProp;
+    return getLinkedObjectProperty(property || this.props.label, this.props.subject, this.context.linkedRenderStore);
   }
 
   expandedProperty(property) {
     return expandedProperty(property || this.props.label, this.context.linkedRenderStore);
   }
 
-  shouldComponentUpdate(nextProps, Ignore, nextContext) {
+  shouldComponentUpdate(nextProps) {
     if (nextProps.label === undefined) {
       return false;
     }
-    return this.props.label !== nextProps.label ||
-      this.props.linkedProp !== nextProps.linkedProp ||
-        getLinkedObjectProperty(nextProps.label, this.props, this.context) !==
-          getLinkedObjectProperty(nextProps.label, nextProps, nextContext);
+    return this.props.version !== nextProps.version;
   }
 
   render() {
@@ -107,8 +98,6 @@ class PropertyBase extends React.Component {
     );
   }
 }
-
-// export const PropBaseTwo = (props, context) => <Subscriber channel={} {...props} />;
 
 PropertyBase.contextTypes = contextTypes
 PropertyBase.propTypes = propTypes;
