@@ -1,4 +1,3 @@
-import * as testUtilities from './test/utilities';
 import linkedSubject from './redux/linkedSubject';
 import linkedVersion from './redux/linkedVersion';
 
@@ -16,5 +15,3 @@ export const lowLevel = {
   linkedSubject,
   linkedVersion,
 };
-
-export { testUtilities };

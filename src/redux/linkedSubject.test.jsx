@@ -4,8 +4,8 @@ import { shallow } from 'enzyme';
 import { describe, it } from 'mocha';
 import React from 'react';
 
-import { chai } from '../test/utilities';
-import * as ctx from '../test/fixtures';
+import { chai } from '../../test/utilities';
+import * as ctx from '../../test/fixtures';
 import linkedSubject from './linkedSubject';
 
 const { expect } = chai;

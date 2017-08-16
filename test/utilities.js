@@ -6,7 +6,7 @@ import { PropTypes } from 'react';
 import { applyMiddleware, createStore } from 'redux';
 import { combineReducers } from 'redux-immutable';
 
-import { linkMiddleware, linkReducer } from '../index';
+import { linkMiddleware, linkReducer } from '../src/index';
 
 chai.use(chaiEnzyme());
 chai.use(sinonChai);

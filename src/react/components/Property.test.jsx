@@ -6,8 +6,8 @@ import { describe, it } from 'mocha';
 import rdf from 'rdflib';
 import React from 'react';
 
-import * as ctx from '../../test/fixtures';
-import { chai } from '../../test/utilities';
+import * as ctx from '../../../test/fixtures';
+import { chai } from '../../../test/utilities';
 import { Property } from './Property';
 import { linkedModelTouch } from '../../redux/linkedObjects/actions';
 

@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { describe, it } from 'mocha';
 import rdf from 'rdflib';
 
-import { chai } from '../../test/utilities';
+import { chai } from '../../../test/utilities';
 import { linkedObjectVersionByIRI } from './selectors';
 
 const { expect } = chai;

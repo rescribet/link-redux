@@ -6,8 +6,8 @@ import { describe, it } from 'mocha';
 import React from 'react';
 import sinon from 'sinon';
 
-import { chai } from '../test/utilities';
-import * as ctx from '../test/fixtures';
+import { chai } from '../../test/utilities';
+import * as ctx from '../../test/fixtures';
 import { LinkedObjectContainer } from './LinkedObjectContainer';
 
 const { expect } = chai;

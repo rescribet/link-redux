@@ -5,8 +5,8 @@ import rdf from 'rdflib';
 import { describe, it } from 'mocha';
 import React from 'react';
 
-import { chai, generateContext, generateStore } from '../test/utilities';
-import * as ctx from '../test/fixtures';
+import { chai, generateContext, generateStore } from '../../test/utilities';
+import * as ctx from '../../test/fixtures';
 import linkedVersion from './linkedVersion';
 import { linkedModelTouch } from './linkedObjects/actions';
 

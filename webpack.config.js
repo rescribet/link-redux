@@ -34,7 +34,14 @@ module.exports = {
       {
         test: /(\.js|\.jsx)$/,
         loader: 'babel-loader',
-        exclude: /(node_modules|bower_components)/
+        exclude: /(node_modules|bower_components)/,
+        options: {
+          presets: [
+            'react',
+            'es2015',
+            'stage-0'
+          ]
+        }
       },
       {
         test: /.json$/,
