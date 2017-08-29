@@ -33,6 +33,7 @@ const sFull = (id, attrs) => {
 function chargeLRS(id, obj, store) {
   const lrs = Object.assign({}, LinkedRenderStore);
   lrs.reset();
+  lrs.store = rdf.graph(); // TODO: Remove when LRS is class based
   lrs.store.add(obj);
   return context(exNS(id), lrs, store);
 }
