@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "6"
-  - "5"
+  - "8"
+  - "7"
+  - "lts/*"
 script:
   - yarn run lint
   - yarn run test
