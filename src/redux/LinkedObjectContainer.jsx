@@ -43,7 +43,8 @@ class LinkedObjectContainer extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.version !== nextProps.version;
+    return this.props.version !== nextProps.version ||
+      this.props.object !== nextProps.object;
   }
 
   onError() {
