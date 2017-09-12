@@ -87,7 +87,8 @@ class PropertyBase extends React.Component {
     if (nextProps.label === undefined) {
       return false;
     }
-    return this.props.version !== nextProps.version;
+    return this.props.version !== nextProps.version ||
+      this.props.subject !== nextProps.subject;
   }
 
   render() {
