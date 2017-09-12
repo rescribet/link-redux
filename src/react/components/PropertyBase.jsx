@@ -100,7 +100,7 @@ class PropertyBase extends React.Component {
   }
 }
 
-PropertyBase.contextTypes = contextTypes
+PropertyBase.contextTypes = contextTypes;
 PropertyBase.propTypes = propTypes;
 
 export default PropertyBase;

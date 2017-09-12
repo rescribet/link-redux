@@ -70,7 +70,7 @@ class LinkedObjectContainer extends Component {
   }
 
   subject(props = this.props) {
-    if (props.object.constructor === rdf.NamedNode) {
+    if (props.object.constructor === rdf.NamedNode || props.object.termType === 'NamedNode') {
       return props.object;
     }
     return new rdf.NamedNode(props.object);
@@ -150,7 +150,7 @@ export default connect(
     let s;
     if (subject.constructor === rdf.Statement) {
       throw new Error('[LOC] Object must be a named node');
-    } else if (subject.constructor === rdf.NamedNode) {
+    } else if (subject.constructor === rdf.NamedNode || subject.termType === 'NamedNode') {
       s = subject;
     } else {
       s = new rdf.NamedNode(subject);
