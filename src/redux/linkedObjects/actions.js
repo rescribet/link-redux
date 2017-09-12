@@ -20,17 +20,15 @@ export const getLinkedObject = iri => ({
   },
 });
 
-export const linkedModelTouch = statements => ({
-  type: LINKED_MODEL_TOUCH,
-  payload: statements
-    .reduce(
-      (acc, s) => Object.assign(
-        {},
-        acc,
-        { [s.subject]: Math.random().toString(36).substr(2, 5) },
-      ),
-      {},
-    ),
-});
+export const linkedModelTouch = (statements) => {
+  const m = {};
+  statements.forEach((subject) => {
+    m[subject] = Math.random().toString(36).substr(2, 5);
+  });
+  return {
+    type: LINKED_MODEL_TOUCH,
+    payload: Object.freeze(m),
+  };
+};
 
 export default fetchLinkedObject;

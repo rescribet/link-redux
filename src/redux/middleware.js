@@ -10,7 +10,7 @@ function handleFetchLinkedObject(lrstore, next, action) {
   const { href } = action.payload;
 
   lrstore
-    .getEntity(href)
+    .getEntity(href, true)
     .then(statements => emitChangedSubjects(statements, next));
 }
 
