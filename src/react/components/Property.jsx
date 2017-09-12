@@ -1,4 +1,4 @@
-import { defaultNS, anyRDFValue } from 'link-lib';
+import { defaultNS, allRDFValues } from 'link-lib';
 import rdf from 'rdflib';
 import React, { PropTypes } from 'react';
 
@@ -27,7 +27,7 @@ const defaultProps = {
 
 function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
   return linkedRenderStore.getRenderClassForProperty(
-    anyRDFValue(linkedRenderStore.tryEntity(props.subject), defaultNS.rdf('type')),
+    allRDFValues(linkedRenderStore.tryEntity(props.subject), defaultNS.rdf('type'), true),
     expandedProperty(props.label, linkedRenderStore),
     topology
   );

@@ -1,4 +1,4 @@
-import LRS, { anyRDFValue } from 'link-lib';
+import { allRDFValues, anyRDFValue } from 'link-lib';
 import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import rdf from 'rdflib';
@@ -83,6 +83,7 @@ class LinkedObjectContainer extends Component {
   }
 
   render() {
+    const { linkedRenderStore } = this.context;
     const data = this.data();
     const ErrComp = this.onError();
     const statusCode = anyRDFValue(data, 'http://www.w3.org/2011/http#statusCodeValue');
@@ -100,11 +101,11 @@ class LinkedObjectContainer extends Component {
         </div>
       );
     }
-    const objType = anyRDFValue(data, LRS.namespaces.rdf('type')) || LRS.defaultType;
+    const objType = allRDFValues(data, linkedRenderStore.namespaces.rdf('type'), true) || linkedRenderStore.defaultType;
     if (objType === undefined) {
       return null;
     }
-    const Klass = this.context.linkedRenderStore.getRenderClassForType(
+    const Klass = linkedRenderStore.getRenderClassForType(
       objType,
       this.topology()
     );
@@ -115,7 +116,7 @@ class LinkedObjectContainer extends Component {
     }
     return (
       <div className="no-view">
-        <Property label="schema:name" />
+        <Property label={linkedRenderStore.namespaces.schema('name')} />
         <p>{"We currently don't have a view for this"}</p>
       </div>
     );

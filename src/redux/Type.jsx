@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import LRS, { anyRDFValue } from 'link-lib';
+import { allRDFValues } from 'link-lib';
 
 import linkedSubject from './linkedSubject';
 import linkedVersion from './linkedVersion';
@@ -11,7 +11,11 @@ const propTypes = {
 };
 
 const Type = (props, { linkedRenderStore, topology }) => {
-  const objType = anyRDFValue(linkedRenderStore.tryEntity(props.subject), LRS.namespaces.rdf('type')) || LRS.defaultType;
+  const objType = allRDFValues(
+      linkedRenderStore.tryEntity(props.subject),
+      linkedRenderStore.namespaces.rdf('type'),
+      true,
+    ) || linkedRenderStore.defaultType;
   if (objType === undefined) {
     return null;
   }
@@ -25,7 +29,7 @@ const Type = (props, { linkedRenderStore, topology }) => {
   }
   return (
     <div className="no-view">
-      <Property label="schema:name" />
+      <Property label={linkedRenderStore.namespaces.schema('name')} />
       <p>{"We currently don't have a view for this"}</p>
     </div>
   );
