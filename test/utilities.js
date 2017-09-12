@@ -16,11 +16,13 @@ export const generateStore = lrs => createStore(
   applyMiddleware(linkMiddleware(lrs)),
 );
 
-const lrs = LinkedRenderStore;
-const contextDefaults = {
-  linkedRenderStore: lrs,
-  schemaObject: {},
-  store: generateStore(lrs),
+const contextDefaults = () => {
+  const lrs = new LinkedRenderStore();
+  return {
+    linkedRenderStore: lrs,
+    schemaObject: {},
+    store: generateStore(lrs),
+  };
 };
 
 function generateContext(properties = {}) {
@@ -29,9 +31,10 @@ function generateContext(properties = {}) {
     childContextTypes: {},
     context: {},
   };
+  const defaults = contextDefaults();
   keys.forEach((key) => {
     if (properties[key] === true) {
-      c.context[key] = contextDefaults[key];
+      c.context[key] = defaults[key];
       c.childContextTypes[key] = PropTypes.object;
     } else if (properties[key] !== undefined) {
       c.context[key] = properties[key];
