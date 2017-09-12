@@ -1,7 +1,6 @@
 /* eslint no-magic-numbers: 0 */
 import 'babel-polyfill';
 import { shallow } from 'enzyme';
-import rdf from 'rdflib';
 import { describe, it } from 'mocha';
 import React from 'react';
 
@@ -47,9 +46,7 @@ describe('linkedVersion component', function () {
     const Comp = linkedVersion(() => <p>test</p>);
     const opts = ctx.empty('0', true);
     const subject = opts.context.subject;
-    const action = linkedModelTouch([
-      new rdf.Statement(subject, undefined, undefined),
-    ]);
+    const action = linkedModelTouch([subject]);
     opts.context.store.dispatch(action);
     const elem = shallow(
       <Comp subject={opts.context.subject} />,

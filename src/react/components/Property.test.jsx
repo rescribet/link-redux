@@ -54,9 +54,7 @@ describe('Property component', function () {
 
   it('renders a LOC when rendering a NamedNode', function () {
     const opts = ctx.fullCW(undefined, undefined, true);
-    const action = linkedModelTouch([
-      new rdf.Statement(opts.context.subject, undefined, undefined),
-    ]);
+    const action = linkedModelTouch([opts.context.subject]);
     opts.context.store.dispatch(action);
     opts.context.linkedRenderStore.loadingComp = () => <p>loading</p>;
     const elem = mount(
