@@ -92,10 +92,11 @@ class PropertyBase extends React.Component {
   }
 
   render() {
-    return (
-      <span>
-        PropBase: {this.getLinkedObjectProperty()}
-      </span>
+    return React.createElement(
+      'span',
+      null,
+      'PropBase: ',
+      this.getLinkedObjectProperty()
     );
   }
 }

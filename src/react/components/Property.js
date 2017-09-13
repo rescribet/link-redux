@@ -47,13 +47,13 @@ export const Property = (props, context) => {
   }
   const Klass = getLinkedObjectClass(props, context);
   if (Klass) {
-    return <Klass linkedProp={obj} {...props} />;
+    return React.createElement(Klass, { linkedProp: obj, ...props });
   }
   if (typeof objRaw !== 'undefined' && objRaw.termType === 'NamedNode') {
-    return <LOC object={objRaw.value} />;
+    return React.createElement(LOC, { object: objRaw.value });
   }
   if (obj) {
-    return (<div>{obj}</div>);
+    return React.createElement('div', null, obj);
   }
   return null;
 };

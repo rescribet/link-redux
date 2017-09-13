@@ -6,7 +6,10 @@ const linkedSubject = (ConnectedProp) => {
     if (typeof subject === 'undefined') {
       throw new Error('[LS] A subject must be given');
     }
-    return <ConnectedProp subject={subject} {...props} />;
+    return React.createElement(
+      ConnectedProp,
+      { subject, ...props }
+    );
   }
   LinkedSubjectComp.contextTypes = {
     subject: PropTypes.instanceOf(NamedNode),

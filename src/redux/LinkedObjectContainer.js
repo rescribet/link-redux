@@ -88,17 +88,20 @@ class LinkedObjectContainer extends Component {
     const ErrComp = this.onError();
     const statusCode = anyRDFValue(data, 'http://www.w3.org/2011/http#statusCodeValue');
     if (statusCode >= 400 && ErrComp) { // && Object.keys(otherProps).length <= 1
-      return <ErrComp subject={this.subject()} {...this.props} />;
+      return React.createElement(
+        ErrComp,
+        { subject: this.subject(), ...this.props }
+      );
     }
     const LoadComp = this.onLoad();
     if (typeof data === 'undefined' || data.size <= 2) {
-      return LoadComp === null ? null : <LoadComp {...this.props} />;
+      return LoadComp === null ? null : React.createElement(LoadComp, this.props);
     }
     if (this.props.children) {
-      return (
-        <div className="view-overridden" style={{ display: 'inherit' }}>
-          {this.props.children}
-        </div>
+      return React.createElement(
+        'div',
+        { className: 'view-overridden', style: { display: 'inherit' } },
+        this.props.children
       );
     }
     const objType = allRDFValues(data, linkedRenderStore.namespaces.rdf('type'), true) || linkedRenderStore.defaultType;
@@ -110,15 +113,16 @@ class LinkedObjectContainer extends Component {
       this.topology()
     );
     if (Klass !== undefined) {
-      return (
-        <Klass {...this.props} />
-      );
+      return React.createElement(Klass, this.props);
     }
-    return (
-      <div className="no-view">
-        <Property label={linkedRenderStore.namespaces.schema('name')} />
-        <p>{"We currently don't have a view for this"}</p>
-      </div>
+    return React.createElement(
+      'div',
+      { className: 'no-view' },
+      React.createElement(
+        Property,
+        { label: linkedRenderStore.namespaces.schema('name') }
+      ),
+      React.createElement('p', null, "We currently don't have a view for this")
     );
   }
 }

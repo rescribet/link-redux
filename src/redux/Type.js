@@ -21,17 +21,17 @@ const Type = (props, { linkedRenderStore, topology }) => {
   }
   const Klass = linkedRenderStore.getRenderClassForType(objType, topology);
   if (Klass !== undefined) {
-    return (
-      <Klass {...props}>
-        {props.children}
-      </Klass>
+    return React.createElement(
+      Klass,
+      props,
+      props.children
     );
   }
-  return (
-    <div className="no-view">
-      <Property label={linkedRenderStore.namespaces.schema('name')} />
-      <p>{"We currently don't have a view for this"}</p>
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'no-view' },
+    React.createElement(Property, { label: linkedRenderStore.namespaces.schema('name') }),
+    React.createElement('p', null, "We currently don't have a view for this")
   );
 };
 
