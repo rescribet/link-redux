@@ -14,7 +14,9 @@ const linkedSubject = (ConnectedProp) => {
   LinkedSubjectComp.contextTypes = {
     subject: PropTypes.instanceOf(NamedNode),
   };
-  LinkedSubjectComp.displayName = 'linkedSubject';
+  LinkedSubjectComp.displayName = ConnectedProp.displayName === undefined
+    ? 'linkedSubject'
+    : `linkedSubject[${ConnectedProp.displayName}]`;
 
   return LinkedSubjectComp;
 };
