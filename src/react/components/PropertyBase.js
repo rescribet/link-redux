@@ -3,17 +3,14 @@ import {
 } from 'link-lib';
 import React, { PropTypes } from 'react';
 
+import { labelType, linkedPropType, subjectType } from '../../propTypes';
+
 const LANG_PREF = ['nl', 'en', 'de'];
 
 const propTypes = {
-  label: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
-  linkedProp: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.string,
-  ]),
+  label: labelType,
+  linkedProp: linkedPropType,
+  subject: subjectType,
   version: PropTypes.string,
 };
 

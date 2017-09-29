@@ -1,25 +1,23 @@
 import { defaultNS, allRDFValues } from 'link-lib';
-import rdf from 'rdflib';
 import React, { PropTypes } from 'react';
 
 import { expandedProperty, getLinkedObjectProperty } from './PropertyBase';
 import linkedSubject from '../../redux/linkedSubject';
 import linkedVersion from '../../redux/linkedVersion';
 import LOC from '../../redux/LinkedObjectContainer';
+import {
+  labelType,
+  linkedPropType,
+  lrsType,
+  subjectType,
+  topologyType,
+} from '../../propTypes';
 
-const nodeShape = PropTypes.shape({
-  termType: PropTypes.string,
-  value: PropTypes.string,
-});
 export const propTypes = {
-  label: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
-    nodeShape,
-    PropTypes.arrayOf(nodeShape),
-  ]).isRequired,
+  label: labelType.isRequired,
   forceRender: PropTypes.bool,
-  subject: PropTypes.instanceOf(rdf.NamedNode)
+  linkedProp: linkedPropType,
+  subject: subjectType,
 };
 const defaultProps = {
   forceRender: false,
@@ -59,11 +57,8 @@ export const PropertyComp = (props, context) => {
 };
 
 PropertyComp.contextTypes = {
-  linkedRenderStore: PropTypes.object,
-  topology: PropTypes.oneOfType([
-    PropTypes.instanceOf(rdf.NamedNode),
-    PropTypes.string,
-  ]),
+  linkedRenderStore: lrsType,
+  topology: topologyType,
 };
 PropertyComp.displayName = 'Property';
 PropertyComp.propTypes = propTypes;

@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
-import { NamedNode } from 'rdflib';
+import React from 'react';
+
+import { subjectType } from '../propTypes';
 
 const linkedSubject = (ConnectedProp) => {
   function LinkedSubjectComp(props, { subject }) {
@@ -12,7 +13,7 @@ const linkedSubject = (ConnectedProp) => {
     );
   }
   LinkedSubjectComp.contextTypes = {
-    subject: PropTypes.instanceOf(NamedNode),
+    subject: subjectType,
   };
   LinkedSubjectComp.displayName = ConnectedProp.displayName === undefined
     ? 'linkedSubject'

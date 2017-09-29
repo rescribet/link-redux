@@ -4,10 +4,11 @@ import { allRDFValues } from 'link-lib';
 import linkedSubject from './linkedSubject';
 import linkedVersion from './linkedVersion';
 import { Property } from '../react/components/index';
+import { lrsType, subjectType, topologyType } from '../propTypes';
 
 const propTypes = {
   children: PropTypes.any,
-  subject: PropTypes.object,
+  subject: subjectType,
 };
 
 const Type = (props, { linkedRenderStore, topology }) => {
@@ -36,8 +37,8 @@ const Type = (props, { linkedRenderStore, topology }) => {
 };
 
 Type.contextTypes = {
-  linkedRenderStore: PropTypes.object,
-  topology: PropTypes.string,
+  linkedRenderStore: lrsType,
+  topology: topologyType,
 };
 Type.displayName = 'Type';
 Type.propTypes = propTypes;

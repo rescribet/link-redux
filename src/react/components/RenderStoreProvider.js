@@ -1,5 +1,15 @@
 import { Component, PropTypes } from 'react';
 
+import { lrsType } from '../../propTypes';
+
+const childContextTypes = {
+  linkedRenderStore: lrsType,
+};
+const propTypes = {
+  children: PropTypes.any,
+  linkedRenderStore: lrsType,
+};
+
 class RenderStoreProvider extends Component {
   getChildContext() {
     return {
@@ -12,8 +22,7 @@ class RenderStoreProvider extends Component {
   }
 }
 
-RenderStoreProvider.childContextTypes = {
-  linkedRenderStore: PropTypes.object,
-};
+RenderStoreProvider.childContextTypes = childContextTypes;
+RenderStoreProvider.propTypes = propTypes;
 
 export default RenderStoreProvider;

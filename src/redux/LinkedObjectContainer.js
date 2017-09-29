@@ -6,20 +6,21 @@ import rdf from 'rdflib';
 import { linkedObjectVersionByIRI } from './linkedObjects/selectors';
 import { getLinkedObject, fetchLinkedObject } from './linkedObjects/actions';
 import Property from '../react/components/Property';
+import { lrsType, subjectType, topologyType } from '../propTypes';
 
 const propTypes = {
   children: PropTypes.any,
-  fetch: PropTypes.bool,
   loadLinkedObject: PropTypes.func.isRequired,
   object: PropTypes.any.isRequired,
   onError: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.func,
   ]),
-  topology: PropTypes.oneOfType([
-    PropTypes.instanceOf(rdf.NamedNode),
-    PropTypes.string,
+  onLoad: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
   ]),
+  topology: topologyType,
   version: PropTypes.string,
 };
 
@@ -128,18 +129,12 @@ class LinkedObjectContainer extends Component {
 }
 
 LinkedObjectContainer.childContextTypes = {
-  subject: PropTypes.instanceOf(rdf.NamedNode),
-  topology: PropTypes.oneOfType([
-    PropTypes.instanceOf(rdf.NamedNode),
-    PropTypes.string,
-  ]),
+  subject: subjectType,
+  topology: topologyType,
 };
 LinkedObjectContainer.contextTypes = {
-  linkedRenderStore: PropTypes.object,
-  topology: PropTypes.oneOfType([
-    PropTypes.instanceOf(rdf.NamedNode),
-    PropTypes.string,
-  ]),
+  linkedRenderStore: lrsType,
+  topology: topologyType,
 };
 LinkedObjectContainer.displayName = 'LinkedObjectContainer';
 LinkedObjectContainer.propTypes = propTypes;

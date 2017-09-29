@@ -20,6 +20,7 @@
     "immutable": "^3.8.1",
     "jsonld": "^0.4.11",
     "link-lib": "1.0.0-beta2",
+    "prop-types": "^15.6.0",
     "rdflib": "^0.15.0",
     "react": "^15.6.1",
     "react-redux": "^4.4.6",
