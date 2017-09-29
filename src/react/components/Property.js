@@ -29,7 +29,7 @@ function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
   return linkedRenderStore.getRenderClassForProperty(
     allRDFValues(linkedRenderStore.tryEntity(props.subject), defaultNS.rdf('type'), true),
     expandedProperty(props.label, linkedRenderStore),
-    topology
+    topology,
   );
 }
 

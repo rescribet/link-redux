@@ -24,14 +24,14 @@ const Type = (props, { linkedRenderStore, topology }) => {
     return React.createElement(
       Klass,
       props,
-      props.children
+      props.children,
     );
   }
   return React.createElement(
     'div',
     { className: 'no-view' },
     React.createElement(Property, { label: linkedRenderStore.namespaces.schema('name') }),
-    React.createElement('p', null, "We currently don't have a view for this")
+    React.createElement('p', null, "We currently don't have a view for this"),
   );
 };
 

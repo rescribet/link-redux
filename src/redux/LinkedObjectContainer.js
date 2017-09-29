@@ -90,7 +90,7 @@ class LinkedObjectContainer extends Component {
     if (statusCode >= 400 && ErrComp) { // && Object.keys(otherProps).length <= 1
       return React.createElement(
         ErrComp,
-        { subject: this.subject(), ...this.props }
+        { subject: this.subject(), ...this.props },
       );
     }
     const LoadComp = this.onLoad();
@@ -101,7 +101,7 @@ class LinkedObjectContainer extends Component {
       return React.createElement(
         'div',
         { className: 'view-overridden', style: { display: 'inherit' } },
-        this.props.children
+        this.props.children,
       );
     }
     const objType = allRDFValues(data, linkedRenderStore.namespaces.rdf('type'), true) || linkedRenderStore.defaultType;
@@ -110,7 +110,7 @@ class LinkedObjectContainer extends Component {
     }
     const Klass = linkedRenderStore.getRenderClassForType(
       objType,
-      this.topology()
+      this.topology(),
     );
     if (Klass !== undefined) {
       return React.createElement(Klass, this.props);
@@ -120,9 +120,9 @@ class LinkedObjectContainer extends Component {
       { className: 'no-view' },
       React.createElement(
         Property,
-        { label: linkedRenderStore.namespaces.schema('name') }
+        { label: linkedRenderStore.namespaces.schema('name') },
       ),
-      React.createElement('p', null, "We currently don't have a view for this")
+      React.createElement('p', null, "We currently don't have a view for this"),
     );
   }
 }

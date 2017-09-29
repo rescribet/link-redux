@@ -70,19 +70,6 @@ export const contextTypes = {
 };
 
 class PropertyBase extends React.Component {
-  getLinkedObjectPropertyRaw(property) {
-    return getLinkedObjectPropertyRaw(property || this.props.label, this.props.subject, this.context.linkedRenderStore);
-  }
-
-  getLinkedObjectProperty(property) {
-    if (property === undefined && typeof this.props.linkedProp !== 'undefined') return this.props.linkedProp;
-    return getLinkedObjectProperty(property || this.props.label, this.props.subject, this.context.linkedRenderStore);
-  }
-
-  expandedProperty(property) {
-    return expandedProperty(property || this.props.label, this.context.linkedRenderStore);
-  }
-
   shouldComponentUpdate(nextProps) {
     if (nextProps.label === undefined) {
       return false;
@@ -91,12 +78,35 @@ class PropertyBase extends React.Component {
       this.props.subject !== nextProps.subject;
   }
 
+  getLinkedObjectProperty(property) {
+    if (property === undefined && typeof this.props.linkedProp !== 'undefined') {
+      return this.props.linkedProp;
+    }
+    return getLinkedObjectProperty(
+      property || this.props.label,
+      this.props.subject,
+      this.context.linkedRenderStore,
+    );
+  }
+
+  getLinkedObjectPropertyRaw(property) {
+    return getLinkedObjectPropertyRaw(
+      property || this.props.label,
+      this.props.subject,
+      this.context.linkedRenderStore,
+    );
+  }
+
+  expandedProperty(property) {
+    return expandedProperty(property || this.props.label, this.context.linkedRenderStore);
+  }
+
   render() {
     return React.createElement(
       'span',
       null,
       'PropBase: ',
-      this.getLinkedObjectProperty()
+      this.getLinkedObjectProperty(),
     );
   }
 }
