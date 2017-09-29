@@ -33,7 +33,7 @@ function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
   );
 }
 
-export const Property = (props, context) => {
+export const PropertyComp = (props, context) => {
   const { forceRender } = props;
   const objRaw = props.linkedProp || getLinkedObjectProperty(
     props.label,
@@ -58,18 +58,18 @@ export const Property = (props, context) => {
   return null;
 };
 
-Property.contextTypes = {
+PropertyComp.contextTypes = {
   linkedRenderStore: PropTypes.object,
   topology: PropTypes.oneOfType([
     PropTypes.instanceOf(rdf.NamedNode),
     PropTypes.string,
   ]),
 };
-Property.displayName = 'Property';
-Property.propTypes = propTypes;
-Property.defaultProps = defaultProps;
+PropertyComp.displayName = 'Property';
+PropertyComp.propTypes = propTypes;
+PropertyComp.defaultProps = defaultProps;
 
-const ConnectedProp = linkedVersion(Property);
+const ConnectedProp = linkedVersion(PropertyComp);
 ConnectedProp.displayName = 'ConnectedProp';
 
 export default linkedSubject(ConnectedProp);
