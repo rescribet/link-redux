@@ -10,6 +10,7 @@ import { lrsType, subjectType, topologyType } from '../propTypes';
 
 const propTypes = {
   children: PropTypes.any,
+  forceRender: PropTypes.bool,
   loadLinkedObject: PropTypes.func.isRequired,
   object: PropTypes.any.isRequired,
   onError: PropTypes.oneOfType([
@@ -25,6 +26,15 @@ const propTypes = {
 };
 
 class LinkedObjectContainer extends Component {
+  static hasData(data) {
+    return typeof data !== 'undefined' && data.length >= 2;
+  }
+
+  static hasErrors(data) {
+    const statusCode = anyRDFValue(data, 'http://www.w3.org/2011/http#statusCodeValue');
+    return statusCode >= 400;
+  }
+
   getChildContext() {
     const p = this.context.linkedRenderStore.expandProperty(this.subject());
     return {
@@ -70,6 +80,11 @@ class LinkedObjectContainer extends Component {
     }
   }
 
+  objType(data) {
+    const { linkedRenderStore } = this.context;
+    return allRDFValues(data, linkedRenderStore.namespaces.rdf('type'), true) || linkedRenderStore.defaultType;
+  }
+
   subject(props = this.props) {
     if (props.object.constructor === rdf.NamedNode || props.object.termType === 'NamedNode') {
       return props.object;
@@ -83,29 +98,38 @@ class LinkedObjectContainer extends Component {
       : (this.props.topology || this.context.topology);
   }
 
+  renderChildren() {
+    return React.createElement(
+      'div',
+      { className: 'view-overridden', style: { display: 'inherit' } },
+      this.props.children,
+    );
+  }
+
   render() {
     const { linkedRenderStore } = this.context;
     const data = this.data();
-    const ErrComp = this.onError();
-    const statusCode = anyRDFValue(data, 'http://www.w3.org/2011/http#statusCodeValue');
-    if (statusCode >= 400 && ErrComp) { // && Object.keys(otherProps).length <= 1
-      return React.createElement(
-        ErrComp,
-        { subject: this.subject(), ...this.props },
-      );
+    if (this.props.forceRender && this.props.children) {
+      return this.renderChildren();
     }
-    const LoadComp = this.onLoad();
-    if (typeof data === 'undefined' || data.size <= 2) {
+    if (!LinkedObjectContainer.hasData(data)) {
+      const LoadComp = this.onLoad();
       return LoadComp === null ? null : React.createElement(LoadComp, this.props);
     }
-    if (this.props.children) {
-      return React.createElement(
-        'div',
-        { className: 'view-overridden', style: { display: 'inherit' } },
-        this.props.children,
-      );
+    if (LinkedObjectContainer.hasErrors(data)) {
+      const ErrComp = this.onError();
+      if (ErrComp) {
+        return React.createElement(
+          ErrComp,
+          { subject: this.subject(), ...this.props },
+        );
+      }
+      return null;
     }
-    const objType = allRDFValues(data, linkedRenderStore.namespaces.rdf('type'), true) || linkedRenderStore.defaultType;
+    if (this.props.children) {
+      return this.renderChildren();
+    }
+    const objType = this.objType(data);
     if (objType === undefined) {
       return null;
     }

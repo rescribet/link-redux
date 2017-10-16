@@ -23,7 +23,7 @@ const defaultProps = {
   forceRender: false,
 };
 
-function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
+export function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
   return linkedRenderStore.getRenderClassForProperty(
     allRDFValues(linkedRenderStore.tryEntity(props.subject), defaultNS.rdf('type'), true),
     expandedProperty(props.label, linkedRenderStore),
@@ -48,7 +48,7 @@ export const PropertyComp = (props, context) => {
     return React.createElement(Klass, { linkedProp: obj, ...props });
   }
   if (typeof objRaw !== 'undefined' && objRaw.termType === 'NamedNode') {
-    return React.createElement(LOC, { object: objRaw.value });
+    return React.createElement(LOC, { object: objRaw.value, ...props });
   }
   if (obj) {
     return React.createElement('div', null, obj);
