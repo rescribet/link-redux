@@ -21,7 +21,7 @@
     "jsonld": "^0.4.11",
     "link-lib": "1.0.0-beta3",
     "prop-types": "^15.6.0",
-    "rdflib": "^0.15.0",
+    "rdflib": "^0.16.3",
     "react": "^15.6.1",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
