@@ -1,5 +1,7 @@
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-15';
 import sinonChai from 'sinon-chai';
 import LinkedRenderStore from 'link-lib';
 import { PropTypes } from 'react';
@@ -7,6 +9,8 @@ import { applyMiddleware, createStore } from 'redux';
 import { combineReducers } from 'redux-immutable';
 
 import { linkMiddleware, linkReducer } from '../src/index';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 chai.use(chaiEnzyme());
 chai.use(sinonChai);

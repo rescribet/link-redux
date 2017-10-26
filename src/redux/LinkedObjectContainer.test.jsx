@@ -102,6 +102,8 @@ describe('LinkedObjectContainer component', function () {
       elem
         .children().first()
         .children().first()
+        .children().first()
+        .children().first()
     ).to.have.className('collectionRendered');
   });
 
@@ -137,6 +139,8 @@ describe('LinkedObjectContainer component', function () {
     );
     expect(
       elem
+        .children().first()
+        .children().first()
         .children().first()
         .children().first()
     ).to.have.className('normalRendered');

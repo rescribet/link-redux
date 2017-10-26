@@ -1,11 +1,16 @@
 require('babel-register')();
-const jsdom = require('jsdom').jsdom;
-
-const exposedProperties = ['window', 'navigator', 'document'];
+const { JSDOM } = require('jsdom');
 
 require.extensions['.scss'] = () => null;
-global.document = jsdom('');
-global.window = document.defaultView;
+
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const exposedProperties = ['window', 'navigator', 'document'];
+const { window } = jsdom;
+
+global.window = window;
+global.document = window.document;
+global.window.fetch = require('whatwg-fetch').fetch;
+global.URL = require('whatwg-url').URL;
 
 Object.keys(document.defaultView).forEach((property) => {
   if (typeof global[property] === 'undefined') {
