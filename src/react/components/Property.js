@@ -1,5 +1,6 @@
 import { defaultNS, allRDFValues } from 'link-lib';
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import { expandedProperty, getLinkedObjectProperty } from './PropertyBase';
 import linkedSubject from '../../redux/linkedSubject';

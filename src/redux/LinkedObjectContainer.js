@@ -1,6 +1,7 @@
 import { allRDFValues, anyRDFValue } from 'link-lib';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import rdf from 'rdflib';
 
 import { linkedObjectVersionByIRI } from './linkedObjects/selectors';

@@ -1,10 +1,10 @@
 import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15';
+import Adapter from 'enzyme-adapter-react-16';
 import sinonChai from 'sinon-chai';
 import LinkedRenderStore from 'link-lib';
-import { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 import { applyMiddleware, createStore } from 'redux';
 import { combineReducers } from 'redux-immutable';
 

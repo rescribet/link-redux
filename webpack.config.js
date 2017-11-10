@@ -11,6 +11,7 @@ module.exports = {
   },
   externals: {
     // Runtime
+    'prop-types': 'prop-types',
     redux: 'redux',
     react: 'react',
     'react-redux': 'react-redux',

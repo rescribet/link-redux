@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
 import { allRDFValues } from 'link-lib';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 import linkedSubject from './linkedSubject';
 import linkedVersion from './linkedVersion';
