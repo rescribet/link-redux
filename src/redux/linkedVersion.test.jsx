@@ -20,7 +20,7 @@ describe('linkedVersion component', function () {
     try {
       shallow(
         <Comp />,
-        generateContext({ store: generateStore() })
+        generateContext({ store: true })
       );
     } catch (e) {
       caught = true;
@@ -34,7 +34,7 @@ describe('linkedVersion component', function () {
     try {
       shallow(
         <Comp subject="http://example.org/1" />,
-        generateContext({ store: generateStore() })
+        generateContext({ store: true })
       );
     } catch (e) {
       caught = true;

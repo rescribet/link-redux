@@ -48,11 +48,7 @@ function generateContext(properties = {}) {
   return c;
 }
 
-const store = generateStore();
-
 export {
   chai,
   generateContext,
-  LinkedRenderStore as linkedRenderStore,
-  store,
 };

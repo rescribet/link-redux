@@ -4,34 +4,25 @@ import {
   linkedModelTouch,
 } from './linkedObjects/actions';
 
-const emitChangedSubjects = (statements, next) => next(linkedModelTouch(statements));
+const emitChangedSubjects = next => statements => next(linkedModelTouch(statements));
 
-function handleFetchLinkedObject(lrstore, next, action) {
-  const { href } = action.payload;
+const linkMiddleware = lrstore => () => (next) => {
+  lrstore.subscribe(emitChangedSubjects(next), { onlySubjects: true });
 
-  lrstore
-    .getEntity(href, true)
-    .then(statements => emitChangedSubjects(statements, next));
-}
-
-function handleGetLinkedObject(lrstore, next, action) {
-  const { iri } = action.payload;
-  return lrstore.tryEntity(iri, next);
-}
-
-const linkMiddleware = lrstore => () => next => (action) => {
-  if (!action.payload || !action.payload.linkedObjectAction) {
-    return next(action);
-  }
-
-  switch (action.type) {
-    case FETCH_LINKED_OBJECT:
-      return handleFetchLinkedObject(lrstore, next, action);
-    case GET_LINKED_OBJECT:
-      return handleGetLinkedObject(lrstore, next, action);
-    default:
+  return (action) => {
+    if (!action.payload || !action.payload.linkedObjectAction) {
       return next(action);
-  }
+    }
+
+    switch (action.type) {
+      case FETCH_LINKED_OBJECT:
+        return lrstore.getEntity(action.payload.href);
+      case GET_LINKED_OBJECT:
+        return lrstore.tryEntity(action.payload.iri);
+      default:
+        return next(action);
+    }
+  };
 };
 
 /**
