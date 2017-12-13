@@ -87,7 +87,7 @@ class LinkedObjectContainer extends Component {
   }
 
   subject(props = this.props) {
-    if (props.object.constructor === rdf.NamedNode || props.object.termType === 'NamedNode') {
+    if (props.object.constructor.name === 'NamedNode' || props.object.termType === 'NamedNode') {
       return props.object;
     }
     return new rdf.NamedNode(props.object);
@@ -148,7 +148,7 @@ class LinkedObjectContainer extends Component {
         Property,
         { label: linkedRenderStore.namespaces.schema('name') },
       ),
-      React.createElement('p', null, "We currently don't have a view for this"),
+      React.createElement('p', null, `We currently don't have a view for this (${objType})`),
     );
   }
 }
@@ -172,9 +172,9 @@ export default connect(
       throw new Error('[LOC] an object must be given');
     }
     let s;
-    if (subject.constructor === rdf.Statement) {
+    if (subject.constructor.name === 'Statement') {
       throw new Error('[LOC] Object must be a named node');
-    } else if (subject.constructor === rdf.NamedNode || subject.termType === 'NamedNode') {
+    } else if (subject.constructor.name === 'NamedNode' || subject.termType === 'NamedNode') {
       s = subject;
     } else {
       s = new rdf.NamedNode(subject);
