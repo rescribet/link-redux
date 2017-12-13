@@ -2817,8 +2817,8 @@ levn@^0.3.0, levn@~0.3.0:
     type-check "~0.3.2"
 
 link-lib@^1.0.0-beta5:
-  version "1.0.0-beta5"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta5.tgz#f5aca720709c954916a70da22454387c51a24bf6"
+  version "1.0.0-beta6"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta6.tgz#ac2175503c8ea87fb252a36a5230aaa662bd7b8a"
   dependencies:
     jsonld "^0.4.11"
     ml-disjoint-set "^1.0.0"
