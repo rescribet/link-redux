@@ -2,7 +2,6 @@ import { allRDFValues, anyRDFValue } from 'link-lib';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import rdf from 'rdflib';
 
 import { linkedObjectVersionByIRI } from './linkedObjects/selectors';
 import { getLinkedObject, fetchLinkedObject } from './linkedObjects/actions';
@@ -25,6 +24,8 @@ const propTypes = {
   topology: topologyType,
   version: PropTypes.string,
 };
+
+const nodeTypes = ['NamedNode', 'BlankNode'];
 
 class LinkedObjectContainer extends Component {
   static hasData(data) {
@@ -87,10 +88,10 @@ class LinkedObjectContainer extends Component {
   }
 
   subject(props = this.props) {
-    if (props.object.constructor.name === 'NamedNode' || props.object.termType === 'NamedNode') {
-      return props.object;
+    if (!nodeTypes.includes(props.object.termType)) {
+      throw new Error('[LOC] Object must be a node');
     }
-    return new rdf.NamedNode(props.object);
+    return props.object;
   }
 
   topology() {
@@ -171,16 +172,11 @@ export default connect(
     if (!subject) {
       throw new Error('[LOC] an object must be given');
     }
-    let s;
-    if (subject.constructor.name === 'Statement') {
-      throw new Error('[LOC] Object must be a named node');
-    } else if (subject.constructor.name === 'NamedNode' || subject.termType === 'NamedNode') {
-      s = subject;
-    } else {
-      s = new rdf.NamedNode(subject);
+    if (!nodeTypes.includes(subject.termType)) {
+      throw new Error('[LOC] Object must be a node');
     }
     return {
-      version: linkedObjectVersionByIRI(state, s),
+      version: linkedObjectVersionByIRI(state, subject),
     };
   },
   dispatch => ({
