@@ -24,6 +24,8 @@ const defaultProps = {
   forceRender: false,
 };
 
+const nodeTypes = ['NamedNode', 'BlankNode'];
+
 export function getLinkedObjectClass(props, { topology, linkedRenderStore }) {
   return linkedRenderStore.getRenderClassForProperty(
     allRDFValues(linkedRenderStore.tryEntity(props.subject), defaultNS.rdf('type'), true),
@@ -46,10 +48,10 @@ export const PropertyComp = (props, context) => {
   }
   const Klass = getLinkedObjectClass(props, context);
   if (Klass) {
-    return React.createElement(Klass, { linkedProp: obj, ...props });
+    return React.createElement(Klass, { linkedProp: objRaw, ...props });
   }
-  if (typeof objRaw !== 'undefined' && objRaw.termType === 'NamedNode') {
-    return React.createElement(LOC, { object: objRaw.value, ...props });
+  if (typeof objRaw !== 'undefined' && nodeTypes.includes(objRaw.termType)) {
+    return React.createElement(LOC, { object: objRaw, ...props });
   }
   if (obj) {
     return React.createElement('div', null, obj);

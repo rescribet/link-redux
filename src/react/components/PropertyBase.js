@@ -55,11 +55,7 @@ export function getLinkedObjectProperty(property, subject, linkedRenderStore, te
   if (rawProp === undefined) {
     return undefined;
   }
-  const val = getPropBestLang(rawProp);
-
-  if (term) return val;
-  return val && val.constructor !== Object &&
-    (val.href || val.value || val.toString());
+  return getPropBestLang(rawProp);
 }
 
 export const contextTypes = {
@@ -104,7 +100,7 @@ class PropertyBase extends React.Component {
       'span',
       null,
       'PropBase: ',
-      this.getLinkedObjectProperty(),
+      this.getLinkedObjectProperty().value,
     );
   }
 }
