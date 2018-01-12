@@ -1,8 +1,9 @@
 /* eslint no-magic-numbers: 0 */
 import 'babel-polyfill';
 import { mount, shallow } from 'enzyme';
-import { defaultNS, RENDER_CLASS_NAME } from 'link-lib';
+import LinkedRenderStore, { defaultNS, RENDER_CLASS_NAME } from 'link-lib';
 import { describe, it } from 'mocha';
+import rdf from 'rdflib';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -13,7 +14,8 @@ import { LinkedObjectContainer } from './LinkedObjectContainer';
 const { expect } = chai;
 
 const id = 'resources/5';
-const iri = 'http://example.org/' + id;
+const iriValue = 'http://example.org/' + id;
+const iri = new rdf.NamedNode(iriValue);
 
 describe('LinkedObjectContainer component', function () {
   it('renders null when type is not present', function() {
@@ -42,12 +44,39 @@ describe('LinkedObjectContainer component', function () {
     expect(llo).to.not.be.called;
   });
 
+  it('raises when object is not a Node', function () {
+    try {
+      mount(<LinkedObjectContainer loadLinkedObject={() => {}} object={iriValue} />, ctx.empty(id));
+      expect(true).to.be.false;
+    } catch (e) {
+      expect(e.message).to.equal('[LOC] Object must be a node (was \'string[http://example.org/resources/5]\')');
+    }
+  });
+
   it('renders the renderer when an object is present', function () {
     const opts = ctx.fullCW(id);
     const Comp = () => <div label="test" />;
     opts.context.linkedRenderStore.registerRenderer(Comp, defaultNS.schema('Thing'));
     const elem = mount(
       <LinkedObjectContainer loadLinkedObject={() => {}} object={iri} />,
+      opts,
+    );
+    expect(elem).to.contain(Comp());
+  });
+
+  it('renders blank nodes', function () {
+    const bn = new rdf.BlankNode();
+    const lrs = new LinkedRenderStore({ store: rdf.graph() });
+    lrs.store.add([
+      new rdf.Statement(bn, defaultNS.rdf('type'), defaultNS.schema('Thing')),
+      new rdf.Statement(bn, defaultNS.schema('name'), new rdf.Literal('title')),
+    ]);
+    const opts = ctx.context(bn, lrs, lrs);
+
+    const Comp = () => <div label="test" />;
+    opts.context.linkedRenderStore.registerRenderer(Comp, defaultNS.schema('Thing'));
+    const elem = mount(
+      <LinkedObjectContainer loadLinkedObject={() => {}} object={bn} />,
       opts,
     );
     expect(elem).to.contain(Comp());
@@ -92,7 +121,7 @@ describe('LinkedObjectContainer component', function () {
         >
           <LinkedObjectContainer
             loadLinkedObject={() => {}}
-            object={'http://example.org/resources/10'}
+            object={new rdf.NamedNode('http://example.org/resources/10')}
           />
         </LinkedObjectContainer>
       </LinkedObjectContainer>,
@@ -130,7 +159,7 @@ describe('LinkedObjectContainer component', function () {
           loadLinkedObject={() => {}}
         >
           <LinkedObjectContainer
-            object={'http://example.org/resources/10'}
+            object={new rdf.NamedNode('http://example.org/resources/10')}
             loadLinkedObject={() => {}}
           />
         </LinkedObjectContainer>
