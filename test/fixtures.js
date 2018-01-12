@@ -6,7 +6,7 @@ import { generateContext } from './utilities';
 const exNS = rdf.Namespace('http://example.org/');
 const { schema } = defaultNS;
 
-const context = (iri, lrs, store) => generateContext({
+export const context = (iri, lrs, store) => generateContext({
   linkedRenderStore: lrs || true,
   subject: iri,
   store: store || false,
