@@ -8,16 +8,20 @@ import { Property } from '../react/components/index';
 import { lrsType, subjectType, topologyType } from '../propTypes';
 
 const propTypes = {
-  children: PropTypes.any,
-  subject: subjectType,
+  children: PropTypes.node,
+  subject: subjectType.isRequired,
+};
+
+const defaultProps = {
+  children: undefined,
 };
 
 const Type = (props, { linkedRenderStore, topology }) => {
   const objType = allRDFValues(
-      linkedRenderStore.tryEntity(props.subject),
-      linkedRenderStore.namespaces.rdf('type'),
-      true,
-    ) || linkedRenderStore.defaultType;
+    linkedRenderStore.tryEntity(props.subject),
+    linkedRenderStore.namespaces.rdf('type'),
+    true,
+  ) || linkedRenderStore.defaultType;
   if (objType === undefined) {
     return null;
   }
@@ -41,6 +45,7 @@ Type.contextTypes = {
   linkedRenderStore: lrsType,
   topology: topologyType,
 };
+Type.defaultProps = defaultProps;
 Type.displayName = 'Type';
 Type.propTypes = propTypes;
 

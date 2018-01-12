@@ -18,10 +18,12 @@ export const propTypes = {
   label: labelType.isRequired,
   forceRender: PropTypes.bool,
   linkedProp: linkedPropType,
-  subject: subjectType,
+  subject: subjectType.isRequired,
 };
+
 const defaultProps = {
   forceRender: false,
+  linkedProp: undefined,
 };
 
 const nodeTypes = ['NamedNode', 'BlankNode'];

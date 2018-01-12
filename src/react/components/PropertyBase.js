@@ -9,10 +9,16 @@ import { labelType, linkedPropType, subjectType } from '../../propTypes';
 const LANG_PREF = ['nl', 'en', 'de'];
 
 const propTypes = {
-  label: labelType,
+  label: labelType.isRequired,
   linkedProp: linkedPropType,
   subject: subjectType,
   version: PropTypes.string,
+};
+
+const defaultProps = {
+  linkedProp: undefined,
+  subject: undefined,
+  version: undefined,
 };
 
 function getPropBestLang(rawProp) {
@@ -106,6 +112,7 @@ class PropertyBase extends React.Component {
 }
 
 PropertyBase.contextTypes = contextTypes;
+PropertyBase.defaultProps = defaultProps;
 PropertyBase.propTypes = propTypes;
 
 export default PropertyBase;

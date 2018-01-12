@@ -9,10 +9,10 @@ import Property from '../react/components/Property';
 import { lrsType, subjectType, topologyType } from '../propTypes';
 
 const propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.node,
   forceRender: PropTypes.bool,
   loadLinkedObject: PropTypes.func.isRequired,
-  object: PropTypes.any.isRequired,
+  object: subjectType.isRequired,
   onError: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.func,
@@ -22,7 +22,15 @@ const propTypes = {
     PropTypes.func,
   ]),
   topology: topologyType,
-  version: PropTypes.string,
+  version: PropTypes.string.isRequired,
+};
+
+const defaultProps = {
+  children: undefined,
+  forceRender: false,
+  onError: undefined,
+  onLoad: undefined,
+  topology: undefined,
 };
 
 const nodeTypes = ['NamedNode', 'BlankNode'];
@@ -70,9 +78,9 @@ class LinkedObjectContainer extends Component {
   }
 
   data(props = this.props) {
-    return this.context.linkedRenderStore.tryEntity(
-      this.context.linkedRenderStore.expandProperty(this.subject(props)),
-    );
+    return this.context.linkedRenderStore.tryEntity((
+      this.context.linkedRenderStore.expandProperty(this.subject(props))
+    ));
   }
 
   loadLinkedObject(props = this.props) {
@@ -162,27 +170,29 @@ LinkedObjectContainer.contextTypes = {
   linkedRenderStore: lrsType,
   topology: topologyType,
 };
+LinkedObjectContainer.defaultProps = defaultProps;
 LinkedObjectContainer.displayName = 'LinkedObjectContainer';
 LinkedObjectContainer.propTypes = propTypes;
 
 export { LinkedObjectContainer };
 
-export default connect(
-  (state, { object: subject }) => {
-    if (!subject) {
-      throw new Error('[LOC] an object must be given');
-    }
-    if (!nodeTypes.includes(subject.termType)) {
-      throw new Error(`[LOC] Object must be a node (was '${typeof subject}')`);
-    }
-    return {
-      version: linkedObjectVersionByIRI(state, subject),
-    };
-  },
-  dispatch => ({
-    loadLinkedObject: (href, fetch) =>
-      dispatch(fetch === false ?
-        getLinkedObject(href) :
-        fetchLinkedObject(href)),
-  }),
-)(LinkedObjectContainer);
+const mapStateToProps = (state, { object: subject }) => {
+  if (!subject) {
+    throw new Error('[LOC] an object must be given');
+  }
+  if (!nodeTypes.includes(subject.termType)) {
+    throw new Error(`[LOC] Object must be a node (was '${typeof subject}')`);
+  }
+  return {
+    version: linkedObjectVersionByIRI(state, subject),
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  loadLinkedObject: (href, fetch) =>
+    dispatch(fetch === false ?
+      getLinkedObject(href) :
+      fetchLinkedObject(href)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedObjectContainer);

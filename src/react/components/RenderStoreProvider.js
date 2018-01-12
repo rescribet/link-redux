@@ -7,8 +7,8 @@ const childContextTypes = {
   linkedRenderStore: lrsType,
 };
 const propTypes = {
-  children: PropTypes.any,
-  linkedRenderStore: lrsType,
+  children: PropTypes.node.isRequired,
+  linkedRenderStore: lrsType.isRequired,
 };
 
 class RenderStoreProvider extends Component {

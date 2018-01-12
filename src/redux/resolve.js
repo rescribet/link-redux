@@ -5,9 +5,10 @@ const converters = {
   },
 };
 
-/* Resolves an URI to a href.
+/**
+ * Resolves an URI to a href.
  * Used when the URI does not point to the actual/parsable entity
- **/
+ */
 export default (iri) => {
   const convKeys = Object.keys(converters);
   for (let i = 0; i < convKeys.length; i++) {
