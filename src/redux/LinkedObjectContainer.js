@@ -89,7 +89,7 @@ class LinkedObjectContainer extends Component {
 
   subject(props = this.props) {
     if (!nodeTypes.includes(props.object.termType)) {
-      throw new Error('[LOC] Object must be a node');
+      throw new Error(`[LOC] Object must be a node (was '${typeof props.object}[${props.object}]')`);
     }
     return props.object;
   }
@@ -173,7 +173,7 @@ export default connect(
       throw new Error('[LOC] an object must be given');
     }
     if (!nodeTypes.includes(subject.termType)) {
-      throw new Error('[LOC] Object must be a node');
+      throw new Error(`[LOC] Object must be a node (was '${typeof subject}')`);
     }
     return {
       version: linkedObjectVersionByIRI(state, subject),
