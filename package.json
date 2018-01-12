@@ -1,6 +1,6 @@
 {
   "name": "link-redux",
-  "version": "1.0.0-beta8",
+  "version": "1.0.0-beta9",
   "description": "React/Redux extensions for the Link library",
   "main": "dist/link-redux.js",
   "module": "dist/module/index.js",
