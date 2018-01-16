@@ -9,6 +9,10 @@ semantic applications for the human consumption of linked data with React and Re
 This was built at [Argu](https://argu.co), if you like what we do, these technologies
 or open data, send us [a mail](mailto:info@argu.co).
 
+### Road to 1.0
+We're busy building the next version of link lib/redux, since there are a lot of changes, the 
+documentation is generally outdated, so the tests are a good place to look for the current API.
+
 ## Basic Usage
 
 Wrap the main React tree with a `LinkedRenderStore`:
@@ -54,7 +58,7 @@ When using a function to render properties, the attribute is passed as the `link
 ```jsx
 const Name = ({ linkedProp }) => (
   <Heading size="2">
-    {linkedProp}
+    {linkedProp.value}
   </Heading>
 );
 ```
