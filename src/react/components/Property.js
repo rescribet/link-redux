@@ -50,10 +50,10 @@ export const PropertyComp = (props, context) => {
   }
   const Klass = getLinkedObjectClass(props, context);
   if (Klass) {
-    return React.createElement(Klass, { linkedProp: objRaw, ...props });
+    return React.createElement(Klass, { ...props, linkedProp: objRaw });
   }
   if (typeof objRaw !== 'undefined' && nodeTypes.includes(objRaw.termType)) {
-    return React.createElement(LOC, { object: objRaw, ...props });
+    return React.createElement(LOC, { ...props, object: objRaw });
   }
   if (obj) {
     return React.createElement('div', null, obj);
