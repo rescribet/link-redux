@@ -184,7 +184,7 @@ const mapStateToProps = (state, { object: subject }) => {
     throw new Error(`[LOC] Object must be a node (was '${typeof subject}')`);
   }
   return {
-    version: linkedObjectVersionByIRI(state, subject),
+    version: linkedObjectVersionByIRI(state, subject) || 'new',
   };
 };
 
