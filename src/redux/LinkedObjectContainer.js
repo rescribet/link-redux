@@ -131,7 +131,7 @@ class LinkedObjectContainer extends Component {
       if (ErrComp) {
         return React.createElement(
           ErrComp,
-          { subject: this.subject(), ...this.props },
+          { ...this.props, subject: this.subject() },
         );
       }
       return null;

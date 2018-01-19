@@ -34,4 +34,14 @@ describe('linkedSubject component', function () {
     );
     expect(elem).to.have.prop('subject', opts.context.subject);
   });
+
+  it('replaces the subject', () => {
+    const Comp = linkedSubject(() => <p>test</p>);
+    const opts = ctx.empty();
+    const elem = shallow(
+      <Comp subject={null} />,
+      opts,
+    );
+    expect(elem).to.have.prop('subject', opts.context.subject);
+  });
 });

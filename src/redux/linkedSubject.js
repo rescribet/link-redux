@@ -9,7 +9,7 @@ const linkedSubject = (ConnectedProp) => {
     }
     return React.createElement(
       ConnectedProp,
-      { subject, ...props },
+      { ...props, subject },
     );
   }
   LinkedSubjectComp.contextTypes = {
