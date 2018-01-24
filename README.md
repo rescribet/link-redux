@@ -6,6 +6,9 @@
 Use this to enable Link in React. It provides components to build data-independent
 semantic applications for the human consumption of linked data with React and Redux.
 
+To transform your Rails application into a linked-data serving beast, see our 
+[Active Model Serializers plugin](https://github.com/argu-co/rdf-serializers).
+
 This was built at [Argu](https://argu.co), if you like what we do, these technologies
 or open data, send us [a mail](mailto:info@argu.co).
 
