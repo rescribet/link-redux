@@ -1,1 +1,4 @@
 .idea
+dist/docs/
+coverage/
+.rpt2_cache/

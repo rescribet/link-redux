@@ -1,3 +1,10 @@
 node_modules/*
 .idea
+.rpt2*
+dist/**/*.d.ts
+dist/**/*.ts
+dist/**/*.ts.map
 dist/**/*.js
+dist/**/*.js.map
+dist/docs
+coverage/**

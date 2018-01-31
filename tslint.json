@@ -1,0 +1,16 @@
+{
+  "lintOptions": {
+    "typeCheck": true
+  },
+  "extends": "tslint:recommended",
+  "rules": {
+    "interface-name": [true, "never-prefix"],
+    "linebreak-style": [true, "LF"],
+    "newline-before-return": true,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-inferrable-types": true,
+    "no-null-keyword": false,
+    "only-arrow-functions": false,
+    "variable-name": [true, "allow-leading-underscore"]
+  }
+}

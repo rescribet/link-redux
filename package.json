@@ -1,64 +1,90 @@
 {
   "name": "link-redux",
-  "version": "1.0.0-beta13",
+  "version": "1.0.0-typescript-2",
   "description": "React/Redux extensions for the Link library",
-  "main": "dist/link-redux.js",
-  "module": "dist/module/index.js",
+  "main": "dist/link-redux.umd.js",
+  "module": "dist/link-redux.es6.js",
+  "typings": "dist/typings/link-redux.d.ts",
+  "files": [
+    "@types",
+    "dist/link-redux.es6.js",
+    "dist/link-redux.umd.js",
+    "dist/typings/**/*.*"
+  ],
   "repository": "https://github.com/fletcher91/link-redux.git",
   "scripts": {
-    "build": "webpack -p --optimize-minimize && babel --no-babelrc --presets react,es2015-native-modules,stage-0 -d dist/module/ src/ && babel --no-babelrc --presets react,es2015-native-modules,stage-0 -d dist/module/test test/",
-    "build:dev": "webpack",
-    "dev": "WEBPACK_ENV=dev webpack --progress --colors --watch",
-    "lint": "eslint ./src ./test",
-    "prepublish": "npm run build",
-    "test": "mocha ./test/testhelper.js \"./src/**/*.test.js*\" --compilers js:babel-core/register"
+    "build": "rollup -c && tsc -p tsconfig-types.json",
+    "doc": "rm -rf dist/docs/* && typedoc --tsconfig tsconfig-types.json --exclude **/*.spec.ts --excludeExternals --excludePrivate --mode file --theme minimal --target ES6 --includeDeclarations --out dist/docs/ src/",
+    "doc:deploy": "gh-pages -d ./dist/docs",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
+    "prebuild": "rm -rf dist/",
+    "prepublish": "npm run build && npm run doc",
+    "postpublish": "npm run doc:deploy",
+    "pretest": "npm run lint",
+    "test": "jest --coverage"
   },
   "author": "Fletcher91 <thom@argu.co>",
   "license": "LGPL-3.0",
   "dependencies": {
     "es6-promise": "^4.2.2",
+    "http-status-codes": "^1.3.0",
     "immutable": "^3.8.1",
     "jsonld": "^0.4.11",
-    "link-lib": "^1.0.0-beta7",
-    "prop-types": "^15.6.0",
+    "link-lib": "^1.0.0-beta8",
+    "prop-types": "15.6.0",
     "rdflib": "^0.16.5",
     "react": "^16.2.0",
     "react-redux": "^5.0.6",
-    "redux": "^3.6.0",
+    "redux": "^4.0.0-beta.1",
     "redux-batched-actions": "^0.2.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.21.0",
-    "babel-eslint": "^8.2.1",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-new-target": "^7.0.0-alpha.14",
-    "babel-polyfill": "^6.20.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2015-native-modules": "^6.9.4",
-    "babel-preset-react": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.18.0",
-    "chai": "^4.1.1",
-    "chai-enzyme": "1.0.0-beta.0",
+    "@types/enzyme": "^3.1.8",
+    "@types/jest": "^22.1.1",
+    "@types/prop-types": "^15.5.2",
+    "@types/react": "^16.0.35",
+    "@types/react-redux": "^5.0.14",
+    "@types/redux": "^3.6.0",
+    "@types/redux-actions": "^2.2.3",
+    "@types/redux-immutable": "^3.0.38",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint": "^4.15.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-loader": "^1.6.1",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "6.0.3",
-    "eslint-plugin-react": "^7.5.1",
-    "jsdom": "^11.5.1",
-    "mocha": "^4.1.0",
+    "gh-pages": "^1.1.0",
+    "jest": "^22.1.4",
+    "jest-enzyme": "^4.1.1",
     "react-dom": "^16.2.0",
     "react-test-renderer": "^16.2.0",
+    "redux-actions": "^2.2.1",
     "redux-immutable": "^4.0.0",
-    "sinon": "^4.1.4",
-    "sinon-chai": "^2.13.0",
-    "webpack": "^3.10.0",
+    "rollup": "^0.55.1",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.10.0",
+    "ts-jest": "^22.0.3",
+    "tslint": "^5.9.1",
+    "typedoc": "^0.10.0",
+    "typescript": "2.7.1",
     "whatwg-fetch": "^2.0.3",
     "whatwg-url": "^6.4.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": false
+      }
+    },
+    "testMatch": [
+      "**/*.spec.ts"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "setupTestFrameworkScriptFile": "./test/setup.js",
+    "testURL": "http://example.org/resources/5",
+    "transform": {
+      "\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
   }
 }
