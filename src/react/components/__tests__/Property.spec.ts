@@ -5,13 +5,15 @@ import * as React from "react";
 
 import * as ctx from "../../../../test/fixtures";
 import { linkedModelTouch } from "../../../redux/linkedObjects/actions";
+import { LinkedResourceContainer } from "../../../redux/LinkedResourceContainer";
 import { PropertyComp as Property } from "../Property";
 
 const subject = defaultNS.example("41");
+const version = "new";
 
 describe("Property component", () => {
     it("renders null when label is not present", () => {
-        const elem = mount(ctx.empty().wrapComponent(React.createElement(Property, { subject })));
+        const elem = mount(ctx.empty().wrapComponent(React.createElement(Property, { subject, version })));
         expect(elem.find(Property).children()).toHaveLength(0);
     });
 
@@ -20,7 +22,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("title"), subject },
+            { label: defaultNS.schema("title"), subject, version },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -33,7 +35,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("name"), subject },
+            { label: defaultNS.schema("name"), subject, version },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -51,7 +53,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("name"), subject },
+            { label: defaultNS.schema("name"), subject, version },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -67,10 +69,36 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("author"), subject },
+            { label: defaultNS.schema("author"), subject, version },
         );
         const elem = mount(opts.wrapComponent(comp));
 
         expect(elem.find(Property)).toHaveText("loading");
+    });
+
+    describe("limit", () => {
+        it("renders two components", () => {
+            const opts = ctx.fullCW(subject);
+            const comp = React.createElement(
+                Property,
+                { label: defaultNS.example("tags"), limit: 2, subject, version },
+            );
+
+            const elem = mount(opts.wrapComponent(comp));
+
+            expect(elem.find(Property).find(LinkedResourceContainer)).toHaveLength(2);
+        });
+
+        it("renders all components", () => {
+            const opts = ctx.fullCW(subject);
+            const comp = React.createElement(
+                Property,
+                { label: defaultNS.example("tags"), limit: Infinity, subject, version },
+            );
+
+            const elem = mount(opts.wrapComponent(comp));
+
+            expect(elem.find(Property).find(LinkedResourceContainer)).toHaveLength(4);
+        });
     });
 });

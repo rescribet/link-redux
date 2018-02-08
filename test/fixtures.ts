@@ -41,6 +41,8 @@ const sFull = (id: NamedNode, attrs: { [k: string]: string }) => {
         new Statement(id, NS.schema("author"), new NamedNode(attrs.author || "http://example.org/people/0"), NS.example("default")),
         new Statement(id, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
         new Statement(id, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
+        new Statement(id, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
+        new Statement(id, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
     ];
 };
 

@@ -113,6 +113,8 @@ describe("PropertyBase component", () => {
             expect(elem.getLinkedObjectPropertyRaw(NS.example("tags"))).toEqual([
                 new Statement(subject, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
                 new Statement(subject, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
+                new Statement(subject, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
+                new Statement(subject, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
             ]);
         });
     });

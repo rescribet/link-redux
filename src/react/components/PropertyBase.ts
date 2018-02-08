@@ -53,7 +53,7 @@ export class PropertyBase extends React.Component<PropTypes> {
         );
     }
 
-    protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] | undefined {
+    protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] {
         return this.context.linkedRenderStore.getResourcePropertyRaw(
             this.props.subject,
             property || this.props.label,
