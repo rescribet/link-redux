@@ -1,6 +1,7 @@
 import { SomeNode } from "link-lib";
 import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
+import { ReactElement } from "react";
 import * as React from "react";
 
 import { labelType, linkedPropType, subjectType } from "../../propTypes";
@@ -12,7 +13,7 @@ export interface PropTypes extends SubjectProp {
     version?: string;
 }
 
-export class PropertyBase extends React.Component<PropTypes> {
+export class PropertyBase<T extends PropTypes> extends React.Component<T> {
     public static contextTypes = {
         linkedRenderStore: ReactPropTypes.object,
     };
@@ -23,7 +24,7 @@ export class PropertyBase extends React.Component<PropTypes> {
         version: ReactPropTypes.string,
     };
 
-    public render() {
+    public render(): ReactElement<any> | null {
         const prop = this.getLinkedObjectProperty();
 
         return React.createElement(

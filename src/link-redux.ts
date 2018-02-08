@@ -14,6 +14,7 @@ export {
     RenderStoreProvider,
 } from "./react/components/index";
 
+export { link } from "./redux/link";
 export * from "./redux/linkedObjects/actions";
 export { linkReducer } from "./redux/linkedObjects/reducer";
 export { linkedObjectVersionByIRI } from "./redux/linkedObjects/selectors";

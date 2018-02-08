@@ -19,7 +19,7 @@ import {
     TopologyType,
 } from "../../types";
 
-export interface PropTypes extends PropertyProps {
+export interface PropertyPropTypes extends PropertyProps {
     /**
      * Pass `true` if the property should render if no data is found.
      * Useful for nesting property's to enable multi-property logic.
@@ -47,7 +47,7 @@ export interface ContextTypes {
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-export function getLinkedObjectClass(props: PropTypes,
+export function getLinkedObjectClass(props: PropertyPropTypes,
                                      { linkedRenderStore, topology }: ContextTypes): React.ReactType | undefined {
     return linkedRenderStore.resourcePropertyComponent(
         props.subject,
@@ -56,7 +56,7 @@ export function getLinkedObjectClass(props: PropTypes,
     );
 }
 
-export class PropertyComp extends React.PureComponent<PropTypes> {
+export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
     public static contextTypes = {
         linkedRenderStore: lrsType,
         topology: topologyType,
@@ -81,22 +81,30 @@ export class PropertyComp extends React.PureComponent<PropTypes> {
 
         const component = getLinkedObjectClass(this.props, this.context);
         if (component) {
-            return this.limitTimes(
+            const toRender = this.limitTimes(
                 objRaw,
-                (p) => React.createElement(component, { ...this.props, linkedProp: p }),
+                (p) => React.createElement(component, { ...this.props, linkedProp: p }, this.props.children),
             );
+            if (toRender === null) {
+                return React.createElement(component, { ...this.props }, this.props.children);
+            }
+
+            return toRender;
         } else if (objRaw.length > 0) {
             if (nodeTypes.includes(objRaw[0].termType)) {
-                const wrapLOC = (p: SomeTerm) => {
-                    const lrcProps = { ...this.props, subject: p as SomeNode };
+                const wrapLOC = (p: SomeTerm | undefined) => {
+                    const lrcProps = { ...this.props, subject: p! as SomeNode };
 
-                    return React.createElement(LRC, lrcProps);
+                    return React.createElement(LRC, lrcProps, this.props.children);
                 };
 
                 return this.limitTimes(objRaw, wrapLOC);
             }
 
-            return this.limitTimes(objRaw, (p) => React.createElement("div", null, p.value));
+            return this.limitTimes(objRaw, (p) => React.createElement("div", null, this.props.children || p.value));
+        }
+        if (this.props.children) {
+            return React.createElement("div", null, this.props.children);
         }
 
         return null;

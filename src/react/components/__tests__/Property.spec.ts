@@ -101,4 +101,39 @@ describe("Property component", () => {
             expect(elem.find(Property).find(LinkedResourceContainer)).toHaveLength(4);
         });
     });
+
+    describe("with children", () => {
+        it("renders the children", () => {
+            const title = "The title";
+            const opts = ctx.name(subject, title);
+
+            const comp = React.createElement(
+                Property,
+                { forceRender: true, label: defaultNS.schema("name"), subject, version },
+                React.createElement("p", { className: "childComponent" }, null),
+            );
+            const elem = mount(opts.wrapComponent(comp));
+
+            expect(elem.find("p.childComponent")).toBePresent();
+        });
+
+        it("renders the children when a component was found", () => {
+            const title = "The title";
+            const opts = ctx.name(subject, title);
+            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+                (props) => React.createElement("div", { className: "nameProp" }, props.children),
+                defaultNS.schema("Thing"),
+                defaultNS.schema("name"),
+            ));
+
+            const comp = React.createElement(
+                Property,
+                { forceRender: true, label: defaultNS.schema("name"), subject, version },
+                React.createElement("p", { className: "childComponent" }, null),
+            );
+            const elem = mount(opts.wrapComponent(comp));
+
+            expect(elem.find("p.childComponent")).toBePresent();
+        });
+    });
 });
