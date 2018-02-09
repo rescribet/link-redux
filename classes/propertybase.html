@@ -983,6 +983,9 @@ img { max-width: 100%; }
 			<h3>Type parameters</h3>
 			<ul class="tsd-type-parameters">
 				<li>
+					<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a></h4>
+				</li>
+				<li>
 					<h4>S</h4>
 				</li>
 				<li>
@@ -994,7 +997,7 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="tsd-signature-type">Component</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span>
+					<span class="tsd-signature-type">Component</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
 					<ul class="tsd-hierarchy">
 						<li>
 							<span class="target">PropertyBase</span>
@@ -1057,7 +1060,7 @@ img { max-width: 100%; }
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Property<wbr>Base<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="propertybase.html" class="tsd-signature-type">PropertyBase</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Property<wbr>Base<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="propertybase.html" class="tsd-signature-type">PropertyBase</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1070,7 +1073,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>props: <a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a></h5>
+								<h5>props: <span class="tsd-signature-type">T</span></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> context: <span class="tsd-signature-type">any</span></h5>
@@ -1097,7 +1100,7 @@ img { max-width: 100%; }
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 				<a name="props" class="tsd-anchor"></a>
 				<h3>props</h3>
-				<div class="tsd-signature tsd-kind-icon">props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<p>Inherited from Component.props</p>
 					<ul>
@@ -1172,7 +1175,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L45">react/components/PropertyBase.ts:45</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L46">react/components/PropertyBase.ts:46</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1192,13 +1195,13 @@ img { max-width: 100%; }
 				<a name="getlinkedobjectpropertyraw" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Linked<wbr>Object<wbr>Property<wbr>Raw</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Linked<wbr>Object<wbr>Property<wbr>Raw<span class="tsd-signature-symbol">(</span>property<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SomeNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Statement</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Linked<wbr>Object<wbr>Property<wbr>Raw<span class="tsd-signature-symbol">(</span>property<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SomeNode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Statement</span><span class="tsd-signature-symbol">[]</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L56">react/components/PropertyBase.ts:56</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L57">react/components/PropertyBase.ts:57</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1207,10 +1210,7 @@ img { max-width: 100%; }
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> property: <span class="tsd-signature-type">SomeNode</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Statement</span><span class="tsd-signature-symbol">[]</span>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">undefined</span>
-						</h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Statement</span><span class="tsd-signature-symbol">[]</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -1218,17 +1218,20 @@ img { max-width: 100%; }
 				<a name="render" class="tsd-anchor"></a>
 				<h3>render</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-					<li class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">DetailedReactHTMLElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLAttributes</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<p>Overrides Component.render</p>
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L26">react/components/PropertyBase.ts:26</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L27">react/components/PropertyBase.ts:27</a></li>
 							</ul>
 						</aside>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DetailedReactHTMLElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLAttributes</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReactElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+							<span class="tsd-signature-symbol"> | </span>
+							<span class="tsd-signature-type">null</span>
+						</h4>
 					</li>
 				</ul>
 			</section>
@@ -1275,7 +1278,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L36">react/components/PropertyBase.ts:36</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L37">react/components/PropertyBase.ts:37</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1348,7 +1351,7 @@ img { max-width: 100%; }
 				<a name="componentdidupdate" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> component<wbr>Did<wbr>Update</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">component<wbr>Did<wbr>Update<span class="tsd-signature-symbol">(</span>prevProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span>, prevState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, prevContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">component<wbr>Did<wbr>Update<span class="tsd-signature-symbol">(</span>prevProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, prevState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, prevContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1366,7 +1369,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>prevProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>prevProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5>prevState: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -1407,7 +1410,7 @@ img { max-width: 100%; }
 				<a name="componentwillreceiveprops" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> component<wbr>Will<wbr>Receive<wbr>Props</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">component<wbr>Will<wbr>Receive<wbr>Props<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">component<wbr>Will<wbr>Receive<wbr>Props<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1428,7 +1431,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5>nextContext: <span class="tsd-signature-type">any</span></h5>
@@ -1466,7 +1469,7 @@ img { max-width: 100%; }
 				<a name="componentwillupdate" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> component<wbr>Will<wbr>Update</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">component<wbr>Will<wbr>Update<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span>, nextState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">component<wbr>Will<wbr>Update<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, nextState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1485,7 +1488,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5>nextState: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -1502,7 +1505,7 @@ img { max-width: 100%; }
 				<a name="shouldcomponentupdate-1" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> should<wbr>Component<wbr>Update</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">should<wbr>Component<wbr>Update<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span>, nextState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">should<wbr>Component<wbr>Update<span class="tsd-signature-symbol">(</span>nextProps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, nextState<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span>, nextContext<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
@@ -1525,7 +1528,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/proptypes.html" class="tsd-signature-type">PropTypes</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>nextProps: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5>nextState: <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -1547,7 +1550,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">context<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L16">react/components/PropertyBase.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L17">react/components/PropertyBase.ts:17</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -1556,7 +1559,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">linked<wbr>Render<wbr>Store<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L17">react/components/PropertyBase.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L18">react/components/PropertyBase.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1567,7 +1570,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">prop<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L19">react/components/PropertyBase.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L20">react/components/PropertyBase.ts:20</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -1576,7 +1579,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;labelType.isRequired</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L20">react/components/PropertyBase.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L21">react/components/PropertyBase.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -1619,7 +1622,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">linked<wbr>Prop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;linkedPropType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L21">react/components/PropertyBase.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L22">react/components/PropertyBase.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1629,7 +1632,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">subject<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;subjectType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L22">react/components/PropertyBase.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L23">react/components/PropertyBase.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1639,7 +1642,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/cb8e06b/src/react/components/PropertyBase.ts#L23">react/components/PropertyBase.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/PropertyBase.ts#L24">react/components/PropertyBase.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>

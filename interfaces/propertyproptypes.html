@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LinkGetAction | link-redux</title>
+	<title>PropertyPropTypes | link-redux</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -908,13 +908,25 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class="current tsd-kind-interface">
-			<a href="linkgetaction.html" class="tsd-kind-icon">Link<wbr>Get<wbr>Action</a>
+			<a href="propertyproptypes.html" class="tsd-kind-icon">Property<wbr>Prop<wbr>Types</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="linkgetaction.html#payload" class="tsd-kind-icon">payload</a>
+					<a href="propertyproptypes.html#forcerender" class="tsd-kind-icon">force<wbr>Render</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="propertyproptypes.html#label" class="tsd-kind-icon">label</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="propertyproptypes.html#limit" class="tsd-kind-icon">limit</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="propertyproptypes.html#linkedprop" class="tsd-kind-icon">linked<wbr>Prop</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a href="linkgetaction.html#type" class="tsd-kind-icon">type</a>
+					<a href="propertyproptypes.html#subject" class="tsd-kind-icon">subject</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a href="propertyproptypes.html#version" class="tsd-kind-icon">version</a>
 				</li>
 			</ul>
 		</li>
@@ -926,10 +938,10 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="tsd-signature-type">Action</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"GET_LINKED_OBJECT"</span><span class="tsd-signature-symbol">&gt;</span>
+					<a href="propertyprops.html" class="tsd-signature-type">PropertyProps</a>
 					<ul class="tsd-hierarchy">
 						<li>
-							<span class="target">LinkGetAction</span>
+							<span class="target">PropertyPropTypes</span>
 						</li>
 					</ul>
 				</li>
@@ -942,8 +954,12 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="linkgetaction.html#payload" class="tsd-kind-icon">payload</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="linkgetaction.html#type" class="tsd-kind-icon">type</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="propertyproptypes.html#forcerender" class="tsd-kind-icon">force<wbr>Render</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="propertyproptypes.html#label" class="tsd-kind-icon">label</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="propertyproptypes.html#limit" class="tsd-kind-icon">limit</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="propertyproptypes.html#linkedprop" class="tsd-kind-icon">linked<wbr>Prop</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="propertyproptypes.html#subject" class="tsd-kind-icon">subject</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="propertyproptypes.html#version" class="tsd-kind-icon">version</a></li>
 						</ul>
 					</section>
 				</div>
@@ -952,23 +968,91 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="payload" class="tsd-anchor"></a>
-				<h3>payload</h3>
-				<div class="tsd-signature tsd-kind-icon">payload<span class="tsd-signature-symbol">:</span> <a href="linkgetpayload.html" class="tsd-signature-type">LinkGetPayload</a></div>
+				<a name="forcerender" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> force<wbr>Render</h3>
+				<div class="tsd-signature tsd-kind-icon">force<wbr>Render<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/types.ts#L48">types.ts:48</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/Property.ts#L27">react/components/Property.ts:27</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Pass <code>true</code> if the property should render if no data is found.
+						Useful for nesting property&#39;s to enable multi-property logic.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="label" class="tsd-anchor"></a>
+				<h3>label</h3>
+				<div class="tsd-signature tsd-kind-icon">label<span class="tsd-signature-symbol">:</span> <a href="../globals.html#labeltype" class="tsd-signature-type">LabelType</a></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/Property.ts#L32">react/components/Property.ts:32</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The property of the surrounding subject to render.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>see</dt>
+						<dd><p>LinkedResourceContainer#subject</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="limit" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> limit</h3>
+				<div class="tsd-signature tsd-kind-icon">limit<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/Property.ts#L37">react/components/Property.ts:37</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Controls the amount of resources to be displayed. This must be greater than 0.
+						Pass <code>Infinity</code> to render all the items.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="linkedprop" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> linked<wbr>Prop</h3>
+				<div class="tsd-signature tsd-kind-icon">linked<wbr>Prop<span class="tsd-signature-symbol">:</span> <a href="../globals.html#linkedproptype" class="tsd-signature-type">LinkedPropType</a></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/react/components/Property.ts#L39">react/components/Property.ts:39</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Internal property used for speeding up some types of renders.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+				<a name="subject" class="tsd-anchor"></a>
+				<h3>subject</h3>
+				<div class="tsd-signature tsd-kind-icon">subject<span class="tsd-signature-symbol">:</span> <a href="../globals.html#subjecttype" class="tsd-signature-type">SubjectType</a></div>
+				<aside class="tsd-sources">
+					<p>Inherited from <a href="subjectprop.html">SubjectProp</a>.<a href="subjectprop.html#subject">subject</a></p>
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/types.ts#L73">types.ts:73</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-				<a name="type" class="tsd-anchor"></a>
-				<h3>type</h3>
-				<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"GET_LINKED_OBJECT"</span></div>
+				<a name="version" class="tsd-anchor"></a>
+				<h3>version</h3>
+				<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
-					<p>Inherited from Action.type</p>
+					<p>Inherited from <a href="versionprop.html">VersionProp</a>.<a href="versionprop.html#version">version</a></p>
 					<ul>
-						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/redux/index.d.ts:20</li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/5dbca45/src/types.ts#L81">types.ts:81</a></li>
 					</ul>
 				</aside>
 			</section>
