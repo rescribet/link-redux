@@ -7,7 +7,7 @@ export const linkedSubject = (connectedProp: React.ReactType): React.ReactType =
         ? "linkedSubject"
         : `linkedSubject[${connectedProp.displayName || connectedProp.name}]`;
 
-    class LinkedSubjectComp extends React.PureComponent {
+    class LinkedSubjectComp extends React.Component {
         public static contextTypes = {
             subject: subjectType,
         };
