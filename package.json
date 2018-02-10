@@ -30,7 +30,7 @@
     "http-status-codes": "^1.3.0",
     "immutable": "^3.8.1",
     "jsonld": "^0.4.11",
-    "link-lib": "^1.0.0-beta9",
+    "link-lib": "^1.0.0-beta10",
     "prop-types": "15.6.0",
     "rdflib": "^0.16.5",
     "react": "^16.2.0",
