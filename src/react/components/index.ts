@@ -6,3 +6,4 @@ export {
   getLinkedObjectClass,
 } from "./Property";
 export { RenderStoreProvider } from "./RenderStoreProvider";
+export { TopologyProvider } from "./TopologyProvider";

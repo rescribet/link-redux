@@ -12,6 +12,7 @@ export {
     Property,
     PropertyBase,
     RenderStoreProvider,
+    TopologyProvider,
 } from "./react/components/index";
 
 export { link } from "./redux/link";
