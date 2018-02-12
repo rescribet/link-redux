@@ -1,9 +1,11 @@
+import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
-import { PropertyBase } from "../react/components";
+import { subjectType } from "../propTypes";
 import { PropertyPropTypes } from "../react/components/Property";
 import { VersionProp } from "../types";
+
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
 
@@ -54,9 +56,13 @@ export function link(mapDataToProps: MapDataToPropsParam,
     const returnType = opts.returnType || "term";
 
     return function wrapWithConnect(wrappedComponent: React.ComponentType<any>) {
-        class Link<T extends VersionProp> extends PropertyBase<any> {
+        class Link<T extends VersionProp> extends React.Component<any> {
 
             public static displayName = `Link(${wrappedComponent.name})`;
+            public static propTypes = {
+                subject: subjectType,
+                version: ReactPropTypes.string,
+            };
 
             public render() {
                 if (requestedProperties.length === 0) {
