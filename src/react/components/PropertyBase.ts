@@ -18,7 +18,7 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
         linkedRenderStore: ReactPropTypes.object,
     };
     public static propTypes = {
-        label: labelType.isRequired,
+        label: labelType,
         linkedProp: linkedPropType,
         subject: subjectType,
         version: ReactPropTypes.string,
