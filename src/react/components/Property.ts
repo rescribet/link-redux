@@ -37,7 +37,6 @@ export interface PropertyPropTypes extends PropertyProps {
     limit?: number;
     /** Internal property used for speeding up some types of renders. */
     linkedProp?: LinkedPropType;
-
 }
 
 export interface ContextTypes {
@@ -101,10 +100,13 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
                 return this.limitTimes(objRaw, wrapLOC);
             }
 
-            return this.limitTimes(objRaw, (p) => React.createElement("div", null, this.props.children || p.value));
+            return this.limitTimes(
+                objRaw,
+                (p) => React.createElement(React.Fragment, null, this.props.children || p.value),
+            );
         }
         if (this.props.children) {
-            return React.createElement("div", null, this.props.children);
+            return React.createElement(React.Fragment, null, this.props.children);
         }
 
         return null;
@@ -126,7 +128,7 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
             elems.push(func(objRaw[i]));
         }
 
-        return elems;
+        return React.createElement(React.Fragment, null, elems);
     }
 }
 
