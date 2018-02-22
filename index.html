@@ -928,6 +928,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-interface">
 			<a href="interfaces/contexttypes.html" class="tsd-kind-icon">Context<wbr>Types</a>
 		</li>
+		<li class=" tsd-kind-interface tsd-is-not-exported">
+			<a href="interfaces/datatopropsmapping.html" class="tsd-kind-icon">Data<wbr>ToProps<wbr>Mapping</a>
+		</li>
 		<li class=" tsd-kind-interface">
 			<a href="interfaces/linkcontext.html" class="tsd-kind-icon">Link<wbr>Context</a>
 		</li>
@@ -960,6 +963,9 @@ img { max-width: 100%; }
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="interfaces/mapdatatopropsparamobject.html" class="tsd-kind-icon">Map<wbr>Data<wbr>ToProps<wbr>Param<wbr>Object</a>
+		</li>
+		<li class=" tsd-kind-interface">
+			<a href="interfaces/processedlinkopts.html" class="tsd-kind-icon">Processed<wbr>Link<wbr>Opts</a>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="interfaces/proptypes.html" class="tsd-kind-icon">Prop<wbr>Types</a>
@@ -1044,6 +1050,9 @@ img { max-width: 100%; }
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
 			<a href="globals.html#converters" class="tsd-kind-icon">converters</a>
+		</li>
+		<li class=" tsd-kind-variable tsd-is-not-exported">
+			<a href="globals.html#globallinkoptsdefaults" class="tsd-kind-icon">global<wbr>Link<wbr>Opts<wbr>Defaults</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
 			<a href="globals.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a>
@@ -1234,6 +1243,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 						<h3>Interfaces</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-interface"><a href="interfaces/contexttypes.html" class="tsd-kind-icon">Context<wbr>Types</a></li>
+							<li class="tsd-kind-interface tsd-is-not-exported"><a href="interfaces/datatopropsmapping.html" class="tsd-kind-icon">Data<wbr>ToProps<wbr>Mapping</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/linkcontext.html" class="tsd-kind-icon">Link<wbr>Context</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/linkfetchaction.html" class="tsd-kind-icon">Link<wbr>Fetch<wbr>Action</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/linkfetchpayload.html" class="tsd-kind-icon">Link<wbr>Fetch<wbr>Payload</a></li>
@@ -1245,6 +1255,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 							<li class="tsd-kind-interface"><a href="interfaces/linkstatetreeslice.html" class="tsd-kind-icon">Link<wbr>State<wbr>Tree<wbr>Slice</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/linkedrenderstorecontext.html" class="tsd-kind-icon">Linked<wbr>Render<wbr>Store<wbr>Context</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/mapdatatopropsparamobject.html" class="tsd-kind-icon">Map<wbr>Data<wbr>ToProps<wbr>Param<wbr>Object</a></li>
+							<li class="tsd-kind-interface"><a href="interfaces/processedlinkopts.html" class="tsd-kind-icon">Processed<wbr>Link<wbr>Opts</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/proptypes.html" class="tsd-kind-icon">Prop<wbr>Types</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/propertyboundprops.html" class="tsd-kind-icon">Property<wbr>Bound<wbr>Props</a></li>
 							<li class="tsd-kind-interface"><a href="interfaces/propertyproptypes.html" class="tsd-kind-icon">Property<wbr>Prop<wbr>Types</a></li>
@@ -1283,6 +1294,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 							<li class="tsd-kind-variable"><a href="globals.html#type" class="tsd-kind-icon">Type</a></li>
 							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#connectedprop" class="tsd-kind-icon">connected<wbr>Prop</a></li>
 							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#converters" class="tsd-kind-icon">converters</a></li>
+							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#globallinkoptsdefaults" class="tsd-kind-icon">global<wbr>Link<wbr>Opts<wbr>Defaults</a></li>
 							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#initialstate" class="tsd-kind-icon">initial<wbr>State</a></li>
 							<li class="tsd-kind-variable"><a href="globals.html#labeltype" class="tsd-kind-icon">label<wbr>Type</a></li>
 							<li class="tsd-kind-variable"><a href="globals.html#linktype" class="tsd-kind-icon">link<wbr>Type</a></li>
@@ -1330,7 +1342,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Label<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedNode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">NamedNode</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L8">types.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L8">types.ts:8</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-comment tsd-typography">
@@ -1345,7 +1357,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Link<wbr>Action<span class="tsd-signature-symbol">:</span> <a href="interfaces/linkfetchaction.html" class="tsd-signature-type">LinkFetchAction</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/linkgetaction.html" class="tsd-signature-type">LinkGetAction</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L10">types.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L10">types.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1355,7 +1367,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Link<wbr>ReduxLRSType<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">LinkedRenderStore</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ReactType</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L16">types.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L16">types.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1365,7 +1377,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Link<wbr>State<wbr>Tree<span class="tsd-signature-symbol">:</span> <a href="interfaces/linkstatetreeobj.html" class="tsd-signature-type">LinkStateTreeObj</a><span class="tsd-signature-symbol"> | </span><a href="globals.html#linkstatetreemap" class="tsd-signature-type">LinkStateTreeMap</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L18">types.ts:18</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L18">types.ts:18</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1375,7 +1387,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Link<wbr>State<wbr>Tree<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L20">types.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L20">types.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1385,7 +1397,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Linked<wbr>Prop<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedNode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BlankNode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Literal</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L14">types.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L14">types.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1395,7 +1407,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Load<wbr>Linked<wbr>Object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L12">types.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L12">types.ts:12</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -1429,7 +1441,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Map<wbr>Data<wbr>ToProps<wbr>Param<span class="tsd-signature-symbol">:</span> <a href="interfaces/mapdatatopropsparamobject.html" class="tsd-signature-type">MapDataToPropsParamObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">NamedNode</span><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/link.ts#L22">redux/link.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/link.ts#L36">redux/link.ts:36</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1439,7 +1451,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Subject<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SomeNode</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L22">types.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L22">types.ts:22</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1449,7 +1461,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Topology<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedNode</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/types.ts#L24">types.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/types.ts#L24">types.ts:24</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1462,7 +1474,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">FETCH_<wbr>LINKED_<wbr>OBJECT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"FETCH_LINKED_OBJECT"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;FETCH_LINKED_OBJECT&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L11">redux/linkedObjects/actions.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L11">redux/linkedObjects/actions.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1472,7 +1484,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">GET_<wbr>LINKED_<wbr>OBJECT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"GET_LINKED_OBJECT"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;GET_LINKED_OBJECT&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L12">redux/linkedObjects/actions.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L12">redux/linkedObjects/actions.ts:12</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1482,7 +1494,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">LINKED_<wbr>MODEL_<wbr>TOUCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"LINKED_MODEL_TOUCH"</span><span class="tsd-signature-symbol"> =&nbsp;&quot;LINKED_MODEL_TOUCH&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L13">redux/linkedObjects/actions.ts:13</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L13">redux/linkedObjects/actions.ts:13</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1492,7 +1504,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Linked<wbr>Resource<wbr>Container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ComponentClass</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/subjectprop.html" class="tsd-signature-type">SubjectProp</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;connect(mapStateToProps, mapDispatchToProps)(LinkedResourceContainerComp)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L227">redux/LinkedResourceContainer.ts:227</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L227">redux/LinkedResourceContainer.ts:227</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1502,7 +1514,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Property<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ComponentClass</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">StatelessComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;linkedSubject(connectedProp)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/react/components/Property.ts#L137">react/components/Property.ts:137</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/react/components/Property.ts#L139">react/components/Property.ts:139</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1512,7 +1524,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ComponentClass</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">StatelessComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;linkedSubject(linkedVersion(TypeComp))</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/Type.ts#L51">redux/Type.ts:51</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/Type.ts#L51">redux/Type.ts:51</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1522,7 +1534,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">connected<wbr>Prop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ComponentClass</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/subjectprop.html" class="tsd-signature-type">SubjectProp</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;linkedVersion(PropertyComp)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/react/components/Property.ts#L133">react/components/Property.ts:133</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/react/components/Property.ts#L135">react/components/Property.ts:135</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1532,7 +1544,17 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">converters<span class="tsd-signature-symbol">:</span> <a href="interfaces/urlconverterset.html" class="tsd-signature-type">URLConverterSet</a><span class="tsd-signature-symbol"> =&nbsp;{dbpedia: {convert: (iri: string) &#x3D;&gt; &#x60;http://dbpedia.org/data/${iri.split(&quot;//dbpedia.org/resource/&quot;).pop()}&#x60;,match: &quot;^[a-zA-Z]{3,5}://dbpedia.org/resource/&quot;,},} as URLConverterSet</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/resolve.ts#L5">redux/resolve.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/resolve.ts#L5">redux/resolve.ts:5</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-variable tsd-is-not-exported">
+				<a name="globallinkoptsdefaults" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> global<wbr>Link<wbr>Opts<wbr>Defaults</h3>
+				<div class="tsd-signature tsd-kind-icon">global<wbr>Link<wbr>Opts<wbr>Defaults<span class="tsd-signature-symbol">:</span> <a href="interfaces/linkopts.html" class="tsd-signature-type">LinkOpts</a><span class="tsd-signature-symbol"> =&nbsp;{forceRender: false,label: undefined,limit: 1,name: undefined,returnType: &quot;term&quot;,} as LinkOpts</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/link.ts#L38">redux/link.ts:38</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1542,7 +1564,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">initial<wbr>State<span class="tsd-signature-symbol">:</span> <a href="interfaces/linkstatetreeslice.html" class="tsd-signature-type">LinkStateTreeSlice</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/reducer.ts#L8">redux/linkedObjects/reducer.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/reducer.ts#L8">redux/linkedObjects/reducer.ts:8</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1552,7 +1574,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">label<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.oneOfType([ReactPropTypes.instanceOf(NamedNode),ReactPropTypes.arrayOf(ReactPropTypes.instanceOf(NamedNode)),])</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L10">propTypes.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L10">propTypes.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1562,7 +1584,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">link<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.oneOfType([ReactPropTypes.instanceOf(NamedNode),ReactPropTypes.instanceOf(BlankNode),])</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L5">propTypes.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L5">propTypes.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1572,7 +1594,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">linked<wbr>Prop<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.oneOfType([ReactPropTypes.instanceOf(NamedNode),ReactPropTypes.instanceOf(BlankNode),ReactPropTypes.instanceOf(Literal),])</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L14">propTypes.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L14">propTypes.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1582,7 +1604,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">lrs<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.instanceOf(LinkedRenderStore)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L19">propTypes.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L19">propTypes.ts:19</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1592,8 +1614,8 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">node<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;NamedNode&quot;, &quot;BlankNode&quot;]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L53">redux/LinkedResourceContainer.ts:53</a></li>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/react/components/Property.ts#L48">react/components/Property.ts:48</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L53">redux/LinkedResourceContainer.ts:53</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/react/components/Property.ts#L47">react/components/Property.ts:47</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1603,7 +1625,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">subject<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;linkType</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L20">propTypes.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L20">propTypes.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1613,7 +1635,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">topology<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;linkType</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/propTypes.ts#L21">propTypes.ts:21</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/propTypes.ts#L21">propTypes.ts:21</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1630,7 +1652,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/middleware.ts#L17">redux/middleware.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/middleware.ts#L17">redux/middleware.ts:17</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1653,7 +1675,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L15">redux/linkedObjects/actions.ts:15</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L15">redux/linkedObjects/actions.ts:15</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1676,7 +1698,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L23">redux/linkedObjects/actions.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L23">redux/linkedObjects/actions.ts:23</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1699,7 +1721,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/react/components/Property.ts#L50">react/components/Property.ts:50</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/react/components/Property.ts#L49">react/components/Property.ts:49</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1736,7 +1758,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/link.ts#L46">redux/link.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/link.ts#L68">redux/link.ts:68</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1769,7 +1791,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 								</div>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> opts: <a href="interfaces/linkopts.html" class="tsd-signature-type">LinkOpts</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> opts: <a href="interfaces/linkopts.html" class="tsd-signature-type">LinkOpts</a><span class="tsd-signature-symbol"> =&nbsp;globalLinkOptsDefaults</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>Adjust the default behaviour, these are not yet guaranteed.</p>
 								</div>
@@ -1807,7 +1829,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/middleware.ts#L46">redux/middleware.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/middleware.ts#L46">redux/middleware.ts:46</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1841,7 +1863,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/middleware.ts#L22">redux/middleware.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/middleware.ts#L22">redux/middleware.ts:22</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1864,7 +1886,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/reducer.ts#L10">redux/linkedObjects/reducer.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/reducer.ts#L10">redux/linkedObjects/reducer.ts:10</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1890,7 +1912,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/actions.ts#L31">redux/linkedObjects/actions.ts:31</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/actions.ts#L31">redux/linkedObjects/actions.ts:31</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1913,7 +1935,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedObjects/selectors.ts#L5">redux/linkedObjects/selectors.ts:5</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedObjects/selectors.ts#L5">redux/linkedObjects/selectors.ts:5</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1942,7 +1964,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedSubject.ts#L5">redux/linkedSubject.ts:5</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedSubject.ts#L5">redux/linkedSubject.ts:5</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1965,7 +1987,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedVersion.ts#L17">redux/linkedVersion.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedVersion.ts#L17">redux/linkedVersion.ts:17</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1997,7 +2019,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L219">redux/LinkedResourceContainer.ts:219</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L219">redux/LinkedResourceContainer.ts:219</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2026,7 +2048,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/linkedVersion.ts#L7">redux/linkedVersion.ts:7</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/linkedVersion.ts#L7">redux/linkedVersion.ts:7</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2053,7 +2075,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L206">redux/LinkedResourceContainer.ts:206</a></li>
+								<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L206">redux/LinkedResourceContainer.ts:206</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2088,7 +2110,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">low<wbr>Level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/link-redux.ts#L32">link-redux.ts:32</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/link-redux.ts#L32">link-redux.ts:32</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -2097,7 +2119,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">linked<wbr>Subject<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">linkedSubject</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/link-redux.ts#L33">link-redux.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/link-redux.ts#L33">link-redux.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2107,7 +2129,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">linked<wbr>Version<span class="tsd-signature-symbol">:</span> <a href="globals.html#linkedversion" class="tsd-signature-type">linkedVersion</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/link-redux.ts#L34">link-redux.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/link-redux.ts#L34">link-redux.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2118,7 +2140,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 				<div class="tsd-signature tsd-kind-icon">prop<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L35">redux/LinkedResourceContainer.ts:35</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L35">redux/LinkedResourceContainer.ts:35</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
@@ -2127,7 +2149,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.node</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L36">redux/LinkedResourceContainer.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L36">redux/LinkedResourceContainer.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2137,7 +2159,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">fetch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.bool</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L37">redux/LinkedResourceContainer.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L37">redux/LinkedResourceContainer.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2147,7 +2169,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">force<wbr>Render<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.bool</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L38">redux/LinkedResourceContainer.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L38">redux/LinkedResourceContainer.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2157,7 +2179,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">load<wbr>Linked<wbr>Object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.func.isRequired</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L39">redux/LinkedResourceContainer.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L39">redux/LinkedResourceContainer.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -2200,7 +2222,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.oneOfType([ReactPropTypes.element,ReactPropTypes.func,])</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L40">redux/LinkedResourceContainer.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L40">redux/LinkedResourceContainer.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2210,7 +2232,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Load<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.oneOfType([ReactPropTypes.element,ReactPropTypes.func,])</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L44">redux/LinkedResourceContainer.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L44">redux/LinkedResourceContainer.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2220,7 +2242,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">subject<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;subjectType.isRequired</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L48">redux/LinkedResourceContainer.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L48">redux/LinkedResourceContainer.ts:48</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -2263,7 +2285,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">topology<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Requireable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;topologyType</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L49">redux/LinkedResourceContainer.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L49">redux/LinkedResourceContainer.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2273,7 +2295,7 @@ LinkedRenderStore.registerRenderer(Thing, 'http://schema.org/Thing');
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;ReactPropTypes.string.isRequired</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/d3d112d/src/redux/LinkedResourceContainer.ts#L50">redux/LinkedResourceContainer.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/a4ed084/src/redux/LinkedResourceContainer.ts#L50">redux/LinkedResourceContainer.ts:50</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
