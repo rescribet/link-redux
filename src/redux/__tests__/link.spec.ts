@@ -99,6 +99,11 @@ describe("link higher order component", () => {
         expect(elem.find(TestComponent)).not.toHaveProp("name", new Literal("title"));
         expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
         expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
-        expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
+        expect(elem.find(TestComponent)).toHaveProp("tags", [
+            defaultNS.example("tag/0"),
+            defaultNS.example("tag/1"),
+            defaultNS.example("tag/2"),
+            defaultNS.example("tag/3"),
+        ]);
     });
 });

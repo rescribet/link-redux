@@ -8,13 +8,15 @@ import { LabelType, LinkedPropType, VersionProp } from "../types";
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
 
+export type LinkReturnType = "term" | "statement" | "value";
+
 export interface LinkOpts {
     forceRender?: boolean;
     label?: LabelType;
     limit?: number;
     linkedProp?: LinkedPropType;
     name?: string;
-    returnType?: "term" | "statement" | "value";
+    returnType?: LinkReturnType;
 }
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode;
@@ -26,7 +28,7 @@ export interface MapDataToPropsParamObject {
 }
 
 export interface PropertyBoundProps {
-    [k: string]: Statement | SomeTerm | string | undefined;
+    [k: string]: Statement | Statement[] | SomeTerm | SomeTerm[] | string | string[] | undefined;
 }
 
 interface DataToPropsMapping {
@@ -42,6 +44,17 @@ const globalLinkOptsDefaults = {
     name: undefined,
     returnType: "term",
 } as LinkOpts;
+
+function toReturnType(returnType: LinkReturnType, p: Statement): Statement | SomeTerm | string {
+    switch (returnType) {
+        case "value":
+            return p.object.value;
+        case "term":
+            return p.object;
+        case "statement":
+            return p;
+    }
+}
 
 /**
  * Binds a react component to data properties.
@@ -161,23 +174,19 @@ export function link(mapDataToProps: MapDataToPropsParam,
                 );
             }
 
-            private getLinkedObjectProperties(props: Statement[]): { [k: string]: SomeTerm | undefined } {
+            private getLinkedObjectProperties(props: Statement[]): PropertyBoundProps {
                 return requestedProperties.reduce((acc: PropertyBoundProps, cur) => {
                     const propOpts = propMap[cur];
-                    const p = props.find((s: Statement) => s.predicate.sI === cur);
 
-                    if (p) {
-                        switch (returnType) {
-                            case "value":
-                                acc[propOpts.name] = p.object.value;
-                                break;
-                            case "term":
-                                acc[propOpts.name] = p.object;
-                                break;
-                            case "statement":
-                                acc[propOpts.name] = p;
-                                break;
+                    if (propOpts.limit === 1) {
+                        const p = props.find((s: Statement) => s.predicate.sI === cur);
+                        if (p) {
+                            acc[propOpts.name] = toReturnType(returnType, p);
                         }
+                    } else {
+                        acc[propOpts.name] = props
+                            .filter((s: Statement) => s.predicate.sI === cur)
+                            .map((s: Statement) => toReturnType(returnType, s)) as Statement[] | SomeTerm[] | string[];
                     }
 
                     return acc;
