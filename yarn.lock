@@ -2163,9 +2163,9 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-link-lib@^1.0.0-beta10:
-  version "1.0.0-beta10"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta10.tgz#1efb3c6490bfb0997806d34698395b9838f00a7c"
+link-lib@^1.0.0-beta11:
+  version "1.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta11.tgz#38c4e55a16d570943d1060c927f377f21bc10f58"
   dependencies:
     http-status-codes "^1.3.0"
     jsonld "^0.4.11"
