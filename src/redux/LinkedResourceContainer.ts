@@ -1,5 +1,6 @@
 import { BAD_REQUEST } from "http-status-codes";
 import {
+    DEFAULT_TOPOLOGY,
     defaultNS as NS,
     SomeNode,
 } from "link-lib";
@@ -32,6 +33,10 @@ export interface PropTypes extends PropertyProps {
     topology?: NamedNode;
 }
 
+export interface StateTypes {
+    hasError: boolean;
+}
+
 const propTypes = {
     children: ReactPropTypes.node,
     fetch: ReactPropTypes.bool,
@@ -53,7 +58,7 @@ const propTypes = {
 const nodeTypes = ["NamedNode", "BlankNode"];
 
 class LinkedResourceContainerComp
-    extends React.Component<PropTypes> implements React.ChildContextProvider<LinkContext> {
+    extends React.Component<PropTypes, StateTypes> implements React.ChildContextProvider<LinkContext> {
 
     public static childContextTypes = {
         subject: subjectType,
@@ -77,10 +82,37 @@ class LinkedResourceContainerComp
         return typeof data !== "undefined" && data.length >= 2;
     }
 
-    public hasErrors() {
-        const status = this.context.linkedRenderStore.getResourceProperty(this.subject(), NS.http("statusCodeValue"));
+    public constructor(props: PropTypes) {
+        super(props);
 
-        return status && Number.parseInt(status.value, 10) >= BAD_REQUEST;
+        this.state = {
+            hasError: false,
+        };
+    }
+
+    public hasErrors() {
+        if (this.state.hasError) {
+            return true;
+        }
+
+        const status: string | number | boolean | undefined = this
+            .context
+            .linkedRenderStore
+            .api
+            .processor
+            .fetcher
+            .requested[this.subject().value];
+
+        if (status && status !== "done" && status !== true) {
+            if (typeof status === "number") {
+                return status >= BAD_REQUEST;
+            }
+
+            return false;
+        }
+
+        return false;
+
     }
 
     public getChildContext(): LinkContext {
@@ -88,6 +120,12 @@ class LinkedResourceContainerComp
             subject: this.subject(),
             topology: this.topology(),
         };
+    }
+
+    public componentDidCatch() {
+        this.setState({
+            hasError: true,
+        });
     }
 
     public componentWillMount() {
@@ -193,11 +231,23 @@ class LinkedResourceContainerComp
     }
 
     private onError(): React.ReactType {
-        return this.props.onError || this.context.linkedRenderStore.onError;
+        return this.props.onError
+            || this.context.linkedRenderStore.getComponentForType(
+                NS.ll("ErrorResource"),
+                this.topology() || DEFAULT_TOPOLOGY,
+            )
+            || this.context.linkedRenderStore.onError
+            || null;
     }
 
     private onLoad(): React.ReactType {
-        return this.props.onLoad || this.context.linkedRenderStore.loadingComp || null;
+        return this.props.onLoad
+            || this.context.linkedRenderStore.getComponentForType(
+                NS.ll("LoadingResource"),
+                this.topology() || DEFAULT_TOPOLOGY,
+            )
+            || this.context.linkedRenderStore.loadingComp
+            || null;
     }
 }
 

@@ -4,24 +4,22 @@ import { defaultNS } from "link-lib";
 import { createElement } from "react";
 
 import * as ctx from "../../../test/fixtures";
+import { SubjectProp } from "../../types";
 import { linkedModelTouch } from "../linkedObjects/actions";
-import { linkedVersion } from "../linkedVersion";
+import { linkedVersion, mapStateToProps } from "../linkedVersion";
 
 const testSubject = defaultNS.example("0");
 
 describe("linkedVersion component", () => {
     it("raises without subject", () => {
-        const opts = ctx.empty();
-        const comp = linkedVersion(() => null);
-        let caught = false;
+        let caught: Error | undefined;
         try {
-            mount(
-                opts.wrapComponent(createElement(comp)),
-            );
+            mapStateToProps(new Map(), {} as SubjectProp);
         } catch (e) {
-            caught = true;
+            caught = e;
         }
-        expect(caught).toEqual(true);
+        expect(caught).toBeTruthy();
+        expect(caught!.message).toEqual("[LS] A subject must be given");
     });
 
     it("does not raise with a subject", () => {
@@ -29,9 +27,7 @@ describe("linkedVersion component", () => {
         const comp = linkedVersion(() => null);
         let caught = false;
         try {
-            mount(
-                opts.wrapComponent(createElement(comp, { subject: "http://example.org/1" })),
-            );
+            mapStateToProps(new Map(), { subject: defaultNS.example("1") });
         } catch (e) {
             caught = true;
         }

@@ -4,8 +4,8 @@ import { LinkStateTree, SubjectProp, VersionProp } from "../types";
 
 import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
 
-const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp) => {
-    if (typeof subject === "undefined") {
+export const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp) => {
+    if (typeof subject === "undefined" || subject === null) {
         throw new Error("[LS] A subject must be given");
     }
 
