@@ -18,16 +18,21 @@ import {
     LinkStateTree,
     LoadLinkedObject,
     PropertyProps,
+    ReloadLinkedObject,
     SubjectProp,
 } from "../types";
 
-import { fetchLinkedObject, getLinkedObject } from "./linkedObjects/actions";
+import { fetchLinkedObject, getLinkedObject, reloadLinkedObject } from "./linkedObjects/actions";
 import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
 
-export interface PropTypes extends PropertyProps {
+export interface DispatchPropTypes {
+    loadLinkedObject: LoadLinkedObject;
+    reloadLinkedObject: ReloadLinkedObject;
+}
+
+export interface PropTypes extends DispatchPropTypes, PropertyProps {
     fetch?: boolean;
     forceRender?: boolean;
-    loadLinkedObject: LoadLinkedObject;
     onError?: () => void;
     onLoad?: () => void;
     topology?: NamedNode;
@@ -50,6 +55,7 @@ const propTypes = {
         ReactPropTypes.element,
         ReactPropTypes.func,
     ]),
+    reloadLinkedObject: ReactPropTypes.func.isRequired,
     subject: subjectType.isRequired,
     topology: topologyType,
     version: ReactPropTypes.string.isRequired,
@@ -266,11 +272,13 @@ const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch): { loadLinkedObject: LoadLinkedObject } => ({
-    loadLinkedObject: (href: NamedNode, fetch: boolean): LinkAction =>
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: PropertyProps): DispatchPropTypes => ({
+    loadLinkedObject: (href: NamedNode = ownProps.subject as NamedNode, fetch: boolean): LinkAction =>
         dispatch(fetch === false ?
             getLinkedObject(href) :
             fetchLinkedObject(href)),
+    reloadLinkedObject: (href: NamedNode = ownProps.subject as NamedNode): LinkAction =>
+        dispatch(reloadLinkedObject(href)),
 });
 
 // tslint:disable-next-line variable-name

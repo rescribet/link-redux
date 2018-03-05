@@ -7,7 +7,7 @@ import { Action } from "redux";
 
 export type LabelType = NamedNode | NamedNode[];
 
-export type LinkAction = LinkFetchAction | LinkGetAction;
+export type LinkAction = LinkFetchAction | LinkGetAction | LinkReloadAction;
 
 export type LoadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction;
 
@@ -18,6 +18,8 @@ export type LinkReduxLRSType = LinkedRenderStore<ReactType>;
 export type LinkStateTree = LinkStateTreeObj | LinkStateTreeMap;
 
 export type LinkStateTreeMap = Map<string, { [k: string]: string }>;
+
+export type ReloadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction;
 
 export type SubjectType = SomeNode;
 
@@ -50,6 +52,10 @@ export interface LinkGetAction extends Action<"GET_LINKED_OBJECT"> {
 
 export interface LinkModelTouchAction extends Action<"LINKED_MODEL_TOUCH"> {
     payload: LinkStateTreeSlice;
+}
+
+export interface LinkReloadAction extends Action<"RELOAD_LINKED_OBJECT"> {
+    payload: LinkFetchPayload;
 }
 
 export interface LinkStateTreeSlice {
