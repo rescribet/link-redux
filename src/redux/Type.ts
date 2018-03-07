@@ -1,35 +1,31 @@
 import { defaultNS } from "link-lib";
-import { Component, ReactType } from "react";
+import { ReactType } from "react";
 import { createElement } from "react";
 
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
 
-import { lrsType, topologyType } from "../propTypes";
-import { Property } from "../react/components/";
-import { PropertyProps } from "../types";
+import { Typable, TypableProps } from "./Typable";
 
-export interface PropTypes extends PropertyProps {
+export interface PropTypes extends TypableProps {
     children: ReactType;
 }
 
-class TypeComp extends Component<PropTypes> {
-    public static contextTypes = {
-        linkedRenderStore: lrsType,
-        topology: topologyType,
-    };
+class TypeComp extends Typable<PropTypes, never> {
     public static displayName = "Type";
 
     public render() {
         const { linkedRenderStore } = this.context;
 
-        const storeTypes = linkedRenderStore.getResourceProperties(this.props.subject, defaultNS.rdf("type"));
-        const objType = storeTypes.length > 0 ? storeTypes : [linkedRenderStore.defaultType];
-        if (objType.length === 0) {
-            return null;
+        const notReadyComponent = this.renderLoadingOrError(this.data());
+        if (notReadyComponent !== undefined) {
+            return notReadyComponent;
         }
 
-        const component = linkedRenderStore.resourceComponent(this.props.subject, this.context.topology);
+        const component = linkedRenderStore.resourceComponent(
+            this.props.subject,
+            this.context.topology,
+        );
         if (component !== undefined) {
             return createElement(
                 component,
@@ -38,12 +34,7 @@ class TypeComp extends Component<PropTypes> {
             );
         }
 
-        return createElement(
-            "div",
-            { className: "no-view" },
-            createElement(Property, { label: linkedRenderStore.namespaces.schema("name") }),
-            createElement("p", null, "We currently don't have a view for this"),
-        );
+        return this.renderNoView();
     }
 }
 

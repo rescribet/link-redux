@@ -20,7 +20,7 @@ describe("Type component", () => {
     });
 
     it("renders no view when no class matches", () => {
-        const opts = ctx.empty(undefined);
+        const opts = ctx.fullCW(undefined);
 
         const elem = mount(opts.wrapComponent(createElement(Type)));
 

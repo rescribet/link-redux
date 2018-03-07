@@ -1,17 +1,10 @@
-import { BAD_REQUEST } from "http-status-codes";
-import {
-    DEFAULT_TOPOLOGY,
-    defaultNS as NS,
-    SomeNode,
-} from "link-lib";
 import * as ReactPropTypes from "prop-types";
-import { BlankNode, NamedNode, Statement } from "rdflib";
+import { BlankNode, NamedNode } from "rdflib";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import { lrsType, subjectType, topologyType } from "../propTypes";
-import { Property } from "../react/components/Property";
+import { subjectType, topologyType } from "../propTypes";
 import {
     LinkAction,
     LinkContext,
@@ -24,22 +17,21 @@ import {
 
 import { fetchLinkedObject, getLinkedObject, reloadLinkedObject } from "./linkedObjects/actions";
 import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
+import { Typable, TypableProps } from "./Typable";
 
 export interface DispatchPropTypes {
     loadLinkedObject: LoadLinkedObject;
     reloadLinkedObject: ReloadLinkedObject;
 }
 
-export interface PropTypes extends DispatchPropTypes, PropertyProps {
+export interface PropTypes extends DispatchPropTypes, TypableProps {
     fetch?: boolean;
     forceRender?: boolean;
-    onError?: () => void;
-    onLoad?: () => void;
     topology?: NamedNode;
 }
 
 export interface StateTypes {
-    hasError: boolean;
+    hasCaughtError: boolean;
 }
 
 const propTypes = {
@@ -63,15 +55,10 @@ const propTypes = {
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-class LinkedResourceContainerComp
-    extends React.Component<PropTypes, StateTypes> implements React.ChildContextProvider<LinkContext> {
-
+class LinkedResourceContainerComp extends Typable<PropTypes, StateTypes>
+    implements React.ChildContextProvider<LinkContext> {
     public static childContextTypes = {
         subject: subjectType,
-        topology: topologyType,
-    };
-    public static contextTypes = {
-        linkedRenderStore: lrsType,
         topology: topologyType,
     };
     public static defaultProps = {
@@ -84,35 +71,12 @@ class LinkedResourceContainerComp
     public static displayName = "LinkedResourceContainer";
     public static propTypes = propTypes;
 
-    public static hasData(data: Statement[]) {
-        return typeof data !== "undefined" && data.length >= 2;
-    }
-
     public constructor(props: PropTypes) {
         super(props);
 
         this.state = {
-            hasError: false,
+            hasCaughtError: false,
         };
-    }
-
-    public hasErrors() {
-        if (this.state.hasError) {
-            return true;
-        }
-        const subject = this.subject();
-
-        if (subject.termType === "BlankNode") {
-            return false;
-        }
-
-        const status = this.context.linkedRenderStore.api.getStatus(subject);
-
-        if (!status.requested) {
-            return false;
-        }
-
-        return status.status >= BAD_REQUEST;
     }
 
     public getChildContext(): LinkContext {
@@ -124,7 +88,7 @@ class LinkedResourceContainerComp
 
     public componentDidCatch() {
         this.setState({
-            hasError: true,
+            hasCaughtError: true,
         });
     }
 
@@ -149,22 +113,12 @@ class LinkedResourceContainerComp
         if (this.props.forceRender && this.props.children) {
             return this.renderChildren();
         }
-        if (!LinkedResourceContainerComp.hasData(data)) {
-            const loadComp = this.onLoad();
 
-            return loadComp === null ? null : React.createElement(loadComp, this.props);
+        const notReadyComponent = this.renderLoadingOrError(data);
+        if (notReadyComponent !== undefined) {
+            return notReadyComponent;
         }
-        if (this.hasErrors()) {
-            const errComp = this.onError();
-            if (errComp) {
-                return React.createElement(
-                    errComp,
-                    { ...this.props, subject: this.subject() },
-                );
-            }
 
-            return null;
-        }
         if (this.props.children) {
             return this.renderChildren();
         }
@@ -176,29 +130,7 @@ class LinkedResourceContainerComp
             return React.createElement(component, this.props);
         }
 
-        return React.createElement(
-            "div",
-            { className: "no-view" },
-            React.createElement(
-                Property,
-                { label: linkedRenderStore.namespaces.schema("name") },
-            ),
-            React.createElement("p", null, `We currently don"t have a view for this (${this.props.subject})`),
-        );
-    }
-
-    protected subject(props = this.props) {
-        if (!nodeTypes.includes(props.subject.termType)) {
-            throw new Error(`[LRC] Subject must be a node (was "${typeof props.subject}[${props.subject}]")`);
-        }
-
-        return props.subject;
-    }
-
-    protected topology(): NamedNode | undefined {
-        return this.props.topology === null
-            ? undefined
-            : (this.props.topology || this.context.topology);
+        return this.renderNoView();
     }
 
     protected renderChildren() {
@@ -209,8 +141,10 @@ class LinkedResourceContainerComp
         );
     }
 
-    private data(props = this.props): Statement[] {
-        return this.context.linkedRenderStore.tryEntity(this.subject(props));
+    protected topology(): NamedNode | undefined {
+        return this.props.topology === null
+            ? undefined
+            : (this.props.topology || this.context.topology);
     }
 
     private loadLinkedObject(props = this.props): void {
@@ -222,32 +156,6 @@ class LinkedResourceContainerComp
             }
             this.props.loadLinkedObject(subject, props.fetch || true);
         }
-    }
-
-    private objType(): SomeNode[] {
-        const { linkedRenderStore } = this.context;
-
-        return linkedRenderStore.getResourceProperties(NS.rdf("type")) || [linkedRenderStore.defaultType];
-    }
-
-    private onError(): React.ReactType {
-        return this.props.onError
-            || this.context.linkedRenderStore.getComponentForType(
-                NS.ll("ErrorResource"),
-                this.topology() || DEFAULT_TOPOLOGY,
-            )
-            || this.context.linkedRenderStore.onError
-            || null;
-    }
-
-    private onLoad(): React.ReactType {
-        return this.props.onLoad
-            || this.context.linkedRenderStore.getComponentForType(
-                NS.ll("LoadingResource"),
-                this.topology() || DEFAULT_TOPOLOGY,
-            )
-            || this.context.linkedRenderStore.loadingComp
-            || null;
     }
 }
 
