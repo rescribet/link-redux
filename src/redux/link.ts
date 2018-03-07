@@ -164,7 +164,7 @@ export function link(mapDataToProps: MapDataToPropsParam,
                     .linkedRenderStore
                     .tryEntity(this.props.subject)
                     .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
-                if (this.props.forceRender !== true && props.length === 0) {
+                if ((this.props.forceRender || opts.forceRender) !== true && props.length === 0) {
                     return null;
                 }
 
