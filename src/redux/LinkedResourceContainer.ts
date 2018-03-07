@@ -100,25 +100,19 @@ class LinkedResourceContainerComp
         if (this.state.hasError) {
             return true;
         }
+        const subject = this.subject();
 
-        const status: string | number | boolean | undefined = this
-            .context
-            .linkedRenderStore
-            .api
-            .processor
-            .fetcher
-            .requested[this.subject().value];
-
-        if (status && status !== "done" && status !== true) {
-            if (typeof status === "number") {
-                return status >= BAD_REQUEST;
-            }
-
+        if (subject.termType === "BlankNode") {
             return false;
         }
 
-        return false;
+        const status = this.context.linkedRenderStore.api.getStatus(subject);
 
+        if (!status.requested) {
+            return false;
+        }
+
+        return status.status >= BAD_REQUEST;
     }
 
     public getChildContext(): LinkContext {
