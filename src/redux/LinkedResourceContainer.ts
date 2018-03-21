@@ -109,12 +109,11 @@ class LinkedResourceContainerComp extends Typable<PropTypes, StateTypes>
 
     public render() {
         const { linkedRenderStore } = this.context;
-        const data = this.data();
         if (this.props.forceRender && this.props.children) {
             return this.renderChildren();
         }
 
-        const notReadyComponent = this.renderLoadingOrError(data);
+        const notReadyComponent = this.renderLoadingOrError();
         if (notReadyComponent !== undefined) {
             return notReadyComponent;
         }

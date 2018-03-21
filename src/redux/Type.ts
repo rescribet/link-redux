@@ -17,7 +17,7 @@ class TypeComp extends Typable<PropTypes, never> {
     public render() {
         const { linkedRenderStore } = this.context;
 
-        const notReadyComponent = this.renderLoadingOrError(this.data());
+        const notReadyComponent = this.renderLoadingOrError();
         if (notReadyComponent !== undefined) {
             return notReadyComponent;
         }

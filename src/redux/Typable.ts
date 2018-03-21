@@ -1,4 +1,4 @@
-import { BAD_REQUEST } from "http-status-codes";
+import { ACCEPTED, BAD_REQUEST } from "http-status-codes";
 import {
     DEFAULT_TOPOLOGY,
     defaultNS as NS,
@@ -34,21 +34,21 @@ export class Typable<P extends TypableProps, S> extends React.Component<P, S> {
         return status.status >= BAD_REQUEST;
     }
 
-    public static hasData(data: Statement[]) {
-        return typeof data !== "undefined" && data.length >= 2;
+    public static isLoading(status: EmptyRequestStatus | FulfilledRequestStatus) {
+        return status.status === ACCEPTED;
     }
 
     protected data(props = this.props): Statement[] {
         return this.context.linkedRenderStore.tryEntity(this.subject(props));
     }
 
-    protected renderLoadingOrError(data: Statement[]) {
-        if (!Typable.hasData(data)) {
+    protected renderLoadingOrError() {
+        const status = this.context.linkedRenderStore.api.getStatus(this.subject());
+        if (Typable.isLoading(status)) {
             const loadComp = this.onLoad();
 
             return loadComp === null ? null : React.createElement(loadComp, this.props);
         }
-        const status = this.context.linkedRenderStore.api.getStatus(this.subject());
         if (Typable.hasErrors(status)) {
             const errComp = this.onError();
             if (errComp) {
