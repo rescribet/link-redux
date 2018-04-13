@@ -148,7 +148,7 @@ export function link(mapDataToProps: MapDataToPropsParam,
     const returnType = opts.returnType || "term";
 
     return function wrapWithConnect(wrappedComponent: React.ComponentType<any>) {
-        class Link<T extends VersionProp> extends React.Component<any> {
+        class Link extends React.Component<any> {
 
             public static contextTypes = {
                 linkedRenderStore: lrsType,
