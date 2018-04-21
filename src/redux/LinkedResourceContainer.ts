@@ -102,11 +102,6 @@ class LinkedResourceContainerComp extends Typable<PropTypes, StateTypes>
         }
     }
 
-    public shouldComponentUpdate(nextProps: PropTypes) {
-        return this.props.version !== nextProps.version ||
-            this.props.subject !== nextProps.subject;
-    }
-
     public render() {
         const { linkedRenderStore } = this.context;
         if (this.props.forceRender && this.props.children) {
