@@ -1,7 +1,7 @@
 import { ComponentClass, StatelessComponent } from "react";
 
 import { LinkedRenderStore, SomeNode } from "link-lib";
-import { Action, Dispatch, Middleware } from "redux";
+import { Action, AnyAction, Dispatch, Middleware } from "redux";
 
 import {
     LinkFetchAction,

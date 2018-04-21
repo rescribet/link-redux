@@ -43,7 +43,7 @@ describe("LinkedResourceContainer component", () => {
 
         const elem = mount(opts.wrapComponent(comp));
 
-        expect(elem.find(".innerLRC")).toBePresent();
+        expect(elem.find(".innerLRC")).toExist();
         expect(llo).toHaveBeenCalledTimes(1);
     });
 
@@ -78,7 +78,7 @@ describe("LinkedResourceContainer component", () => {
 
         const elem = mount(opts.wrapComponent());
 
-        expect(elem.find(LinkedResourceContainer)).toBePresent();
+        expect(elem.find(LinkedResourceContainer)).toExist();
         expect(elem.find("span.testComponent")).toHaveLength(1);
     });
 
@@ -102,7 +102,7 @@ describe("LinkedResourceContainer component", () => {
             })),
         );
 
-        expect(elem.find("span.testComponent")).toBePresent();
+        expect(elem.find("span.testComponent")).toExist();
     });
 
     it("renders children when present", () => {

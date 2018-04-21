@@ -10,7 +10,6 @@ import { NamedNode, Statement } from "rdflib";
 import * as React from "react";
 
 import { lrsType, topologyType } from "../propTypes";
-import { Property } from "../react/components";
 import { PropertyProps } from "../types";
 
 const nodeTypes = ["NamedNode", "BlankNode"];
@@ -20,7 +19,7 @@ export interface TypableProps extends PropertyProps {
     onLoad?: () => void;
 }
 
-export class Typable<P extends TypableProps, S> extends React.Component<P, S> {
+export class Typable<P extends TypableProps, S> extends React.PureComponent<P, S> {
     public static contextTypes = {
         linkedRenderStore: lrsType,
         topology: topologyType,
@@ -75,10 +74,6 @@ export class Typable<P extends TypableProps, S> extends React.Component<P, S> {
         return React.createElement(
             "div",
             { className: "no-view" },
-            React.createElement(
-                Property,
-                { label: this.context.linkedRenderStore.namespaces.schema("name") },
-            ),
             React.createElement("p", null, `We currently don"t have a view for this (${this.props.subject})`),
         );
     }

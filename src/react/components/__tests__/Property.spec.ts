@@ -58,7 +58,7 @@ describe("Property component", () => {
         const elem = mount(opts.wrapComponent(comp));
 
         expect(elem.find(Property).children()).toHaveLength(1);
-        expect(elem.find(".nameProp")).toBePresent();
+        expect(elem.find(".nameProp")).toExist();
     });
 
     it("renders a LRC when rendering a NamedNode", () => {
@@ -114,7 +114,7 @@ describe("Property component", () => {
             );
             const elem = mount(opts.wrapComponent(comp));
 
-            expect(elem.find("p.childComponent")).toBePresent();
+            expect(elem.find("p.childComponent")).toExist();
         });
 
         it("renders the children when a component was found", () => {
@@ -133,7 +133,7 @@ describe("Property component", () => {
             );
             const elem = mount(opts.wrapComponent(comp));
 
-            expect(elem.find("p.childComponent")).toBePresent();
+            expect(elem.find("p.childComponent")).toExist();
         });
     });
 });

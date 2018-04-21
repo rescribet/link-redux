@@ -16,7 +16,7 @@ describe("Type component", () => {
 
         const elem = shallow(opts.wrapComponent(createElement(Type)));
 
-        expect(elem.find("span")).not.toBePresent();
+        expect(elem.find("span")).not.toExist();
     });
 
     it("renders no view when no class matches", () => {
@@ -24,7 +24,7 @@ describe("Type component", () => {
 
         const elem = mount(opts.wrapComponent(createElement(Type)));
 
-        expect(elem.find("div.no-view")).toBePresent();
+        expect(elem.find("div.no-view")).toExist();
     });
 
     it("renders default when set", () => {
@@ -48,6 +48,6 @@ describe("Type component", () => {
 
         const elem = mount(opts.wrapComponent(createElement(Type)));
 
-        expect(elem.find(".creativeWork")).toBePresent();
+        expect(elem.find(".creativeWork")).toExist();
     });
 });
