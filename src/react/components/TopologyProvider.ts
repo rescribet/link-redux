@@ -35,7 +35,7 @@ export class TopologyProvider
         topology: topologyType,
     };
     public static propTypes = {
-        children: node.isRequired,
+        children: node,
     };
 
     protected className: string | undefined = undefined;
@@ -57,6 +57,6 @@ export class TopologyProvider
             );
         }
 
-        return this.props.children;
+        return this.props.children || null;
     }
 }
