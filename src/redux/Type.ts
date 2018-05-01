@@ -11,7 +11,7 @@ export interface PropTypes extends TypableProps {
     children: ReactType;
 }
 
-class TypeComp extends Typable<PropTypes, never> {
+class TypeComp extends Typable<PropTypes> {
     public static displayName = "Type";
 
     public render() {

@@ -14,12 +14,16 @@ import { PropertyProps } from "../types";
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
+export interface StateTypes {
+    hasCaughtError: boolean;
+}
+
 export interface TypableProps extends PropertyProps {
     onError?: () => void;
     onLoad?: () => void;
 }
 
-export class Typable<P extends TypableProps, S> extends React.PureComponent<P, S> {
+export class Typable<P extends TypableProps> extends React.PureComponent<P, StateTypes> {
     public static contextTypes = {
         linkedRenderStore: lrsType,
         topology: topologyType,
@@ -37,18 +41,32 @@ export class Typable<P extends TypableProps, S> extends React.PureComponent<P, S
         return status.status === ACCEPTED;
     }
 
+    public constructor(props: P) {
+        super(props);
+
+        this.state = {
+            hasCaughtError: false,
+        };
+    }
+
+    public componentDidCatch() {
+        this.setState({
+            hasCaughtError: true,
+        });
+    }
+
     protected data(props = this.props): Statement[] {
         return this.context.linkedRenderStore.tryEntity(this.subject(props));
     }
 
     protected renderLoadingOrError() {
         const status = this.context.linkedRenderStore.api.getStatus(this.subject());
-        if (Typable.isLoading(status)) {
+        if (!this.state.hasCaughtError && Typable.isLoading(status)) {
             const loadComp = this.onLoad();
 
             return loadComp === null ? null : React.createElement(loadComp, this.props);
         }
-        if (Typable.hasErrors(status)) {
+        if (this.state.hasCaughtError || Typable.hasErrors(status)) {
             const errComp = this.onError();
             if (errComp) {
                 return React.createElement(

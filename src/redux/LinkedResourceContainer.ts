@@ -30,10 +30,6 @@ export interface PropTypes extends DispatchPropTypes, TypableProps {
     topology?: NamedNode;
 }
 
-export interface StateTypes {
-    hasCaughtError: boolean;
-}
-
 const propTypes = {
     children: ReactPropTypes.node,
     fetch: ReactPropTypes.bool,
@@ -55,7 +51,7 @@ const propTypes = {
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-class LinkedResourceContainerComp extends Typable<PropTypes, StateTypes>
+class LinkedResourceContainerComp extends Typable<PropTypes>
     implements React.ChildContextProvider<LinkContext> {
     public static childContextTypes = {
         subject: subjectType,
@@ -71,25 +67,11 @@ class LinkedResourceContainerComp extends Typable<PropTypes, StateTypes>
     public static displayName = "LinkedResourceContainer";
     public static propTypes = propTypes;
 
-    public constructor(props: PropTypes) {
-        super(props);
-
-        this.state = {
-            hasCaughtError: false,
-        };
-    }
-
     public getChildContext(): LinkContext {
         return {
             subject: this.subject(),
             topology: this.topology(),
         };
-    }
-
-    public componentDidCatch() {
-        this.setState({
-            hasCaughtError: true,
-        });
     }
 
     public componentWillMount() {
