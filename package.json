@@ -10,7 +10,9 @@
     "@types",
     "dist/link-redux.es6.js",
     "dist/link-redux.umd.js",
-    "dist/typings/**/*.*"
+    "dist/typings/**/*.*",
+    "package.json",
+    "yarn.lock"
   ],
   "repository": "https://github.com/fletcher91/link-redux.git",
   "scripts": {
@@ -31,7 +33,7 @@
     "http-status-codes": "^1.3.0",
     "immutable": "^3.8.1",
     "jsonld": "^1.0.1",
-    "link-lib": "^1.0.0-beta16.2",
+    "link-lib": "^1.0.0-beta17",
     "prop-types": "15.6.1",
     "rdflib": "^0.16.8",
     "react": "^16.3.2",
