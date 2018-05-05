@@ -34,7 +34,7 @@ const propTypes = {
     children: ReactPropTypes.node,
     fetch: ReactPropTypes.bool,
     forceRender: ReactPropTypes.bool,
-    loadLinkedObject: ReactPropTypes.func.isRequired,
+    loadLinkedObject: ReactPropTypes.func,
     onError: ReactPropTypes.oneOfType([
         ReactPropTypes.element,
         ReactPropTypes.func,
@@ -43,10 +43,10 @@ const propTypes = {
         ReactPropTypes.element,
         ReactPropTypes.func,
     ]),
-    reloadLinkedObject: ReactPropTypes.func.isRequired,
+    reloadLinkedObject: ReactPropTypes.func,
     subject: subjectType.isRequired,
     topology: topologyType,
-    version: ReactPropTypes.string.isRequired,
+    version: ReactPropTypes.string,
 };
 
 const nodeTypes = ["NamedNode", "BlankNode"];

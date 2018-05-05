@@ -1,4 +1,5 @@
 import { Requireable } from "prop-types";
+import { ReactElement } from "react";
 import * as React from "react";
 
 import { lrsType } from "../../propTypes";
@@ -6,7 +7,7 @@ import { lrsType } from "../../propTypes";
 import { LinkReduxLRSType } from "../../types";
 
 export interface PropTypes {
-    children?: React.ReactType;
+    children?: React.ReactType | ReactElement<any>;
     linkedRenderStore: LinkReduxLRSType;
 }
 

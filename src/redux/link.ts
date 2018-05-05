@@ -79,7 +79,7 @@ function toReturnType(returnType: LinkReturnType, p: Statement): Statement | Som
  * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
  */
 export function link(mapDataToProps: MapDataToPropsParam,
-                     opts: LinkOpts = globalLinkOptsDefaults): (p: React.ComponentType) => React.ReactType {
+                     opts: LinkOpts = globalLinkOptsDefaults): (p: React.ComponentType<any>) => React.ReactType {
 
     const propMap: DataToPropsMapping = {};
     const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => p.sI) : [];

@@ -12,6 +12,7 @@
     "dist/link-redux.umd.js",
     "dist/typings/**/*.*",
     "package.json",
+    "tsconfig.json",
     "yarn.lock"
   ],
   "repository": "https://github.com/fletcher91/link-redux.git",
