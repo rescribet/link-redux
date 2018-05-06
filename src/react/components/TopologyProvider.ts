@@ -1,4 +1,5 @@
 import { node, Requireable } from "prop-types";
+import { ReactNode } from "react";
 import * as React from "react";
 
 import { topologyType } from "../../propTypes";
@@ -7,7 +8,7 @@ import {
 } from "../../types";
 
 export interface PropTypes {
-    topology: TopologyType;
+    children?: ReactNode | ReactNode[];
 }
 
 export interface TopologyContext {
