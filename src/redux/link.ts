@@ -1,4 +1,4 @@
-import { getPropBestLangRaw } from "link-lib";
+import { getPropBestLangRaw, normalizeType } from "link-lib";
 import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
@@ -20,7 +20,7 @@ export interface LinkOpts {
     returnType?: LinkReturnType;
 }
 export interface ProcessedLinkOpts extends LinkOpts {
-    label: NamedNode;
+    label: NamedNode[];
     name: string;
 }
 
@@ -90,9 +90,9 @@ export function link(mapDataToProps: MapDataToPropsParam,
             throw new TypeError("Props array must contain at least one predicate");
         }
         mapDataToProps.forEach((prop) => {
-            propMap[prop.sI] = {
+            propMap[prop.term] = {
                 forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                label: prop,
+                label: [prop],
                 limit: opts.limit || globalLinkOptsDefaults.limit,
                 name: prop.term,
             };
@@ -109,9 +109,9 @@ export function link(mapDataToProps: MapDataToPropsParam,
                 }
                 predObj.forEach((prop) => {
                     requestedProperties.push(prop.sI);
-                    propMap[prop.sI] = {
+                    propMap[prop.term] = {
                         forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                        label: prop,
+                        label: [prop],
                         limit: opts.limit || globalLinkOptsDefaults.limit,
                         name: prop.term,
                         returnType: opts.returnType || globalLinkOptsDefaults.returnType,
@@ -119,23 +119,27 @@ export function link(mapDataToProps: MapDataToPropsParam,
                 });
             } else if (predObj instanceof NamedNode) {
                 requestedProperties.push(predObj.sI);
-                propMap[predObj.sI] = {
+                propMap[propKey || predObj.term] = {
                     forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                    label: predObj,
+                    label: [predObj],
                     limit: opts.limit || globalLinkOptsDefaults.limit,
                     name: propKey || predObj.term,
                 };
             } else {
-                if (predObj.label === undefined || Array.isArray(predObj.label)) {
+                if (predObj.label === undefined) {
                     throw new TypeError("Inner opts label must be a single NamedNode");
                 }
-                requestedProperties.push(predObj.label!.sI);
-                propMap[predObj.label!.sI] = {
+                const labelArr = Array.isArray(predObj.label) ? predObj.label : [predObj.label];
+
+                labelArr.forEach((label) => {
+                    requestedProperties.push(label.sI);
+                });
+                propMap[propKey || predObj.name || labelArr[0].term] = {
                     forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
-                    label: predObj.label,
+                    label: normalizeType(predObj.label),
                     limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
                     linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
-                    name: predObj.name || predObj.label.term,
+                    name: propKey || predObj.name || labelArr[0].term,
                     returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
                 } as ProcessedLinkOpts;
             }
@@ -179,25 +183,34 @@ export function link(mapDataToProps: MapDataToPropsParam,
                 const acc: PropertyBoundProps = {};
                 const lrs = this.context.linkedRenderStore;
 
-                return requestedProperties.reduce((acc: PropertyBoundProps, cur) => {
-                    const propOpts = propMap[cur];
-
-                    if (propOpts.limit === 1) {
-                        const p = getPropBestLangRaw(
-                            lrs.getResourcePropertyRaw(this.props.subject, cur),
-                            lrs.store.langPrefs,
-                        );
-                        if (p) {
-                            acc[propOpts.name] = toReturnType(returnType, p);
+                for (const propOpts of Object.values(propMap)) {
+                    propOpts.label.forEach((cur) => {
+                        if (acc[propOpts.name]) {
+                            // TODO: Merge
+                            return;
                         }
-                    } else {
-                        acc[propOpts.name] = props
-                            .filter((s: Statement) => s.predicate.sI === cur)
-                            .map((s: Statement) => toReturnType(returnType, s)) as Statement[] | SomeTerm[] | string[];
-                    }
 
-                    return acc;
-                }, {});
+                        if (propOpts.limit === 1) {
+                            const p = getPropBestLangRaw(
+                                lrs.getResourcePropertyRaw(this.props.subject, cur),
+                                lrs.store.langPrefs,
+                            );
+                            if (p) {
+                                acc[propOpts.name] = toReturnType(returnType, p);
+                            }
+                        } else {
+                            acc[propOpts.name] = props
+                                .filter((s: Statement) => s.predicate.sI === cur.sI)
+                                .map(
+                                    (s: Statement) => toReturnType(returnType, s),
+                                ) as Statement[] | SomeTerm[] | string[];
+                        }
+
+                        return acc;
+                    });
+                }
+
+                return acc;
             }
         }
 
