@@ -122,7 +122,7 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
         } else if (this.props.limit === 1 || objRaw.length === 1) {
             return func(objRaw[0]);
         }
-        const pLimit = this.props.limit === Infinity ? objRaw.length : this.props.limit!;
+        const pLimit = Math.min(...[this.props.limit, objRaw.length].filter(Number) as number[]);
         const elems = new Array(pLimit);
         for (let i = 0; i < pLimit; i++) {
             elems.push(func(objRaw[i]));
