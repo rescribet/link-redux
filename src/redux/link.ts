@@ -1,9 +1,10 @@
+import { getPropBestLangRaw } from "link-lib";
 import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
 import { lrsType, subjectType } from "../propTypes";
-import { LabelType, LinkedPropType, VersionProp } from "../types";
+import { LabelType, LinkedPropType } from "../types";
 
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
@@ -175,11 +176,17 @@ export function link(mapDataToProps: MapDataToPropsParam,
             }
 
             private getLinkedObjectProperties(props: Statement[]): PropertyBoundProps {
+                const acc: PropertyBoundProps = {};
+                const lrs = this.context.linkedRenderStore;
+
                 return requestedProperties.reduce((acc: PropertyBoundProps, cur) => {
                     const propOpts = propMap[cur];
 
                     if (propOpts.limit === 1) {
-                        const p = props.find((s: Statement) => s.predicate.sI === cur);
+                        const p = getPropBestLangRaw(
+                            lrs.getResourcePropertyRaw(this.props.subject, cur),
+                            lrs.store.langPrefs,
+                        );
                         if (p) {
                             acc[propOpts.name] = toReturnType(returnType, p);
                         }

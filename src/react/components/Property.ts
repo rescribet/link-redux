@@ -1,4 +1,4 @@
-import { SomeNode } from "link-lib";
+import { getTermBestLang, SomeNode } from "link-lib";
 import { Requireable } from "prop-types";
 import { SomeTerm } from "rdflib";
 import * as React from "react";
@@ -119,8 +119,10 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
 
         if (objRaw.length === 0) {
             return null;
-        } else if (this.props.limit === 1 || objRaw.length === 1) {
+        } else if (objRaw.length === 1) {
             return func(objRaw[0]);
+        } else if (this.props.limit === 1) {
+            return func(getTermBestLang(objRaw, this.context.linkedRenderStore.store.langPrefs));
         }
         const pLimit = Math.min(...[this.props.limit, objRaw.length].filter(Number) as number[]);
         const elems = new Array(pLimit);
