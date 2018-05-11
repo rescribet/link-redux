@@ -51,7 +51,7 @@ const propTypes = {
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-class LinkedResourceContainerComp extends Typable<PropTypes>
+class LinkedResourceContainerComp extends Typable<any & PropTypes>
     implements React.ChildContextProvider<LinkContext> {
     public static childContextTypes = {
         subject: subjectType,
@@ -137,7 +137,7 @@ class LinkedResourceContainerComp extends Typable<PropTypes>
 
 export { LinkedResourceContainerComp };
 
-const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp) => {
+const mapStateToProps = (state: LinkStateTree, { subject }: any & SubjectProp) => {
     if (!subject) {
         throw new Error("[LRC] a subject must be given");
     }
@@ -150,7 +150,7 @@ const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: PropertyProps): DispatchPropTypes => ({
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: any & PropertyProps): DispatchPropTypes => ({
     loadLinkedObject: (href: NamedNode = ownProps.subject as NamedNode, fetch: boolean): LinkAction =>
         dispatch(fetch === false ?
             getLinkedObject(href) :
