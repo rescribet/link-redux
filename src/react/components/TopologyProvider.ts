@@ -29,7 +29,7 @@ export interface TopologyContext {
  *   }
  * ```
  */
-export class TopologyProvider<T = {}> extends React.PureComponent<T & PropTypes>
+export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T & PropTypes, S>
     implements React.ChildContextProvider<TopologyContext> {
 
     public static childContextTypes = {
