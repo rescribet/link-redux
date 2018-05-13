@@ -92,7 +92,7 @@ export class Typable<P extends TypableProps> extends React.PureComponent<P, Stat
         return React.createElement(
             "div",
             { className: "no-view" },
-            React.createElement("p", null, `We currently don"t have a view for this (${this.props.subject})`),
+            React.createElement("p", null, `We currently don't have a view for this (${this.props.subject})`),
         );
     }
 
