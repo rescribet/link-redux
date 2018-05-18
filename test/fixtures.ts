@@ -68,11 +68,12 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
         wrapComponent: (children?: ReactElement<any>, topology?: NamedNode | undefined): ReactElement<any> => {
             return createElement(Provider, { store: reduxStore },
                 createElement(RenderStoreProvider, { linkedRenderStore: lrs },
-                    createElement(
-                        LinkedResourceContainer,
-                        { forceRender: true, subject, topology },
-                        children,
-                    )));
+                    createElement("div", { className: "root" },
+                        createElement(
+                            LinkedResourceContainer,
+                            { forceRender: true, subject, topology },
+                            children,
+                        ))));
         },
     } as TestContext<ReactType>;
 }
