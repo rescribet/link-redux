@@ -111,8 +111,8 @@ class LinkedResourceContainerComp extends Typable<PropTypes>
 
     protected renderChildren() {
         return React.createElement(
-            "div",
-            { className: "view-overridden", style: { display: "inherit" } },
+            React.Fragment,
+            null,
             this.props.children,
         );
     }

@@ -114,7 +114,6 @@ describe("LinkedResourceContainer component", () => {
         );
         const elem = mount(opts.wrapComponent(loc));
 
-        expect(elem.find("div").last()).toHaveClassName("view-overridden");
         expect(elem.find("span").last()).toHaveText("override");
     });
 
