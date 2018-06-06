@@ -1,4 +1,5 @@
-import { defaultNS } from "link-lib";
+import { RENDER_CLASS_NAME } from "link-lib";
+import { NamedNode } from "rdflib";
 import { ReactType } from "react";
 import { createElement } from "react";
 
@@ -9,6 +10,7 @@ import { Typable, TypableProps } from "./Typable";
 
 export interface PropTypes extends TypableProps {
     children: ReactType;
+    label?: NamedNode;
 }
 
 class TypeComp extends Typable<PropTypes> {
@@ -22,8 +24,9 @@ class TypeComp extends Typable<PropTypes> {
             return notReadyComponent;
         }
 
-        const component = linkedRenderStore.resourceComponent(
+        const component = linkedRenderStore.resourcePropertyComponent(
             this.props.subject,
+            this.props.label || RENDER_CLASS_NAME,
             this.context.topology,
         );
         if (component !== undefined) {
