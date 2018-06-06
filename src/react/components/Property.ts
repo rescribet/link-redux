@@ -1,6 +1,6 @@
-import { getTermBestLang, SomeNode } from "link-lib";
+import { defaultNS, getTermBestLang, SomeNode } from "link-lib";
 import { Requireable } from "prop-types";
-import { SomeTerm } from "rdflib";
+import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
 
 import { lrsType, topologyType } from "../../propTypes";
@@ -47,10 +47,11 @@ export interface ContextTypes {
 const nodeTypes = ["NamedNode", "BlankNode"];
 
 export function getLinkedObjectClass(props: PropertyPropTypes,
-                                     { linkedRenderStore, topology }: ContextTypes): React.ReactType | undefined {
+                                     { linkedRenderStore, topology }: ContextTypes,
+                                     label?: NamedNode): React.ReactType | undefined {
     return linkedRenderStore.resourcePropertyComponent(
         props.subject,
-        props.label,
+        label || props.label,
         topology === null ? undefined : topology,
     );
 }
@@ -78,14 +79,25 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
             return null;
         }
 
+        const associationRenderer = getLinkedObjectClass(
+            this.props,
+            this.context,
+            defaultNS.rdf("predicate"),
+        ) || React.Fragment;
+        const associationProps = associationRenderer !== React.Fragment ? this.props : null;
         const component = getLinkedObjectClass(this.props, this.context);
         if (component) {
             const toRender = this.limitTimes(
                 objRaw,
                 (p) => React.createElement(component, { ...this.props, linkedProp: p }, this.props.children),
+                associationRenderer,
             );
             if (toRender === null) {
-                return React.createElement(component, { ...this.props }, this.props.children);
+                return React.createElement(
+                    associationRenderer,
+                    associationProps,
+                    React.createElement(component, { ...this.props }, this.props.children),
+                );
             }
 
             return toRender;
@@ -97,16 +109,17 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
                     return React.createElement(LRC, lrcProps, this.props.children);
                 };
 
-                return this.limitTimes(objRaw, wrapLOC);
+                return this.limitTimes(objRaw, wrapLOC, associationRenderer);
             }
 
             return this.limitTimes(
                 objRaw,
                 (p) => React.createElement(React.Fragment, null, this.props.children || p.value),
+                associationRenderer,
             );
         }
         if (this.props.children) {
-            return React.createElement(React.Fragment, null, this.props.children);
+            return React.createElement(associationRenderer, associationProps, this.props.children);
         }
 
         return null;
@@ -115,14 +128,21 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
     private limitTimes(
         objRaw: SomeTerm[],
         func: (prop: SomeTerm) => React.ReactElement<any>,
+        associationRenderer: React.ReactType,
     ): React.ReactElement<any> | Array<React.ReactElement<any>> | null {
+
+        const associationProps = associationRenderer !== React.Fragment ? this.props : null;
 
         if (objRaw.length === 0) {
             return null;
         } else if (objRaw.length === 1) {
-            return func(objRaw[0]);
+            return React.createElement(associationRenderer, associationProps, func(objRaw[0]));
         } else if (this.props.limit === 1) {
-            return func(getTermBestLang(objRaw, this.context.linkedRenderStore.store.langPrefs));
+            return React.createElement(
+                associationRenderer,
+                associationProps,
+                func(getTermBestLang(objRaw, this.context.linkedRenderStore.store.langPrefs)),
+            );
         }
         const pLimit = Math.min(...[this.props.limit, objRaw.length].filter(Number) as number[]);
         const elems = new Array(pLimit);
@@ -130,7 +150,7 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
             elems.push(func(objRaw[i]));
         }
 
-        return React.createElement(React.Fragment, null, elems);
+        return React.createElement(associationRenderer, associationProps, elems);
     }
 }
 
