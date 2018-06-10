@@ -3,6 +3,7 @@ import {
     ComponentClass,
     StatelessComponent,
 } from "react";
+import { SubjectProp } from "./types";
 
 import { linkedSubject } from "./redux/linkedSubject";
 import { linkedVersion } from "./redux/linkedVersion";
@@ -26,6 +27,7 @@ export {
     LinkedResourceContainer,
 } from "./redux/LinkedResourceContainer";
 
+export { register } from "./register";
 export * from "./types";
 export * from "./propTypes";
 

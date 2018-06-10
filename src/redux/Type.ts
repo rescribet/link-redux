@@ -1,11 +1,13 @@
 import { RENDER_CLASS_NAME } from "link-lib";
 import { NamedNode } from "rdflib";
-import { ReactType } from "react";
+import { ComponentClass, ReactType, StatelessComponent } from "react";
 import { createElement } from "react";
+import { DispatchProp } from "react-redux";
+
+import { SubjectProp } from "../types";
 
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
-
 import { Typable, TypableProps } from "./Typable";
 
 export interface PropTypes extends TypableProps {

@@ -1,31 +1,18 @@
 import { getPropBestLangRaw, normalizeType } from "link-lib";
 import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
+import { ComponentType } from "react";
 import * as React from "react";
 
 import { lrsType, subjectType } from "../propTypes";
-import { LabelType, LinkedPropType } from "../types";
+import { LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
 
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
 
-export type LinkReturnType = "term" | "statement" | "value";
-
-export interface LinkOpts {
-    forceRender?: boolean;
-    label?: LabelType;
-    limit?: number;
-    linkedProp?: LinkedPropType;
-    name?: string;
-    returnType?: LinkReturnType;
-}
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode[];
     name: string;
-}
-
-export interface MapDataToPropsParamObject {
-    [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
 export interface PropertyBoundProps {
@@ -35,8 +22,6 @@ export interface PropertyBoundProps {
 interface DataToPropsMapping {
     [k: string]: ProcessedLinkOpts;
 }
-
-export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
 const globalLinkOptsDefaults = {
     forceRender: false,
@@ -79,8 +64,8 @@ function toReturnType(returnType: LinkReturnType, p: Statement): Statement | Som
  * @param {NamedNode[]} mapDataToProps The properties to bind to the component, only NamedNode[] is currently supported.
  * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
  */
-export function link(mapDataToProps: MapDataToPropsParam,
-                     opts: LinkOpts = globalLinkOptsDefaults): (p: React.ComponentType<any>) => React.ReactType {
+export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globalLinkOptsDefaults):
+    <P>(p: React.ComponentType<P>) => React.ComponentType<P> {
 
     const propMap: DataToPropsMapping = {};
     const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => p.sI) : [];
@@ -152,7 +137,7 @@ export function link(mapDataToProps: MapDataToPropsParam,
 
     const returnType = opts.returnType || "term";
 
-    return function wrapWithConnect(wrappedComponent: React.ComponentType<any>) {
+    return function wrapWithConnect(wrappedComponent: React.ComponentType<any>): ComponentType<any> {
         class Link extends React.Component<any> {
 
             public static contextTypes = {

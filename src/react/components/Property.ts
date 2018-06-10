@@ -2,6 +2,7 @@ import { defaultNS, getTermBestLang, SomeNode } from "link-lib";
 import { Requireable } from "prop-types";
 import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
+import { DispatchProp } from "react-redux";
 
 import { lrsType, topologyType } from "../../propTypes";
 import {

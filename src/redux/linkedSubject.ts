@@ -1,13 +1,14 @@
 import * as React from "react";
 
 import { subjectType } from "../propTypes";
+import { SubjectProp } from "../types";
 
-export const linkedSubject = (connectedProp: React.ReactType): React.ReactType => {
-    const displayName = typeof connectedProp === "string"
-        ? "linkedSubject"
-        : `linkedSubject[${connectedProp.displayName || connectedProp.name}]`;
+export const linkedSubject = <P>(connectedProp: React.ComponentType<P & SubjectProp>):
+    React.ComponentType<P & Partial<SubjectProp>> => {
 
-    class LinkedSubjectComp extends React.Component {
+    const displayName = `linkedSubject[${connectedProp.displayName || connectedProp.name}]`;
+
+    class LinkedSubjectComp extends React.Component<P & Partial<SubjectProp>> {
         public static contextTypes = {
             subject: subjectType,
         };
@@ -17,7 +18,11 @@ export const linkedSubject = (connectedProp: React.ReactType): React.ReactType =
         public render() {
             return React.createElement(
                 connectedProp,
-                { ...this.props, subject: this.context.subject },
+                Object.assign(
+                    {},
+                    this.props,
+                    { subject: this.context.subject } as SubjectProp,
+                ) as P & SubjectProp,
             );
         }
     }
