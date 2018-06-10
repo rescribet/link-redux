@@ -26,6 +26,7 @@ export {
     LinkedResourceContainer,
 } from "./redux/LinkedResourceContainer";
 
+export { register } from "./register";
 export * from "./types";
 export * from "./propTypes";
 

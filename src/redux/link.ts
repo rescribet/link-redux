@@ -4,28 +4,14 @@ import { NamedNode, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
 import { lrsType, subjectType } from "../propTypes";
-import { LabelType, LinkedPropType } from "../types";
+import { LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
 
 import { linkedSubject } from "./linkedSubject";
 import { linkedVersion } from "./linkedVersion";
 
-export type LinkReturnType = "term" | "statement" | "value";
-
-export interface LinkOpts {
-    forceRender?: boolean;
-    label?: LabelType;
-    limit?: number;
-    linkedProp?: LinkedPropType;
-    name?: string;
-    returnType?: LinkReturnType;
-}
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode[];
     name: string;
-}
-
-export interface MapDataToPropsParamObject {
-    [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
 export interface PropertyBoundProps {
@@ -35,8 +21,6 @@ export interface PropertyBoundProps {
 interface DataToPropsMapping {
     [k: string]: ProcessedLinkOpts;
 }
-
-export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
 const globalLinkOptsDefaults = {
     forceRender: false,
