@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect, DispatchProp } from "react-redux";
+import { AnyAction } from "redux";
 import { LinkStateTree, SubjectProp, VersionProp } from "../types";
 
 import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
@@ -14,8 +15,8 @@ export const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp):
     };
 };
 
-export function linkedVersion<T extends VersionProp>(
-    component: React.ComponentType<T & DispatchProp<any> & SubjectProp>,
+export function linkedVersion<T>(
+    component: React.ComponentType<T & DispatchProp<AnyAction> & SubjectProp & VersionProp>,
 ) {
-    return connect(mapStateToProps)<T & DispatchProp<any> & SubjectProp>(component);
+    return connect(mapStateToProps)<T & DispatchProp<AnyAction> & SubjectProp & VersionProp>(component);
 }
