@@ -3,7 +3,7 @@
     "allowJs": false,
     "declaration": false,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "jsx": "react",
     "lib": [
       "es2015",
       "es2016",

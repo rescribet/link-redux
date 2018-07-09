@@ -5,24 +5,20 @@ import { ReactElement } from "react";
 import * as React from "react";
 
 import { labelType, linkedPropType, subjectType } from "../../propTypes";
-import { LabelType, LinkReduxLRSType, SubjectProp } from "../../types";
+import { LabelType, LinkContextRecieverProps } from "../../types";
 
-export interface PropTypes extends SubjectProp {
+export interface PropTypes extends LinkContextRecieverProps {
     label: LabelType;
     linkedProp?: SomeTerm;
-    version?: string;
 }
 
-export class PropertyBase<T extends PropTypes> extends React.Component<T> {
-    public static contextTypes = {
-        linkedRenderStore: ReactPropTypes.object,
-    };
-    public static propTypes = {
-        label: labelType,
-        linkedProp: linkedPropType,
-        subject: subjectType,
-        version: ReactPropTypes.string,
-    };
+export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
+    // public static propTypes = {
+    //     label: labelType,
+    //     linkedProp: linkedPropType,
+    //     subject: subjectType,
+    //     version: ReactPropTypes.string,
+    // };
 
     public render(): ReactElement<any> | null {
         const prop = this.getLinkedObjectProperty();
@@ -48,14 +44,14 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
             return this.props.linkedProp;
         }
 
-        return this.context.linkedRenderStore.getResourceProperty(
+        return this.props.lrs.getResourceProperty(
             this.props.subject,
             property || this.props.label,
         );
     }
 
     protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] {
-        return this.context.linkedRenderStore.getResourcePropertyRaw(
+        return this.props.lrs.getResourcePropertyRaw(
             this.props.subject,
             property || this.props.label,
         );

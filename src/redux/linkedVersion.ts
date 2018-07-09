@@ -1,12 +1,12 @@
 import * as React from "react";
-import { connect, Shared } from "react-redux";
-import { LinkStateTree, SubjectProp, VersionProp } from "../types";
+import { connect } from "react-redux";
+import { LinkStateTree, Omit, SubjectProp, VersionProp } from "../types";
 
 import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
 
 export const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp): VersionProp => {
     if (typeof subject === "undefined" || subject === null) {
-        throw new Error("[LS] A subject must be given");
+        throw new Error("[LV] A subject must be given");
     }
 
     return {
@@ -14,10 +14,10 @@ export const mapStateToProps = (state: LinkStateTree, { subject }: SubjectProp):
     };
 };
 
-const conn = connect(mapStateToProps, null);
+export function linkedVersion<T extends VersionProp & SubjectProp>(
+    component: React.ComponentType<T>,
+): React.ComponentType<Omit<T, keyof VersionProp> & SubjectProp> {
 
-export function linkedVersion<
-    TOwnProps extends Shared<SubjectProp, VersionProp>
->(component: React.ComponentType<TOwnProps & VersionProp>) {
-    return conn(component);
+    // @ts-ignore
+    return connect(mapStateToProps)(component);
 }

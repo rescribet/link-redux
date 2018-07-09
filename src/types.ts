@@ -3,6 +3,8 @@ import { BlankNode, Literal, NamedNode } from "rdflib";
 import { ComponentClass, ComponentType, ReactType, StatelessComponent } from "react";
 import { Action } from "redux";
 
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 /****** Types & Composite types ******/
 
 export type LabelType = NamedNode | NamedNode[];
@@ -21,6 +23,8 @@ export type LinkStateTree = LinkStateTreeObj | LinkStateTreeMap;
 
 export type LinkStateTreeMap = Map<string, { [k: string]: string }>;
 
+export type LinkCtx = SubjectProp & VersionProp & TopologyContextProp;
+
 export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
 export type RegistrableComponent<P = {}> = RegistrableComponentClass<P> | RegistrableStatelessComponent<P>;
@@ -29,13 +33,25 @@ export type ReloadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction
 
 export type SubjectType = SomeNode;
 
-export type TopologyType = NamedNode | undefined | null;
+export type TopologyContextType = NamedNode | undefined;
+
+export type TopologyType = TopologyContextType | null;
 
 /****** Others ******/
 
 export interface LinkContext {
     subject: SubjectType;
-    topology: TopologyType;
+    topology: TopologyContextType;
+    lrs: LinkReduxLRSType;
+    /** @deprecated */
+    linkedRenderStore: LinkReduxLRSType;
+}
+
+export type LinkContextRecieverProps = LinkContext & VersionProp;
+
+export interface LinkCtxOverrides {
+    subjectCtx: SubjectType;
+    topologyCtx: TopologyContextType;
 }
 
 export interface LinkFetchPayload {
@@ -108,6 +124,10 @@ export interface URLConverterSet {
 
 export interface SubjectProp {
     subject: SubjectType;
+}
+
+export interface TopologyContextProp {
+    topology: TopologyContextType;
 }
 
 export interface TopologyProp {

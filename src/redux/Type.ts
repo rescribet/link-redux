@@ -1,41 +1,48 @@
 import { RENDER_CLASS_NAME } from "link-lib";
 import { NamedNode } from "rdflib";
-import { ComponentClass, ReactType, StatelessComponent } from "react";
+import * as React from "react";
 import { createElement } from "react";
-import { DispatchProp } from "react-redux";
 
-import { SubjectProp } from "../types";
-
-import { linkedSubject } from "./linkedSubject";
-import { linkedVersion } from "./linkedVersion";
-import { Typable, TypableProps } from "./Typable";
+import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
+import { withLinkCtx } from "./withLinkCtx";
 
 export interface PropTypes extends TypableProps {
-    children: ReactType;
+    children?: React.ReactType;
     label?: NamedNode;
 }
 
-class TypeComp extends Typable<PropTypes> {
+export interface PropTypesWithInjected extends PropTypes, TypableInjectedProps {}
+
+class TypeComp extends TypableBase<PropTypesWithInjected> {
     public static displayName = "Type";
 
     public render() {
-        const { linkedRenderStore } = this.context;
+        const {
+            label,
+            lrs,
+            subject,
+        } = this.props;
 
         const notReadyComponent = this.renderLoadingOrError();
         if (notReadyComponent !== undefined) {
             return notReadyComponent;
         }
 
-        const component = linkedRenderStore.resourcePropertyComponent(
-            this.props.subject,
-            this.props.label || RENDER_CLASS_NAME,
-            this.context.topology,
+        const component = lrs.resourcePropertyComponent(
+            subject,
+            label || RENDER_CLASS_NAME,
+            this.props.topology,
         );
         if (component !== undefined) {
+            const {
+                children,
+                ...rest // tslint:disable-line trailing-comma
+            } = this.props;
+
             return createElement(
                 component,
-                this.props,
-                this.props.children,
+                rest,
+                children,
             );
         }
 
@@ -44,4 +51,4 @@ class TypeComp extends Typable<PropTypes> {
 }
 
 // tslint:disable-next-line: variable-name
-export const Type = linkedSubject(linkedVersion(TypeComp));
+export const Type = withLinkCtx<PropTypesWithInjected>(TypeComp);

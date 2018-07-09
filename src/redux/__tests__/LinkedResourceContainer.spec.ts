@@ -37,7 +37,7 @@ describe("LinkedResourceContainer component", () => {
         const llo = jest.fn();
         const opts = ctx.fullCW();
         const comp = createElement(
-            LinkedResourceContainerComp,
+            (LinkedResourceContainerComp as any),
             { className: "innerLRC", loadLinkedObject: llo, subject: iri, version },
         );
 
@@ -51,7 +51,7 @@ describe("LinkedResourceContainer component", () => {
         const llo = jest.fn();
         const opts = ctx.fullCW(iri);
         const comp = createElement(
-            LinkedResourceContainerComp,
+            (LinkedResourceContainerComp as any),
             { loadLinkedObject: llo, subject: iri, version },
         );
 

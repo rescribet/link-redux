@@ -19,7 +19,7 @@ describe("linkedVersion component", () => {
             caught = e;
         }
         expect(caught).toBeTruthy();
-        expect(caught!.message).toEqual("[LS] A subject must be given");
+        expect(caught!.message).toEqual("[LV] A subject must be given");
     });
 
     it("does not raise with a subject", () => {

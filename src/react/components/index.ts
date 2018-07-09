@@ -1,9 +1,7 @@
 export {
-  PropertyBase,
+    PropertyBase,
 } from "./PropertyBase";
 export {
-  Property,
-  getLinkedObjectClass,
+    Property,
+    getLinkedObjectClass,
 } from "./Property";
-export { RenderStoreProvider } from "./RenderStoreProvider";
-export { TopologyProvider } from "./TopologyProvider";

@@ -2,7 +2,7 @@
   "lintOptions": {
     "typeCheck": true
   },
-  "extends": "tslint:recommended",
+  "extends": ["tslint:recommended", "tslint-react"],
   "rules": {
     "interface-name": [true, "never-prefix"],
     "linebreak-style": [true, "LF"],
@@ -11,6 +11,6 @@
     "no-inferrable-types": true,
     "no-null-keyword": false,
     "only-arrow-functions": false,
-    "variable-name": [true, "allow-leading-underscore"]
+    "jsx-no-multiline-js": false
   }
 }

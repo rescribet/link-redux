@@ -1,17 +1,20 @@
 import { ComponentRegistration, LinkedRenderStore } from "link-lib";
-import { ComponentType } from "react";
+import { ComponentClass, ComponentType } from "react";
 import { InferableComponentEnhancerWithProps } from "react-redux";
 
 import { link } from "./redux/link";
 import { RegistrableComponent } from "./types";
 
-export type higherOrderWrappers = Array<InferableComponentEnhancerWithProps<any, any>>;
+export type higherOrderWrapper<TNeedsProps> = InferableComponentEnhancerWithProps<TNeedsProps, TNeedsProps>;
 
-export function register<P>(comp: RegistrableComponent<P>, ...hocs: higherOrderWrappers):
+export function register<P>(comp: RegistrableComponent<P>, ...hocs: Array<higherOrderWrapper<P>>):
     Array<ComponentRegistration<ComponentType<P>>> {
 
-    const dataBoundComp = comp.mapDataToProps ? link(comp.mapDataToProps, comp.linkOpts)<P>(comp) : comp;
-    const wrappedComp = hocs.reduce<ComponentType<P>>((prev, cur) => cur(prev), dataBoundComp);
+    const dataBoundComp = comp.mapDataToProps ? link(comp.mapDataToProps, comp.linkOpts)(comp) : comp;
+
+    const reducer = (prev: ComponentClass<P>, cur: higherOrderWrapper<P>) => cur(prev);
+    // @ts-ignore
+    const wrappedComp = hocs.reduce(reducer, dataBoundComp);
 
     return LinkedRenderStore.registerRenderer(
         wrappedComp,

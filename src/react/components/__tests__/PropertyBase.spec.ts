@@ -6,6 +6,7 @@ import * as React from "react";
 
 import * as ctx from "../../../../test/fixtures";
 import { PropertyBase } from "../PropertyBase";
+import { withLRS } from "../RenderStoreProvider";
 
 const label = NS.schema("name");
 const subject = NS.example("41");
@@ -15,7 +16,9 @@ class CustomClass extends PropertyBase {
 }
 
 function getComp(linkedProp?: SomeTerm | undefined) {
-    return React.createElement(CustomClass, { label, linkedProp, subject, version });
+    const test = withLRS(CustomClass);
+
+    return React.createElement(test, { label, linkedProp, subject, version });
 }
 
 describe("PropertyBase component", () => {

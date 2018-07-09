@@ -7,8 +7,7 @@ import * as React from "react";
 import { lrsType, subjectType } from "../propTypes";
 import { LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
 
-import { linkedSubject } from "./linkedSubject";
-import { linkedVersion } from "./linkedVersion";
+import { withLinkCtx } from "./withLinkCtx";
 
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode[];
@@ -140,18 +139,16 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
     return function wrapWithConnect(wrappedComponent: React.ComponentType<any>): ComponentType<any> {
         class Link extends React.Component<any> {
 
-            public static contextTypes = {
-                linkedRenderStore: lrsType,
-            };
             public static displayName = `Link(${wrappedComponent.name})`;
-            public static propTypes = {
-                subject: subjectType,
-                version: ReactPropTypes.string,
-            };
+            // public static propTypes = {
+            //     subject: subjectType,
+            //     version: ReactPropTypes.string,
+            // };
 
             public render() {
-                const props = this.context
-                    .linkedRenderStore
+                const props = this
+                    .props
+                    .lrs
                     .tryEntity(this.props.subject)
                     .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
                 if ((this.props.forceRender || opts.forceRender) !== true && props.length === 0) {
@@ -166,7 +163,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
 
             private getLinkedObjectProperties(props: Statement[]): PropertyBoundProps {
                 const acc: PropertyBoundProps = {};
-                const lrs = this.context.linkedRenderStore;
+                const { lrs } = this.props;
 
                 for (const propOpts of Object.values(propMap)) {
                     propOpts.label.forEach((cur) => {
@@ -199,6 +196,6 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
             }
         }
 
-        return linkedSubject(linkedVersion(Link as React.ComponentType<any>));
+        return withLinkCtx(Link);
     };
 }

@@ -1,34 +1,30 @@
 import { ACCEPTED, BAD_REQUEST } from "http-status-codes";
 import {
-    DEFAULT_TOPOLOGY,
     defaultNS as NS,
     EmptyRequestStatus,
     FulfilledRequestStatus,
 } from "link-lib";
-import { Requireable } from "prop-types";
 import { NamedNode, Statement } from "rdflib";
 import * as React from "react";
 
-import { lrsType, topologyType } from "../propTypes";
-import { PropertyProps } from "../types";
+import { LinkContext, LinkCtxOverrides, PropertyProps, TopologyContextType } from "../types";
+import { Provider, withLinkCtx } from "./withLinkCtx";
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
 export interface StateTypes {
     hasCaughtError: boolean;
+    caughtError?: Error;
 }
 
-export interface TypableProps extends PropertyProps {
-    onError?: () => void;
-    onLoad?: () => void;
+export interface TypableProps {
+    onError?: React.ReactType;
+    onLoad?: React.ReactType;
 }
 
-export class Typable<P extends TypableProps> extends React.PureComponent<P, StateTypes> {
-    public static contextTypes = {
-        linkedRenderStore: lrsType,
-        topology: topologyType,
-    };
+export interface TypableInjectedProps extends PropertyProps, LinkContext, LinkCtxOverrides  {}
 
+class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureComponent<P, StateTypes> {
     public static hasErrors(status: EmptyRequestStatus | FulfilledRequestStatus) {
         if (!status.requested) {
             return false;
@@ -49,18 +45,19 @@ export class Typable<P extends TypableProps> extends React.PureComponent<P, Stat
         };
     }
 
-    public componentDidCatch() {
+    public componentDidCatch(e: Error) {
         this.setState({
+            caughtError: e,
             hasCaughtError: true,
         });
     }
 
-    protected data(props = this.props): Statement[] {
-        return this.context.linkedRenderStore.tryEntity(this.subject(props));
+    protected data(props: P = this.props): Statement[] {
+        return this.props.lrs.tryEntity(this.subject(props));
     }
 
     protected renderLoadingOrError() {
-        const status = this.context.linkedRenderStore.api.getStatus(this.subject());
+        const status = this.props.lrs.getStatus(this.subject());
         if (!this.state.hasCaughtError && Typable.isLoading(status)) {
             const loadComp = this.onLoad();
 
@@ -75,6 +72,7 @@ export class Typable<P extends TypableProps> extends React.PureComponent<P, Stat
                         {},
                         this.props,
                         {
+                            caughtError: this.state.caughtError,
                             linkRequestStatus: status,
                             subject: this.subject(),
                         },
@@ -96,7 +94,7 @@ export class Typable<P extends TypableProps> extends React.PureComponent<P, Stat
         );
     }
 
-    protected subject(props = this.props) {
+    protected subject(props: P = this.props) {
         if (!nodeTypes.includes(props.subject.termType)) {
             throw new Error(`[LRC] Subject must be a node (was "${typeof props.subject}[${props.subject}]")`);
         }
@@ -104,27 +102,47 @@ export class Typable<P extends TypableProps> extends React.PureComponent<P, Stat
         return props.subject;
     }
 
-    protected topology(): NamedNode | undefined {
-        return this.context.topology;
+    protected topology(): TopologyContextType {
+        return this.props.topology || this.props.topologyCtx;
     }
 
-    protected onError(): React.ReactType {
-        return this.props.onError
-            || this.context.linkedRenderStore.getComponentForType(
+    protected onError(): React.ReactType | null {
+        return (this.props.onError as any)
+            || this.props.lrs.getComponentForType(
                 NS.ll("ErrorResource"),
-                this.topology() || DEFAULT_TOPOLOGY,
+                this.topology(),
             )
-            || this.context.linkedRenderStore.onError
             || null;
     }
 
-    protected onLoad(): React.ReactType {
-        return this.props.onLoad
-            || this.context.linkedRenderStore.getComponentForType(
+    protected onLoad(): React.ReactType | null {
+        return (this.props.onLoad as any)
+            || this.props.lrs.getComponentForType(
                 NS.ll("LoadingResource"),
-                this.topology() || DEFAULT_TOPOLOGY,
+                this.topology(),
             )
-            || this.context.linkedRenderStore.loadingComp
             || null;
+    }
+
+    protected wrapContext<ChildProps>(comp: React.ReactElement<ChildProps>) {
+        return React.createElement(
+            Provider,
+            {
+                value: {
+                    linkedRenderStore: this.props.lrs,
+                    lrs: this.props.lrs,
+                    subject: this.subject(),
+                    topology: this.topology(),
+                },
+            },
+            comp,
+        );
     }
 }
+
+const connectedTypable = withLinkCtx(Typable, { topology: true });
+
+export {
+    connectedTypable as Typable,
+    Typable as TypableBase,
+};

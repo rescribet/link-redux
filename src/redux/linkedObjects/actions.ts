@@ -35,7 +35,7 @@ export const linkedModelTouch = (subjects: SomeNode[]): LinkModelTouchAction => 
 
     return {
         payload: Object.freeze(subjects.reduce((a, b) => {
-            a[b.toString()] = nextVal;
+            a[b.value] = nextVal;
 
             return a;
         }, {} as LinkStateTreeSlice)),

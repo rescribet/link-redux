@@ -15,7 +15,7 @@ import { createElement, ReactElement, ReactType } from "react";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore, Store } from "redux";
 import { combineReducers } from "redux-immutable";
-import { linkMiddleware, linkReducer } from "../src/link-redux";
+import { linkMiddleware, linkReducer, TopologyContextType } from "../src/link-redux";
 
 import { RenderStoreProvider } from "../src/react/components";
 import { LinkedResourceContainer } from "../src/redux/LinkedResourceContainer";
@@ -33,7 +33,7 @@ const sTitle = (id: NamedNode, title: string) => [
     new Statement(id, NS.schema("name"), new Literal(title)),
 ];
 
-const sFull = (id: NamedNode, attrs: { [k: string]: string }) => {
+const sFull = (id: NamedNode, attrs: Test) => {
     return [
         typeObject(id)[0],
         new Statement(id, NS.schema("name"), new Literal(attrs.title || "title"), NS.example("default")),
@@ -65,9 +65,9 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
         reduxStore,
         schema,
         store,
-        wrapComponent: (children?: ReactElement<any>, topology?: NamedNode | undefined): ReactElement<any> => {
+        wrapComponent: (children?: ReactElement<any>, topology?: TopologyContextType): ReactElement<any> => {
             return createElement(Provider, { store: reduxStore },
-                createElement(RenderStoreProvider, { linkedRenderStore: lrs },
+                createElement(RenderStoreProvider, { value: lrs },
                     createElement("div", { className: "root" },
                         createElement(
                             LinkedResourceContainer,
@@ -96,6 +96,23 @@ export const multipleCW = (id = exNS("3"), attrs: { [k: string]: string } = {}) 
     const opts = chargeLRS(sFull(id, attrs), id);
     const second = attrs.second || { id: "4" };
     opts.store.addStatements(sFull(exNS(second.id), second));
+
+    return opts;
+};
+
+interface Test {
+    id: NamedNode;
+    author?: string;
+    title?: string;
+    text?: string;
+}
+
+export const multipleCWArr = (attrs: Test[] = []) => {
+    const first = attrs.pop()!;
+    const opts = chargeLRS(sFull(first.id, first), first.id);
+    attrs.forEach((obj) => {
+        opts.store.addStatements(sFull(obj.id, obj));
+    });
 
     return opts;
 };

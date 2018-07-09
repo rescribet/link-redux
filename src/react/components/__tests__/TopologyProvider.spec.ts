@@ -20,7 +20,7 @@ const version = "new";
 
 describe("TopologyProvider component", () => {
     it("sets the topology", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: "resources/10" } });
+        const opts = ctx.multipleCWArr([{ id: iri }, { id: defaultNS.example("resources/10") }]);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
             defaultNS.schema("CreativeWork"),
@@ -44,7 +44,7 @@ describe("TopologyProvider component", () => {
             null,
             createElement(
                 LinkedResourceContainer,
-                { loadLinkedObject, subject: defaultNS.example("resources/10"), version },
+                { subject: defaultNS.example("resources/10"), version },
             ),
         );
 

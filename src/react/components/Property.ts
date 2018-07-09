@@ -2,25 +2,21 @@ import { defaultNS, getTermBestLang, SomeNode } from "link-lib";
 import { Requireable } from "prop-types";
 import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
-import { DispatchProp } from "react-redux";
 
-import { lrsType, topologyType } from "../../propTypes";
 import {
-    LinkedResourceContainer as LRC,
-    PropTypes as LRSPropTypes,
+    LinkedResourceContainerUnwrapped as LRC,
 } from "../../redux/LinkedResourceContainer";
-import { linkedSubject } from "../../redux/linkedSubject";
-import { linkedVersion } from "../../redux/linkedVersion";
+import { withLinkCtx } from "../../redux/withLinkCtx";
 import {
     LabelType,
+    LinkContextRecieverProps,
+    LinkCtxOverrides,
     LinkedPropType,
     LinkReduxLRSType,
-    PropertyProps,
-    SubjectProp,
     TopologyType,
 } from "../../types";
 
-export interface PropertyPropTypes extends PropertyProps {
+export interface PropertyPropTypes {
     /**
      * Pass `true` if the property should render if no data is found.
      * Useful for nesting property's to enable multi-property logic.
@@ -40,28 +36,26 @@ export interface PropertyPropTypes extends PropertyProps {
     linkedProp?: LinkedPropType;
 }
 
-export interface ContextTypes {
-    linkedRenderStore: LinkReduxLRSType;
+export interface PropertyWrappedProps extends PropertyPropTypes, LinkContextRecieverProps, LinkCtxOverrides {}
+
+export interface ContextTypes extends Partial<LinkCtxOverrides> {
+    lrs: LinkReduxLRSType;
     topology: TopologyType;
 }
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-export function getLinkedObjectClass(props: PropertyPropTypes,
-                                     { linkedRenderStore, topology }: ContextTypes,
+export function getLinkedObjectClass(props: PropertyWrappedProps,
+                                     { lrs, topology, topologyCtx }: ContextTypes,
                                      label?: NamedNode): React.ReactType | undefined {
-    return linkedRenderStore.resourcePropertyComponent(
+    return lrs.resourcePropertyComponent(
         props.subject,
         label || props.label,
-        topology === null ? undefined : topology,
+        topology === null ? undefined : topology || topologyCtx,
     );
 }
 
-export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
-    public static contextTypes = {
-        linkedRenderStore: lrsType,
-        topology: topologyType,
-    };
+export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
     public static defaultProps = {
         forceRender: false,
         limit: 1,
@@ -71,7 +65,7 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
 
     public render() {
         const { forceRender } = this.props;
-        const objRaw = this.context.linkedRenderStore.getResourceProperties(
+        const objRaw = this.props.lrs.getResourceProperties(
             this.props.subject,
             this.props.label,
         );
@@ -82,11 +76,11 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
 
         const associationRenderer = getLinkedObjectClass(
             this.props,
-            this.context,
+            this.props,
             defaultNS.rdf("predicate"),
         ) || React.Fragment;
         const associationProps = associationRenderer !== React.Fragment ? this.props : null;
-        const component = getLinkedObjectClass(this.props, this.context);
+        const component = getLinkedObjectClass(this.props, this.props);
         if (component) {
             const toRender = this.limitTimes(
                 objRaw,
@@ -105,7 +99,10 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
         } else if (objRaw.length > 0) {
             if (nodeTypes.includes(objRaw[0].termType)) {
                 const wrapLOC = (p: SomeTerm | undefined) => {
-                    const lrcProps = { ...this.props, subject: p! as SomeNode };
+                    const lrcProps = {
+                        ...this.props,
+                        subject: p! as SomeNode,
+                    };
 
                     return React.createElement(LRC, lrcProps, this.props.children);
                 };
@@ -126,11 +123,11 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
         return null;
     }
 
-    private limitTimes(
+    private limitTimes<P>(
         objRaw: SomeTerm[],
-        func: (prop: SomeTerm) => React.ReactElement<any>,
+        func: (prop: SomeTerm) => React.ReactElement<P>,
         associationRenderer: React.ReactType,
-    ): React.ReactElement<any> | Array<React.ReactElement<any>> | null {
+    ): React.ReactElement<P> | Array<React.ReactElement<P>> | null {
 
         const associationProps = associationRenderer !== React.Fragment ? this.props : null;
 
@@ -142,7 +139,8 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
             return React.createElement(
                 associationRenderer,
                 associationProps,
-                func(getTermBestLang(objRaw, this.context.linkedRenderStore.store.langPrefs)),
+                // @ts-ignore
+                func(getTermBestLang(objRaw, this.props.lrs.store.langPrefs)),
             );
         }
         const pLimit = Math.min(...[this.props.limit, objRaw.length].filter(Number) as number[]);
@@ -155,8 +153,5 @@ export class PropertyComp extends React.PureComponent<PropertyPropTypes> {
     }
 }
 
-const connectedProp = linkedVersion(PropertyComp);
-connectedProp.displayName = "ConnectedProp";
-
 // tslint:disable-next-line: variable-name
-export const Property = linkedSubject(connectedProp);
+export const Property = withLinkCtx(PropertyComp, { topology: true });
