@@ -17,7 +17,7 @@ export type LinkedPropType = NamedNode | BlankNode | Literal;
 
 export type LinkReduxLRSType = LinkedRenderStore<ReactType>;
 
-export type LinkReturnType = "term" | "statement" | "value";
+export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
 export type LinkStateTree = LinkStateTreeObj | LinkStateTreeMap;
 

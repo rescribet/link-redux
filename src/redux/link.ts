@@ -1,6 +1,6 @@
 import { getPropBestLangRaw, normalizeType } from "link-lib";
 import * as ReactPropTypes from "prop-types";
-import { NamedNode, SomeTerm, Statement } from "rdflib";
+import { NamedNode, Node, SomeTerm, Statement, ToJSOutputTypes } from "rdflib";
 import { ComponentType } from "react";
 import * as React from "react";
 
@@ -15,7 +15,7 @@ export interface ProcessedLinkOpts extends LinkOpts {
 }
 
 export interface PropertyBoundProps {
-    [k: string]: Statement | Statement[] | SomeTerm | SomeTerm[] | string | string[] | undefined;
+    [k: string]: Statement | Statement[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 }
 
 interface DataToPropsMapping {
@@ -30,8 +30,10 @@ const globalLinkOptsDefaults = {
     returnType: "term",
 } as LinkOpts;
 
-function toReturnType(returnType: LinkReturnType, p: Statement): Statement | SomeTerm | string {
+function toReturnType(returnType: LinkReturnType, p: Statement): Statement | SomeTerm | ToJSOutputTypes {
     switch (returnType) {
+        case "literal":
+            return Node.toJS(p.object);
         case "value":
             return p.object.value;
         case "term":
