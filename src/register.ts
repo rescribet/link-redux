@@ -2,7 +2,7 @@ import { ComponentRegistration, LinkedRenderStore } from "link-lib";
 import { ComponentClass, ComponentType } from "react";
 import { InferableComponentEnhancerWithProps } from "react-redux";
 
-import { link } from "./redux/link";
+import { link } from "./components/link";
 import { RegistrableComponent } from "./types";
 
 export type higherOrderWrapper<TNeedsProps> = InferableComponentEnhancerWithProps<TNeedsProps, TNeedsProps>;

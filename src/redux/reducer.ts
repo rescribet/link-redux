@@ -1,9 +1,8 @@
 import { Action } from "redux-actions";
 
-import { LinkAction, LinkModelTouchAction, LinkStateTreeSlice } from "../../types";
-import {
-    LINKED_MODEL_TOUCH,
-} from "./actions";
+import { LinkAction, LinkModelTouchAction, LinkStateTreeSlice } from "../types";
+
+import { LINKED_MODEL_TOUCH } from "./actions";
 
 const initialState: LinkStateTreeSlice = {};
 

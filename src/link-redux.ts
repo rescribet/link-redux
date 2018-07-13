@@ -1,28 +1,20 @@
 import { Requireable } from "prop-types";
 
-export {
-    getLinkedObjectClass,
-    Property,
-    PropertyBase,
-} from "./react/components/index";
+export { link } from "./components/link";
+export { LinkedResourceContainer } from "./components/LinkedResourceContainer";
+export { linkMiddleware } from "./components/middleware";
+export { Property, getLinkedObjectClass } from "./components/Property";
+export { PropertyBase } from "./components/PropertyBase";
+export { RenderStoreProvider } from "./components/RenderStoreProvider";
+export { TopologyProvider } from "./components/TopologyProvider";
+export { Type } from "./components/Type";
+export { withLinkCtx } from "./components/withLinkCtx";
+export { withLRS } from "./components/withLRS";
+export { withTopology } from "./components/withTopology";
 
-export { link } from "./redux/link";
-export * from "./redux/linkedObjects/actions";
-export { linkReducer } from "./redux/linkedObjects/reducer";
-export { linkedObjectVersionByIRI } from "./redux/linkedObjects/selectors";
-export { linkMiddleware } from "./redux/middleware";
-export {
-    RenderStoreProvider,
-    TopologyProvider,
-    withLinkCtx,
-    withLRS,
-    withTopology,
-} from "./redux/withLinkCtx";
-
-export { Type } from "./redux/Type";
-export {
-    LinkedResourceContainer,
-} from "./redux/LinkedResourceContainer";
+export * from "./redux/actions";
+export { linkReducer } from "./redux/reducer";
+export { linkedObjectVersionByIRI } from "./redux/selectors";
 
 export { register } from "./register";
 export * from "./types";

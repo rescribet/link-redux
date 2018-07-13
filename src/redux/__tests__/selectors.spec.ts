@@ -7,13 +7,13 @@ import { linkedObjectVersionByIRI } from "../selectors";
 const state = new Map().set(
     "linkedObjects",
     {
-        [NS.example("resource/1").toString()]: "6qqyb",
+        [NS.example("resource/1").value]: "6qqyb",
     },
 );
 
 describe("linkedObjects selector", () => {
     describe("linkedObjectVersionByIRI", () => {
-        it("returns the version", () => {
+        it("returns the linkVersion", () => {
             expect(linkedObjectVersionByIRI(state, NS.example("resource/1")))
                 .toEqual("6qqyb");
         });

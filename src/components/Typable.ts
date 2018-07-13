@@ -129,7 +129,6 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
             Provider,
             {
                 value: {
-                    linkedRenderStore: this.props.lrs,
                     lrs: this.props.lrs,
                     subject: this.subject(),
                     topology: this.topology(),

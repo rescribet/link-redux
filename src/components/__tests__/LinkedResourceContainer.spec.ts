@@ -15,16 +15,16 @@ const createTestElement = (className = "testComponent") => () => createElement(
     { className },
 );
 const loadLinkedObject = () => undefined;
-const version = "new";
+const linkVersion = "new";
 
 describe("LinkedResourceContainer component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty(iri);
         const comp = createElement(LinkedResourceContainer, {
             className: "testmarker",
+            linkVersion,
             loadLinkedObject,
             subject: iri,
-            version,
         });
 
         const elem = mount(opts.wrapComponent(comp));
@@ -35,13 +35,13 @@ describe("LinkedResourceContainer component", () => {
 
     it("loads the reference when no data is present", () => {
         const llo = jest.fn();
-        const opts = ctx.fullCW();
+        const opts = ctx.empty();
         const comp = createElement(
             (LinkedResourceContainerComp as any),
-            { className: "innerLRC", loadLinkedObject: llo, subject: iri, version },
+            { className: "innerLRC", loadLinkedObject: llo, ...opts.contextProps() },
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const elem = mount(comp);
 
         expect(elem.find(".innerLRC")).toExist();
         expect(llo).toHaveBeenCalledTimes(1);
@@ -52,7 +52,7 @@ describe("LinkedResourceContainer component", () => {
         const opts = ctx.fullCW(iri);
         const comp = createElement(
             (LinkedResourceContainerComp as any),
-            { loadLinkedObject: llo, subject: iri, version },
+            { loadLinkedObject: llo, ...opts.contextProps() },
         );
 
         mount(opts.wrapComponent(comp));
@@ -96,9 +96,9 @@ describe("LinkedResourceContainer component", () => {
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
         const elem = mount(
             opts.wrapComponent(createElement(LinkedResourceContainer, {
+                linkVersion,
                 loadLinkedObject,
                 subject: bn,
-                version,
             })),
         );
 
@@ -132,13 +132,13 @@ describe("LinkedResourceContainer component", () => {
 
         const comp = createElement(
             LinkedResourceContainer,
-            { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection"), version },
+            { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection"), linkVersion },
             createElement(
                 LinkedResourceContainer,
-                { loadLinkedObject, subject: iri, version },
+                { loadLinkedObject, subject: iri, linkVersion },
                 createElement(
                     LinkedResourceContainer,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10"), version },
+                    { loadLinkedObject, subject: defaultNS.example("resources/10"), linkVersion },
                 ),
             ),
         );
@@ -163,13 +163,13 @@ describe("LinkedResourceContainer component", () => {
 
         const comp = createElement(
             LinkedResourceContainer,
-            { loadLinkedObject, subject: iri , version},
+            { loadLinkedObject, subject: iri , linkVersion},
             createElement
             (LinkedResourceContainer,
-                { loadLinkedObject, subject: iri, version },
+                { loadLinkedObject, subject: iri, linkVersion },
                 createElement(
                     LinkedResourceContainer,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10"), version },
+                    { loadLinkedObject, subject: defaultNS.example("resources/10"), linkVersion },
                 ),
             ),
         );

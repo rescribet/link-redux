@@ -7,7 +7,7 @@ import {
     LinkModelTouchAction,
     LinkReloadAction,
     LinkStateTreeSlice,
-} from "../../types";
+} from "../types";
 
 export const FETCH_LINKED_OBJECT = "FETCH_LINKED_OBJECT";
 export const GET_LINKED_OBJECT = "GET_LINKED_OBJECT";

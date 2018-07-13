@@ -3,9 +3,8 @@ import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import { createElement } from "react";
 
-import * as ctx from "../../../../test/fixtures";
-import { LinkedResourceContainer } from "../../../redux/LinkedResourceContainer";
-
+import * as ctx from "../../../test/fixtures";
+import { LinkedResourceContainer } from "../LinkedResourceContainer";
 import { TopologyProvider } from "../TopologyProvider";
 
 const id = "resources/5";
@@ -16,7 +15,7 @@ const createTestElement = (className = "testComponent") => () => createElement(
     { className },
 );
 const loadLinkedObject = () => undefined;
-const version = "new";
+const linkVersion = "new";
 
 describe("TopologyProvider component", () => {
     it("sets the topology", () => {
@@ -44,7 +43,7 @@ describe("TopologyProvider component", () => {
             null,
             createElement(
                 LinkedResourceContainer,
-                { subject: defaultNS.example("resources/10"), version },
+                { subject: defaultNS.example("resources/10"), linkVersion },
             ),
         );
 

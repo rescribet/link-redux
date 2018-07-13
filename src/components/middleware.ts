@@ -4,17 +4,17 @@ import { LinkedRenderStore, SomeNode } from "link-lib";
 import { Action, AnyAction, Dispatch, Middleware } from "redux";
 
 import {
+    FETCH_LINKED_OBJECT,
+    GET_LINKED_OBJECT,
+    linkedModelTouch,
+    RELOAD_LINKED_OBJECT,
+} from "../redux/actions";
+import {
     LinkFetchAction,
     LinkGetAction,
     LinkReduxLRSType,
     LinkReloadAction,
 } from "../types";
-import {
-    FETCH_LINKED_OBJECT,
-    GET_LINKED_OBJECT,
-    linkedModelTouch,
-    RELOAD_LINKED_OBJECT,
-} from "./linkedObjects/actions";
 
 const emitChangedSubjects = (next: Dispatch<Action>) => (statements: SomeNode[]) => {
     const action = linkedModelTouch(statements);

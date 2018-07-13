@@ -1,16 +1,16 @@
 /* eslint no-magic-numbers: 0 */
 import { mount } from "enzyme";
-import { defaultNS as NS } from "link-lib";
+import { DEFAULT_TOPOLOGY, defaultNS as NS } from "link-lib";
 import { Literal, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
-import * as ctx from "../../../../test/fixtures";
+import * as ctx from "../../../test/fixtures";
 import { PropertyBase } from "../PropertyBase";
-import { withLRS } from "../RenderStoreProvider";
+import { withLRS } from "../withLRS";
 
 const label = NS.schema("name");
 const subject = NS.example("41");
-const version = "new";
+const linkVersion = "new";
 
 class CustomClass extends PropertyBase {
 }
@@ -18,7 +18,16 @@ class CustomClass extends PropertyBase {
 function getComp(linkedProp?: SomeTerm | undefined) {
     const test = withLRS(CustomClass);
 
-    return React.createElement(test, { label, linkedProp, subject, version });
+    return React.createElement(
+        test,
+        {
+            label,
+            linkVersion,
+            linkedProp,
+            subject,
+            topology: DEFAULT_TOPOLOGY,
+        },
+    );
 }
 
 describe("PropertyBase component", () => {
@@ -29,17 +38,17 @@ describe("PropertyBase component", () => {
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { subject, version };
+            const nextProps = { subject, linkVersion };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(false);
         });
 
-        it("returns false when subject and version are unchanged", () => {
+        it("returns false when subject and linkVersion are unchanged", () => {
             const opts = ctx.fullCW(subject);
 
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { label, subject, version };
+            const nextProps = { label, subject, linkVersion };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(false);
         });
 
@@ -49,17 +58,17 @@ describe("PropertyBase component", () => {
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { label, subject: NS.example("different"), version };
+            const nextProps = { label, subject: NS.example("different"), linkVersion };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(true);
         });
 
-        it("returns true when version is changed", () => {
+        it("returns true when linkVersion is changed", () => {
             const opts = ctx.fullCW(subject);
 
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { label, subject, version: "different" };
+            const nextProps = { label, subject, linkVersion: "different" };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(true);
         });
     });

@@ -15,10 +15,16 @@ import { createElement, ReactElement, ReactType } from "react";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore, Store } from "redux";
 import { combineReducers } from "redux-immutable";
-import { linkMiddleware, linkReducer, TopologyContextType } from "../src/link-redux";
+import {
+    LinkContextReceiverProps,
+    LinkCtxOverrides,
+    linkMiddleware,
+    linkReducer,
+    TopologyContextType,
+} from "../src/link-redux";
 
-import { RenderStoreProvider } from "../src/react/components";
-import { LinkedResourceContainer } from "../src/redux/LinkedResourceContainer";
+import { RenderStoreProvider } from "../src/components/RenderStoreProvider";
+import { LinkedResourceContainer } from "../src/components/LinkedResourceContainer";
 import { LinkReduxLRSType } from "../src/types";
 
 import { TestContext } from "./types";
@@ -60,11 +66,20 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
     const reduxStore = generateReduxStore(lrs);
 
     return {
+        contextProps: (topology?: TopologyContextType): LinkContextReceiverProps & LinkCtxOverrides => ({
+            lrs,
+            subject,
+            subjectCtx: subject,
+            topology,
+            topologyCtx: topology,
+            linkVersion: "new",
+        }),
         lrs,
         mapping,
         reduxStore,
         schema,
         store,
+        subject,
         wrapComponent: (children?: ReactElement<any>, topology?: TopologyContextType): ReactElement<any> => {
             return createElement(Provider, { store: reduxStore },
                 createElement(RenderStoreProvider, { value: lrs },

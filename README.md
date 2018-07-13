@@ -184,7 +184,7 @@ const App = ReactRouter
 
 export default () => (
   <Provider store={configureReduxStore()}>
-    <RenderStoreProvider linkedRenderStore={LinkedRenderStore}>
+    <RenderStoreProvider value={LinkedRenderStore}>
       <Router history={example}>
         <App /> 
       </Router>

@@ -1,6 +1,5 @@
 import * as ReactPropTypes from "prop-types";
 import { NamedNode } from "rdflib";
-import { SFC } from "react";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -15,8 +14,8 @@ import {
     SubjectProp,
 } from "../types";
 
-import { fetchLinkedObject, getLinkedObject, reloadLinkedObject } from "./linkedObjects/actions";
-import { linkedObjectVersionByIRI } from "./linkedObjects/selectors";
+import { fetchLinkedObject, getLinkedObject, reloadLinkedObject } from "../redux/actions";
+import { linkedObjectVersionByIRI } from "../redux/selectors";
 import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
 import { withLinkCtx } from "./withLinkCtx";
 
@@ -32,24 +31,24 @@ export interface PropTypes extends TypableProps {
 
 export interface InjectedPropTypes extends PropTypes, DispatchPropTypes, TypableInjectedProps {}
 
-// const propTypes = {
-//     children: ReactPropTypes.node,
-//     fetch: ReactPropTypes.bool,
-//     forceRender: ReactPropTypes.bool,
-//     loadLinkedObject: ReactPropTypes.func,
-//     onError: ReactPropTypes.oneOfType([
-//         ReactPropTypes.element,
-//         ReactPropTypes.func,
-//     ]),
-//     onLoad: ReactPropTypes.oneOfType([
-//         ReactPropTypes.element,
-//         ReactPropTypes.func,
-//     ]),
-//     reloadLinkedObject: ReactPropTypes.func,
-//     subject: subjectType.isRequired,
-//     topology: topologyType,
-//     version: ReactPropTypes.string,
-// };
+const propTypes = {
+    children: ReactPropTypes.node,
+    fetch: ReactPropTypes.bool,
+    forceRender: ReactPropTypes.bool,
+    linkVersion: ReactPropTypes.string,
+    loadLinkedObject: ReactPropTypes.func,
+    onError: ReactPropTypes.oneOfType([
+        ReactPropTypes.element,
+        ReactPropTypes.func,
+    ]),
+    onLoad: ReactPropTypes.oneOfType([
+        ReactPropTypes.element,
+        ReactPropTypes.func,
+    ]),
+    reloadLinkedObject: ReactPropTypes.func,
+    subject: subjectType.isRequired,
+    topology: topologyType,
+};
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
@@ -126,7 +125,7 @@ const mapStateToProps = <P>(state: LinkStateTree, { subject }: P & SubjectProp) 
     }
 
     return {
-        version: linkedObjectVersionByIRI(state, subject) || "new",
+        linkVersion: linkedObjectVersionByIRI(state, subject) || "new",
     };
 };
 

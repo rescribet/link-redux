@@ -4,17 +4,14 @@ import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
 
 import {
-    LinkedResourceContainerUnwrapped as LRC,
-} from "../../redux/LinkedResourceContainer";
-import { withLinkCtx } from "../../redux/withLinkCtx";
-import {
     LabelType,
-    LinkContextRecieverProps,
+    LinkContextReceiverProps,
     LinkCtxOverrides,
     LinkedPropType,
-    LinkReduxLRSType,
-    TopologyType,
-} from "../../types";
+} from "../types";
+
+import { LinkedResourceContainerUnwrapped as LRC } from "./LinkedResourceContainer";
+import { withLinkCtx } from "./withLinkCtx";
 
 export interface PropertyPropTypes {
     /**
@@ -36,21 +33,15 @@ export interface PropertyPropTypes {
     linkedProp?: LinkedPropType;
 }
 
-export interface PropertyWrappedProps extends PropertyPropTypes, LinkContextRecieverProps, LinkCtxOverrides {}
-
-export interface ContextTypes extends Partial<LinkCtxOverrides> {
-    lrs: LinkReduxLRSType;
-    topology: TopologyType;
-}
+export interface PropertyWrappedProps extends PropertyPropTypes, LinkContextReceiverProps, LinkCtxOverrides {}
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-export function getLinkedObjectClass(props: PropertyWrappedProps,
-                                     { lrs, topology, topologyCtx }: ContextTypes,
-                                     label?: NamedNode): React.ReactType | undefined {
+export function getLinkedObjectClass({ label, lrs, subject, topology, topologyCtx }: PropertyWrappedProps,
+                                     labelOverride?: NamedNode): React.ReactType | undefined {
     return lrs.resourcePropertyComponent(
-        props.subject,
-        label || props.label,
+        subject,
+        labelOverride || label,
         topology === null ? undefined : topology || topologyCtx,
     );
 }
@@ -76,11 +67,10 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
 
         const associationRenderer = getLinkedObjectClass(
             this.props,
-            this.props,
             defaultNS.rdf("predicate"),
         ) || React.Fragment;
         const associationProps = associationRenderer !== React.Fragment ? this.props : null;
-        const component = getLinkedObjectClass(this.props, this.props);
+        const component = getLinkedObjectClass(this.props);
         if (component) {
             const toRender = this.limitTimes(
                 objRaw,

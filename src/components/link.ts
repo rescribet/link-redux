@@ -144,7 +144,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
             public static displayName = `Link(${wrappedComponent.name})`;
             // public static propTypes = {
             //     subject: subjectType,
-            //     version: ReactPropTypes.string,
+            //     linkVersion: ReactPropTypes.string,
             // };
 
             public render() {

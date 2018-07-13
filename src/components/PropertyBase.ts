@@ -4,21 +4,21 @@ import { NamedNode, SomeTerm, Statement } from "rdflib";
 import { ReactElement } from "react";
 import * as React from "react";
 
-import { labelType, linkedPropType, subjectType } from "../../propTypes";
-import { LabelType, LinkContextRecieverProps } from "../../types";
+import { labelType, linkedPropType, subjectType } from "../propTypes";
+import { LabelType, LinkContextReceiverProps } from "../types";
 
-export interface PropTypes extends LinkContextRecieverProps {
+export interface PropTypes extends LinkContextReceiverProps {
     label: LabelType;
     linkedProp?: SomeTerm;
 }
 
 export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
-    // public static propTypes = {
-    //     label: labelType,
-    //     linkedProp: linkedPropType,
-    //     subject: subjectType,
-    //     version: ReactPropTypes.string,
-    // };
+    public static propTypes = {
+        label: labelType,
+        linkVersion: ReactPropTypes.string,
+        linkedProp: linkedPropType,
+        subject: subjectType,
+    };
 
     public render(): ReactElement<any> | null {
         const prop = this.getLinkedObjectProperty();
@@ -36,7 +36,7 @@ export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
         }
 
         return this.props.subject !== nextProps.subject ||
-            this.props.version !== nextProps.version;
+            this.props.linkVersion !== nextProps.linkVersion;
     }
 
     protected getLinkedObjectProperty(property?: NamedNode): SomeTerm | undefined {

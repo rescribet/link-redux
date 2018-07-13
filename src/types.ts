@@ -2,6 +2,7 @@ import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
 import { BlankNode, Literal, NamedNode } from "rdflib";
 import { ComponentClass, ComponentType, ReactType, StatelessComponent } from "react";
 import { Action } from "redux";
+import { Overwrite } from "type-zoo";
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -23,8 +24,6 @@ export type LinkStateTree = LinkStateTreeObj | LinkStateTreeMap;
 
 export type LinkStateTreeMap = Map<string, { [k: string]: string }>;
 
-export type LinkCtx = SubjectProp & VersionProp & TopologyContextProp;
-
 export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
 export type RegistrableComponent<P = {}> = RegistrableComponentClass<P> | RegistrableStatelessComponent<P>;
@@ -37,17 +36,25 @@ export type TopologyContextType = NamedNode | undefined;
 
 export type TopologyType = TopologyContextType | null;
 
+export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext & VersionProp;
+
+export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> = Overwrite<
+    Omit<P, keyof UninheritableLinkCtxProps>,
+    Partial<SubjectProp & TopologyProp>
+>;
+
 /****** Others ******/
 
 export interface LinkContext {
     subject: SubjectType;
     topology: TopologyContextType;
     lrs: LinkReduxLRSType;
-    /** @deprecated */
-    linkedRenderStore: LinkReduxLRSType;
 }
 
-export type LinkContextRecieverProps = LinkContext & VersionProp;
+export interface LinkedRenderStoreContext {
+    lrs: LinkReduxLRSType;
+}
+export type LinkContextReceiverProps = LinkContext & VersionProp;
 
 export interface LinkCtxOverrides {
     subjectCtx: SubjectType;
@@ -135,7 +142,7 @@ export interface TopologyProp {
 }
 
 export interface VersionProp {
-    version: string;
+    linkVersion: string;
 }
 
 export interface PropertyProps extends SubjectProp, VersionProp {}

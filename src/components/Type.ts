@@ -51,4 +51,4 @@ class TypeComp extends TypableBase<PropTypesWithInjected> {
 }
 
 // tslint:disable-next-line: variable-name
-export const Type = withLinkCtx<PropTypesWithInjected>(TypeComp);
+export const Type = withLinkCtx(TypeComp);
