@@ -31,7 +31,7 @@ class TypeComp extends TypableBase<PropTypesWithInjected> {
         const component = lrs.resourcePropertyComponent(
             subject,
             label || RENDER_CLASS_NAME,
-            this.props.topology,
+            this.topology(),
         );
         if (component !== undefined) {
             const {
