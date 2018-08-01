@@ -15,4 +15,4 @@ addons:
     packages:
       - g++-4.9
 install:
-  - CC=gcc-4.9 CXX=g++-4.9 npm install
+  - CC=gcc-4.9 CXX=g++-4.9 yarn
