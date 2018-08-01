@@ -1,9 +1,13 @@
 import { DEFAULT_TOPOLOGY } from "link-lib";
+import { NamedNode } from "rdflib";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { reloadLinkedObject } from "../redux/actions";
 
 import { linkedObjectVersionByIRI } from "../redux/selectors";
 import {
+    LinkAction,
     LinkContext,
     LinkContextReceiverProps,
     LinkCtxOverrides,
@@ -24,15 +28,21 @@ export const { Consumer, Provider } = React.createContext<Partial<LinkContext> &
     { lrs: {} as LinkReduxLRSType },
 );
 
-const VersionBase = connect((state: LinkStateTree, { subject }: SubjectProp): VersionProp => {
-    if (typeof subject === "undefined" || subject === null) {
-        throw new Error("[LV] A subject must be given");
-    }
+const VersionBase = connect(
+    (state: LinkStateTree, { subject }: SubjectProp): VersionProp => {
+        if (typeof subject === "undefined" || subject === null) {
+            throw new Error("[LV] A subject must be given");
+        }
 
-    return {
-        linkVersion: linkedObjectVersionByIRI(state, subject),
-    };
-});
+        return {
+            linkVersion: linkedObjectVersionByIRI(state, subject),
+        };
+    },
+    (dispatch: Dispatch, { subject }: SubjectProp) => ({
+        reloadLinkedObject: (href: NamedNode = subject as NamedNode): LinkAction =>
+            dispatch(reloadLinkedObject(href)),
+    }),
+);
 
 function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
                                 context: Partial<LinkContext> & LinkedRenderStoreContext,
@@ -65,7 +75,7 @@ export function withLinkCtx<P>(
     // @ts-ignore
     const VersionComp = VersionBase(Component);
 
-    return (props: PropsWithOptLinkProps<P>) => (
+    const Comp: React.SFC<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => (
         <Consumer>
             {(context: Partial<LinkContext> & LinkedRenderStoreContext) => {
                 const childProps = calculateChildProps(props, context, options);
@@ -76,4 +86,7 @@ export function withLinkCtx<P>(
             }}
         </Consumer>
     );
+    Comp.displayName = "withLinkCtxWrapper";
+
+    return Comp;
 }
