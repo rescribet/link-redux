@@ -72,7 +72,6 @@ export function withLinkCtx<P>(
     Component: React.ComponentType<P & LinkContextReceiverProps & Partial<LinkCtxOverrides>>,
     options: WithLinkCtxOptions = {}): React.ComponentType<PropsWithOptLinkProps<P>> {
 
-    // @ts-ignore
     const VersionComp = VersionBase(Component);
 
     const Comp: React.SFC<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => (

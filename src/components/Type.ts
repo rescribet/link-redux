@@ -13,7 +13,7 @@ export interface PropTypes extends TypableProps {
 
 export interface PropTypesWithInjected extends PropTypes, TypableInjectedProps {}
 
-class TypeComp extends TypableBase<PropTypesWithInjected> {
+class TypeComp<U = {}> extends TypableBase<U & PropTypesWithInjected> {
     public static displayName = "Type";
 
     public render() {
@@ -30,14 +30,14 @@ class TypeComp extends TypableBase<PropTypesWithInjected> {
 
         const component = lrs.resourcePropertyComponent(
             subject,
-            label || RENDER_CLASS_NAME,
+            (label || RENDER_CLASS_NAME) as NamedNode,
             this.topology(),
         );
         if (component !== undefined) {
             const {
                 children,
                 ...rest // tslint:disable-line trailing-comma
-            } = this.props;
+            } = this.props as {} & PropTypesWithInjected;
 
             return createElement(
                 component,
