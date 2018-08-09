@@ -1,7 +1,8 @@
+import { SomeNode } from "link-lib";
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
-import { LinkContext, TopologyType } from "../types";
+import { LinkContext, TopologyRenderer, TopologyType } from "../types";
 
 import { Consumer, Provider } from "./withLinkCtx";
 
@@ -28,20 +29,23 @@ export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T, S> 
     protected elementType = "div";
     protected topology: TopologyType = null;
 
-    public wrap(children: React.ReactNode | React.ReactNode[]) {
-        return React.createElement(Consumer, null, ({ lrs, subject }: LinkContext) =>
-            React.createElement(
-                Provider,
-                {
-                    value: {
-                        lrs,
-                        subject,
-                        topology: this.topology === null ? undefined : this.topology,
+    public wrap(children: TopologyRenderer | React.ReactNode | React.ReactNode[]) {
+        return React.createElement(
+            Consumer,
+            null,
+            ({ lrs, subject }: LinkContext) =>
+                React.createElement(
+                    Provider,
+                    {
+                        value: {
+                            lrs,
+                            subject,
+                            topology: this.topology === null ? undefined : this.topology,
+                        },
                     },
-                },
-                children,
-            ),
-        );
+                    typeof children === "function" ? children(subject) : children,
+                ),
+            );
     }
 
     public render() {
@@ -50,7 +54,7 @@ export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T, S> 
         if (this.className !== undefined) {
             children = React.createElement(
                 this.elementType,
-                { className: this.className},
+                { className: this.className },
                 this.props.children,
             );
         }

@@ -1,5 +1,6 @@
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
 import { BlankNode, Literal, NamedNode } from "rdflib";
+import * as React from "react";
 import { ComponentClass, ComponentType, ReactType, StatelessComponent } from "react";
 import { Action } from "redux";
 import { Overwrite } from "type-zoo";
@@ -33,6 +34,8 @@ export type ReloadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction
 export type SubjectType = SomeNode;
 
 export type TopologyContextType = NamedNode | undefined;
+
+export type TopologyRenderer = (subject: SomeNode) => React.ReactNode | React.ReactNode[];
 
 export type TopologyType = TopologyContextType | null;
 
