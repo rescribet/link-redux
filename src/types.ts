@@ -4,6 +4,7 @@ import * as React from "react";
 import { ComponentClass, ComponentType, ReactType, StatelessComponent } from "react";
 import { Action } from "redux";
 import { Overwrite } from "type-zoo";
+import { higherOrderWrapper } from "./register";
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
@@ -111,16 +112,17 @@ export interface MapDataToPropsParamObject {
     [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
-export interface RegistrableComponentClass<P = {}> extends ComponentClass<P>, RegistrationOpts {}
+export interface RegistrableComponentClass<P = {}> extends ComponentClass<P>, RegistrationOpts<P> {}
 
-export interface RegistrableStatelessComponent<P = {}> extends StatelessComponent<P>, RegistrationOpts {}
+export interface RegistrableStatelessComponent<P = {}> extends StatelessComponent<P>, RegistrationOpts<P> {}
 
-export interface RegistrationOpts {
-    type: LazyNNArgument;
-    mapDataToProps?: MapDataToPropsParam;
+export interface RegistrationOpts<P> {
+    hocs?: Array<higherOrderWrapper<P>>;
     linkOpts?: LinkOpts;
+    mapDataToProps?: MapDataToPropsParam;
     property?: LazyNNArgument;
     topology?: LazyNNArgument | Array<NamedNode | undefined>;
+    type: LazyNNArgument;
 }
 
 export interface URLConverter {

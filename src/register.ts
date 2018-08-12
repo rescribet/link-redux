@@ -14,7 +14,7 @@ export function register<P>(comp: RegistrableComponent<P>, ...hocs: Array<higher
 
     const reducer = (prev: ComponentClass<P>, cur: higherOrderWrapper<P>) => cur(prev);
     // @ts-ignore
-    const wrappedComp = hocs.reduce(reducer, dataBoundComp);
+    const wrappedComp = (comp.hocs || hocs).reduce(reducer, dataBoundComp);
 
     return LinkedRenderStore.registerRenderer(
         wrappedComp,
