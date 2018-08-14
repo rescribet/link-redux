@@ -1,4 +1,9 @@
-import { defaultNS, getTermBestLang, SomeNode } from "link-lib";
+import {
+    defaultNS,
+    getTermBestLang,
+    namedNodeByIRI,
+    SomeNode,
+} from "link-lib";
 import { Requireable } from "prop-types";
 import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
@@ -54,6 +59,12 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
     };
     public static displayName = "Property";
 
+    constructor(props: PropertyWrappedProps) {
+        super(props);
+
+        this.renderChildrenOrValue = this.renderChildrenOrValue.bind(this);
+    }
+
     public render() {
         const { forceRender } = this.props;
         const objRaw = this.props.lrs.getResourceProperties(
@@ -100,17 +111,43 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
                 return this.limitTimes(objRaw, wrapLOC, associationRenderer);
             }
 
-            return this.limitTimes(
-                objRaw,
-                (p) => React.createElement(React.Fragment, null, this.props.children || p.value),
-                associationRenderer,
-            );
+            return this.limitTimes(objRaw, this.renderChildrenOrValue, associationRenderer);
         }
         if (this.props.children) {
             return React.createElement(associationRenderer, associationProps, this.props.children);
         }
 
         return null;
+    }
+
+    private renderChildrenOrValue(p: SomeTerm): React.ReactElement<any> {
+        if (this.props.children || p.termType !== "Literal") {
+            return React.createElement(React.Fragment, null, this.props.children || p.value);
+        }
+
+        const { linkVersion, lrs, topology, topologyCtx, subjectCtx } = this.props;
+        const literalRenderer = lrs.getComponentForProperty(
+            defaultNS.rdfs("Literal"),
+            namedNodeByIRI(p.datatype.value),
+            topology === null ? undefined : topology || topologyCtx,
+        );
+
+        if (!literalRenderer) {
+            return React.createElement(React.Fragment, null, p.value);
+        }
+
+        return React.createElement(
+            literalRenderer,
+            {
+                linkVersion,
+                linkedProp: p,
+                lrs,
+                subject: p.datatype,
+                subjectCtx,
+                topology,
+                topologyCtx,
+            },
+        );
     }
 
     private limitTimes<P>(
