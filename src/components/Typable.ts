@@ -74,6 +74,10 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
                         {
                             caughtError: this.state.caughtError,
                             linkRequestStatus: status,
+                            reset: () => this.setState({
+                                caughtError: undefined,
+                                hasCaughtError: false,
+                            }),
                             subject: this.subject(),
                         },
                     ),
