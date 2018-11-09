@@ -1,11 +1,10 @@
 import {
     defaultNS,
     getTermBestLang,
-    namedNodeByIRI,
     SomeNode,
 } from "link-lib";
 import { Requireable } from "prop-types";
-import { NamedNode, SomeTerm } from "rdflib";
+import { NamedNode, SomeTerm, Term } from "rdflib";
 import * as React from "react";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
@@ -130,7 +129,7 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
         const { lrs, topology, topologyCtx, subjectCtx } = this.props;
         const literalRenderer = lrs.getComponentForProperty(
             defaultNS.rdfs("Literal"),
-            namedNodeByIRI(p.datatype.value),
+            Term.namedNodeByIRI(p.datatype.value),
             topology === null ? undefined : topology || topologyCtx,
         );
 
