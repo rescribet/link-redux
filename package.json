@@ -1,6 +1,6 @@
 {
   "name": "link-redux",
-  "version": "1.0.0-beta33",
+  "version": "1.0.0-beta33-20190108T094946",
   "description": "React/Redux extensions for the Link library",
   "main": "dist/link-redux.umd.js",
   "module": "dist/link-redux.es6.js",
@@ -33,7 +33,7 @@
     "http-status-codes": ">= 1.x",
     "link-lib": ">=1.0.0-beta29",
     "prop-types": ">= 15.x",
-    "rdflib": ">= 0.17.x",
+    "rdflib": ">= 0.19.x",
     "react": ">= 16.x"
   },
   "devDependencies": {
@@ -50,9 +50,9 @@
     "immutable": "3.8.x",
     "jest": "^23.5.0",
     "jest-enzyme": "^6.0.3",
-    "link-lib": "=1.0.0-beta29",
+    "link-lib": "=1.0.0-beta29-20190108T094946",
     "prop-types": "^15.x",
-    "rdflib": "0.17.x",
+    "rdflib": "npm:link-rdflib@0.19.1-20190108T094946",
     "react": "=16.7.0-alpha.2",
     "react-dom": "=16.7.0-alpha.2",
     "react-redux": "^6.0.0",

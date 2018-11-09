@@ -32,6 +32,10 @@ const globalLinkOptsDefaults = {
     returnType: "term",
 } as LinkOpts;
 
+function term(iri: NamedNode): string {
+    return iri.term || iri.value.split(/[\/#]/).pop()!.split("?").shift() || "";
+}
+
 function toReturnType(returnType: LinkReturnType, p: Statement): Statement | SomeTerm | ToJSOutputTypes {
     switch (returnType) {
         case "literal":
@@ -78,11 +82,11 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
             throw new TypeError("Props array must contain at least one predicate");
         }
         mapDataToProps.forEach((prop) => {
-            propMap[prop.term] = {
+            propMap[term(prop)] = {
                 forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                 label: [prop],
                 limit: opts.limit || globalLinkOptsDefaults.limit,
-                name: prop.term,
+                name: term(prop),
             };
         });
     } else {
@@ -97,21 +101,21 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                 }
                 predObj.forEach((prop) => {
                     requestedProperties.push(prop.sI);
-                    propMap[prop.term] = {
+                    propMap[term(prop)] = {
                         forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                         label: [prop],
                         limit: opts.limit || globalLinkOptsDefaults.limit,
-                        name: prop.term,
+                        name: term(prop),
                         returnType: opts.returnType || globalLinkOptsDefaults.returnType,
                     };
                 });
             } else if (predObj instanceof NamedNode) {
                 requestedProperties.push(predObj.sI);
-                propMap[propKey || predObj.term] = {
+                propMap[propKey || term(predObj)] = {
                     forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                     label: [predObj],
                     limit: opts.limit || globalLinkOptsDefaults.limit,
-                    name: propKey || predObj.term,
+                    name: propKey || term(predObj),
                 };
             } else {
                 if (predObj.label === undefined) {
@@ -122,12 +126,12 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                 labelArr.forEach((label) => {
                     requestedProperties.push(label.sI);
                 });
-                propMap[propKey || predObj.name || labelArr[0].term] = {
+                propMap[propKey || predObj.name || term(labelArr[0])] = {
                     forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
                     label: normalizeType(predObj.label),
                     limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
                     linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
-                    name: propKey || predObj.name || labelArr[0].term,
+                    name: propKey || predObj.name || term(labelArr[0]),
                     returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
                 } as ProcessedLinkOpts;
             }

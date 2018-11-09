@@ -1,4 +1,4 @@
-import { NamedNode } from "rdflib";
+import { NamedNode, Term } from "rdflib";
 
 import { URLConverterSet } from "../types";
 
@@ -17,7 +17,7 @@ export default (iri: NamedNode): NamedNode => {
     for (const convName of Object.keys(converters)) {
         const converter = converters[convName];
         if (iri.value.match(converter.match)) {
-            return new NamedNode(converter.convert(iri.value));
+            return Term.namedNodeByIRI(converter.convert(iri.value));
         }
     }
 
