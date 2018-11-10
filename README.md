@@ -1,7 +1,7 @@
 # Link Redux
 *A Link to the Web*
 
-[![Build Status](https://travis-ci.org/fletcher91/link-redux.svg?branch=master)](https://travis-ci.org/fletcher91/link-redux)
+[![CircleCI](https://circleci.com/gh/fletcher91/link-redux.svg?style=svg)](https://circleci.com/gh/fletcher91/link-redux)
 [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://fletcher91.github.io/link-redux/)
 ![npm version](https://img.shields.io/npm/v/link-lib.svg)
 ![npm type definitions](https://img.shields.io/npm/types/link-redux.svg)

@@ -1,0 +1,98 @@
+version: 2
+jobs:
+  build-node-11:
+    docker:
+      - image: circleci/node:11
+    working_directory: ~/link-redux
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-11-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-11-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-11-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
+  build-node-10:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/link-redux
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-10-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-10-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-10-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
+  build-node-9:
+    docker:
+      - image: circleci/node:9
+    working_directory: ~/link-redux
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-9-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-9-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-9-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
+  build-node-8:
+    docker:
+      - image: circleci/node:8
+    working_directory: ~/link-redux
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-8-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-8-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-8-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-node-11
+      - build-node-10
+      - build-node-9
+      - build-node-8
