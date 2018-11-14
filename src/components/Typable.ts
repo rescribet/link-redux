@@ -61,25 +61,27 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
         if (!this.state.hasCaughtError && Typable.isLoading(status)) {
             const loadComp = this.onLoad();
 
-            return loadComp === null ? null : React.createElement(loadComp, this.props);
+            return loadComp === null ? null : this.wrapContext(React.createElement(loadComp, this.props));
         }
         if (this.state.hasCaughtError || Typable.hasErrors(status)) {
             const errComp = this.onError();
             if (errComp) {
-                return React.createElement(
-                    errComp,
-                    Object.assign(
-                        {},
-                        this.props,
-                        {
-                            caughtError: this.state.caughtError,
-                            linkRequestStatus: status,
-                            reset: () => this.setState({
-                                caughtError: undefined,
-                                hasCaughtError: false,
-                            }),
-                            subject: this.subject(),
-                        },
+                return this.wrapContext(
+                    React.createElement(
+                        errComp,
+                        Object.assign(
+                            {},
+                            this.props,
+                            {
+                                caughtError: this.state.caughtError,
+                                linkRequestStatus: status,
+                                reset: () => this.setState({
+                                    caughtError: undefined,
+                                    hasCaughtError: false,
+                                }),
+                                subject: this.subject(),
+                            },
+                        ),
                     ),
                 );
             }
