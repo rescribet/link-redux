@@ -1,41 +1,23 @@
 import * as ReactPropTypes from "prop-types";
 import { NamedNode } from "rdflib";
 import * as React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
 
 import { subjectType, topologyType } from "../propTypes";
-import {
-    LinkAction,
-    LinkStateTree,
-    LoadLinkedObject,
-    PropertyProps,
-    ReloadLinkedObject,
-    SubjectProp,
-} from "../types";
 
-import { fetchLinkedObject, getLinkedObject, reloadLinkedObject } from "../redux/actions";
-import { linkedObjectVersionByIRI } from "../redux/selectors";
 import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
 import { withLinkCtx } from "./withLinkCtx";
-
-export interface DispatchPropTypes {
-    loadLinkedObject: LoadLinkedObject;
-    reloadLinkedObject: ReloadLinkedObject;
-}
 
 export interface PropTypes extends TypableProps {
     fetch?: boolean;
     forceRender?: boolean;
 }
 
-export interface InjectedPropTypes extends PropTypes, DispatchPropTypes, TypableInjectedProps {}
+export interface InjectedPropTypes extends PropTypes, TypableInjectedProps {}
 
 const propTypes = {
     children: ReactPropTypes.node,
     fetch: ReactPropTypes.bool,
     forceRender: ReactPropTypes.bool,
-    linkVersion: ReactPropTypes.string,
     loadLinkedObject: ReactPropTypes.func,
     onError: ReactPropTypes.oneOfType([
         ReactPropTypes.element,
@@ -45,7 +27,6 @@ const propTypes = {
         ReactPropTypes.element,
         ReactPropTypes.func,
     ]),
-    reloadLinkedObject: ReactPropTypes.func,
     subject: subjectType.isRequired,
     topology: topologyType,
 };
@@ -109,44 +90,22 @@ class LinkedResourceContainerComp<P extends InjectedPropTypes> extends TypableBa
             if (subject.termType === "BlankNode") {
                 throw new TypeError("Cannot load a blank node since it has no defined way to be resolved.");
             }
-            this.props.loadLinkedObject((subject as NamedNode), !!props.fetch || true);
+            if (!!props.fetch || true) {
+                this.props.lrs.getEntity((subject as NamedNode));
+            } else {
+                this.props.lrs.tryEntity((subject as NamedNode));
+            }
         }
     }
 }
 
 export { LinkedResourceContainerComp };
 
-const mapStateToProps = <P>(state: LinkStateTree, { subject }: P & SubjectProp) => {
-    if (!subject) {
-        throw new Error("[LRC] a subject must be given");
-    }
-    if (!nodeTypes.includes(subject.termType)) {
-        throw new Error(`[LRC] Subject must be a node (was "${typeof subject}[${subject}]")`);
-    }
-
-    return {
-        linkVersion: linkedObjectVersionByIRI(state, subject) || "new",
-    };
-};
-
-const mapDispatchToProps = <P>(dispatch: Dispatch, ownProps: P & TypableInjectedProps): DispatchPropTypes => ({
-    loadLinkedObject: (href: NamedNode = ownProps.subject as NamedNode, fetch: boolean): LinkAction =>
-        dispatch(fetch === false ?
-            getLinkedObject(href) :
-            fetchLinkedObject(href)),
-    reloadLinkedObject: (href: NamedNode = ownProps.subject as NamedNode): LinkAction =>
-        dispatch(reloadLinkedObject(href)),
-});
-
-const conn = connect(mapStateToProps, mapDispatchToProps);
-
-export const LinkedResourceContainerUnwrapped = conn(LinkedResourceContainerComp);
-
 // The actual value of the `any` placeholder would be the props interface of the component which will
 // be rendered, but we can't know that (yet).
 // tslint:disable-next-line variable-name
 export const LinkedResourceContainer = withLinkCtx<any>(
-    LinkedResourceContainerUnwrapped,
+    LinkedResourceContainerComp,
     {
         subject: true,
         topology: true,

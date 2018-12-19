@@ -10,7 +10,6 @@ import { withLRS } from "../withLRS";
 
 const label = NS.schema("name");
 const subject = NS.example("41");
-const linkVersion = "new";
 
 class CustomClass extends PropertyBase {
 }
@@ -22,7 +21,6 @@ function getComp(linkedProp?: SomeTerm | undefined) {
         test,
         {
             label,
-            linkVersion,
             linkedProp,
             subject,
             topology: DEFAULT_TOPOLOGY,
@@ -38,17 +36,7 @@ describe("PropertyBase component", () => {
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { subject, linkVersion };
-            expect(elem.shouldComponentUpdate(nextProps)).toEqual(false);
-        });
-
-        it("returns false when subject and linkVersion are unchanged", () => {
-            const opts = ctx.fullCW(subject);
-
-            const comp = getComp();
-            const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
-
-            const nextProps = { label, subject, linkVersion };
+            const nextProps = { subject };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(false);
         });
 
@@ -58,17 +46,7 @@ describe("PropertyBase component", () => {
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            const nextProps = { label, subject: NS.example("different"), linkVersion };
-            expect(elem.shouldComponentUpdate(nextProps)).toEqual(true);
-        });
-
-        it("returns true when linkVersion is changed", () => {
-            const opts = ctx.fullCW(subject);
-
-            const comp = getComp();
-            const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
-
-            const nextProps = { label, subject, linkVersion: "different" };
+            const nextProps = { label, subject: NS.example("different") };
             expect(elem.shouldComponentUpdate(nextProps)).toEqual(true);
         });
     });

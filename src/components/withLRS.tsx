@@ -5,7 +5,7 @@ import { LinkedRenderStoreContext, Omit } from "../types";
 import { Consumer } from "./withLinkCtx";
 
 export function withLRS<P extends LinkedRenderStoreContext>(Component: React.ComponentType<P>):
-    React.SFC<Omit<P, keyof LinkedRenderStoreContext>> {
+    React.FunctionComponent<Omit<P, keyof LinkedRenderStoreContext>> {
 
     return (props) => (
         <Consumer>
@@ -14,7 +14,7 @@ export function withLRS<P extends LinkedRenderStoreContext>(Component: React.Com
                     throw new Error("No LinkedRenderStore provided");
                 }
 
-                return <Component {...props} lrs={lrs} />;
+                return <Component {...props as P} lrs={lrs} />;
             }}
         </Consumer>
     );

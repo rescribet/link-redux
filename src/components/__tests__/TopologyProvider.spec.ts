@@ -14,8 +14,6 @@ const createTestElement = (className = "testComponent") => () => createElement(
     "span",
     { className },
 );
-const loadLinkedObject = () => undefined;
-const linkVersion = "new";
 
 describe("TopologyProvider component", () => {
     it("sets the topology", () => {
@@ -43,7 +41,7 @@ describe("TopologyProvider component", () => {
             null,
             createElement(
                 LinkedResourceContainer,
-                { subject: defaultNS.example("resources/10"), linkVersion },
+                { subject: defaultNS.example("resources/10") },
             ),
         );
 

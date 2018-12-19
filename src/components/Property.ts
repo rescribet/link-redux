@@ -10,12 +10,12 @@ import * as React from "react";
 
 import {
     LabelType,
-    LinkContextReceiverProps,
+    LinkContext,
     LinkCtxOverrides,
     LinkedPropType,
 } from "../types";
 
-import { LinkedResourceContainerUnwrapped as LRC } from "./LinkedResourceContainer";
+import { LinkedResourceContainerComp as LRC } from "./LinkedResourceContainer";
 import { withLinkCtx } from "./withLinkCtx";
 
 export interface PropertyPropTypes {
@@ -38,7 +38,7 @@ export interface PropertyPropTypes {
     linkedProp?: LinkedPropType;
 }
 
-export interface PropertyWrappedProps extends PropertyPropTypes, LinkContextReceiverProps, LinkCtxOverrides {}
+export interface PropertyWrappedProps extends PropertyPropTypes, LinkContext, LinkCtxOverrides {}
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
@@ -125,7 +125,7 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
             return React.createElement(React.Fragment, null, this.props.children || p.value);
         }
 
-        const { linkVersion, lrs, topology, topologyCtx, subjectCtx } = this.props;
+        const { lrs, topology, topologyCtx, subjectCtx } = this.props;
         const literalRenderer = lrs.getComponentForProperty(
             defaultNS.rdfs("Literal"),
             namedNodeByIRI(p.datatype.value),
@@ -139,7 +139,6 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
         return React.createElement(
             literalRenderer,
             {
-                linkVersion,
                 linkedProp: p,
                 lrs,
                 subject: p.datatype,

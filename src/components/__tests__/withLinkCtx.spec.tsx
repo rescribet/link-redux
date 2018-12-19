@@ -44,7 +44,6 @@ describe("withLinkCtx hoc", () => {
         expect(node).toHaveProp("lrs", opts.lrs);
         expect(node).toHaveProp("subject", opts.subject);
         expect(node).toHaveProp("topology", ctxProps.topology);
-        expect(node).toHaveProp("linkVersion");
 
         expect(node).not.toHaveProp("subjectCtx");
         expect(node).not.toHaveProp("topologyCtx");
@@ -65,7 +64,6 @@ describe("withLinkCtx hoc", () => {
             expect(node).toHaveProp("lrs", opts.lrs);
             expect(node).toHaveProp("subject", defaultNS.ex("override"));
             expect(node).toHaveProp("topology", ctxProps.topology);
-            expect(node).toHaveProp("linkVersion");
 
             expect(node).toHaveProp("subjectCtx", opts.subject);
             expect(node).not.toHaveProp("topologyCtx");
@@ -85,7 +83,6 @@ describe("withLinkCtx hoc", () => {
             expect(node).toHaveProp("lrs", opts.lrs);
             expect(node).toHaveProp("subject", opts.subject);
             expect(node).toHaveProp("topology", defaultNS.ex("override"));
-            expect(node).toHaveProp("linkVersion");
 
             expect(node).not.toHaveProp("subjectCtx");
             expect(node).toHaveProp("topologyCtx", ctxProps.topology);

@@ -1,3 +1,4 @@
+import { FunctionComponent } from "react";
 import * as React from "react";
 
 import { Omit, TopologyContextProp } from "../types";
@@ -5,11 +6,18 @@ import { Omit, TopologyContextProp } from "../types";
 import { Consumer } from "./withLinkCtx";
 
 export function withTopology<P extends TopologyContextProp>(Component: React.ComponentType<P>):
-    React.SFC<Omit<P, keyof TopologyContextProp>> {
+    React.FunctionComponent<Omit<P, keyof TopologyContextProp>> {
 
-    return (props) => (
+    return (props: Omit<P, keyof TopologyContextProp>) => (
         <Consumer>
-            {({ topology }) => <Component {...props} topology={topology} />}
+            {({ topology }) => {
+                const merged = {
+                    ...props,
+                    topology,
+                } as P;
+
+                return <Component {...merged} />;
+            }}
         </Consumer>
     );
 }

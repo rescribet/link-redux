@@ -67,7 +67,6 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
 
     return {
         contextProps: (topology?: TopologyContextType): LinkContextReceiverProps & LinkCtxOverrides => ({
-            linkVersion: "new",
             lrs,
             subject,
             subjectCtx: subject,

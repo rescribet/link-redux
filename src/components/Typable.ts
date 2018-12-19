@@ -7,7 +7,7 @@ import {
 import { NamedNode, Statement } from "rdflib";
 import * as React from "react";
 
-import { LinkContext, LinkCtxOverrides, PropertyProps, TopologyContextType } from "../types";
+import { LinkContext, LinkCtxOverrides, SubjectProp, TopologyContextType } from "../types";
 import { Provider, withLinkCtx } from "./withLinkCtx";
 
 const nodeTypes = ["NamedNode", "BlankNode"];
@@ -22,7 +22,7 @@ export interface TypableProps {
     onLoad?: React.ReactType;
 }
 
-export interface TypableInjectedProps extends PropertyProps, LinkContext, LinkCtxOverrides  {}
+export interface TypableInjectedProps extends SubjectProp, LinkContext, LinkCtxOverrides  {}
 
 class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureComponent<P, StateTypes> {
     public static hasErrors(status: EmptyRequestStatus | FulfilledRequestStatus) {

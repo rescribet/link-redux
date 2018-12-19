@@ -40,7 +40,7 @@ export type TopologyRenderer = (subject: SomeNode) => React.ReactNode | React.Re
 
 export type TopologyType = TopologyContextType | null;
 
-export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext & VersionProp;
+export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext;
 
 export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> = Overwrite<
     Omit<P, keyof UninheritableLinkCtxProps>,
@@ -58,7 +58,6 @@ export interface LinkContext {
 export interface LinkedRenderStoreContext {
     lrs: LinkReduxLRSType;
 }
-export type LinkContextReceiverProps = LinkContext & VersionProp;
 
 export interface LinkCtxOverrides {
     subjectCtx: SubjectType;
@@ -145,9 +144,3 @@ export interface TopologyContextProp {
 export interface TopologyProp {
     topology: TopologyType;
 }
-
-export interface VersionProp {
-    linkVersion: string;
-}
-
-export interface PropertyProps extends SubjectProp, VersionProp {}

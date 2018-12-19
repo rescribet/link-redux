@@ -1,23 +1,15 @@
 import { DEFAULT_TOPOLOGY } from "link-lib";
 import { NamedNode } from "rdflib";
 import * as React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { reloadLinkedObject } from "../redux/actions";
 
-import { linkedObjectVersionByIRI } from "../redux/selectors";
 import {
-    LinkAction,
     LinkContext,
-    LinkContextReceiverProps,
     LinkCtxOverrides,
     LinkedRenderStoreContext,
     LinkReduxLRSType,
-    LinkStateTree,
     PropsWithOptLinkProps,
     SubjectProp,
     TopologyProp,
-    VersionProp,
 } from "../types";
 
 export interface WithLinkCtxOptions {
@@ -26,22 +18,6 @@ export interface WithLinkCtxOptions {
 
 export const { Consumer, Provider } = React.createContext<Partial<LinkContext> & LinkedRenderStoreContext>(
     { lrs: {} as LinkReduxLRSType },
-);
-
-const VersionBase = connect(
-    (state: LinkStateTree, { subject }: SubjectProp): VersionProp => {
-        if (typeof subject === "undefined" || subject === null) {
-            throw new Error("[LV] A subject must be given");
-        }
-
-        return {
-            linkVersion: linkedObjectVersionByIRI(state, subject),
-        };
-    },
-    (dispatch: Dispatch, { subject }: SubjectProp) => ({
-        reloadLinkedObject: (href: NamedNode = subject as NamedNode): LinkAction =>
-            dispatch(reloadLinkedObject(href)),
-    }),
 );
 
 function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
@@ -69,19 +45,15 @@ function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
 }
 
 export function withLinkCtx<P>(
-    Component: React.ComponentType<P & LinkContextReceiverProps & Partial<LinkCtxOverrides>>,
+    Component: React.ComponentType<P & LinkContext & Partial<LinkCtxOverrides>>,
     options: WithLinkCtxOptions = {}): React.ComponentType<PropsWithOptLinkProps<P>> {
 
-    const VersionComp = VersionBase(Component);
-
-    const Comp: React.SFC<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => (
+    const Comp: React.FunctionComponent<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => (
         <Consumer>
             {(context: Partial<LinkContext> & LinkedRenderStoreContext) => {
                 const childProps = calculateChildProps(props, context, options);
 
-                const FinalComponent = childProps.subject ? VersionComp : Component;
-
-                return <FinalComponent linkVersion="" {...childProps} />;
+                return <Component {...childProps as P & LinkContext & Partial<LinkCtxOverrides>} />;
             }}
         </Consumer>
     );

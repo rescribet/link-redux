@@ -5,9 +5,9 @@ import { ReactElement } from "react";
 import * as React from "react";
 
 import { labelType, linkedPropType, subjectType } from "../propTypes";
-import { LabelType, LinkContextReceiverProps } from "../types";
+import { LabelType, LinkContext } from "../types";
 
-export interface PropTypes extends LinkContextReceiverProps {
+export interface PropTypes extends LinkContext {
     label: LabelType;
     linkedProp?: SomeTerm;
 }
@@ -15,7 +15,6 @@ export interface PropTypes extends LinkContextReceiverProps {
 export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
     public static propTypes = {
         label: labelType,
-        linkVersion: ReactPropTypes.string,
         linkedProp: linkedPropType,
         subject: subjectType,
     };
@@ -35,8 +34,7 @@ export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
             return false;
         }
 
-        return this.props.subject !== nextProps.subject ||
-            this.props.linkVersion !== nextProps.linkVersion;
+        return this.props.subject !== nextProps.subject;
     }
 
     protected getLinkedObjectProperty(property?: NamedNode): SomeTerm | undefined {

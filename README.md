@@ -484,7 +484,7 @@ class ThingNavigation extends React.PureComponent {
 /**
 * Properties without being connected via the `link` function recieve their prop's value via `linkedProp`
 * 
-* As you can see, components don't have to be classes, but can be SFC as well.
+* As you can see, components don't have to be classes, but can be function components as well.
 */
 const ThingName = ({ linkedProp }) => <h1>{linkedProp.value}</h1>;
 

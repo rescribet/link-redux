@@ -43,7 +43,7 @@ export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T, S> 
                             topology: this.topology === null ? undefined : this.topology,
                         },
                     },
-                    typeof children === "function" ? children(subject) : children,
+                    typeof children === "function" ? (children as TopologyRenderer)(subject) : children,
                 ),
             );
     }

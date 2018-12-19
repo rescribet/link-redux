@@ -15,14 +15,12 @@ const createTestElement = (className = "testComponent") => () => createElement(
     { className },
 );
 const loadLinkedObject = () => undefined;
-const linkVersion = "new";
 
 describe("LinkedResourceContainer component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty(iri);
         const comp = createElement(LinkedResourceContainer, {
             className: "testmarker",
-            linkVersion,
             loadLinkedObject,
             subject: iri,
         });
@@ -96,7 +94,6 @@ describe("LinkedResourceContainer component", () => {
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
         const elem = mount(
             opts.wrapComponent(createElement(LinkedResourceContainer, {
-                linkVersion,
                 loadLinkedObject,
                 subject: bn,
             })),
@@ -132,13 +129,13 @@ describe("LinkedResourceContainer component", () => {
 
         const comp = createElement(
             LinkedResourceContainer,
-            { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection"), linkVersion },
+            { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection") },
             createElement(
                 LinkedResourceContainer,
-                { loadLinkedObject, subject: iri, linkVersion },
+                { loadLinkedObject, subject: iri },
                 createElement(
                     LinkedResourceContainer,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10"), linkVersion },
+                    { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),
             ),
         );
@@ -163,13 +160,13 @@ describe("LinkedResourceContainer component", () => {
 
         const comp = createElement(
             LinkedResourceContainer,
-            { loadLinkedObject, subject: iri , linkVersion},
+            { loadLinkedObject, subject: iri },
             createElement
             (LinkedResourceContainer,
-                { loadLinkedObject, subject: iri, linkVersion },
+                { loadLinkedObject, subject: iri },
                 createElement(
                     LinkedResourceContainer,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10"), linkVersion },
+                    { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),
             ),
         );

@@ -4,11 +4,9 @@ import { defaultNS, LinkedRenderStore } from "link-lib";
 import * as React from "react";
 
 import * as ctx from "../../../test/fixtures";
-import { linkedModelTouch } from "../../redux/actions";
 import { PropertyComp as Property } from "../Property";
 
 const subject = defaultNS.example("41");
-const linkVersion = "new";
 
 describe("Property component", () => {
     it("renders null when label is not present", () => {

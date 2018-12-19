@@ -10,6 +10,7 @@ export type higherOrderWrapper<TNeedsProps> = InferableComponentEnhancerWithProp
 export function register<P>(comp: RegistrableComponent<P>, ...hocs: Array<higherOrderWrapper<P>>):
     Array<ComponentRegistration<ComponentType<P>>> {
 
+    // @ts-ignore
     const reducer = (prev: ComponentClass<P>, cur: higherOrderWrapper<P>) => cur(prev);
     // @ts-ignore
     const wrappedComp = (comp.hocs || hocs).reduce(reducer, comp);
