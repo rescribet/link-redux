@@ -1,8 +1,10 @@
 import * as ReactPropTypes from "prop-types";
 import { NamedNode } from "rdflib";
 import * as React from "react";
+import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 
 import { subjectType, topologyType } from "../propTypes";
+import { DataInvalidationProps } from "../types";
 
 import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
 import { withLinkCtx } from "./withLinkCtx";
@@ -12,10 +14,11 @@ export interface PropTypes extends TypableProps {
     forceRender?: boolean;
 }
 
-export interface InjectedPropTypes extends PropTypes, TypableInjectedProps {}
+export interface InjectedPropTypes extends PropTypes, DataInvalidationProps, TypableInjectedProps {}
 
 const propTypes = {
     children: ReactPropTypes.node,
+    dataSubjects: ReactPropTypes.arrayOf(subjectType),
     fetch: ReactPropTypes.bool,
     forceRender: ReactPropTypes.bool,
     loadLinkedObject: ReactPropTypes.func,
@@ -44,13 +47,21 @@ class LinkedResourceContainerComp<P extends InjectedPropTypes> extends TypableBa
     public static displayName = "LinkedResourceContainer";
     // public static propTypes = propTypes;
 
-    public componentWillMount() {
+    public unsubscribe?: () => void;
+
+    public componentDidMount() {
         this.loadLinkedObject();
     }
 
-    public componentWillReceiveProps(nextProps: P) {
-        if (this.props.subject !== nextProps.subject) {
-            this.loadLinkedObject(nextProps);
+    public componentDidUpdate(prevProps: Readonly<P>): void {
+    if (this.props.subject !== prevProps.subject) {
+            this.loadLinkedObject(this.props);
+        }
+    }
+
+    public componentWillUnmount(): void {
+        if (this.unsubscribe) {
+            this.unsubscribe();
         }
     }
 
@@ -84,9 +95,20 @@ class LinkedResourceContainerComp<P extends InjectedPropTypes> extends TypableBa
     }
 
     private loadLinkedObject(props: P = this.props): void {
-        const data = this.data(props);
-        if (data.length === 0) {
-            const subject = this.subject(props);
+        const unsubscribe = props.lrs.subscribe({
+            // Overriding the props might result in an invariant since the forceUpdate closure is evaluated later.
+            callback: () => this.forceUpdate(),
+            markedForDelete: false,
+            onlySubjects: true,
+            subjectFilter: normalizeDataSubjects(props),
+        });
+        // TODO: If this can be in componentWillReceiveProps, we can check if the subs have changed
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
+        this.unsubscribe = unsubscribe;
+        const subject = this.subject(props);
+        if (this.willLoadObject(props)) {
             if (subject.termType === "BlankNode") {
                 throw new TypeError("Cannot load a blank node since it has no defined way to be resolved.");
             }

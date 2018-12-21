@@ -7,8 +7,10 @@ import {
 import { Requireable } from "prop-types";
 import { NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
+import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
 import {
+    DataInvalidationProps,
     LabelType,
     LinkContext,
     LinkCtxOverrides,
@@ -38,7 +40,7 @@ export interface PropertyPropTypes {
     linkedProp?: LinkedPropType;
 }
 
-export interface PropertyWrappedProps extends PropertyPropTypes, LinkContext, LinkCtxOverrides {}
+export interface PropertyWrappedProps extends PropertyPropTypes, DataInvalidationProps, LinkContext, LinkCtxOverrides {}
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
@@ -179,5 +181,11 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
     }
 }
 
+export function PropertySubbed<P>(props: P & PropertyWrappedProps) {
+    const version = useDataInvalidation(props, props.lrs);
+
+    return <PropertyComp {...props} linkVersion={version} />;
+}
+
 // tslint:disable-next-line: variable-name
-export const Property = withLinkCtx(PropertyComp, { topology: true });
+export const Property = withLinkCtx(PropertySubbed, { topology: true });

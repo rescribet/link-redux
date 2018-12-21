@@ -12,20 +12,14 @@ import {
     Statement,
 } from "rdflib";
 import { createElement, ReactElement, ReactType } from "react";
-import { Provider } from "react-redux";
-import { applyMiddleware, createStore, Store } from "redux";
-import { combineReducers } from "redux-immutable";
+
+import { LinkedResourceContainer } from "../src/components/LinkedResourceContainer";
+import { RenderStoreProvider } from "../src/components/RenderStoreProvider";
 import {
-    LinkContextReceiverProps,
+    LinkContext,
     LinkCtxOverrides,
-    linkMiddleware,
-    linkReducer,
     TopologyContextType,
 } from "../src/link-redux";
-
-import { RenderStoreProvider } from "../src/components/RenderStoreProvider";
-import { LinkedResourceContainer } from "../src/components/LinkedResourceContainer";
-import { LinkReduxLRSType } from "../src/types";
 
 import { TestContext } from "./types";
 
@@ -52,21 +46,16 @@ const sFull = (id: NamedNode, attrs: Test) => {
     ];
 };
 
-const generateReduxStore = (lrs: LinkReduxLRSType): Store => createStore(
-    combineReducers({ linkedObjects: linkReducer }),
-    applyMiddleware(linkMiddleware(lrs)),
-);
-
 export function chargeLRS(statements: Statement[] = [], subject: SomeNode): TestContext<ReactType> {
     const store = new RDFStore();
     const schema = new Schema(store);
     const mapping = new ComponentStoreTestProxy<ReactType>(schema);
     const lrs = new LinkedRenderStore<ReactType>({ mapping, schema, store });
     store.addStatements(statements);
-    const reduxStore = generateReduxStore(lrs);
+    store.flush();
 
     return {
-        contextProps: (topology?: TopologyContextType): LinkContextReceiverProps & LinkCtxOverrides => ({
+        contextProps: (topology?: TopologyContextType): LinkContext & LinkCtxOverrides => ({
             lrs,
             subject,
             subjectCtx: subject,
@@ -75,19 +64,17 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
         }),
         lrs,
         mapping,
-        reduxStore,
         schema,
         store,
         subject,
         wrapComponent: (children?: ReactElement<any>, topology?: TopologyContextType): ReactElement<any> => {
-            return createElement(Provider, { store: reduxStore },
-                createElement(RenderStoreProvider, { value: lrs },
-                    createElement("div", { className: "root" },
-                        createElement(
-                            LinkedResourceContainer,
-                            { forceRender: true, subject, topology },
-                            children,
-                        ))));
+            return createElement(RenderStoreProvider, { value: lrs },
+                createElement("div", { className: "root" },
+                    createElement(
+                        LinkedResourceContainer,
+                        { forceRender: true, subject, topology },
+                        children,
+                    )));
         },
     } as TestContext<ReactType>;
 }
@@ -110,6 +97,7 @@ export const multipleCW = (id = exNS("3"), attrs: { [k: string]: string } = {}) 
     const opts = chargeLRS(sFull(id, attrs), id);
     const second = attrs.second || { id: "4" };
     opts.store.addStatements(sFull(exNS(second.id), second));
+    opts.store.flush();
 
     return opts;
 };
@@ -127,6 +115,7 @@ export const multipleCWArr = (attrs: Test[] = []) => {
     attrs.forEach((obj) => {
         opts.store.addStatements(sFull(obj.id, obj));
     });
+    opts.store.flush();
 
     return opts;
 };

@@ -1,8 +1,7 @@
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
 import { BlankNode, Literal, NamedNode } from "rdflib";
 import * as React from "react";
-import { ComponentClass, ComponentType, ReactType, StatelessComponent } from "react";
-import { Action } from "redux";
+import { ComponentClass, ReactType, StatelessComponent } from "react";
 import { Overwrite } from "type-zoo";
 import { higherOrderWrapper } from "./register";
 
@@ -12,25 +11,15 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export type LabelType = NamedNode | NamedNode[];
 
-export type LinkAction = LinkFetchAction | LinkGetAction | LinkReloadAction;
-
-export type LoadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction;
-
 export type LinkedPropType = NamedNode | BlankNode | Literal;
 
 export type LinkReduxLRSType = LinkedRenderStore<ReactType>;
 
 export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
-export type LinkStateTree = LinkStateTreeObj | LinkStateTreeMap;
-
-export type LinkStateTreeMap = Map<string, { [k: string]: string }>;
-
 export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
 export type RegistrableComponent<P = {}> = RegistrableComponentClass<P> | RegistrableStatelessComponent<P>;
-
-export type ReloadLinkedObject = (href: NamedNode, fetch: boolean) => LinkAction;
 
 export type SubjectType = SomeNode;
 
@@ -64,28 +53,6 @@ export interface LinkCtxOverrides {
     topologyCtx: TopologyContextType;
 }
 
-export interface LinkFetchPayload {
-    href: NamedNode;
-    linkedObjectAction: true;
-}
-
-export interface LinkFetchAction extends Action<"FETCH_LINKED_OBJECT"> {
-    payload: LinkFetchPayload;
-}
-
-export interface LinkGetPayload {
-    iri: NamedNode;
-    linkedObjectAction: true;
-}
-
-export interface LinkGetAction extends Action<"GET_LINKED_OBJECT"> {
-    payload: LinkGetPayload;
-}
-
-export interface LinkModelTouchAction extends Action<"LINKED_MODEL_TOUCH"> {
-    payload: LinkStateTreeSlice;
-}
-
 export interface LinkOpts {
     forceRender?: boolean;
     label?: LabelType;
@@ -93,18 +60,6 @@ export interface LinkOpts {
     linkedProp?: LinkedPropType;
     name?: string;
     returnType?: LinkReturnType;
-}
-
-export interface LinkReloadAction extends Action<"RELOAD_LINKED_OBJECT"> {
-    payload: LinkFetchPayload;
-}
-
-export interface LinkStateTreeSlice {
-    [k: string]: string;
-}
-
-export interface LinkStateTreeObj {
-    linkedObjects: LinkStateTreeSlice;
 }
 
 export interface MapDataToPropsParamObject {
@@ -135,6 +90,10 @@ export interface URLConverterSet {
 
 export interface SubjectProp {
     subject: SubjectType;
+}
+
+export interface DataInvalidationProps extends SubjectProp {
+    dataSubjects?: SubjectType | SubjectType[];
 }
 
 export interface TopologyContextProp {

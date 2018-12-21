@@ -64,8 +64,6 @@ describe("Property component", () => {
 
     it("renders a LRC when rendering a NamedNode", () => {
         const opts = ctx.fullCW(subject);
-        const action = linkedModelTouch([subject]);
-        opts.reduxStore.dispatch(action);
         opts.lrs.registerAll(
             LinkedRenderStore.registerRenderer(
                 () => React.createElement("p", null, "loading"),

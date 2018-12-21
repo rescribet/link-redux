@@ -34,6 +34,7 @@ describe("LinkedResourceContainer component", () => {
     it("loads the reference when no data is present", () => {
         const llo = jest.fn();
         const opts = ctx.empty();
+        opts.lrs.getEntity = llo;
         const comp = createElement(
             (LinkedResourceContainerComp as any),
             { className: "innerLRC", loadLinkedObject: llo, ...opts.contextProps() },
@@ -48,6 +49,7 @@ describe("LinkedResourceContainer component", () => {
     it("does not load the reference when data is present", () => {
         const llo = jest.fn();
         const opts = ctx.fullCW(iri);
+        opts.lrs.getEntity = llo;
         const comp = createElement(
             (LinkedResourceContainerComp as any),
             { loadLinkedObject: llo, ...opts.contextProps() },

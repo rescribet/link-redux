@@ -4,10 +4,16 @@ import {
     EmptyRequestStatus,
     FulfilledRequestStatus,
 } from "link-lib";
-import { NamedNode, Statement } from "rdflib";
+import { Statement } from "rdflib";
 import * as React from "react";
 
-import { LinkContext, LinkCtxOverrides, SubjectProp, TopologyContextType } from "../types";
+import {
+    DataInvalidationProps,
+    LinkContext,
+    LinkCtxOverrides,
+    SubjectProp,
+    TopologyContextType,
+} from "../types";
 import { Provider, withLinkCtx } from "./withLinkCtx";
 
 const nodeTypes = ["NamedNode", "BlankNode"];
@@ -17,7 +23,8 @@ export interface StateTypes {
     caughtError?: Error;
 }
 
-export interface TypableProps {
+export interface TypableProps extends DataInvalidationProps {
+    linkVersion?: number;
     onError?: React.ReactType;
     onLoad?: React.ReactType;
 }
@@ -58,7 +65,7 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
 
     protected renderLoadingOrError() {
         const status = this.props.lrs.getStatus(this.subject());
-        if (!this.state.hasCaughtError && Typable.isLoading(status)) {
+        if (!this.state.hasCaughtError && (Typable.isLoading(status) || this.willLoadObject())) {
             const loadComp = this.onLoad();
 
             return loadComp === null ? null : this.wrapContext(React.createElement(loadComp, this.props));
@@ -93,6 +100,15 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
     }
 
     protected renderNoView() {
+        // tslint:disable-next-line no-console
+        console.log(
+            "no-view",
+            this.subject(),
+            this.data(),
+            this.props.lrs.getStatus(this.subject()),
+            this.renderLoadingOrError(),
+        );
+
         return React.createElement(
             "div",
             { className: "no-view" },
@@ -128,6 +144,13 @@ class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureC
                 this.topology(),
             )
             || null;
+    }
+
+    protected willLoadObject(props: P = this.props): boolean {
+        const s = this.subject(props);
+
+        return (this.props.lrs as any).store.changeTimestamps[s.sI] === undefined
+            && s.termType !== "BlankNode";
     }
 
     protected wrapContext<ChildProps>(comp: React.ReactElement<ChildProps>) {

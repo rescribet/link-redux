@@ -557,7 +557,6 @@ Now that we have views, lets enable link in the React tree with our `LinkedRende
 ```JSX harmony
 import { RenderStoreProvider } from 'link-redux';
 import { withRouter } from 'react-router';
-import configureReduxStore from './configureStore';
 import LRS from './LRS';
 
 // Either with react-router, or without and just take the current location (but listen for pushstate).
@@ -566,13 +565,11 @@ const App = ReactRouter
   : () => <LinkedResourceContainer subject={namedNodeByIRI(window.location.href)} />;
 
 export default () => (
-  <Provider store={configureReduxStore()}>
-    <RenderStoreProvider value={LRS}>
-      <Router history={example}>
-        <App /> 
-      </Router>
-    </RenderStoreProvider>
-  </Provider>
+  <RenderStoreProvider value={LRS}>
+    <Router history={example}>
+      <App /> 
+    </Router>
+  </RenderStoreProvider>
 );
 ```
 

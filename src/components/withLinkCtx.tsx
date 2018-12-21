@@ -53,7 +53,8 @@ export function withLinkCtx<P>(
             {(context: Partial<LinkContext> & LinkedRenderStoreContext) => {
                 const childProps = calculateChildProps(props, context, options);
 
-                return <Component {...childProps as P & LinkContext & Partial<LinkCtxOverrides>} />;
+                // return <Component {...childProps as P & LinkContext & Partial<LinkCtxOverrides>} />;
+                return React.createElement(Component, childProps as P & LinkContext & Partial<LinkCtxOverrides>);
             }}
         </Consumer>
     );

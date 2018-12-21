@@ -3,9 +3,11 @@ import * as ReactPropTypes from "prop-types";
 import { NamedNode, Node, SomeTerm, Statement, ToJSOutputTypes } from "rdflib";
 import { ComponentType } from "react";
 import * as React from "react";
+import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
 import { lrsType, subjectType } from "../propTypes";
-import { LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
+import { DataInvalidationProps, LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
+import { PropertyWrappedProps } from "./Property";
 
 import { withLinkCtx } from "./withLinkCtx";
 
@@ -138,65 +140,66 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
 
     const returnType = opts.returnType || "term";
 
-    return function wrapWithConnect(wrappedComponent: React.ComponentType<any>): ComponentType<any> {
-        class Link extends React.Component<any> {
+    function getLinkedObjectProperties(
+        props: PropertyWrappedProps,
+        subjProps: Statement[],
+    ): PropertyBoundProps {
+        const acc: PropertyBoundProps = {};
+        const { lrs } = props;
 
-            public static displayName = `Link(${wrappedComponent.name})`;
-            // public static propTypes = {
-            //     subject: subjectType,
-            //     linkVersion: ReactPropTypes.string,
-            // };
-
-            public render() {
-                const props = this
-                    .props
-                    .lrs
-                    .tryEntity(this.props.subject)
-                    .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
-                if ((this.props.forceRender || opts.forceRender) !== true && props.length === 0) {
-                    return null;
+        for (const propOpts of Object.values(propMap)) {
+            propOpts.label.forEach((cur) => {
+                if (acc[propOpts.name]) {
+                    // TODO: Merge
+                    return;
                 }
 
-                return React.createElement(
-                    wrappedComponent,
-                    { ...this.props, ...this.getLinkedObjectProperties(props) },
-                );
-            }
-
-            private getLinkedObjectProperties(props: Statement[]): PropertyBoundProps {
-                const acc: PropertyBoundProps = {};
-                const { lrs } = this.props;
-
-                for (const propOpts of Object.values(propMap)) {
-                    propOpts.label.forEach((cur) => {
-                        if (acc[propOpts.name]) {
-                            // TODO: Merge
-                            return;
-                        }
-
-                        if (propOpts.limit === 1) {
-                            const p = getPropBestLangRaw(
-                                lrs.getResourcePropertyRaw(this.props.subject, cur),
-                                lrs.store.langPrefs,
-                            );
-                            if (p) {
-                                acc[propOpts.name] = toReturnType(returnType, p);
-                            }
-                        } else {
-                            acc[propOpts.name] = props
-                                .filter((s: Statement) => s.predicate.sI === cur.sI)
-                                .map(
-                                    (s: Statement) => toReturnType(returnType, s),
-                                ) as Statement[] | SomeTerm[] | string[];
-                        }
-
-                        return acc;
-                    });
+                if (propOpts.limit === 1) {
+                    const p = getPropBestLangRaw(
+                        lrs.getResourcePropertyRaw(props.subject, cur),
+                        (lrs as any).store.langPrefs,
+                    );
+                    if (p) {
+                        acc[propOpts.name] = toReturnType(returnType, p);
+                    }
+                } else {
+                    acc[propOpts.name] = subjProps
+                        .filter((s: Statement) => s.predicate.sI === cur.sI)
+                        .map(
+                            (s: Statement) => toReturnType(returnType, s),
+                        ) as Statement[] | SomeTerm[] | string[];
                 }
 
                 return acc;
-            }
+            });
         }
+
+        return acc;
+    }
+
+    return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): ComponentType<any> {
+        const Link = (props: P & PropertyWrappedProps) => {
+
+            const subjProps = props
+                .lrs
+                .tryEntity(props.subject)
+                .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
+            if ((props.forceRender || opts.forceRender) !== true && subjProps.length === 0) {
+                return null;
+            }
+            const mappedProps = { ...props, ...getLinkedObjectProperties(props, subjProps) };
+
+            const linkVersion = useDataInvalidation(mappedProps, props.lrs);
+            const childProps = {
+                linkVersion,
+                ...mappedProps,
+            };
+
+            return React.createElement(
+                wrappedComponent,
+                childProps,
+            );
+        };
 
         return withLinkCtx(Link);
     };

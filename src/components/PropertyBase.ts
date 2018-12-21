@@ -3,6 +3,7 @@ import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
 import { ReactElement } from "react";
 import * as React from "react";
+import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 
 import { labelType, linkedPropType, subjectType } from "../propTypes";
 import { LabelType, LinkContext } from "../types";
@@ -12,12 +13,28 @@ export interface PropTypes extends LinkContext {
     linkedProp?: SomeTerm;
 }
 
-export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
+export class PropertyBase<T extends PropTypes> extends React.Component<T> {
     public static propTypes = {
         label: labelType,
         linkedProp: linkedPropType,
         subject: subjectType,
     };
+
+    public unsubscribe?: () => void;
+
+    public componentDidMount(): void {
+        this.resubscribe();
+    }
+
+    public componentDidUpdate(): void {
+        this.resubscribe();
+    }
+
+    public componentWillUnmount(): void {
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
+    }
 
     public render(): ReactElement<any> | null {
         const prop = this.getLinkedObjectProperty();
@@ -53,5 +70,22 @@ export class PropertyBase<T = {}> extends React.Component<T & PropTypes> {
             this.props.subject,
             property || this.props.label,
         );
+    }
+
+    protected resubscribe(props: T = this.props) {
+        let unsubscribe;
+        const subs = normalizeDataSubjects(props);
+        if (subs.length > 0) {
+            unsubscribe = props.lrs.subscribe({
+                callback: () => this.forceUpdate(),
+                markedForDelete: false,
+                onlySubjects: true,
+                subjectFilter: subs,
+            });
+        }
+        if (this.unsubscribe) {
+            this.unsubscribe();
+        }
+        this.unsubscribe = unsubscribe;
     }
 }

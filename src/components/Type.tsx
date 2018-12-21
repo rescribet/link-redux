@@ -2,6 +2,8 @@ import { RENDER_CLASS_NAME } from "link-lib";
 import { NamedNode } from "rdflib";
 import * as React from "react";
 import { createElement } from "react";
+import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { InjectedPropTypes } from "./LinkedResourceContainer";
 
 import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
 import { withLinkCtx } from "./withLinkCtx";
@@ -50,5 +52,11 @@ class TypeComp<U = {}> extends TypableBase<U & PropTypesWithInjected> {
     }
 }
 
+function TypeSubbed<P>(props: P & InjectedPropTypes) {
+    const version = useDataInvalidation(props, props.lrs);
+
+    return <TypeComp {...props} linkVersion={version} />;
+}
+
 // tslint:disable-next-line: variable-name
-export const Type = withLinkCtx(TypeComp);
+export const Type = withLinkCtx(TypeSubbed);
