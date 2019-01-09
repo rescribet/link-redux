@@ -2811,10 +2811,10 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-link-lib@=1.0.0-beta29-20190108T094946:
-  version "1.0.0-beta29-20190108T094946"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta29-20190108T094946.tgz#d15873d8a08a935d0a1cba0423a74f69fe481cb8"
-  integrity sha512-2zE90KaCFkouzSR2aIYIfT4yw4GKviotzRydDo3QF+qYvJvGdFXMZavJlAHeN4TQomES2D8h+Hcx56YCojF6lw==
+link-lib@=1.0.0-beta29-20190109T215523:
+  version "1.0.0-beta29-20190109T215523"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-beta29-20190109T215523.tgz#3db458f9660715d1db4397e4c6615d6049de77b2"
+  integrity sha512-SImwES/YD7l3TUiJ/iCMFybblZKSlCgVakpbYCZCZKeHTVVzE9tf55yNHAjrnJQ9ye1MQYgY08x5yLQuUGlzCw==
 
 load-json-file@^1.0.0:
   version "1.1.0"

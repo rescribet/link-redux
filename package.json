@@ -50,7 +50,7 @@
     "immutable": "3.8.x",
     "jest": "^23.5.0",
     "jest-enzyme": "^6.0.3",
-    "link-lib": "=1.0.0-beta29-20190108T094946",
+    "link-lib": "=1.0.0-beta29-20190109T215523",
     "prop-types": "^15.x",
     "rdflib": "npm:link-rdflib@0.19.1-20190108T094946",
     "react": "=16.7.0-alpha.2",

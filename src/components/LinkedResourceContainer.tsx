@@ -113,7 +113,7 @@ class LinkedResourceContainerComp<P extends InjectedPropTypes> extends TypableBa
                 throw new TypeError("Cannot load a blank node since it has no defined way to be resolved.");
             }
             if (!!props.fetch || true) {
-                this.props.lrs.getEntity((subject as NamedNode));
+                this.props.lrs.queueEntity((subject as NamedNode));
             } else {
                 this.props.lrs.tryEntity((subject as NamedNode));
             }
