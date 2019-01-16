@@ -1,10 +1,10 @@
 import {
     defaultNS,
-    getTermBestLang,
+    getTermBestLang, normalizeType,
     SomeNode,
 } from "link-lib";
-import { Requireable } from "prop-types";
-import { NamedNode, SomeTerm, Term } from "rdflib";
+import { NamedNode, SomeTerm } from "rdflib";
+import { ReactElement, ReactNode } from "react";
 import * as React from "react";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
@@ -14,12 +14,16 @@ import {
     LinkContext,
     LinkCtxOverrides,
     LinkedPropType,
+    TopologyProp,
 } from "../types";
 
-import { LinkedResourceContainerComp as LRC } from "./LinkedResourceContainer";
-import { withLinkCtx } from "./withLinkCtx";
+import { LinkedResourceContainer as LRC } from "./LinkedResourceContainer";
+import { renderError } from "./Typable";
+import { calculateChildProps, useLinkContext } from "./withLinkCtx";
 
-export interface PropertyPropTypes {
+export interface PropertyPropTypes extends DataInvalidationProps, TopologyProp {
+    children?: ReactNode;
+
     /**
      * Pass `true` if the property should render if no data is found.
      * Useful for nesting property's to enable multi-property logic.
@@ -39,97 +43,64 @@ export interface PropertyPropTypes {
     linkedProp?: LinkedPropType;
 }
 
-export interface PropertyWrappedProps extends PropertyPropTypes, DataInvalidationProps, LinkContext, LinkCtxOverrides {}
+export type PropertyWrappedProps = PropertyPropTypes
+    & Partial<LinkCtxOverrides>;
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 
-export function getLinkedObjectClass({ label, lrs, subject, topology, topologyCtx }: PropertyWrappedProps,
+export function getLinkedObjectClass({ label, subject, topology, topologyCtx }: PropertyWrappedProps,
+                                     context: LinkContext,
                                      labelOverride?: NamedNode): React.ReactType | undefined {
-    return lrs.resourcePropertyComponent(
+    return context.lrs.resourcePropertyComponent(
         subject,
         labelOverride || label,
         topology === null ? undefined : topology || topologyCtx,
     );
 }
 
-export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
-    public static defaultProps = {
-        forceRender: false,
-        limit: 1,
-        linkedProp: undefined,
-    };
-    public static displayName = "Property";
+function limitTimes<P extends PropertyWrappedProps>(
+    props: P,
+    objRaw: SomeTerm[],
+    context: LinkContext,
+    func: (prop: SomeTerm) => React.ReactNode,
+    associationRenderer: React.ReactType,
+): React.ReactElement<any> | null {
 
-    constructor(props: PropertyWrappedProps) {
-        super(props);
+    const associationProps = associationRenderer !== React.Fragment ? props : null;
 
-        this.renderChildrenOrValue = this.renderChildrenOrValue.bind(this);
-    }
-
-    public render() {
-        const { forceRender } = this.props;
-        const objRaw = this.props.lrs.getResourceProperties(
-            this.props.subject,
-            this.props.label,
-        );
-
-        if (objRaw.length === 0 && !forceRender) {
-            return null;
-        }
-
-        const associationRenderer = getLinkedObjectClass(
-            this.props,
-            defaultNS.rdf("predicate"),
-        ) || React.Fragment;
-        const associationProps = associationRenderer !== React.Fragment ? this.props : null;
-        const component = getLinkedObjectClass(this.props);
-        if (component) {
-            const toRender = this.limitTimes(
-                objRaw,
-                (p) => React.createElement(component, { ...this.props, linkedProp: p }, this.props.children),
-                associationRenderer,
-            );
-            if (toRender === null) {
-                return React.createElement(
-                    associationRenderer,
-                    associationProps,
-                    React.createElement(component, { ...this.props }, this.props.children),
-                );
-            }
-
-            return toRender;
-        } else if (objRaw.length > 0) {
-            if (nodeTypes.includes(objRaw[0].termType)) {
-                const wrapLOC = (p: SomeTerm | undefined) => {
-                    const lrcProps = {
-                        ...this.props,
-                        subject: p! as SomeNode,
-                    };
-
-                    return React.createElement(LRC, lrcProps, this.props.children);
-                };
-
-                return this.limitTimes(objRaw, wrapLOC, associationRenderer);
-            }
-
-            return this.limitTimes(objRaw, this.renderChildrenOrValue, associationRenderer);
-        }
-        if (this.props.children) {
-            return React.createElement(associationRenderer, associationProps, this.props.children);
-        }
-
+    if (objRaw.length === 0) {
         return null;
+    } else if (objRaw.length === 1) {
+        return React.createElement(associationRenderer, associationProps, func(objRaw[0]));
+    } else if (props.limit === 1) {
+        return React.createElement(
+            associationRenderer,
+            associationProps,
+            // @ts-ignore
+            func(getTermBestLang(objRaw, context.lrs.store.langPrefs)),
+        );
+    }
+    const pLimit = Math.min(...[props.limit, objRaw.length].filter(Number) as number[]);
+    const elems = new Array(pLimit);
+    for (let i = 0; i < pLimit; i++) {
+        elems.push(func(objRaw[i]));
     }
 
-    private renderChildrenOrValue(p: SomeTerm): React.ReactElement<any> {
-        if (this.props.children || p.termType !== "Literal") {
-            return React.createElement(React.Fragment, null, this.props.children || p.value);
+    return React.createElement(associationRenderer, associationProps, elems);
+}
+
+function renderChildrenOrValue(props: PropertyWrappedProps, context: LinkContext):
+    (p: SomeTerm) => React.ReactNode {
+
+    return function(p: SomeTerm): React.ReactNode {
+        if (props.children || p.termType !== "Literal") {
+            return React.createElement(React.Fragment, null, props.children || p.value);
         }
 
-        const { lrs, topology, topologyCtx, subjectCtx } = this.props;
-        const literalRenderer = lrs.getComponentForProperty(
+        const { topology, topologyCtx, subjectCtx } = props;
+        const literalRenderer = context.lrs.getComponentForProperty(
             defaultNS.rdfs("Literal"),
-            Term.namedNodeByIRI(p.datatype.value),
+            NamedNode.find(p.datatype.value),
             topology === null ? undefined : topology || topologyCtx,
         );
 
@@ -141,50 +112,102 @@ export class PropertyComp extends React.PureComponent<PropertyWrappedProps> {
             literalRenderer,
             {
                 linkedProp: p,
-                lrs,
                 subject: p.datatype,
                 subjectCtx,
                 topology,
                 topologyCtx,
             },
         );
+    };
+}
+
+export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
+    const options = { topology: true };
+
+    const [error, setError] = React.useState<Error|undefined>(undefined);
+    const context = useLinkContext();
+    const subjectData = context.lrs.tryEntity(context.subject);
+
+    const childProps = calculateChildProps(props, context, options);
+    try {
+    useDataInvalidation(childProps, context);
+    } catch (e) {
+        setError(e);
+    }
+    if (subjectData.length === 0) {
+        return null;
+    }
+    const labels = normalizeType(childProps.label);
+    const objRaw = subjectData
+        .filter((s) => labels.includes(s.predicate))
+        .map((s) => s.object);
+
+    if (error) {
+        return renderError(childProps, context, error);
     }
 
-    private limitTimes<P>(
-        objRaw: SomeTerm[],
-        func: (prop: SomeTerm) => React.ReactElement<P>,
-        associationRenderer: React.ReactType,
-    ): React.ReactElement<P> | Array<React.ReactElement<P>> | null {
+    if (objRaw.length === 0 && !childProps.forceRender) {
+        return null;
+    }
 
-        const associationProps = associationRenderer !== React.Fragment ? this.props : null;
-
-        if (objRaw.length === 0) {
-            return null;
-        } else if (objRaw.length === 1) {
-            return React.createElement(associationRenderer, associationProps, func(objRaw[0]));
-        } else if (this.props.limit === 1) {
+    const associationRenderer = getLinkedObjectClass(
+        childProps,
+        context,
+        defaultNS.rdf("predicate"),
+    ) || React.Fragment;
+    const associationProps = associationRenderer !== React.Fragment ? childProps : null;
+    const component = getLinkedObjectClass(childProps, context);
+    if (component) {
+        const toRender = limitTimes(
+            childProps,
+            objRaw,
+            context,
+            (p) => React.createElement(component, { ...childProps, linkedProp: p }, childProps.children),
+            associationRenderer,
+        );
+        if (toRender === null) {
             return React.createElement(
                 associationRenderer,
                 associationProps,
-                // @ts-ignore
-                func(getTermBestLang(objRaw, this.props.lrs.store.langPrefs)),
+                React.createElement(component, { ...childProps }, childProps.children),
             );
         }
-        const pLimit = Math.min(...[this.props.limit, objRaw.length].filter(Number) as number[]);
-        const elems = new Array(pLimit);
-        for (let i = 0; i < pLimit; i++) {
-            elems.push(func(objRaw[i]));
+
+        return toRender;
+    } else if (objRaw.length > 0) {
+        if (nodeTypes.includes(objRaw[0].termType)) {
+            const wrapLOC = (p: SomeTerm | undefined) => {
+                const lrcProps = {
+                    ...childProps,
+                    subject: p! as SomeNode,
+                };
+
+                return React.createElement(LRC, lrcProps, childProps.children);
+            };
+
+            return limitTimes(childProps, objRaw, context, wrapLOC, associationRenderer);
         }
 
-        return React.createElement(associationRenderer, associationProps, elems);
+        return limitTimes(
+            childProps,
+            objRaw,
+            context,
+            renderChildrenOrValue(childProps, context),
+            associationRenderer,
+        );
     }
+    if (childProps.children) {
+        return React.createElement(associationRenderer, associationProps, childProps.children);
+    }
+
+    return null;
 }
 
-export function PropertySubbed<P>(props: P & PropertyWrappedProps) {
-    const version = useDataInvalidation(props, props.lrs);
+Prop.defaultProps = {
+    forceRender: false,
+    limit: 1,
+    linkedProp: undefined,
+};
+Prop.displayName = "Property";
 
-    return <PropertyComp {...props} linkVersion={version} />;
-}
-
-// tslint:disable-next-line: variable-name
-export const Property = withLinkCtx(PropertySubbed, { topology: true });
+export const Property = React.memo(Prop);

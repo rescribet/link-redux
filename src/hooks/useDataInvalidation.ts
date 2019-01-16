@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import * as React from "react";
 
-import { DataInvalidationProps, LinkReduxLRSType, SubjectType } from "../types";
+import { DataInvalidationProps, LinkContext, SubjectType } from "../types";
 
 /**
  * The subjects this component subscribes to.
@@ -11,25 +11,31 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
         return [];
     }
 
+    let result;
     if (props.dataSubjects) {
-        return Array.isArray(props.dataSubjects)
+        result = Array.isArray(props.dataSubjects)
             ? [props.subject, ...props.dataSubjects]
             : [props.subject, props.dataSubjects];
+    } else {
+        result = [props.subject];
     }
 
-    return [props.subject];
+    return result;
 }
 
-export function useDataInvalidation(props: DataInvalidationProps, lrs: LinkReduxLRSType) {
-    const [lastUpdate, setInvalidate] = useState<number>(0);
+export function useDataInvalidation(props: DataInvalidationProps, context: LinkContext) {
+    const [lastUpdate, setInvalidate] = React.useState<number>(
+        (context.lrs as any).store.changeTimestamps[props.subject.sI],
+    );
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
         setInvalidate(lastUpdateAt!);
     }
 
     const subscriptionSubjects = normalizeDataSubjects(props);
-    useEffect(() => lrs.subscribe({
+    React.useEffect(() => context.lrs.subscribe({
         callback: handleStatusChange,
+        lastUpdateAt: undefined,
         markedForDelete: false,
         onlySubjects: true,
         subjectFilter: subscriptionSubjects,

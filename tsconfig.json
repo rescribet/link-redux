@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "declaration": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "lib": [

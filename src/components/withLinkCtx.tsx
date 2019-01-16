@@ -1,8 +1,10 @@
+import hoistNonReactStatics from "hoist-non-react-statics";
 import { DEFAULT_TOPOLOGY } from "link-lib";
 import { NamedNode } from "rdflib";
 import * as React from "react";
 
 import {
+    Helpers,
     LinkContext,
     LinkCtxOverrides,
     LinkedRenderStoreContext,
@@ -13,16 +15,26 @@ import {
 } from "../types";
 
 export interface WithLinkCtxOptions {
-    [k: string]: boolean;
+    [k: string]: boolean | object | undefined;
+    helpers?: Helpers;
 }
 
-export const { Consumer, Provider } = React.createContext<Partial<LinkContext> & LinkedRenderStoreContext>(
-    { lrs: {} as LinkReduxLRSType },
+export const LinkCtx = React.createContext<LinkContext & LinkedRenderStoreContext>(
+    {
+        lrs: {} as LinkReduxLRSType,
+        subject: undefined!,
+        topology: DEFAULT_TOPOLOGY,
+    },
 );
 
-function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
-                                context: Partial<LinkContext> & LinkedRenderStoreContext,
-                                options: WithLinkCtxOptions): P & LinkContext & Partial<LinkCtxOverrides> {
+export const useLinkContext = () => React.useContext(LinkCtx);
+
+export const { Consumer, Provider } = LinkCtx;
+
+export function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
+                                       context: LinkContext,
+                                       options: WithLinkCtxOptions = {}):
+    P & Partial<LinkContext> & Partial<LinkCtxOverrides> {
 
     const { lrs, subject, topology } = context;
     const overrides: Partial<LinkContext & LinkCtxOverrides> = {};
@@ -35,30 +47,34 @@ function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
         overrides.topologyCtx = topology;
         overrides.topology = props.topology === null ? DEFAULT_TOPOLOGY : props.topology;
     }
+    if (options.lrs) {
+        overrides.lrs = lrs;
+    }
+    if (options.helpers) {
+        overrides.reset = options.helpers.reset;
+        overrides.reloadLinkedObject = () =>
+            lrs.getEntity((props.subject || subject) as NamedNode);
+    }
 
     return Object.assign(
         {},
         props,
-        { lrs, subject: subject!, topology },
+        { subject, topology: topology! },
         overrides,
     );
 }
 
 export function withLinkCtx<P>(
     Component: React.ComponentType<P & LinkContext & Partial<LinkCtxOverrides>>,
-    options: WithLinkCtxOptions = {}): React.ComponentType<PropsWithOptLinkProps<P>> {
+    options: WithLinkCtxOptions = { lrs: true }): React.ComponentType<PropsWithOptLinkProps<P>> {
 
-    const Comp: React.FunctionComponent<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => (
-        <Consumer>
-            {(context: Partial<LinkContext> & LinkedRenderStoreContext) => {
-                const childProps = calculateChildProps(props, context, options);
+    const Comp: React.FunctionComponent<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => {
+        const context = useLinkContext();
+        const childProps = calculateChildProps(props, context, options);
 
-                // return <Component {...childProps as P & LinkContext & Partial<LinkCtxOverrides>} />;
-                return React.createElement(Component, childProps as P & LinkContext & Partial<LinkCtxOverrides>);
-            }}
-        </Consumer>
-    );
+        return React.createElement(Component, childProps as P & LinkContext & Partial<LinkCtxOverrides>);
+    };
     Comp.displayName = "withLinkCtxWrapper";
 
-    return Comp;
+    return hoistNonReactStatics(Comp, Component);
 }

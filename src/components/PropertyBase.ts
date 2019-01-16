@@ -7,13 +7,19 @@ import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 
 import { labelType, linkedPropType, subjectType } from "../propTypes";
 import { LabelType, LinkContext } from "../types";
+import { LinkCtx } from "./withLinkCtx";
 
 export interface PropTypes extends LinkContext {
     label: LabelType;
     linkedProp?: SomeTerm;
 }
 
+/**
+ * @deprecated
+ */
 export class PropertyBase<T extends PropTypes> extends React.Component<T> {
+    public static contextType = LinkCtx;
+
     public static propTypes = {
         label: labelType,
         linkedProp: linkedPropType,
@@ -59,14 +65,14 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
             return this.props.linkedProp;
         }
 
-        return this.props.lrs.getResourceProperty(
+        return this.context.lrs.getResourceProperty(
             this.props.subject,
             property || this.props.label,
         );
     }
 
     protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] {
-        return this.props.lrs.getResourcePropertyRaw(
+        return this.context.lrs.getResourcePropertyRaw(
             this.props.subject,
             property || this.props.label,
         );
@@ -76,7 +82,7 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
         let unsubscribe;
         const subs = normalizeDataSubjects(props);
         if (subs.length > 0) {
-            unsubscribe = props.lrs.subscribe({
+            unsubscribe = this.context.lrs.subscribe({
                 callback: () => this.forceUpdate(),
                 markedForDelete: false,
                 onlySubjects: true,

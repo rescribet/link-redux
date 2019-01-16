@@ -1,135 +1,100 @@
-import * as ReactPropTypes from "prop-types";
-import { NamedNode } from "rdflib";
+import { ReactElement } from "react";
 import * as React from "react";
-import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
+import { useDataFetching } from "../hooks/useDataFetching";
+import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
-import { subjectType, topologyType } from "../propTypes";
-import { DataInvalidationProps } from "../types";
+import {
+    DataInvalidationProps,
+    LinkContext,
+} from "../types";
 
-import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
-import { withLinkCtx } from "./withLinkCtx";
+import {
+    nextContext,
+    renderLoadingOrError,
+    renderNoView,
+    TypableInjectedProps,
+    TypableProps,
+    wrapContext,
+} from "./Typable";
+import { calculateChildProps, useLinkContext } from "./withLinkCtx";
 
 export interface PropTypes extends TypableProps {
+    children?: React.ReactNode;
     fetch?: boolean;
     forceRender?: boolean;
 }
 
 export interface InjectedPropTypes extends PropTypes, DataInvalidationProps, TypableInjectedProps {}
 
-const propTypes = {
-    children: ReactPropTypes.node,
-    dataSubjects: ReactPropTypes.arrayOf(subjectType),
-    fetch: ReactPropTypes.bool,
-    forceRender: ReactPropTypes.bool,
-    loadLinkedObject: ReactPropTypes.func,
-    onError: ReactPropTypes.oneOfType([
-        ReactPropTypes.element,
-        ReactPropTypes.func,
-    ]),
-    onLoad: ReactPropTypes.oneOfType([
-        ReactPropTypes.element,
-        ReactPropTypes.func,
-    ]),
-    subject: subjectType.isRequired,
-    topology: topologyType,
-};
-
-const nodeTypes = ["NamedNode", "BlankNode"];
-
-class LinkedResourceContainerComp<P extends InjectedPropTypes> extends TypableBase<P> {
-    public static defaultProps = {
-        children: undefined,
-        forceRender: false,
-        onError: undefined,
-        onLoad: undefined,
-        topology: undefined,
-    };
-    public static displayName = "LinkedResourceContainer";
-    // public static propTypes = propTypes;
-
-    public unsubscribe?: () => void;
-
-    public componentDidMount() {
-        this.loadLinkedObject();
+function calculateView(props: InjectedPropTypes, context: LinkContext, error?: Error): ReactElement<any> | null {
+    if (props.forceRender && props.children) {
+        return React.createElement(React.Fragment, null, props.children);
     }
 
-    public componentDidUpdate(prevProps: Readonly<P>): void {
-    if (this.props.subject !== prevProps.subject) {
-            this.loadLinkedObject(this.props);
-        }
+    const notReadyComponent = renderLoadingOrError(props, context, error);
+    if (notReadyComponent !== undefined) {
+        return notReadyComponent;
     }
 
-    public componentWillUnmount(): void {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
+    if (props.children) {
+        return React.createElement(React.Fragment, null, props.children);
+    }
+    const component = context.lrs.resourceComponent(
+        props.subject,
+        props.topology || props.topologyCtx,
+    );
+    if (component !== undefined) {
+        return React.createElement(component, props);
     }
 
-    public render() {
-        const { lrs } = this.props;
-        if (this.props.forceRender && this.props.children) {
-            return this.renderChildren();
-        }
-
-        const notReadyComponent = this.renderLoadingOrError();
-        if (notReadyComponent !== undefined) {
-            return notReadyComponent;
-        }
-
-        if (this.props.children) {
-            return this.renderChildren();
-        }
-        const component = lrs.resourceComponent(
-            this.props.subject,
-            this.topology(),
-        );
-        if (component !== undefined) {
-            return this.wrapContext(React.createElement(component, this.props));
-        }
-
-        return this.renderNoView();
-    }
-
-    protected renderChildren() {
-        return this.wrapContext(React.createElement(React.Fragment, null, this.props.children));
-    }
-
-    private loadLinkedObject(props: P = this.props): void {
-        const unsubscribe = props.lrs.subscribe({
-            // Overriding the props might result in an invariant since the forceUpdate closure is evaluated later.
-            callback: () => this.forceUpdate(),
-            markedForDelete: false,
-            onlySubjects: true,
-            subjectFilter: normalizeDataSubjects(props),
-        });
-        // TODO: If this can be in componentWillReceiveProps, we can check if the subs have changed
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
-        this.unsubscribe = unsubscribe;
-        const subject = this.subject(props);
-        if (this.willLoadObject(props)) {
-            if (subject.termType === "BlankNode") {
-                throw new TypeError("Cannot load a blank node since it has no defined way to be resolved.");
-            }
-            if (!!props.fetch || true) {
-                this.props.lrs.queueEntity((subject as NamedNode));
-            } else {
-                this.props.lrs.tryEntity((subject as NamedNode));
-            }
-        }
-    }
+    return renderNoView(props, context);
 }
 
-export { LinkedResourceContainerComp };
+export function LRC(props: PropTypes, _?: any): ReactElement<any> | null {
+    let context = useLinkContext();
+    const [error, setError] = React.useState<Error|undefined>(undefined);
 
-// The actual value of the `any` placeholder would be the props interface of the component which will
-// be rendered, but we can't know that (yet).
-// tslint:disable-next-line variable-name
-export const LinkedResourceContainer = withLinkCtx<any>(
-    LinkedResourceContainerComp,
-    {
+    const options = {
+        helpers: {
+            reset: () => setError(undefined),
+        },
         subject: true,
         topology: true,
-    },
-);
+    };
+    const childProps = calculateChildProps(props, context, options) as InjectedPropTypes;
+    context = nextContext(childProps, context);
+    useDataInvalidation(childProps, context);
+    useDataFetching(childProps, context, setError);
+
+    const comp = calculateView(childProps, context, error);
+
+    return wrapContext(childProps, context, comp);
+}
+
+LRC.defaultProps = {
+    children: undefined,
+    forceRender: false,
+    onError: undefined,
+    onLoad: undefined,
+    topology: undefined,
+};
+LRC.displayName = "LinkedResourceContainer";
+
+export const LinkedResourceContainer = React.memo(LRC);
+// LinkedResourceContainer.propTypes = {
+//     children: ReactPropTypes.node,
+//     dataSubjects: ReactPropTypes.arrayOf(subjectType),
+//     fetch: ReactPropTypes.bool,
+//     forceRender: ReactPropTypes.bool,
+//     loadLinkedObject: ReactPropTypes.func,
+//     onError: ReactPropTypes.oneOfType([
+//         ReactPropTypes.element,
+//         ReactPropTypes.func,
+//     ]),
+//     onLoad: ReactPropTypes.oneOfType([
+//         ReactPropTypes.element,
+//         ReactPropTypes.func,
+//     ]),
+//     subject: subjectType.isRequired,
+//     topology: topologyType,
+// };

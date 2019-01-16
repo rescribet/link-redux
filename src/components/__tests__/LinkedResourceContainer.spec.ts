@@ -5,7 +5,7 @@ import { BlankNode, Literal, Statement } from "rdflib";
 import { createElement } from "react";
 
 import * as ctx from "../../../test/fixtures";
-import { LinkedResourceContainer, LinkedResourceContainerComp } from "../LinkedResourceContainer";
+import { LinkedResourceContainer } from "../LinkedResourceContainer";
 
 const id = "resources/5";
 const iri = defaultNS.example(id);
@@ -32,42 +32,27 @@ describe("LinkedResourceContainer component", () => {
     });
 
     it("loads the reference when no data is present", () => {
-        const llo = jest.fn();
+        const spy = jest.fn();
         const opts = ctx.empty();
-        opts.lrs.getEntity = llo;
-        const comp = createElement(
-            (LinkedResourceContainerComp as any),
-            { className: "innerLRC", loadLinkedObject: llo, ...opts.contextProps() },
-        );
+        opts.lrs.queueEntity = spy;
 
-        const elem = mount(comp);
+        mount(opts.wrapComponent());
 
-        expect(elem.find(".innerLRC")).toExist();
-        expect(llo).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it("does not load the reference when data is present", () => {
-        const llo = jest.fn();
+        const spy = jest.fn();
         const opts = ctx.fullCW(iri);
-        opts.lrs.getEntity = llo;
+        opts.lrs.getEntity = spy;
         const comp = createElement(
-            (LinkedResourceContainerComp as any),
-            { loadLinkedObject: llo, ...opts.contextProps() },
+            LinkedResourceContainer,
+            opts.contextProps(),
         );
 
         mount(opts.wrapComponent(comp));
 
-        expect(llo).not.toHaveBeenCalled();
-    });
-
-    it("raises when subject is not a Node", () => {
-        try {
-            const opts = ctx.empty("http://example.com/shouldRaise/5");
-            mount(opts.wrapComponent());
-            expect(true).toBeFalsy();
-        } catch (e) {
-            expect(e.message).toEqual('[LRC] Subject must be a node (was "string[http://example.com/shouldRaise/5]")');
-        }
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it("renders the renderer when an subject is present", () => {

@@ -4,7 +4,7 @@ import { defaultNS, LinkedRenderStore } from "link-lib";
 import * as React from "react";
 
 import * as ctx from "../../../test/fixtures";
-import { PropertyComp as Property } from "../Property";
+import { Property } from "../Property";
 
 const subject = defaultNS.example("41");
 

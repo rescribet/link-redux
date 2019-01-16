@@ -1,12 +1,20 @@
 import { RENDER_CLASS_NAME } from "link-lib";
 import { NamedNode } from "rdflib";
+import { ReactElement } from "react";
 import * as React from "react";
 import { createElement } from "react";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
-import { InjectedPropTypes } from "./LinkedResourceContainer";
 
-import { TypableBase, TypableInjectedProps, TypableProps } from "./Typable";
-import { withLinkCtx } from "./withLinkCtx";
+import {
+    renderLoadingOrError,
+    renderNoView,
+    TypableInjectedProps,
+    TypableProps,
+} from "./Typable";
+import {
+    calculateChildProps,
+    useLinkContext,
+} from "./withLinkCtx";
 
 export interface PropTypes extends TypableProps {
     children?: React.ReactType;
@@ -15,48 +23,34 @@ export interface PropTypes extends TypableProps {
 
 export interface PropTypesWithInjected extends PropTypes, TypableInjectedProps {}
 
-class TypeComp<U = {}> extends TypableBase<U & PropTypesWithInjected> {
-    public static displayName = "Type";
+export function Type(props: PropTypes, _?: any): ReactElement<any> | null {
+    const options = {};
+    const context = useLinkContext();
+    const childProps = calculateChildProps(props, context, options) as PropTypesWithInjected;
+    useDataInvalidation(childProps, context);
 
-    public render() {
-        const {
-            label,
-            lrs,
-            subject,
-        } = this.props;
-
-        const notReadyComponent = this.renderLoadingOrError();
-        if (notReadyComponent !== undefined) {
-            return notReadyComponent;
-        }
-
-        const component = lrs.resourcePropertyComponent(
-            subject,
-            (label || RENDER_CLASS_NAME) as NamedNode,
-            this.topology(),
-        );
-        if (component !== undefined) {
-            const {
-                children,
-                ...rest // tslint:disable-line trailing-comma
-            } = this.props as {} & PropTypesWithInjected;
-
-            return createElement(
-                component,
-                rest,
-                children,
-            );
-        }
-
-        return this.renderNoView();
+    const notReadyComponent = renderLoadingOrError(childProps, context);
+    if (notReadyComponent !== undefined) {
+        return notReadyComponent;
     }
+
+    const component = context.lrs.resourcePropertyComponent(
+        childProps.subject,
+        (childProps.label || RENDER_CLASS_NAME) as NamedNode,
+        childProps.topology || childProps.topologyCtx,
+    );
+    if (component !== undefined) {
+        const {
+            children,
+            ...rest // tslint:disable-line trailing-comma
+        } = childProps as {} & PropTypesWithInjected;
+
+        return createElement(
+            component,
+            rest,
+            children,
+        );
+    }
+
+    return renderNoView(childProps, context);
 }
-
-function TypeSubbed<P>(props: P & InjectedPropTypes) {
-    const version = useDataInvalidation(props, props.lrs);
-
-    return <TypeComp {...props} linkVersion={version} />;
-}
-
-// tslint:disable-next-line: variable-name
-export const Type = withLinkCtx(TypeSubbed);

@@ -19,8 +19,8 @@ export default {
   ],
   input: "src/link-redux.ts",
   output: [
-    { file: "dist/link-redux.umd.js", name: "linkRedux", format: "umd" },
-    { file: "dist/link-redux.es6.js", format: "es" },
+    { file: "dist/link-redux.umd.js", name: "linkRedux", format: "umd", sourcemap: true },
+    { file: "dist/link-redux.es6.js", format: "es", sourcemap: true },
   ],
   plugins: [
     // Compile TypeScript files
@@ -37,7 +37,6 @@ export default {
     // Resolve source maps to the original source
     sourceMaps(),
   ],
-  sourcemap: true,
   watch: {
     include: "src/**",
   },

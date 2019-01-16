@@ -1,10 +1,8 @@
 import { ACCEPTED, BAD_REQUEST } from "http-status-codes";
 import {
-    defaultNS as NS,
-    EmptyRequestStatus,
-    FulfilledRequestStatus,
+    defaultNS as NS, RequestStatus,
 } from "link-lib";
-import { Statement } from "rdflib";
+import { ReactElement } from "react";
 import * as React from "react";
 
 import {
@@ -12,16 +10,10 @@ import {
     LinkContext,
     LinkCtxOverrides,
     SubjectProp,
-    TopologyContextType,
+    SubjectType,
+    TopologyProp,
 } from "../types";
-import { Provider, withLinkCtx } from "./withLinkCtx";
-
-const nodeTypes = ["NamedNode", "BlankNode"];
-
-export interface StateTypes {
-    hasCaughtError: boolean;
-    caughtError?: Error;
-}
+import { Provider } from "./withLinkCtx";
 
 export interface TypableProps extends DataInvalidationProps {
     linkVersion?: number;
@@ -29,148 +21,103 @@ export interface TypableProps extends DataInvalidationProps {
     onLoad?: React.ReactType;
 }
 
-export interface TypableInjectedProps extends SubjectProp, LinkContext, LinkCtxOverrides  {}
+export interface TypableInjectedProps extends SubjectProp, TopologyProp, Partial<LinkCtxOverrides>  {}
 
-class Typable<P extends TypableProps & TypableInjectedProps> extends React.PureComponent<P, StateTypes> {
-    public static hasErrors(status: EmptyRequestStatus | FulfilledRequestStatus) {
-        if (!status.requested) {
-            return false;
-        }
-
-        return status.status >= BAD_REQUEST;
-    }
-
-    public static isLoading(status: EmptyRequestStatus | FulfilledRequestStatus) {
-        return status.status === ACCEPTED;
-    }
-
-    public constructor(props: P) {
-        super(props);
-
-        this.state = {
-            hasCaughtError: false,
-        };
-    }
-
-    public componentDidCatch(e: Error) {
-        this.setState({
-            caughtError: e,
-            hasCaughtError: true,
-        });
-    }
-
-    protected data(props: P = this.props): Statement[] {
-        return this.props.lrs.tryEntity(this.subject(props));
-    }
-
-    protected renderLoadingOrError() {
-        const status = this.props.lrs.getStatus(this.subject());
-        if (!this.state.hasCaughtError && (Typable.isLoading(status) || this.willLoadObject())) {
-            const loadComp = this.onLoad();
-
-            return loadComp === null ? null : this.wrapContext(React.createElement(loadComp, this.props));
-        }
-        if (this.state.hasCaughtError || Typable.hasErrors(status)) {
-            const errComp = this.onError();
-            if (errComp) {
-                return this.wrapContext(
-                    React.createElement(
-                        errComp,
-                        Object.assign(
-                            {},
-                            this.props,
-                            {
-                                caughtError: this.state.caughtError,
-                                linkRequestStatus: status,
-                                reset: () => this.setState({
-                                    caughtError: undefined,
-                                    hasCaughtError: false,
-                                }),
-                                subject: this.subject(),
-                            },
-                        ),
-                    ),
-                );
-            }
-
-            return null;
-        }
-
-        return undefined;
-    }
-
-    protected renderNoView() {
-        // tslint:disable-next-line no-console
-        console.log(
-            "no-view",
-            this.subject(),
-            this.data(),
-            this.props.lrs.getStatus(this.subject()),
-            this.renderLoadingOrError(),
-        );
-
-        return React.createElement(
-            "div",
-            { className: "no-view" },
-            React.createElement("p", null, `We currently don't have a view for this (${this.props.subject})`),
-        );
-    }
-
-    protected subject(props: P = this.props) {
-        if (!nodeTypes.includes(props.subject.termType)) {
-            throw new Error(`[LRC] Subject must be a node (was "${typeof props.subject}[${props.subject}]")`);
-        }
-
-        return props.subject;
-    }
-
-    protected topology(): TopologyContextType {
-        return this.props.topology || this.props.topologyCtx;
-    }
-
-    protected onError(): React.ReactType | null {
-        return (this.props.onError as any)
-            || this.props.lrs.getComponentForType(
-                NS.ll("ErrorResource"),
-                this.topology(),
-            )
-            || null;
-    }
-
-    protected onLoad(): React.ReactType | null {
-        return (this.props.onLoad as any)
-            || this.props.lrs.getComponentForType(
-                NS.ll("LoadingResource"),
-                this.topology(),
-            )
-            || null;
-    }
-
-    protected willLoadObject(props: P = this.props): boolean {
-        const s = this.subject(props);
-
-        return (this.props.lrs as any).store.changeTimestamps[s.sI] === undefined
-            && s.termType !== "BlankNode";
-    }
-
-    protected wrapContext<ChildProps>(comp: React.ReactElement<ChildProps>) {
-        return React.createElement(
-            Provider,
-            {
-                value: {
-                    lrs: this.props.lrs,
-                    subject: this.subject(),
-                    topology: this.topology(),
-                },
-            },
-            comp,
-        );
-    }
+export function nextContext(props: TypableInjectedProps, context: LinkContext): LinkContext {
+    return {
+        lrs: context.lrs,
+        subject: props.subject,
+        topology: props.topology || props.topologyCtx,
+    };
 }
 
-const connectedTypable = withLinkCtx(Typable, { topology: true });
+export function wrapContext<P>(props: P & TypableInjectedProps,
+                               nextCtx: LinkContext,
+                               comp: React.ReactNode) {
+    return React.createElement(
+        Provider,
+        { value: nextContext(props, nextCtx) },
+        comp,
+    );
+}
 
-export {
-    connectedTypable as Typable,
-    Typable as TypableBase,
-};
+export function renderNoView(props: TypableInjectedProps, context: LinkContext) {
+    // tslint:disable-next-line no-console
+    console.log(
+        "no-view",
+        props.subject,
+        context.lrs.getStatus(props.subject),
+    );
+
+    return React.createElement(
+        "div",
+        { className: "no-view" },
+        React.createElement("p", null, `We currently don't have a view for this (${props.subject})`),
+    );
+}
+
+export function renderError(props: Partial<TypableProps> & DataInvalidationProps & TypableInjectedProps,
+                            context: LinkContext,
+                            error?: Error | RequestStatus) {
+    const errComp = errorComponent(props, context);
+    if (errComp) {
+        return wrapContext(
+            props,
+            context,
+            React.createElement(
+                errComp,
+                Object.assign(
+                    {},
+                    props,
+                    {
+                        error: error instanceof Error ? error : undefined,
+                        linkRequestStatus: context.lrs.getStatus(props.subject || props.subjectCtx),
+                        subject: props.subject,
+                    },
+                ),
+            ),
+        );
+    }
+
+    return null;
+}
+
+export function renderLoadingOrError(props: TypableProps & TypableInjectedProps,
+                                     context: LinkContext,
+                                     error?: Error): ReactElement<any> | null | undefined {
+
+    if (error) {
+        return renderError(props, context, error);
+    }
+
+    const status = context.lrs.getStatus(props.subject);
+    if (status.status === ACCEPTED || hasNoDataInStore(props.subject, context)) {
+        const loadComp = loadingComponent(props, context);
+
+        return loadComp === null
+            ? null
+            : wrapContext(props, context, React.createElement(loadComp, props));
+    }
+
+    if (status.status! >= BAD_REQUEST) {
+        return renderError(props, context, error);
+    }
+
+    return undefined;
+}
+
+export function errorComponent(props: TypableProps & TypableInjectedProps, context: LinkContext) {
+    return (props.onError as any)
+        || context.lrs.getComponentForType(NS.ll("ErrorResource"), props.topology || props.topologyCtx)
+        || null;
+}
+
+export function loadingComponent(props: TypableProps & TypableInjectedProps, context: LinkContext) {
+    return (props.onLoad as any)
+        || context.lrs.getComponentForType(NS.ll("LoadingResource"), props.topology || props.topologyCtx)
+        || null;
+}
+
+export function hasNoDataInStore(subject: SubjectType, context: LinkContext) {
+    return (context.lrs as any).store.changeTimestamps[subject.sI] === 0;
+}

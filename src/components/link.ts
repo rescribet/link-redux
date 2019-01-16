@@ -1,15 +1,14 @@
+import hoistNonReactStatics from "hoist-non-react-statics";
 import { getPropBestLangRaw, normalizeType } from "link-lib";
-import * as ReactPropTypes from "prop-types";
 import { NamedNode, Node, SomeTerm, Statement, ToJSOutputTypes } from "rdflib";
 import { ComponentType } from "react";
 import * as React from "react";
-import { useDataInvalidation } from "../hooks/useDataInvalidation";
 
-import { lrsType, subjectType } from "../propTypes";
-import { DataInvalidationProps, LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
+import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { LinkContext, LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
 import { PropertyWrappedProps } from "./Property";
 
-import { withLinkCtx } from "./withLinkCtx";
+import { calculateChildProps, useLinkContext } from "./withLinkCtx";
 
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode[];
@@ -145,23 +144,22 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
     const returnType = opts.returnType || "term";
 
     function getLinkedObjectProperties(
-        props: PropertyWrappedProps,
+        context: LinkContext,
         subjProps: Statement[],
     ): PropertyBoundProps {
         const acc: PropertyBoundProps = {};
-        const { lrs } = props;
 
         for (const propOpts of Object.values(propMap)) {
-            propOpts.label.forEach((cur) => {
+            for (const cur of propOpts.label) {
                 if (acc[propOpts.name]) {
                     // TODO: Merge
-                    return;
+                    continue;
                 }
 
                 if (propOpts.limit === 1) {
                     const p = getPropBestLangRaw(
-                        lrs.getResourcePropertyRaw(props.subject, cur),
-                        (lrs as any).store.langPrefs,
+                        context.lrs.getResourcePropertyRaw(context.subject, cur),
+                        (context.lrs as any).store.langPrefs,
                     );
                     if (p) {
                         acc[propOpts.name] = toReturnType(returnType, p);
@@ -173,38 +171,40 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                             (s: Statement) => toReturnType(returnType, s),
                         ) as Statement[] | SomeTerm[] | string[];
                 }
-
-                return acc;
-            });
+            }
         }
 
         return acc;
     }
 
     return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): ComponentType<any> {
-        const Link = (props: P & PropertyWrappedProps) => {
+        const comp = (props: P & PropertyWrappedProps) => {
+            const context = useLinkContext();
+            const childProps = calculateChildProps(props, context, { lrs: true });
+            const subjectData = context.lrs.tryEntity(childProps.subject);
 
-            const subjProps = props
-                .lrs
-                .tryEntity(props.subject)
+            const subjProps = subjectData
                 .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
+            const mappedProps = {
+                ...childProps,
+                ...getLinkedObjectProperties(context, subjProps),
+            };
+
+            const linkVersion = useDataInvalidation(mappedProps, context);
+
             if ((props.forceRender || opts.forceRender) !== true && subjProps.length === 0) {
                 return null;
             }
-            const mappedProps = { ...props, ...getLinkedObjectProperties(props, subjProps) };
-
-            const linkVersion = useDataInvalidation(mappedProps, props.lrs);
-            const childProps = {
-                linkVersion,
-                ...mappedProps,
-            };
 
             return React.createElement(
                 wrappedComponent,
-                childProps,
+                {
+                    ...mappedProps,
+                    linkVersion,
+                },
             );
         };
 
-        return withLinkCtx(Link);
+        return hoistNonReactStatics(comp, wrappedComponent);
     };
 }

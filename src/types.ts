@@ -1,7 +1,7 @@
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
-import { BlankNode, Literal, NamedNode } from "rdflib";
+import { BlankNode, Literal, NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
-import { ComponentClass, ReactType, StatelessComponent } from "react";
+import { ComponentClass, FunctionComponent, ReactType } from "react";
 import { Overwrite } from "type-zoo";
 import { higherOrderWrapper } from "./register";
 
@@ -11,7 +11,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export type LabelType = NamedNode | NamedNode[];
 
-export type LinkedPropType = NamedNode | BlankNode | Literal;
+export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType = LinkedRenderStore<ReactType>;
 
@@ -40,8 +40,12 @@ export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> 
 
 export interface LinkContext {
     subject: SubjectType;
-    topology: TopologyContextType;
+    topology: NamedNode | undefined;
     lrs: LinkReduxLRSType;
+}
+
+export interface Helpers {
+    reset: () => void;
 }
 
 export interface LinkedRenderStoreContext {
@@ -49,6 +53,8 @@ export interface LinkedRenderStoreContext {
 }
 
 export interface LinkCtxOverrides {
+    reloadLinkedObject?: () => void;
+    reset?: () => void;
     subjectCtx: SubjectType;
     topologyCtx: TopologyContextType;
 }
@@ -68,7 +74,7 @@ export interface MapDataToPropsParamObject {
 
 export interface RegistrableComponentClass<P = {}> extends ComponentClass<P>, RegistrationOpts<P> {}
 
-export interface RegistrableStatelessComponent<P = {}> extends StatelessComponent<P>, RegistrationOpts<P> {}
+export interface RegistrableStatelessComponent<P = {}> extends FunctionComponent<P>, RegistrationOpts<P> {}
 
 export interface RegistrationOpts<P> {
     hocs?: Array<higherOrderWrapper<P>>;

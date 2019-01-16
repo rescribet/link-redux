@@ -1,3 +1,4 @@
+import hoistNonReactStatics from "hoist-non-react-statics";
 import * as React from "react";
 
 import { LinkedRenderStoreContext, Omit } from "../types";
@@ -7,7 +8,7 @@ import { Consumer } from "./withLinkCtx";
 export function withLRS<P extends LinkedRenderStoreContext>(Component: React.ComponentType<P>):
     React.FunctionComponent<Omit<P, keyof LinkedRenderStoreContext>> {
 
-    return (props) => (
+    const Comp = (props: Omit<P, keyof LinkedRenderStoreContext>) => (
         <Consumer>
             {({ lrs }) => {
                 if (!lrs) {
@@ -18,4 +19,6 @@ export function withLRS<P extends LinkedRenderStoreContext>(Component: React.Com
             }}
         </Consumer>
     );
+
+    return hoistNonReactStatics(Comp, Component);
 }

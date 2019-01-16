@@ -7,9 +7,12 @@ export { PropertyBase } from "./components/PropertyBase";
 export { RenderStoreProvider } from "./components/RenderStoreProvider";
 export { TopologyProvider } from "./components/TopologyProvider";
 export { Type } from "./components/Type";
-export { withLinkCtx } from "./components/withLinkCtx";
+export { useLinkContext, withLinkCtx } from "./components/withLinkCtx";
 export { withLRS } from "./components/withLRS";
 export { withTopology } from "./components/withTopology";
+
+export { useDataFetching } from "./hooks/useDataFetching";
+export { useDataInvalidation } from "./hooks/useDataInvalidation";
 
 export { register } from "./register";
 export * from "./types";

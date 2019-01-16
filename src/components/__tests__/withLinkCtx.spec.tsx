@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers: 0 */
-import { mount, shallow } from "enzyme";
-import { defaultNS, SomeNode } from "link-lib";
+import { mount } from "enzyme";
+import { DEFAULT_TOPOLOGY, defaultNS, SomeNode } from "link-lib";
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
@@ -37,10 +37,8 @@ describe("withLinkCtx hoc", () => {
         const tree = mount(opts.wrapComponent(elem));
         const node = tree.find("TestComponent");
 
-        const ctxProps = opts.contextProps();
-        expect(node).toHaveProp("lrs", opts.lrs);
         expect(node).toHaveProp("subject", opts.subject);
-        expect(node).toHaveProp("topology", ctxProps.topology);
+        expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
 
         expect(node).not.toHaveProp("subjectCtx");
         expect(node).not.toHaveProp("topologyCtx");
@@ -50,15 +48,14 @@ describe("withLinkCtx hoc", () => {
         it("allows overriding subject", () => {
             const opts = ctx.fullCW();
 
-            const Comp = withLinkCtx(TestComponent, { subject: true });
+            const Comp = withLinkCtx(TestComponent, { subject: true, lrs: true });
             const elem = <Comp subject={defaultNS.ex("override")} />;
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
-            const ctxProps = opts.contextProps();
             expect(node).toHaveProp("lrs", opts.lrs);
             expect(node).toHaveProp("subject", defaultNS.ex("override"));
-            expect(node).toHaveProp("topology", ctxProps.topology);
+            expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
 
             expect(node).toHaveProp("subjectCtx", opts.subject);
             expect(node).not.toHaveProp("topologyCtx");
@@ -67,18 +64,17 @@ describe("withLinkCtx hoc", () => {
         it("allows overriding topology", () => {
             const opts = ctx.fullCW();
 
-            const Comp = withLinkCtx(TestComponent, { topology: true });
+            const Comp = withLinkCtx(TestComponent, { topology: true, lrs: true });
             const elem = <Comp topology={defaultNS.ex("override")} />;
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
-            const ctxProps = opts.contextProps();
             expect(node).toHaveProp("lrs", opts.lrs);
             expect(node).toHaveProp("subject", opts.subject);
             expect(node).toHaveProp("topology", defaultNS.ex("override"));
 
             expect(node).not.toHaveProp("subjectCtx");
-            expect(node).toHaveProp("topologyCtx", ctxProps.topology);
+            expect(node).toHaveProp("topologyCtx", DEFAULT_TOPOLOGY);
         });
     });
 });
