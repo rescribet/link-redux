@@ -72,6 +72,7 @@ export function renderError(props: Partial<TypableProps> & DataInvalidationProps
                     {
                         error: error instanceof Error ? error : undefined,
                         linkRequestStatus: context.lrs.getStatus(props.subject || props.subjectCtx),
+                        report: context.lrs.report,
                         subject: props.subject,
                     },
                 ),
