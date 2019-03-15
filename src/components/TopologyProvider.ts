@@ -1,10 +1,13 @@
-import { SomeNode } from "link-lib";
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
 import { LinkContext, TopologyRenderer, TopologyType } from "../types";
 
 import { Consumer, Provider } from "./withLinkCtx";
+
+interface TopologyProviderProps {
+    elementProps?: object;
+}
 
 /**
  * Inherit from this component to set the topology.
@@ -20,9 +23,10 @@ import { Consumer, Provider } from "./withLinkCtx";
  *   }
  * ```
  */
-export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T, S> {
+export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> extends React.PureComponent<T, S> {
     public static propTypes = {
         children: PropTypes.node,
+        elementProps: PropTypes.object,
     };
 
     protected className: string | undefined = undefined;
@@ -54,7 +58,7 @@ export class TopologyProvider<T = {}, S = {}> extends React.PureComponent<T, S> 
         if (this.className !== undefined) {
             children = React.createElement(
                 this.elementType,
-                { className: this.className },
+                { className: this.className, ...(this.props.elementProps || {}) },
                 this.props.children,
             );
         }
