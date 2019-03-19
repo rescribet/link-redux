@@ -11,17 +11,26 @@ describe("useDataInvalidation", () => {
         });
 
         it("makes an array from the subject", () => {
-            expect(normalizeDataSubjects({ subject: defaultNS.ex("Tim") }))
-                .toEqual([defaultNS.ex("Tim")]);
+            expect(normalizeDataSubjects({ subject: defaultNS.example("Tim") }))
+                .toEqual([defaultNS.example("Tim")]);
         });
 
         it("merges dataSubjects with the subject", () => {
             expect(normalizeDataSubjects({
-                dataSubjects: [defaultNS.ex("Roy")],
-                subject: defaultNS.ex("Tim"),
+                dataSubjects: [defaultNS.example("Roy")],
+                subject: defaultNS.example("Tim"),
             })).toEqual([
-                defaultNS.ex("Tim"),
-                defaultNS.ex("Roy"),
+                defaultNS.example("Tim"),
+                defaultNS.example("Roy"),
+            ]);
+        });
+
+        it("adds the base document for the subject", () => {
+            expect(normalizeDataSubjects({
+                subject: defaultNS.example("Tim#me"),
+            })).toEqual([
+                defaultNS.example("Tim#me"),
+                defaultNS.example("Tim"),
             ]);
         });
     });

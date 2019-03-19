@@ -20,6 +20,13 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
         result = [props.subject];
     }
 
+    if (props.subject && props.subject.termType === "NamedNode") {
+        const doc = props.subject.doc();
+        if (doc !== props.subject) {
+            result.push(doc);
+        }
+    }
+
     return result;
 }
 
