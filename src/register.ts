@@ -10,7 +10,8 @@ export function register<P>(comp: RegistrableComponent<P>, ...hocs: Array<higher
     Array<ComponentRegistration<ComponentType<P>>> {
 
     let renderComp: ComponentType<any> = comp;
-    if (typeof comp === "function") {
+    // Only memoize "functional components"
+    if (typeof comp === "function" && !comp.prototype) {
         renderComp = memo(comp);
     }
 
