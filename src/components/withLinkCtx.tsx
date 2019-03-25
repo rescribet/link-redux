@@ -53,7 +53,7 @@ export function calculateChildProps<P>(props: P & Partial<SubjectProp & Topology
     if (options.helpers) {
         overrides.reset = options.helpers.reset;
         overrides.reloadLinkedObject = () =>
-            lrs.getEntity((props.subject || subject) as NamedNode);
+            lrs.getEntity((props.subject || subject) as NamedNode, { reload: true });
     }
 
     return Object.assign(
