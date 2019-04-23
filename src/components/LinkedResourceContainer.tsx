@@ -63,8 +63,8 @@ export function LRC(props: PropTypes, _?: any): ReactElement<any> | null {
     };
     const childProps = calculateChildProps(props, context, options) as InjectedPropTypes;
     context = nextContext(childProps, context);
-    useDataInvalidation(childProps, context);
-    useDataFetching(childProps, context, setError);
+    const lastUpdate = useDataInvalidation(childProps, context);
+    useDataFetching(childProps, context, lastUpdate, setError);
 
     const comp = calculateView(childProps, context, error);
 
@@ -81,20 +81,3 @@ LRC.defaultProps = {
 LRC.displayName = "LinkedResourceContainer";
 
 export const LinkedResourceContainer = React.memo(LRC);
-// LinkedResourceContainer.propTypes = {
-//     children: ReactPropTypes.node,
-//     dataSubjects: ReactPropTypes.arrayOf(subjectType),
-//     fetch: ReactPropTypes.bool,
-//     forceRender: ReactPropTypes.bool,
-//     loadLinkedObject: ReactPropTypes.func,
-//     onError: ReactPropTypes.oneOfType([
-//         ReactPropTypes.element,
-//         ReactPropTypes.func,
-//     ]),
-//     onLoad: ReactPropTypes.oneOfType([
-//         ReactPropTypes.element,
-//         ReactPropTypes.func,
-//     ]),
-//     subject: subjectType.isRequired,
-//     topology: topologyType,
-// };

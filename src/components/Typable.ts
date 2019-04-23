@@ -92,7 +92,7 @@ export function renderLoadingOrError(props: TypableProps & TypableInjectedProps,
     }
 
     const status = context.lrs.getStatus(props.subject);
-    if (status.status === ACCEPTED || hasNoDataInStore(props.subject, context)) {
+    if (status.status === ACCEPTED || context.lrs.shouldLoadResource(props.subject)) {
         const loadComp = loadingComponent(props, context);
 
         return loadComp === null
@@ -117,8 +117,4 @@ export function loadingComponent(props: TypableProps & TypableInjectedProps, con
     return (props.onLoad as any)
         || context.lrs.getComponentForType(NS.ll("LoadingResource"), props.topology || props.topologyCtx)
         || null;
-}
-
-export function hasNoDataInStore(subject: SubjectType, context: LinkContext) {
-    return (context.lrs as any).store.changeTimestamps[subject.sI] === 0;
 }
