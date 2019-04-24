@@ -1,5 +1,27 @@
 version: 2
 jobs:
+  build-node-12:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/link-redux
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-12-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-12-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-12-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
   build-node-11:
     docker:
       - image: circleci/node:11
@@ -44,28 +66,6 @@ jobs:
       - run: yarn test
       - run: yarn build
 
-  build-node-9:
-    docker:
-      - image: circleci/node:9
-    working_directory: ~/link-redux
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-9-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-9-
-
-      - run: yarn install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-9-{{ checksum "package.json" }}
-      - run: yarn lint
-      - run: yarn test
-      - run: yarn build
-
   build-node-8:
     docker:
       - image: circleci/node:8
@@ -92,7 +92,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - build-node-12
       - build-node-11
       - build-node-10
-      - build-node-9
       - build-node-8
