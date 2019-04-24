@@ -6,30 +6,35 @@ import {
     loadingComponent,
     renderError,
 } from "./components/Typable";
-import { calculateChildProps, LinkCtx } from "./components/withLinkCtx";
+import { LRSCtx } from "./contexts/LRSCtx";
+import { LinkRenderCtx, useCalculateChildProps } from "./hocs/withLinkCtx";
 
-export { link } from "./components/link";
+export { link } from "./hocs/link";
 export { LinkedResourceContainer } from "./components/LinkedResourceContainer";
 export { Property } from "./components/Property";
 export { PropertyBase } from "./components/PropertyBase";
 export { RenderStoreProvider } from "./components/RenderStoreProvider";
 export { TopologyProvider } from "./components/TopologyProvider";
 export { Type } from "./components/Type";
-export { useLinkContext, withLinkCtx } from "./components/withLinkCtx";
-export { withLRS } from "./components/withLRS";
-export { withTopology } from "./components/withTopology";
+export { useLinkRenderContext, withLinkCtx } from "./hocs/withLinkCtx";
+export { withLRS } from "./hocs/withLRS";
+export { withTopology } from "./hocs/withTopology";
 
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
+export { useLRS } from "./hooks/useLRS";
+export { useResourceView } from "./hooks/useResourceView";
+export { useView } from "./hooks/useView";
 
 /** Prone to change */
 export const unstable = {
-    LinkCtx,
-    calculateChildProps,
+    LRSCtx,
+    LinkRenderCtx,
     errorComponent,
     getLinkedObjectClass,
     loadingComponent,
     renderError,
+    useCalculateChildProps,
 };
 
 export { register } from "./register";

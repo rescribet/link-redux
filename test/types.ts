@@ -21,5 +21,5 @@ export interface TestContext<T> {
     store: RDFStore;
     schema: Schema;
     subject: SomeNode | undefined;
-    wrapComponent: (children?: ReactElement<any>, topology?: TopologyType) => ReactElement<any>;
+    wrapComponent: (children?: ReactElement<any>, topology?: TopologyType, lrsOverride?: unknown) => ReactElement<any>;
 }

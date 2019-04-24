@@ -5,8 +5,8 @@ import { Literal, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
 import * as ctx from "../../../test/fixtures";
+import { withLRS } from "../../hocs/withLRS";
 import { PropertyBase } from "../PropertyBase";
-import { withLRS } from "../withLRS";
 
 const label = NS.schema("name");
 const subject = NS.example("41");

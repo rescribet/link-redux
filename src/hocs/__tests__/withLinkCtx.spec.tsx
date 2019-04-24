@@ -76,5 +76,40 @@ describe("withLinkCtx hoc", () => {
             expect(node).not.toHaveProp("subjectCtx");
             expect(node).toHaveProp("topologyCtx", DEFAULT_TOPOLOGY);
         });
+
+        it("defaults the topology", () => {
+            const opts = ctx.fullCW();
+
+            const Comp = withLinkCtx(TestComponent, { topology: true, lrs: true });
+            const tree = mount(opts.wrapComponent(<Comp topology={null} />));
+            const node = tree.find("TestComponent");
+
+            expect((node.props() as any).lrs).toEqual(opts.lrs);
+            expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
+        });
+
+        it("adds the helpers", () => {
+            const opts = ctx.fullCW();
+            const getEntity = jest.fn();
+            const lrs = new Proxy(opts.lrs, {
+                get(obj, prop) {
+                    return prop === "getEntity" ? getEntity : obj[prop];
+                },
+            });
+
+            const reset = () => undefined;
+            const Comp = withLinkCtx(TestComponent, { helpers: { reset } });
+            const tree = mount(opts.wrapComponent(<Comp topology={null} />, undefined, lrs));
+            const node = tree.find("TestComponent");
+
+            expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
+            expect(node).toHaveProp("reloadLinkedObject");
+            expect(node).toHaveProp("reset", reset);
+            const rlo = (node.props() as any).reloadLinkedObject;
+            expect(rlo).toBeInstanceOf(Function);
+            expect(getEntity).not.toHaveBeenCalled();
+            rlo();
+            expect(getEntity).toHaveBeenCalledWith(opts.subject, { reload: true });
+        });
     });
 });

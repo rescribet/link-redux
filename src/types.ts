@@ -38,18 +38,19 @@ export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> 
 
 /****** Others ******/
 
-export interface LinkContext {
+export interface LinkRenderContext {
     subject: SubjectType;
     topology: NamedNode | undefined;
-    lrs: LinkReduxLRSType;
-}
-
-export interface Helpers {
-    reset: () => void;
 }
 
 export interface LinkedRenderStoreContext {
     lrs: LinkReduxLRSType;
+}
+
+export type LinkContext = LinkRenderContext & LinkedRenderStoreContext;
+
+export interface Helpers {
+    reset: () => void;
 }
 
 export interface LinkCtxOverrides {

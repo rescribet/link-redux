@@ -74,6 +74,14 @@
     "whatwg-url": "^7.0.0"
   },
   "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 90,
+        "lines": 95,
+        "statements": 95
+      }
+    },
     "globals": {
       "ts-jest": {
         "enableTsDiagnostics": false

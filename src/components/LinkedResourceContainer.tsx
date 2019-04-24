@@ -1,22 +1,22 @@
 import { ReactElement } from "react";
 import * as React from "react";
+
+import { useCalculateChildProps, useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useDataFetching } from "../hooks/useDataFetching";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
-
+import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
+import { useLRS } from "../hooks/useLRS";
 import {
     DataInvalidationProps,
-    LinkContext,
+    LinkReduxLRSType,
 } from "../types";
 
 import {
-    nextContext,
-    renderLoadingOrError,
     renderNoView,
     TypableInjectedProps,
     TypableProps,
-    wrapContext,
+    wrapRenderContext,
 } from "./Typable";
-import { calculateChildProps, useLinkContext } from "./withLinkCtx";
 
 export interface PropTypes extends TypableProps {
     children?: React.ReactNode;
@@ -26,12 +26,15 @@ export interface PropTypes extends TypableProps {
 
 export interface InjectedPropTypes extends PropTypes, DataInvalidationProps, TypableInjectedProps {}
 
-function calculateView(props: InjectedPropTypes, context: LinkContext, error?: Error): ReactElement<any> | null {
+function useCalculatedViewWithState(props: InjectedPropTypes,
+                                    lrs: LinkReduxLRSType,
+                                    error?: Error): ReactElement<any> | null {
+
     if (props.forceRender && props.children) {
         return React.createElement(React.Fragment, null, props.children);
     }
 
-    const notReadyComponent = renderLoadingOrError(props, context, error);
+    const notReadyComponent = useRenderLoadingOrError(props, error);
     if (notReadyComponent !== undefined) {
         return notReadyComponent;
     }
@@ -39,7 +42,7 @@ function calculateView(props: InjectedPropTypes, context: LinkContext, error?: E
     if (props.children) {
         return React.createElement(React.Fragment, null, props.children);
     }
-    const component = context.lrs.resourceComponent(
+    const component = lrs.resourceComponent(
         props.subject,
         props.topology || props.topologyCtx,
     );
@@ -47,11 +50,11 @@ function calculateView(props: InjectedPropTypes, context: LinkContext, error?: E
         return React.createElement(component, props);
     }
 
-    return renderNoView(props, context);
+    return renderNoView(props, lrs);
 }
 
 export function LRC(props: PropTypes, _?: any): ReactElement<any> | null {
-    let context = useLinkContext();
+    const context = useLinkRenderContext();
     const [error, setError] = React.useState<Error|undefined>(undefined);
 
     const options = {
@@ -61,14 +64,14 @@ export function LRC(props: PropTypes, _?: any): ReactElement<any> | null {
         subject: true,
         topology: true,
     };
-    const childProps = calculateChildProps(props, context, options) as InjectedPropTypes;
-    context = nextContext(childProps, context);
-    const lastUpdate = useDataInvalidation(childProps, context);
-    useDataFetching(childProps, context, lastUpdate, setError);
+    const lrs = useLRS();
+    const childProps = useCalculateChildProps(props, context, options) as InjectedPropTypes;
+    const lastUpdate = useDataInvalidation(childProps);
+    useDataFetching(childProps, lastUpdate, setError);
 
-    const comp = calculateView(childProps, context, error);
+    const comp = useCalculatedViewWithState(childProps, lrs, error);
 
-    return wrapContext(childProps, context, comp);
+    return wrapRenderContext(childProps, comp);
 }
 
 LRC.defaultProps = {

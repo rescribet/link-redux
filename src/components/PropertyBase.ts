@@ -3,11 +3,11 @@ import * as ReactPropTypes from "prop-types";
 import { NamedNode, SomeTerm, Statement } from "rdflib";
 import { ReactElement } from "react";
 import * as React from "react";
-import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 
+import { LRSCtx } from "../contexts/LRSCtx";
+import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 import { labelType, linkedPropType, subjectType } from "../propTypes";
 import { LabelType, LinkContext } from "../types";
-import { LinkCtx } from "./withLinkCtx";
 
 export interface PropTypes extends LinkContext {
     label: LabelType;
@@ -18,7 +18,7 @@ export interface PropTypes extends LinkContext {
  * @deprecated
  */
 export class PropertyBase<T extends PropTypes> extends React.Component<T> {
-    public static contextType = LinkCtx;
+    public static contextType = LRSCtx;
 
     public static propTypes = {
         label: labelType,
@@ -65,14 +65,14 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
             return this.props.linkedProp;
         }
 
-        return this.context.lrs.getResourceProperty(
+        return this.context.getResourceProperty(
             this.props.subject,
             property || this.props.label,
         );
     }
 
     protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] {
-        return this.context.lrs.getResourcePropertyRaw(
+        return this.context.getResourcePropertyRaw(
             this.props.subject,
             property || this.props.label,
         );
@@ -82,7 +82,7 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
         let unsubscribe;
         const subs = normalizeDataSubjects(props);
         if (subs.length > 0) {
-            unsubscribe = this.context.lrs.subscribe({
+            unsubscribe = this.context.subscribe({
                 callback: () => this.forceUpdate(),
                 markedForDelete: false,
                 onlySubjects: true,

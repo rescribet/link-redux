@@ -4,11 +4,18 @@ import { NamedNode, Node, SomeTerm, Statement, ToJSOutputTypes } from "rdflib";
 import { ComponentType } from "react";
 import * as React from "react";
 
+import { PropertyWrappedProps } from "../components/Property";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
-import { LinkContext, LinkOpts, LinkReturnType, MapDataToPropsParam } from "../types";
-import { PropertyWrappedProps } from "./Property";
+import { useLRS } from "../hooks/useLRS";
+import {
+    LinkOpts,
+    LinkReduxLRSType,
+    LinkRenderContext,
+    LinkReturnType,
+    MapDataToPropsParam,
+} from "../types";
 
-import { calculateChildProps, useLinkContext } from "./withLinkCtx";
+import { useCalculateChildProps, useLinkRenderContext } from "./withLinkCtx";
 
 export interface ProcessedLinkOpts extends LinkOpts {
     label: NamedNode[];
@@ -48,30 +55,8 @@ function toReturnType(returnType: LinkReturnType, p: Statement): Statement | Som
     }
 }
 
-/**
- * Binds a react component to data properties.
- *
- * The current implementation only supports a one-dimensional array of NamedNode objects. And binds
- * the underlying values to the `props` object with each predicate term as the key.
- *
- * @example
- * ```
- *
- *   const BlogPost = (props) => (
- *     <div>
- *         <h1>{props.name.value}</h1>
- *         <p>{props.text.value}</p>
- *         <LinkedResourceContainer subject={props.author} />
- *     </div
- *   )
- *
- *   link([NS.schema("name"), NS.schema("text"), NS.schema("author")])(BlogPost)
- * ```
- * @param {NamedNode[]} mapDataToProps The properties to bind to the component, only NamedNode[] is currently supported.
- * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
- */
-export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globalLinkOptsDefaults):
-    <P>(p: React.ComponentType<P>) => React.ComponentType<P> {
+export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
+                                   opts: LinkOpts): [DataToPropsMapping, number[]] {
 
     const propMap: DataToPropsMapping = {};
     const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => p.sI) : [];
@@ -100,11 +85,11 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                 }
                 predObj.forEach((prop) => {
                     requestedProperties.push(prop.sI);
-                    propMap[term(prop)] = {
+                    propMap[propKey || term(prop)] = {
                         forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                         label: [prop],
                         limit: opts.limit || globalLinkOptsDefaults.limit,
-                        name: term(prop),
+                        name: propKey || term(prop),
                         returnType: opts.returnType || globalLinkOptsDefaults.returnType,
                     };
                 });
@@ -137,6 +122,36 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
         }
     }
 
+    return [ propMap, requestedProperties ];
+}
+
+/**
+ * Binds a react component to data properties.
+ *
+ * The current implementation only supports a one-dimensional array of NamedNode objects. And binds
+ * the underlying values to the `props` object with each predicate term as the key.
+ *
+ * @example
+ * ```
+ *
+ *   const BlogPost = (props) => (
+ *     <div>
+ *         <h1>{props.name.value}</h1>
+ *         <p>{props.text.value}</p>
+ *         <LinkedResourceContainer subject={props.author} />
+ *     </div
+ *   )
+ *
+ *   link([NS.schema("name"), NS.schema("text"), NS.schema("author")])(BlogPost)
+ * ```
+ * @param {NamedNode[]} mapDataToProps The properties to bind to the component, only NamedNode[] is currently supported.
+ * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
+ */
+export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globalLinkOptsDefaults):
+    <P>(p: React.ComponentType<P>) => React.ComponentType<P> {
+
+    const [ propMap, requestedProperties ] = dataPropsToPropMap(mapDataToProps, opts);
+
     if (requestedProperties.length === 0) {
         throw new TypeError("Props array must contain at least one predicate");
     }
@@ -144,7 +159,8 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
     const returnType = opts.returnType || "term";
 
     function getLinkedObjectProperties(
-        context: LinkContext,
+        lrs: LinkReduxLRSType,
+        context: LinkRenderContext,
         subjProps: Statement[],
     ): PropertyBoundProps {
         const acc: PropertyBoundProps = {};
@@ -158,8 +174,8 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
 
                 if (propOpts.limit === 1) {
                     const p = getPropBestLangRaw(
-                        context.lrs.getResourcePropertyRaw(context.subject, cur),
-                        (context.lrs as any).store.langPrefs,
+                        lrs.getResourcePropertyRaw(context.subject, cur),
+                        (lrs as any).store.langPrefs,
                     );
                     if (p) {
                         acc[propOpts.name] = toReturnType(returnType, p);
@@ -179,18 +195,19 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
 
     return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): ComponentType<any> {
         const comp = (props: P & PropertyWrappedProps) => {
-            const context = useLinkContext();
-            const childProps = calculateChildProps(props, context, { lrs: true });
-            const subjectData = context.lrs.tryEntity(childProps.subject);
+            const lrs = useLRS();
+            const context = useLinkRenderContext();
+            const childProps = useCalculateChildProps(props, context, { lrs: true });
+            const subjectData = lrs.tryEntity(childProps.subject);
 
             const subjProps = subjectData
                 .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
             const mappedProps = {
                 ...childProps,
-                ...getLinkedObjectProperties(context, subjProps),
+                ...getLinkedObjectProperties(lrs, context, subjProps),
             };
 
-            const linkVersion = useDataInvalidation(mappedProps, context);
+            const linkVersion = useDataInvalidation(mappedProps);
 
             if ((props.forceRender || opts.forceRender) !== true && subjProps.length === 0) {
                 return null;

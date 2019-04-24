@@ -1,4 +1,3 @@
-import { FunctionComponent } from "react";
 import * as React from "react";
 
 import { Omit, TopologyContextProp } from "../types";
@@ -11,10 +10,7 @@ export function withTopology<P extends TopologyContextProp>(Component: React.Com
     return (props: Omit<P, keyof TopologyContextProp>) => (
         <Consumer>
             {({ topology }) => {
-                const merged = {
-                    ...props,
-                    topology,
-                } as P;
+                const merged = { ...props, topology } as P;
 
                 return <Component {...merged} />;
             }}

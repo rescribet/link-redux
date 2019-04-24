@@ -1,9 +1,13 @@
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
-import { LinkContext, TopologyRenderer, TopologyType } from "../types";
+import {
+    LinkRenderContext,
+    TopologyRenderer,
+    TopologyType,
+} from "../types";
 
-import { Consumer, Provider } from "./withLinkCtx";
+import { Consumer, Provider } from "../hocs/withLinkCtx";
 
 interface TopologyProviderProps {
     elementProps?: object;
@@ -37,12 +41,11 @@ export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> exte
         return React.createElement(
             Consumer,
             null,
-            ({ lrs, subject }: LinkContext) =>
+            ({ subject }: LinkRenderContext) =>
                 React.createElement(
                     Provider,
                     {
                         value: {
-                            lrs,
                             subject,
                             topology: this.topology === null ? undefined : this.topology,
                         },

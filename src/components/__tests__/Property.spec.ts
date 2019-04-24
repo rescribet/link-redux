@@ -9,13 +9,63 @@ import { Property } from "../Property";
 const subject = defaultNS.example("41");
 
 describe("Property component", () => {
-    it("renders null when label is not present", () => {
+    it("renders null when label and data are not present", () => {
         const opts = ctx.empty();
         const elem = mount(opts.wrapComponent(React.createElement(
             Property,
             { subject, ...opts.contextProps() },
         )));
         expect(elem.find(Property).children()).toHaveLength(0);
+    });
+
+    it("renders null when data is not present with forceRender", () => {
+        const opts = ctx.fullCW();
+        const elem = mount(opts.wrapComponent(React.createElement(
+            Property,
+            {
+                forceRender: true,
+                label: defaultNS.ex("nonexistent"),
+                subject,
+                ...opts.contextProps(),
+            },
+        )));
+        expect(elem.find(Property).children()).toHaveLength(0);
+    });
+
+    it("renders the children when data is not present with forceRender and children", () => {
+        const opts = ctx.fullCW();
+        const elem = mount(opts.wrapComponent(React.createElement(
+            Property,
+            {
+                children: React.createElement("span", { className: "child-elem" }),
+                forceRender: true,
+                label: defaultNS.ex("nonexistent"),
+                subject,
+                ...opts.contextProps(),
+            },
+        )));
+        expect(elem).toContainMatchingElement(".child-elem");
+    });
+
+    it("renders the children and association renderer when data is not present with forceRender and children", () => {
+        const opts = ctx.fullCW();
+        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+            ({ children }) => React.createElement("div", { className: "association" }, children),
+            defaultNS.schema("CreativeWork"),
+            defaultNS.rdf("predicate"),
+        ));
+        const elem = mount(opts.wrapComponent(React.createElement(
+            Property,
+            {
+                children: React.createElement("span", { className: "child-elem" }),
+                forceRender: true,
+                label: defaultNS.ex("nonexistent"),
+                subject,
+                ...opts.contextProps(),
+            },
+        )));
+        expect(elem).toContainMatchingElement(".association");
+        expect(elem).toContainMatchingElement(".child-elem");
     });
 
     it("renders null when the given property is not present", () => {
@@ -78,6 +128,27 @@ describe("Property component", () => {
         const elem = mount(opts.wrapComponent(comp));
 
         expect(elem.find("Property")).toHaveText("loading");
+    });
+
+    it("renders the literal renderer", () => {
+        const opts = ctx.fullCW();
+        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+            ({ linkedProp }) => React.createElement(
+                "div",
+                { className: "integerRenderer", children: linkedProp.value },
+            ),
+            defaultNS.rdfs("Literal"),
+            defaultNS.xsd("integer"),
+        ));
+
+        const comp = React.createElement(
+            Property,
+            { label: defaultNS.ex("timesRead"), ...opts.contextProps() },
+        );
+        const elem = mount(opts.wrapComponent(comp));
+
+        expect(elem).toContainMatchingElement(".integerRenderer");
+        expect(elem.find(".integerRenderer")).toHaveText("5");
     });
 
     describe("limit", () => {

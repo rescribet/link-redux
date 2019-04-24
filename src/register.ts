@@ -1,7 +1,7 @@
 import { ComponentRegistration, LinkedRenderStore } from "link-lib";
 import { ComponentClass, ComponentType, memo } from "react";
 
-import { link } from "./components/link";
+import { link } from "./hocs/link";
 import { RegistrableComponent } from "./types";
 
 export type higherOrderWrapper<TNeedsProps> = (c: ComponentType<TNeedsProps>) => ComponentType<TNeedsProps>;

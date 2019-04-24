@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { DataInvalidationProps, LinkContext, SubjectType } from "../types";
+import { DataInvalidationProps, SubjectType } from "../types";
+import { useLRS } from "./useLRS";
 
 /**
  * The subjects this component subscribes to.
@@ -30,9 +31,10 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
     return result;
 }
 
-export function useDataInvalidation(props: DataInvalidationProps, context: LinkContext) {
+export function useDataInvalidation(props: DataInvalidationProps) {
+    const lrs = useLRS();
     const [lastUpdate, setInvalidate] = React.useState<number>(
-        (context.lrs as any).store.changeTimestamps[props.subject.sI],
+        (lrs as any).store.changeTimestamps[props.subject.sI],
     );
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
@@ -40,7 +42,7 @@ export function useDataInvalidation(props: DataInvalidationProps, context: LinkC
     }
 
     const subscriptionSubjects = normalizeDataSubjects(props);
-    React.useEffect(() => context.lrs.subscribe({
+    React.useEffect(() => lrs.subscribe({
         callback: handleStatusChange,
         lastUpdateAt: undefined,
         markedForDelete: false,

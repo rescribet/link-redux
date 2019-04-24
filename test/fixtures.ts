@@ -39,6 +39,8 @@ const sFull = (id: NamedNode, attrs: Test) => {
         new Statement(id, NS.schema("name"), new Literal(attrs.title || "title"), NS.example("default")),
         new Statement(id, NS.schema("text"), new Literal(attrs.text || "text"), NS.example("default")),
         new Statement(id, NS.schema("author"), new NamedNode(attrs.author || "http://example.org/people/0"), NS.example("default")),
+        new Statement(id, NS.schema("dateCreated"), Literal.fromDate(new Date("2019-01-01")), NS.example("default")),
+        new Statement(id, NS.ex("timesRead"), Literal.fromValue(5), NS.example("default")),
         new Statement(id, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
         new Statement(id, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
         new Statement(id, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
@@ -67,8 +69,11 @@ export function chargeLRS(statements: Statement[] = [], subject: SomeNode): Test
         schema,
         store,
         subject,
-        wrapComponent: (children?: ReactElement<any>, topology?: TopologyContextType): ReactElement<any> => {
-            return createElement(RenderStoreProvider, { value: lrs },
+        wrapComponent: (children?: ReactElement<any>,
+                        topology?: TopologyContextType,
+                        lrsOverride?: unknown): ReactElement<any> => {
+
+            return createElement(RenderStoreProvider, { value: lrsOverride || lrs },
                 createElement("div", { className: "root" },
                     createElement(
                         LinkedResourceContainer,

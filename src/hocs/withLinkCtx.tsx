@@ -3,12 +3,12 @@ import { DEFAULT_TOPOLOGY } from "link-lib";
 import { NamedNode } from "rdflib";
 import * as React from "react";
 
+import { useLRS } from "../hooks/useLRS";
 import {
     Helpers,
-    LinkContext,
     LinkCtxOverrides,
     LinkedRenderStoreContext,
-    LinkReduxLRSType,
+    LinkRenderContext,
     PropsWithOptLinkProps,
     SubjectProp,
     TopologyProp,
@@ -19,25 +19,25 @@ export interface WithLinkCtxOptions {
     helpers?: Helpers;
 }
 
-export const LinkCtx = React.createContext<LinkContext & LinkedRenderStoreContext>(
+export const LinkRenderCtx = React.createContext<LinkRenderContext>(
     {
-        lrs: {} as LinkReduxLRSType,
         subject: undefined!,
         topology: DEFAULT_TOPOLOGY,
     },
 );
 
-export const useLinkContext = () => React.useContext(LinkCtx);
+export const useLinkRenderContext = () => React.useContext(LinkRenderCtx);
 
-export const { Consumer, Provider } = LinkCtx;
+export const { Consumer, Provider } = LinkRenderCtx;
 
-export function calculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
-                                       context: LinkContext,
-                                       options: WithLinkCtxOptions = {}):
-    P & Partial<LinkContext> & Partial<LinkCtxOverrides> {
+export function useCalculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
+                                          context: LinkRenderContext,
+                                          options: WithLinkCtxOptions = {}):
+    P & Partial<LinkRenderContext & LinkedRenderStoreContext> & Partial<LinkCtxOverrides> {
 
-    const { lrs, subject, topology } = context;
-    const overrides: Partial<LinkContext & LinkCtxOverrides> = {};
+    const lrs = useLRS();
+    const { subject, topology } = context;
+    const overrides: Partial<LinkRenderContext & LinkedRenderStoreContext & LinkCtxOverrides> = {};
 
     if (options.subject) {
         overrides.subjectCtx = subject;
@@ -65,14 +65,17 @@ export function calculateChildProps<P>(props: P & Partial<SubjectProp & Topology
 }
 
 export function withLinkCtx<P>(
-    Component: React.ComponentType<P & LinkContext & Partial<LinkCtxOverrides>>,
+    Component: React.ComponentType<P & LinkRenderContext & Partial<LinkCtxOverrides>>,
     options: WithLinkCtxOptions = { lrs: true }): React.ComponentType<PropsWithOptLinkProps<P>> {
 
     const Comp: React.FunctionComponent<PropsWithOptLinkProps<P>> = (props: PropsWithOptLinkProps<P>) => {
-        const context = useLinkContext();
-        const childProps = calculateChildProps(props, context, options);
+        const context = useLinkRenderContext();
+        const childProps = useCalculateChildProps(props, context, options);
 
-        return React.createElement(Component, childProps as P & LinkContext & Partial<LinkCtxOverrides>);
+        return React.createElement(
+            Component,
+            childProps as unknown as P & LinkRenderContext & LinkedRenderStoreContext & Partial<LinkCtxOverrides>,
+        );
     };
     Comp.displayName = "withLinkCtxWrapper";
 
