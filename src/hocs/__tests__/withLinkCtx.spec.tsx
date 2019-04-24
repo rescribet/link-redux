@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers: 0 */
 import { mount } from "enzyme";
-import { DEFAULT_TOPOLOGY, defaultNS, SomeNode } from "link-lib";
+import { DEFAULT_TOPOLOGY, defaultNS } from "link-lib";
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
@@ -8,20 +8,7 @@ import * as ctx from "../../../test/fixtures";
 import { LinkContext, LinkCtxOverrides } from "../../types";
 import { withLinkCtx } from "../withLinkCtx";
 
-const testSubject = defaultNS.example("resource/8");
-
-const shallowCtx = (subject: SomeNode) => ({
-    context: {
-        subject,
-    },
-    contextTypes: {
-        subject: PropTypes.object,
-    },
-});
-
-interface PropTypes extends LinkContext, Partial<LinkCtxOverrides> {
-    type: any;
-}
+type PropTypes = LinkContext & Partial<LinkCtxOverrides>;
 
 class TestComponent extends React.Component<PropTypes> {
     public render() {
@@ -53,7 +40,8 @@ describe("withLinkCtx hoc", () => {
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
-            expect(node).toHaveProp("lrs", opts.lrs);
+            // enzyme-matchers' `toHaveProps` does a slow recursive deep compare
+            expect((node.props() as any).lrs).toEqual(opts.lrs);
             expect(node).toHaveProp("subject", defaultNS.ex("override"));
             expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
 
@@ -69,7 +57,7 @@ describe("withLinkCtx hoc", () => {
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
-            expect(node).toHaveProp("lrs", opts.lrs);
+            expect((node.props() as any).lrs).toEqual(opts.lrs);
             expect(node).toHaveProp("subject", opts.subject);
             expect(node).toHaveProp("topology", defaultNS.ex("override"));
 

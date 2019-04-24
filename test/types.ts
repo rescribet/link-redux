@@ -1,3 +1,4 @@
+import "jest-enzyme";
 import {
     ComponentStoreTestProxy,
     LinkedRenderStore,

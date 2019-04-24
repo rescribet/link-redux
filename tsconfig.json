@@ -20,7 +20,8 @@
     "target": "es5",
     "typeRoots": [
       "node_modules/@types",
-      "./node_modules/link-lib/@types"
+      "./node_modules/link-lib/@types",
+      "./node_modules/jest-enzyme/lib"
     ]
   },
   "files": [
