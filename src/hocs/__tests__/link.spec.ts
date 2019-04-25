@@ -69,6 +69,21 @@ describe("link", () => {
                 expect(cLabel).toHaveProperty("name", "cLabel");
             });
 
+            it("skips others' properties", () => {
+                const dataProps = Object.create({ oLabel: defaultNS.ex("o") });
+                dataProps.cLabel = defaultNS.ex("p");
+
+                const [ propMap, requestedProperties ] = dataPropsToPropMap(dataProps, {});
+
+                expect(propMap).toHaveProperty("cLabel");
+                expect(propMap).not.toHaveProperty("oLabel");
+                expect(requestedProperties).toEqual([defaultNS.ex("p").sI]);
+
+                const { cLabel } = propMap;
+                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+                expect(cLabel).toHaveProperty("name", "cLabel");
+            });
+
             it("processes a map with object value", () => {
                 const [ propMap, requestedProperties ] = dataPropsToPropMap({
                     cLabel: {
