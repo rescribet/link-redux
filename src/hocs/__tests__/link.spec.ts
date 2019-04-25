@@ -37,14 +37,14 @@ describe("link", () => {
 
             it("processes a map with an array value", () => {
                 const [ propMap, requestedProperties ] = dataPropsToPropMap({
-                    cLabel: [defaultNS.ex("p")],
+                    cLabel: [defaultNS.ex("p"), defaultNS.ex("q")],
                 }, {});
 
                 expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([defaultNS.ex("p").sI]);
+                expect(requestedProperties).toEqual([defaultNS.ex("p").sI, defaultNS.ex("q").sI]);
 
                 const { cLabel } = propMap;
-                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p"), defaultNS.ex("q")]);
                 expect(cLabel).toHaveProperty("name", "cLabel");
             });
 
@@ -163,20 +163,20 @@ describe("link", () => {
 
             const comp = link({
                 author: defaultNS.schema("author"),
+                name: [defaultNS.schema("name"), defaultNS.rdfs("label")],
                 tags: {
                     label: defaultNS.example("tags"),
                     limit: Infinity,
                 },
                 text: defaultNS.schema("text"),
-                title: defaultNS.schema("name"),
             })(TestComponent);
             opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
 
             const elem = mount(opts.wrapComponent());
 
             expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("title", new Literal("title"));
-            expect(elem.find(TestComponent)).not.toHaveProp("name", new Literal("title"));
+            expect(elem.find(TestComponent)).not.toHaveProp("label");
+            expect(elem.find(TestComponent)).toHaveProp("name", new Literal("title"));
             expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
             expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", [

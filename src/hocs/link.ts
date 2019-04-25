@@ -83,16 +83,14 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                 if (predObj.length === 0) {
                     throw new TypeError("Props array must contain at least one predicate");
                 }
-                predObj.forEach((prop) => {
-                    requestedProperties.push(prop.sI);
-                    propMap[propKey || term(prop)] = {
-                        forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                        label: [prop],
-                        limit: opts.limit || globalLinkOptsDefaults.limit,
-                        name: propKey || term(prop),
-                        returnType: opts.returnType || globalLinkOptsDefaults.returnType,
-                    };
-                });
+                requestedProperties.push(...predObj.map((p) => p.sI));
+                propMap[propKey || term(predObj[0])] = {
+                    forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
+                    label: predObj,
+                    limit: opts.limit || globalLinkOptsDefaults.limit,
+                    name: propKey || term(predObj[0]),
+                    returnType: opts.returnType || globalLinkOptsDefaults.returnType,
+                };
             } else if (predObj instanceof NamedNode) {
                 requestedProperties.push(predObj.sI);
                 propMap[propKey || term(predObj)] = {
