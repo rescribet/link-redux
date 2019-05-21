@@ -33,7 +33,7 @@ export const { Consumer, Provider } = LinkRenderCtx;
 export function useCalculateChildProps<P>(props: P & Partial<SubjectProp & TopologyProp>,
                                           context: LinkRenderContext,
                                           options: WithLinkCtxOptions = {}):
-    P & Partial<LinkRenderContext & LinkedRenderStoreContext> & Partial<LinkCtxOverrides> {
+    P & LinkRenderContext & Partial<LinkedRenderStoreContext> & Partial<LinkCtxOverrides> {
 
     const lrs = useLRS();
     const { subject, topology } = context;

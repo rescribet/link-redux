@@ -1,6 +1,7 @@
 import {
     defaultNS,
-    getTermBestLang, normalizeType,
+    getTermBestLang,
+    normalizeType,
     SomeNode,
 } from "link-lib";
 import { NamedNode, SomeTerm } from "rdflib";
@@ -17,13 +18,14 @@ import {
     LinkCtxOverrides,
     LinkedPropType,
     LinkReduxLRSType,
+    SubjectProp,
     TopologyProp,
 } from "../types";
 
 import { LinkedResourceContainer as LRC } from "./LinkedResourceContainer";
 import { renderError } from "./Typable";
 
-export interface PropertyPropTypes extends DataInvalidationProps, TopologyProp {
+export interface PropertyPropTypes extends Partial<DataInvalidationProps>, Partial<TopologyProp> {
     children?: ReactNode;
 
     /**
@@ -46,7 +48,7 @@ export interface PropertyPropTypes extends DataInvalidationProps, TopologyProp {
 }
 
 export type PropertyWrappedProps = PropertyPropTypes
-    & Partial<LinkCtxOverrides>;
+    & Partial<LinkCtxOverrides> & Required<SubjectProp>;
 
 const nodeTypes = ["NamedNode", "BlankNode"];
 

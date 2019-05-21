@@ -18,7 +18,7 @@ export interface TypableProps extends DataInvalidationProps {
     onLoad?: React.ReactType;
 }
 
-export interface TypableInjectedProps extends SubjectProp, TopologyProp, Partial<LinkCtxOverrides>  {}
+export interface TypableInjectedProps extends SubjectProp, Partial<TopologyProp>, Partial<LinkCtxOverrides>  {}
 
 export function nextRenderContext(props: TypableInjectedProps): LinkRenderContext {
     return {
