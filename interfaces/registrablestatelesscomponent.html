@@ -920,6 +920,9 @@ img { max-width: 100%; }
 					<a href="registrablestatelesscomponent.html#displayname" class="tsd-kind-icon">display<wbr>Name</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a href="registrablestatelesscomponent.html#hocs" class="tsd-kind-icon">hocs</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a href="registrablestatelesscomponent.html#linkopts" class="tsd-kind-icon">link<wbr>Opts</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -955,10 +958,10 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="tsd-signature-type">StatelessComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span>
+					<span class="tsd-signature-type">FunctionComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span>
 				</li>
 				<li>
-					<a href="registrationopts.html" class="tsd-signature-type">RegistrationOpts</a>
+					<a href="registrationopts.html" class="tsd-signature-type">RegistrationOpts</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span>
 					<ul class="tsd-hierarchy">
 						<li>
 							<span class="target">RegistrableStatelessComponent</span>
@@ -970,25 +973,25 @@ img { max-width: 100%; }
 		<section class="tsd-panel">
 			<h3 class="tsd-before-signature">Callable</h3>
 			<ul class="tsd-signatures tsd-kind-interface tsd-has-type-parameter">
-				<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+				<li class="tsd-signature tsd-kind-icon">__call<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PropsWithChildren</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span>, context<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ReactElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 			</ul>
 			<ul class="tsd-descriptions">
 				<li class="tsd-description">
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:325</li>
+							<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:505</li>
 						</ul>
 					</aside>
 					<h4 class="tsd-parameters-title">Parameters</h4>
 					<ul class="tsd-parameters">
 						<li>
-							<h5>props: <span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span></h5>
+							<h5>props: <span class="tsd-signature-type">PropsWithChildren</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></h5>
 						</li>
 						<li>
 							<h5><span class="tsd-flag ts-flagOptional">Optional</span> context: <span class="tsd-signature-type">any</span></h5>
 						</li>
 					</ul>
-					<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReactElement</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>
+					<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ReactElement</span>
 						<span class="tsd-signature-symbol"> | </span>
 						<span class="tsd-signature-type">null</span>
 					</h4>
@@ -1005,6 +1008,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#contexttypes" class="tsd-kind-icon">context<wbr>Types</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#defaultprops" class="tsd-kind-icon">default<wbr>Props</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#displayname" class="tsd-kind-icon">display<wbr>Name</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#hocs" class="tsd-kind-icon">hocs</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#linkopts" class="tsd-kind-icon">link<wbr>Opts</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#mapdatatoprops" class="tsd-kind-icon">map<wbr>Data<wbr>ToProps</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="registrablestatelesscomponent.html#proptypes" class="tsd-kind-icon">prop<wbr>Types</a></li>
@@ -1023,9 +1027,9 @@ img { max-width: 100%; }
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> context<wbr>Types</h3>
 				<div class="tsd-signature tsd-kind-icon">context<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ValidationMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
-					<p>Inherited from StatelessComponent.contextTypes</p>
+					<p>Inherited from FunctionComponent.contextTypes</p>
 					<ul>
-						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:328</li>
+						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:508</li>
 					</ul>
 				</aside>
 			</section>
@@ -1034,9 +1038,9 @@ img { max-width: 100%; }
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> default<wbr>Props</h3>
 				<div class="tsd-signature tsd-kind-icon">default<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
-					<p>Inherited from StatelessComponent.defaultProps</p>
+					<p>Inherited from FunctionComponent.defaultProps</p>
 					<ul>
-						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:329</li>
+						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:509</li>
 					</ul>
 				</aside>
 			</section>
@@ -1045,9 +1049,20 @@ img { max-width: 100%; }
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> display<wbr>Name</h3>
 				<div class="tsd-signature tsd-kind-icon">display<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
-					<p>Inherited from StatelessComponent.displayName</p>
+					<p>Inherited from FunctionComponent.displayName</p>
 					<ul>
-						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:330</li>
+						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:510</li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+				<a name="hocs" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> hocs</h3>
+				<div class="tsd-signature tsd-kind-icon">hocs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="../globals.html#higherorderwrapper" class="tsd-signature-type">higherOrderWrapper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#hocs">hocs</a></p>
+					<ul>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L81">types.ts:81</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1058,7 +1073,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#linkopts">linkOpts</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/b62b1e5/src/types.ts#L95">types.ts:95</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L82">types.ts:82</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1069,18 +1084,18 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#mapdatatoprops">mapDataToProps</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/b62b1e5/src/types.ts#L94">types.ts:94</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L83">types.ts:83</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 				<a name="proptypes" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> prop<wbr>Types</h3>
-				<div class="tsd-signature tsd-kind-icon">prop<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ValidationMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">prop<wbr>Types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WeakValidationMap</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
-					<p>Inherited from StatelessComponent.propTypes</p>
+					<p>Inherited from FunctionComponent.propTypes</p>
 					<ul>
-						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:327</li>
+						<li>Defined in /home/fletcher91/dev/src/github.com/fletcher91/link-redux/node_modules/@types/react/index.d.ts:507</li>
 					</ul>
 				</aside>
 			</section>
@@ -1091,7 +1106,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#property">property</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/b62b1e5/src/types.ts#L96">types.ts:96</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L84">types.ts:84</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1102,7 +1117,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#topology">topology</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/b62b1e5/src/types.ts#L97">types.ts:97</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L85">types.ts:85</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1113,7 +1128,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="registrationopts.html">RegistrationOpts</a>.<a href="registrationopts.html#type">type</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/b62b1e5/src/types.ts#L93">types.ts:93</a></li>
+						<li>Defined in <a href="https://github.com/fletcher91/link-redux/blob/fc41636/src/types.ts#L86">types.ts:86</a></li>
 					</ul>
 				</aside>
 			</section>
