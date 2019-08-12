@@ -2867,10 +2867,10 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-link-lib@=1.0.0-rc2:
-  version "1.0.0-rc2"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-rc2.tgz#fbfabe6f4aa4e694c0c95c6a54c0c203e51568ef"
-  integrity sha512-KawgZFY5rr4g5aWHgbht4bp7mDeR6e9ni2ZrvubYNPpzSbXe5nhn45DkoCvgzMOFgexJmbcsADobJHatbKViUA==
+link-lib@=1.0.0-rc3:
+  version "1.0.0-rc3"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-rc3.tgz#a8bd4d66370f26f07e3c42191efdb8cb15efe5fe"
+  integrity sha512-U8Z8mlGTjjMp5Z/D3Ml9qcg7+wghc5I2tLrveJOq09P0qZNtjrDKxlg0n+pK2L9mUW2Mj8k+qH08Fk6stCSOaw==
 
 "link-rdflib@npm:link-rdflib@0.19.1-20190124T144209":
   version "0.19.1-20190124T144209"

@@ -32,7 +32,7 @@
     "es6-promise": ">= 4.x",
     "hoist-non-react-statics": ">=3.x",
     "http-status-codes": ">= 1.x",
-    "link-lib": ">=1.0.0-rc1",
+    "link-lib": ">=1.0.0-rc3",
     "prop-types": ">= 15.x",
     "rdflib": ">= 0.19.x",
     "react": ">= 16.8.x"
@@ -53,7 +53,7 @@
     "immutable": "3.8.x",
     "jest": "^24.7.1",
     "jest-enzyme": "^7.0.2",
-    "link-lib": "=1.0.0-rc2",
+    "link-lib": "=1.0.0-rc3",
     "prop-types": "^15.x",
     "rdflib": "npm:link-rdflib@0.19.1-20190515T091246",
     "react": "^16.8.6",
