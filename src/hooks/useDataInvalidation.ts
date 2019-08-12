@@ -31,6 +31,11 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
     return result;
 }
 
+/**
+ * Re-renders when {props.subject} or a resource mentioned in {props.dataSubjects} changes in the store.
+ *
+ * Be sure to keep undefined values in subject or dataSubjects to ensure useEffect DependencyList consistency.
+ */
 export function useDataInvalidation(props: DataInvalidationProps) {
     const lrs = useLRS();
     const [lastUpdate, setInvalidate] = React.useState<number>(
@@ -47,7 +52,7 @@ export function useDataInvalidation(props: DataInvalidationProps) {
         lastUpdateAt: undefined,
         markedForDelete: false,
         onlySubjects: true,
-        subjectFilter: subscriptionSubjects,
+        subjectFilter: subscriptionSubjects.filter(Boolean),
     }), subscriptionSubjects);
 
     return lastUpdate;
