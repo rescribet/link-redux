@@ -17,7 +17,7 @@ export function useResourceView(subject?: NamedNode | BlankNode,
             subject || context.subject,
             topology || context.topology,
         ));
-    }, [subject, topology]);
+    }, [subject, topology, context.subject, context.topology]);
 
     return view;
 }

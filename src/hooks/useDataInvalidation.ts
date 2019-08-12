@@ -46,14 +46,17 @@ export function useDataInvalidation(props: DataInvalidationProps) {
         setInvalidate(lastUpdateAt!);
     }
 
-    const subscriptionSubjects = normalizeDataSubjects(props);
-    React.useEffect(() => lrs.subscribe({
-        callback: handleStatusChange,
-        lastUpdateAt: undefined,
-        markedForDelete: false,
-        onlySubjects: true,
-        subjectFilter: subscriptionSubjects.filter(Boolean),
-    }), subscriptionSubjects);
+    React.useEffect(() => {
+        const subscriptionSubjects = normalizeDataSubjects(props);
+
+        return lrs.subscribe({
+            callback: handleStatusChange,
+            lastUpdateAt: undefined,
+            markedForDelete: false,
+            onlySubjects: true,
+            subjectFilter: subscriptionSubjects.filter(Boolean),
+        });
+    }, [props.subject, props.dataSubjects]);
 
     return lastUpdate;
 }
