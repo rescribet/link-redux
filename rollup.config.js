@@ -13,7 +13,6 @@ export default {
     "redux",
     "redux-actions",
     "react",
-    "react-redux",
     "link-lib",
     "prop-types",
   ],
