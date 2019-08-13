@@ -18,16 +18,14 @@ import {
     wrapRenderContext,
 } from "./Typable";
 
-export interface PropTypes<R = any> extends TypableProps {
+export interface LRCPropTypes<R = any> extends TypableProps {
     children?: React.ReactNode;
     fetch?: boolean;
     forceRender?: boolean;
     innerRef?: React.Ref<R>;
 }
 
-export interface InjectedPropTypes extends PropTypes,
-  DataInvalidationProps,
-  TypableInjectedProps {}
+export interface InjectedPropTypes extends LRCPropTypes, DataInvalidationProps, TypableInjectedProps {}
 
 function useCalculatedViewWithState(props: InjectedPropTypes,
                                     lrs: LinkReduxLRSType,
@@ -56,7 +54,7 @@ function useCalculatedViewWithState(props: InjectedPropTypes,
     return renderNoView(props, lrs);
 }
 
-export function LRC(props: PropTypes, _?: any): ReactElement<any> | null {
+export function LRC<T = {}>(props: LRCPropTypes & T, _?: any): ReactElement<any> | null {
     const context = useLinkRenderContext();
     const [error, setError] = React.useState<Error|undefined>(undefined);
 
@@ -87,5 +85,5 @@ LRC.defaultProps = {
 LRC.displayName = "LinkedResourceContainer";
 
 export const LinkedResourceContainer = React.forwardRef(
-  (props: PropTypes<unknown>, ref) => <LRC innerRef={ref} {...props} />,
+  (props: LRCPropTypes<unknown>, ref) => <LRC innerRef={ref} {...props} />,
 );

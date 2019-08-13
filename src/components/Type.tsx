@@ -11,6 +11,7 @@ import {
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
+import { SubjectProp } from "../types";
 
 import {
     renderNoView,
@@ -18,12 +19,15 @@ import {
     TypableProps,
 } from "./Typable";
 
-export interface PropTypes extends TypableProps {
+export interface PropTypes extends Partial<TypableProps> {
     children?: React.ReactType;
     label?: NamedNode;
 }
 
-export interface PropTypesWithInjected extends PropTypes, TypableInjectedProps {}
+export interface PropTypesWithInjected extends
+    Omit<PropTypes, "subject">,
+    SubjectProp,
+    Omit<TypableInjectedProps, "subject"> {}
 
 export function Type(props: PropTypes, _?: any): ReactElement<any> | null {
     const options = {};

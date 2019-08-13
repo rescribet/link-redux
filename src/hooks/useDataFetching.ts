@@ -1,7 +1,7 @@
 import { NamedNode } from "rdflib";
 import * as React from "react";
 
-import { PropTypes } from "../components/LinkedResourceContainer";
+import { LRCPropTypes } from "../components/LinkedResourceContainer";
 
 import { useLRS } from "./useLRS";
 
@@ -15,7 +15,7 @@ const blankNodeWarn = "Cannot load a blank node since it has no defined way to b
  *
  * @see {LinkedRenderStore#shouldLoadResource} for the triggering mechanism.
  */
-export function useDataFetching(props: PropTypes,
+export function useDataFetching(props: LRCPropTypes,
                                 lastUpdate?: number,
                                 setError?: (e: Error) => void) {
     const lrs = useLRS();

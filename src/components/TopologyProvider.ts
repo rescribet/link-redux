@@ -9,7 +9,7 @@ import {
 
 import { Consumer, Provider } from "../hocs/withLinkCtx";
 
-interface TopologyProviderProps {
+export interface TopologyProviderProps {
     elementProps?: object;
 }
 
