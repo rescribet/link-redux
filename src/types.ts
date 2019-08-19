@@ -1,7 +1,7 @@
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
 import { BlankNode, Literal, NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
-import { ComponentClass, FunctionComponent, ReactType } from "react";
+import { ComponentClass, ElementType, FunctionComponent, Ref } from "react";
 import { Overwrite } from "type-zoo";
 import { higherOrderWrapper } from "./register";
 
@@ -13,7 +13,7 @@ export type LabelType = NamedNode | NamedNode[];
 
 export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
-export type LinkReduxLRSType = LinkedRenderStore<ReactType>;
+export type LinkReduxLRSType = LinkedRenderStore<ElementType>;
 
 export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
@@ -109,4 +109,8 @@ export interface TopologyContextProp {
 
 export interface TopologyProp {
     topology: TopologyType;
+}
+
+export interface PassableRef<T> {
+  innerRef: Ref<T>;
 }

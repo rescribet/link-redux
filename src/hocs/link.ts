@@ -192,10 +192,10 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
     }
 
     return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): ComponentType<any> {
-        const comp = (props: P & PropertyWrappedProps) => {
+        const comp = React.forwardRef((props: P & PropertyWrappedProps, ref: unknown) => {
             const lrs = useLRS();
             const context = useLinkRenderContext();
-            const childProps = useCalculateChildProps(props, context, { lrs: true });
+            const childProps = useCalculateChildProps({ ...props, innerRef: ref}, context, { lrs: true });
             const subjectData = lrs.tryEntity(childProps.subject);
 
             const subjProps = subjectData
@@ -218,7 +218,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                     linkVersion,
                 },
             );
-        };
+        });
 
         return hoistNonReactStatics(comp, wrappedComponent);
     };
