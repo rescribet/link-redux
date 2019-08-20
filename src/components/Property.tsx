@@ -161,20 +161,25 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
         defaultNS.rdf("predicate"),
     ) || React.Fragment;
     const associationProps = associationRenderer !== React.Fragment ? childProps : null;
+    const childComp = typeof childProps.children === "function" ? childProps.children(objRaw) : childProps.children;
+    if (typeof childProps.children === "function") {
+        return React.createElement(associationRenderer, associationProps, childComp);
+    }
+
     const component = getLinkedObjectClass(childProps, lrs);
     if (component) {
         const toRender = limitTimes(
             childProps,
             objRaw,
             lrs,
-            (p) => React.createElement(component, { ...childProps, linkedProp: p }, childProps.children),
+            (p) => React.createElement(component, { ...childProps, linkedProp: p }, childComp),
             associationRenderer,
         );
         if (toRender === null) {
             return React.createElement(
                 associationRenderer,
                 associationProps,
-                React.createElement(component, { ...childProps }, childProps.children),
+                React.createElement(component, { ...childProps }, childComp),
             );
         }
 
@@ -187,7 +192,7 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
                     subject: p! as SomeNode,
                 };
 
-                return React.createElement(LRC, lrcProps, childProps.children);
+                return React.createElement(LRC, lrcProps, childComp);
             };
 
             return limitTimes(childProps, objRaw, lrs, wrapLOC, associationRenderer);
@@ -202,7 +207,7 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
         );
     }
     if (childProps.children) {
-        return React.createElement(associationRenderer, associationProps, childProps.children);
+        return React.createElement(associationRenderer, associationProps, childComp);
     }
 
     return null;
