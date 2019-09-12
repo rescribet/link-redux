@@ -190,32 +190,52 @@ class PersonName extends React.PureComponent {
 }
 ```
 
-#### Middleware
-Last but not least, link has its own middleware stack. Each component can call `lrs.exec(iri, payload)`
-to execute an action. By default, unhandled actions are passed to the `execActionByIRI` method which
-will try to execute a resource if it were a http://schema.org/Action resource as per the [hypermedia
-API documentation](https://github.com/fletcher91/link-lib/wiki/Hypermedia-API), which allows you to 
-declaratively describe HTTP actions to be done in your application.
+#### Actions and the Middleware
+So far we have seen how to render the data, but applications wouldn't be complete without
+interactivity. 
 
-Futhermore, if the server responds with the `Exec-Action` header, the server can execute an action 
+Traditionally web applications differentiate between actions which modify client state (e.g. showing
+a popup) and those which modify server state (e.g. doing a POST requests). Server actions can be
+characterised by the URL to send the request to, together with some optional request body. The
+client side is more diverse (i.e. using events, passing callbacks, redux's action system, etc.) but
+link re-uses the server-side interface for modifying client state as well, all actions written with
+the tools link provides can be executed by providing the system with an URL and an optional body.
+
+Constraining client actions to be able to be described via URLs (and an optional body) might seem
+somewhat cumbersome, but it enables some very interesting behaviour. It allows rendering both server
+data and client state with the same tools, as well as allowing the the logic which is needed to 
+fulfill the action between client and server without breaking the system.
+
+To execute an action, just call `lrs.exec(iri: NamedNode, payload: any)`. By default link will search
+the store for the resource (`iri`) or fetch it if it doesn't exists, if the resource is some
+[schema:Action](https://schema.org/Action) it will try and fulfill the request, updating the store
+with the changes the server requested (see the the
+[hypermedia API documentation](https://github.com/fletcher91/link-lib/wiki/Hypermedia-API) for more
+info).
+
+The exec method is a middleware function with a handler for doing http requests (via schema:Action
+resources) pre-installed. You can add your own handlers to the stack to implement behaviour for other
+URLs or to override the default behaviour.
+
+Furthermore, if the server responds with the `Exec-Action` header, the server can execute an action 
 in the front-end (e.g. trigger some popup to perform a required action). This is what sets it apart
 from just using redux for state management, since it allows the front-end to execute actions on far
 more data than a client device could calculate, resulting in more powerful experiences without
 duplicating logic as well.
 
-The following example implements the state management for a popup, the `processDelta` calls are what
-change the state. The syntax is somewhat verbose for middleware this size, but the overhead is 
+The following example implements the state management for a popup, the `processDelta` calls are used
+to change the state. The syntax is somewhat verbose for middleware this size, but the overhead is 
 acceptable for real-world implementations, since you shouldn't need a lot of these methods (most 
 actions should be handled automatically with the hypermedia API).
 
 ```JSX Harmony
 // src/middleware/popup.js
-import { memoizedNamespace, namedNodeByIRI } from 'link-lib';
+import { Namespace, NamedNode } from 'link-lib';
 import { Literal, Statement } from 'rdflib';
 
 const PopupMiddleware = (store) => {
   // Define a new namespace for our popup system
-  const popup = memoizedNamespace(store.namespaces.app('popup'));
+  const popup = Namespace(store.namespaces.app('popup'));
   // Make the namespace available throughout the app
   store.namespaces.popup = popup;
   // Set up the state in the store, e.g. which resource to render and if it should be shown
@@ -248,7 +268,7 @@ const PopupMiddleware = (store) => {
       new Statement(
         popup('manager'),
         popup('resource'),
-        namedNodeByIRI(iri),
+        new NamedNode(iri),
         store.namespaces.ll('replace')
       ),
       new Statement(
@@ -562,7 +582,7 @@ import LRS from './LRS';
 // Either with react-router, or without and just take the current location (but listen for pushstate).
 const App = ReactRouter
   ? withRouter(() => <LinkedResourceContainer subject={} />)         
-  : () => <LinkedResourceContainer subject={namedNodeByIRI(window.location.href)} />;
+  : () => <LinkedResourceContainer subject={new NamedNode(window.location.href)} />;
 
 export default () => (
   <RenderStoreProvider value={LRS}>
@@ -652,8 +672,8 @@ class DollarTableCell extends React.PureComponent {
 
 ### String IRI to NamedNode
 It sometimes happens that you recieve an IRI in string form (e.g. window.location.href) which needs
-to be converted to a link-enabled NamedNode, you MUST use the [provided function `namedNodeByIRI`](https://fletcher91.github.io/link-lib/globals.html#namednodebyiri);
-for this, since we work around the default RDFlib.js NamedNode constuctor for performance reasons.
+to be converted to a link-enabled NamedNode, you MUST use the [patched version of rdflib](https://github.com/fletcher91/rdfllib.js);
+for this, since we work around the default RDFlib.js NamedNode constructor for performance reasons.
 
 ### Multi-IRI
 Most components wouldn't be very useful if they can only render one type of term. Therefore, most of the methods accept
@@ -664,4 +684,3 @@ LinkedRenderStore.registerRenderer(Thing, [NS.schema('Thing'), NS.owl('Thing')])
 ```jsx harmony
 <Property label={[NS.schema('name'), NS.rdfs('label')]} />
 ```
-
