@@ -1,3 +1,5 @@
+import "../../__tests__/useHashFactory";
+
 import { defaultNS } from "link-lib";
 
 import { DataInvalidationProps } from "../../types";

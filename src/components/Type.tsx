@@ -1,5 +1,5 @@
+import { NamedNode } from "@ontologies/core";
 import { RENDER_CLASS_NAME } from "link-lib";
-import { NamedNode } from "rdflib";
 import { ReactElement } from "react";
 import * as React from "react";
 import { createElement } from "react";

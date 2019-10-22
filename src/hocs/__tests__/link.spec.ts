@@ -1,7 +1,9 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
+import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
-import { Literal, NamedNode, Statement } from "rdflib";
 import * as React from "react";
 import { Component } from "react";
 
@@ -41,7 +43,10 @@ describe("link", () => {
                 }, {});
 
                 expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([defaultNS.ex("p").sI, defaultNS.ex("q").sI]);
+                expect(requestedProperties).toEqual([
+                    rdfFactory.id(defaultNS.ex("p")),
+                    rdfFactory.id(defaultNS.ex("q")),
+                ]);
 
                 const { cLabel } = propMap;
                 expect(cLabel).toHaveProperty("label", [defaultNS.ex("p"), defaultNS.ex("q")]);
@@ -62,7 +67,7 @@ describe("link", () => {
                 }, {});
 
                 expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([defaultNS.ex("p").sI]);
+                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
                 const { cLabel } = propMap;
                 expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
@@ -77,7 +82,7 @@ describe("link", () => {
 
                 expect(propMap).toHaveProperty("cLabel");
                 expect(propMap).not.toHaveProperty("oLabel");
-                expect(requestedProperties).toEqual([defaultNS.ex("p").sI]);
+                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
                 const { cLabel } = propMap;
                 expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
@@ -92,7 +97,7 @@ describe("link", () => {
                 }, {});
 
                 expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([defaultNS.ex("p").sI]);
+                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
                 const { cLabel } = propMap;
                 expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
@@ -126,9 +131,9 @@ describe("link", () => {
             const elem = mount(opts.wrapComponent());
 
             expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("name", new Literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
+            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
+            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
         });
 
@@ -146,9 +151,9 @@ describe("link", () => {
             const elem = mount(opts.wrapComponent());
 
             expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("name", new Literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
+            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
+            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
         });
 
@@ -166,10 +171,10 @@ describe("link", () => {
             const elem = mount(opts.wrapComponent());
 
             expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("title", new Literal("title"));
-            expect(elem.find(TestComponent)).not.toHaveProp("name", new Literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
+            expect(elem.find(TestComponent)).toHaveProp("title", rdfFactory.literal("title"));
+            expect(elem.find(TestComponent)).not.toHaveProp("name", rdfFactory.literal("title"));
+            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
+            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
         });
 
@@ -191,9 +196,9 @@ describe("link", () => {
 
             expect(elem.find(TestComponent)).toHaveLength(1);
             expect(elem.find(TestComponent)).not.toHaveProp("label");
-            expect(elem.find(TestComponent)).toHaveProp("name", new Literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", new Literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
+            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
+            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", [
                 defaultNS.example("tag/0"),
                 defaultNS.example("tag/1"),
@@ -223,7 +228,8 @@ describe("link", () => {
                 expect(elem.find(TestComponent)).toHaveProp("name", "title");
                 expect(elem.find(TestComponent)).toHaveProp("timesRead", 5);
                 expect(elem.find(TestComponent)).toHaveProp("dateCreated", new Date("2019-01-01"));
-                expect(elem.find(TestComponent)).toHaveProp("author", new NamedNode("http://example.org/people/0"));
+                expect(elem.find(TestComponent))
+                  .toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             });
 
             it("can return values", () => {
@@ -253,7 +259,7 @@ describe("link", () => {
                 const elem = mount(opts.wrapComponent());
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", new Literal("title"));
+                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
             });
 
             it("can return statements", () => {
@@ -268,10 +274,10 @@ describe("link", () => {
                 const elem = mount(opts.wrapComponent());
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", new Statement(
+                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.quad(
                     opts.subject,
                     defaultNS.schema("name"),
-                    new Literal("title"),
+                    rdfFactory.literal("title"),
                     defaultNS.example("default"),
                 ));
             });

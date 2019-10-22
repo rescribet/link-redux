@@ -1,4 +1,6 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
 import { mount } from "enzyme";
 import { DEFAULT_TOPOLOGY, defaultNS } from "link-lib";
 import * as PropTypes from "prop-types";

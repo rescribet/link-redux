@@ -1,4 +1,10 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
+import rdf from "@ontologies/rdf";
+import rdfs from "@ontologies/rdfs";
+import schema from "@ontologies/schema";
+import xsd from "@ontologies/xsd";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
 import * as React from "react";
@@ -51,8 +57,8 @@ describe("Property component", () => {
         const opts = ctx.fullCW();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             ({ children }) => React.createElement("div", { className: "association" }, children),
-            defaultNS.schema("CreativeWork"),
-            defaultNS.rdf("predicate"),
+            schema.CreativeWork,
+            rdf.predicate,
         ));
         const elem = mount(opts.wrapComponent(React.createElement(
             Property,
@@ -73,7 +79,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("title"), ...opts.contextProps() },
+            { label: schema.title, ...opts.contextProps() },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -86,7 +92,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("name"), ...opts.contextProps() },
+            { label: schema.name, ...opts.contextProps() },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -98,13 +104,13 @@ describe("Property component", () => {
         const opts = ctx.name(subject, title);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             () => React.createElement("div", { className: "nameProp" }),
-            defaultNS.schema("Thing"),
-            defaultNS.schema("name"),
+            schema.Thing,
+            schema.name,
         ));
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("name"), ...opts.contextProps() },
+            { label: schema.name, ...opts.contextProps() },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -123,7 +129,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.schema("author"), ...opts.contextProps() },
+            { label: schema.author, ...opts.contextProps() },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -137,8 +143,8 @@ describe("Property component", () => {
                 "div",
                 { className: "integerRenderer", children: linkedProp.value },
             ),
-            defaultNS.rdfs("Literal"),
-            defaultNS.xsd("integer"),
+            rdfs.Literal,
+            xsd.integer,
         ));
 
         const comp = React.createElement(
@@ -184,7 +190,7 @@ describe("Property component", () => {
 
             const comp = React.createElement(
                 Property,
-                { forceRender: true, label: defaultNS.schema("name"), ...opts.contextProps() },
+                { forceRender: true, label: schema.name, ...opts.contextProps() },
                 React.createElement("p", { className: "childComponent" }, null),
             );
             const elem = mount(opts.wrapComponent(comp));
@@ -197,13 +203,13 @@ describe("Property component", () => {
             const opts = ctx.name(subject, title);
             opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
                 (props) => React.createElement("div", { className: "nameProp" }, props.children),
-                defaultNS.schema("Thing"),
-                defaultNS.schema("name"),
+                schema.Thing,
+                schema.name,
             ));
 
             const comp = React.createElement(
                 Property,
-                { forceRender: true, label: defaultNS.schema("name"), ...opts.contextProps() },
+                { forceRender: true, label: schema.name, ...opts.contextProps() },
                 React.createElement("p", { className: "childComponent" }, null),
             );
             const elem = mount(opts.wrapComponent(comp));

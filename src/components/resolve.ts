@@ -1,4 +1,4 @@
-import { NamedNode } from "rdflib";
+import rdfFactory, { NamedNode } from "@ontologies/core";
 
 import { URLConverterSet } from "../types";
 
@@ -17,7 +17,7 @@ export default (iri: NamedNode): NamedNode => {
     for (const convName of Object.keys(converters)) {
         const converter = converters[convName];
         if (iri.value.match(converter.match)) {
-            return NamedNode.find(converter.convert(iri.value));
+            return rdfFactory.namedNode(converter.convert(iri.value));
         }
     }
 

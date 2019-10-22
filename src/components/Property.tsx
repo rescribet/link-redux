@@ -1,10 +1,11 @@
+import rdfFactory, { NamedNode, SomeTerm, TermType } from "@ontologies/core";
+import rdf from "@ontologies/rdf";
+import rdfs from "@ontologies/rdfs";
 import {
-    defaultNS,
     getTermBestLang,
     normalizeType,
     SomeNode,
 } from "link-lib";
-import { NamedNode, SomeTerm } from "rdflib";
 import { ReactElement, ReactNode } from "react";
 import * as React from "react";
 
@@ -50,7 +51,7 @@ export interface PropertyPropTypes extends Partial<DataInvalidationProps>, Parti
 export type PropertyWrappedProps = PropertyPropTypes
     & Partial<LinkCtxOverrides> & Required<SubjectProp>;
 
-const nodeTypes = ["NamedNode", "BlankNode"];
+const nodeTypes: string[] = [TermType.NamedNode, TermType.BlankNode];
 
 export function getLinkedObjectClass({ label, subject, topology, topologyCtx }: PropertyWrappedProps,
                                      lrs: LinkReduxLRSType,
@@ -97,14 +98,14 @@ function renderChildrenOrValue(props: PropertyWrappedProps, lrs: LinkReduxLRSTyp
     (p: SomeTerm) => React.ReactNode {
 
     return function(p: SomeTerm): React.ReactNode {
-        if (props.children || p.termType !== "Literal") {
+        if (props.children || p.termType !== TermType.Literal) {
             return React.createElement(React.Fragment, null, props.children || p.value);
         }
 
         const { topology, topologyCtx, subjectCtx } = props;
         const literalRenderer = lrs.getComponentForProperty(
-            defaultNS.rdfs("Literal"),
-            NamedNode.find(p.datatype.value),
+          rdfs.Literal,
+            rdfFactory.namedNode(p.datatype.value),
             topology === null ? undefined : topology || topologyCtx,
         );
 
@@ -125,7 +126,7 @@ function renderChildrenOrValue(props: PropertyWrappedProps, lrs: LinkReduxLRSTyp
     };
 }
 
-export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
+export function Prop(props: PropertyPropTypes & any): ReactElement<any> | null {
     const options = { topology: true };
 
     const lrs = useLRS();
@@ -142,9 +143,9 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
     if (subjectData.length === 0) {
         return null;
     }
-    const labels = normalizeType(childProps.label);
+    const labels = normalizeType(childProps.label).map((l) => l.value);
     const objRaw = subjectData
-        .filter((s) => labels.includes(s.predicate))
+        .filter((s) => labels.includes(s.predicate.value))
         .map((s) => s.object);
 
     if (error) {
@@ -158,7 +159,7 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
     const associationRenderer = getLinkedObjectClass(
         childProps,
         lrs,
-        defaultNS.rdf("predicate"),
+        rdf.predicate,
     ) || React.Fragment;
     const associationProps = associationRenderer !== React.Fragment ? childProps : null;
     const childComp = typeof childProps.children === "function" ? childProps.children(objRaw) : childProps.children;
@@ -192,7 +193,8 @@ export function Prop(props: PropertyPropTypes): ReactElement<any> | null {
                     subject: p! as SomeNode,
                 };
 
-                return React.createElement(LRC, lrcProps, childComp);
+                // return React.createElement(LRC, lrcProps, childComp);
+                return <LRC {...lrcProps}>{childComp}</LRC>;
             };
 
             return limitTimes(childProps, objRaw, lrs, wrapLOC, associationRenderer);

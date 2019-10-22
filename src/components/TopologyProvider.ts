@@ -27,7 +27,7 @@ export interface TopologyProviderProps {
  *   }
  * ```
  */
-export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> extends React.PureComponent<T, S> {
+export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> extends React.Component<T, S> {
     public static propTypes = {
         children: PropTypes.node,
         elementProps: PropTypes.object,

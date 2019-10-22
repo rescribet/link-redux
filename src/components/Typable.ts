@@ -27,8 +27,8 @@ export function nextRenderContext(props: TypableInjectedProps): LinkRenderContex
     };
 }
 
-export function wrapRenderContext<P>(props: P & TypableInjectedProps,
-                                     comp: React.ReactNode) {
+export function wrapRenderContext(props: TypableInjectedProps,
+                                  comp: React.ReactNode) {
     return React.createElement(
         Provider,
         { value: nextRenderContext(props) },

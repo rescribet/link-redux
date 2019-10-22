@@ -1,12 +1,12 @@
+import rdfFactory, { BlankNode, NamedNode } from "@ontologies/core";
 import { DEFAULT_TOPOLOGY } from "link-lib";
-import { BlankNode, NamedNode } from "rdflib";
 import * as React from "react";
 
 import { useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useLRS } from "./useLRS";
 
 export function useResourceView(subject?: NamedNode | BlankNode,
-                                topology: NamedNode = DEFAULT_TOPOLOGY): React.ReactType | undefined {
+                                topology: NamedNode = DEFAULT_TOPOLOGY): React.ElementType | undefined {
 
     const lrs = useLRS();
     const context = useLinkRenderContext();
@@ -17,7 +17,12 @@ export function useResourceView(subject?: NamedNode | BlankNode,
             subject || context.subject,
             topology || context.topology,
         ));
-    }, [subject, topology, context.subject, context.topology]);
+    }, [
+      rdfFactory.id(subject),
+      rdfFactory.id(topology),
+      rdfFactory.id(context.subject),
+      rdfFactory.id(context.topology),
+    ]);
 
     return view;
 }

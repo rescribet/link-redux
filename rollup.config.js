@@ -10,8 +10,6 @@ export default {
     "jsonld",
     "node-fetch",
     "rdflib",
-    "redux",
-    "redux-actions",
     "react",
     "link-lib",
     "prop-types",

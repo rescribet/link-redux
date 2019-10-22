@@ -1,5 +1,7 @@
+import "../../__tests__/useHashFactory";
+
+import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
-import { BlankNode } from "rdflib";
 import { createElement } from "react";
 
 import * as ctx from "../../../test/fixtures";
@@ -11,7 +13,7 @@ describe("useDataFetching", () => {
 
         const setError = jest.fn();
         const comp = () => {
-            useDataFetching({ subject: new BlankNode() }, 0, setError);
+            useDataFetching({ subject: rdfFactory.blankNode() }, 0, setError);
 
             return null;
         };

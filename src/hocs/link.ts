@@ -1,6 +1,7 @@
+import rdfFactory, { isLiteral, isNamedNode, Literal, NamedNode, Quad, SomeTerm } from "@ontologies/core";
+import xsd from "@ontologies/xsd";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { getPropBestLangRaw, normalizeType } from "link-lib";
-import { NamedNode, Node, SomeTerm, Statement, ToJSOutputTypes } from "rdflib";
 import { ComponentType } from "react";
 import * as React from "react";
 
@@ -13,6 +14,7 @@ import {
     LinkRenderContext,
     LinkReturnType,
     MapDataToPropsParam,
+    ToJSOutputTypes,
 } from "../types";
 
 import { useCalculateChildProps, useLinkRenderContext } from "./withLinkCtx";
@@ -23,7 +25,7 @@ export interface ProcessedLinkOpts extends LinkOpts {
 }
 
 export interface PropertyBoundProps {
-    [k: string]: Statement | Statement[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
+    [k: string]: Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 }
 
 interface DataToPropsMapping {
@@ -39,13 +41,45 @@ const globalLinkOptsDefaults = {
 } as LinkOpts;
 
 function term(iri: NamedNode): string {
-    return iri.term || iri.value.split(/[\/#]/).pop()!.split("?").shift() || "";
+    return (iri as any).term || iri.value.split(/[\/#]/).pop()!.split("?").shift() || "";
 }
 
-function toReturnType(returnType: LinkReturnType, p: Statement): Statement | SomeTerm | ToJSOutputTypes {
+const numberTypes = [
+    xsd.integer,
+    xsd.int,
+    xsd.unsignedInt,
+    xsd.short,
+    xsd.unsignedShort,
+    xsd.byte,
+    xsd.unsignedByte,
+    xsd.float,
+    xsd.decimal,
+];
+
+// From rdflib.js with modifications
+function toJS(obj: Literal | unknown): any {
+    if (!isLiteral(obj)) {
+        return obj;
+    }
+
+    if (rdfFactory.equals(obj.datatype, xsd.boolean)) {
+        return obj.value === "true" || obj.value === "1" || obj.value === "t";
+    }
+    if (rdfFactory.equals(obj.datatype, xsd.dateTime) ||
+        rdfFactory.equals(obj.datatype, xsd.date)) {
+        return new Date(obj.value);
+    }
+    if (numberTypes.some((type) => rdfFactory.equals(obj.datatype, type))) {
+        return Number(obj.value);
+    }
+
+    return obj.value;
+}
+
+function toReturnType(returnType: LinkReturnType, p: Quad): Quad | SomeTerm | ToJSOutputTypes {
     switch (returnType) {
         case "literal":
-            return Node.toJS(p.object);
+            return toJS(p.object);
         case "value":
             return p.object.value;
         case "term":
@@ -59,7 +93,7 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                                    opts: LinkOpts): [DataToPropsMapping, number[]] {
 
     const propMap: DataToPropsMapping = {};
-    const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => p.sI) : [];
+    const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => rdfFactory.id(p)) : [];
 
     if (Array.isArray(mapDataToProps)) {
         if (mapDataToProps.length === 0) {
@@ -83,7 +117,7 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                 if (predObj.length === 0) {
                     throw new TypeError("Props array must contain at least one predicate");
                 }
-                requestedProperties.push(...predObj.map((p) => p.sI));
+                requestedProperties.push(...predObj.map((p) => rdfFactory.id(p)));
                 propMap[propKey || term(predObj[0])] = {
                     forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                     label: predObj,
@@ -91,8 +125,8 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                     name: propKey || term(predObj[0]),
                     returnType: opts.returnType || globalLinkOptsDefaults.returnType,
                 };
-            } else if (predObj instanceof NamedNode) {
-                requestedProperties.push(predObj.sI);
+            } else if (isNamedNode(predObj)) {
+                requestedProperties.push(rdfFactory.id(predObj));
                 propMap[propKey || term(predObj)] = {
                     forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
                     label: [predObj],
@@ -106,7 +140,7 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                 const labelArr = Array.isArray(predObj.label) ? predObj.label : [predObj.label];
 
                 labelArr.forEach((label) => {
-                    requestedProperties.push(label.sI);
+                    requestedProperties.push(rdfFactory.id(label));
                 });
                 propMap[propKey || predObj.name || term(labelArr[0])] = {
                     forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -159,7 +193,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
     function getLinkedObjectProperties(
         lrs: LinkReduxLRSType,
         context: LinkRenderContext,
-        subjProps: Statement[],
+        subjProps: Quad[],
     ): PropertyBoundProps {
         const acc: PropertyBoundProps = {};
 
@@ -180,10 +214,10 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
                     }
                 } else {
                     acc[propOpts.name] = subjProps
-                        .filter((s: Statement) => s.predicate.sI === cur.sI)
+                        .filter((s: Quad) => rdfFactory.id(s.predicate) === rdfFactory.id(cur))
                         .map(
-                            (s: Statement) => toReturnType(returnType, s),
-                        ) as Statement[] | SomeTerm[] | string[];
+                            (s: Quad) => toReturnType(returnType, s),
+                        ) as Quad[] | SomeTerm[] | string[];
                 }
             }
         }
@@ -199,7 +233,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
             const subjectData = lrs.tryEntity(childProps.subject);
 
             const subjProps = subjectData
-                .filter((s: Statement) => requestedProperties.includes(s.predicate.sI));
+                .filter((s: Quad) => requestedProperties.includes(rdfFactory.id(s.predicate)));
             const mappedProps = {
                 ...childProps,
                 ...getLinkedObjectProperties(lrs, context, subjProps),

@@ -1,4 +1,4 @@
-import { NamedNode } from "rdflib";
+import rdfFactory, { NamedNode, TermType } from "@ontologies/core";
 import * as React from "react";
 
 import { LRCPropTypes } from "../components/LinkedResourceContainer";
@@ -23,7 +23,7 @@ export function useDataFetching(props: LRCPropTypes,
     React.useEffect(
         () => {
             if (props.subject && lrs.shouldLoadResource(props.subject)) {
-                if (setError && props.subject.termType === "BlankNode") {
+                if (setError && props.subject.termType === TermType.BlankNode) {
                     return setError(new TypeError(blankNodeWarn));
                 }
                 if (!!props.fetch || true) {
@@ -31,6 +31,6 @@ export function useDataFetching(props: LRCPropTypes,
                 }
             }
         },
-        [props.subject, lastUpdate],
+        [rdfFactory.id(props.subject), lastUpdate],
     );
 }

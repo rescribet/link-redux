@@ -1,4 +1,6 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
 import { mount, shallow } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
 import { createElement, ReactType } from "react";

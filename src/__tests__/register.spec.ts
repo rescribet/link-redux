@@ -1,3 +1,6 @@
+import "./useHashFactory";
+
+import rdfFactory from "@ontologies/core";
 import {
     DEFAULT_TOPOLOGY,
     defaultNS,
@@ -15,9 +18,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component", Comp);
-        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.sI);
-        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.sI);
-        expect(registration).toHaveProperty("type", defaultNS.ex("TestClass").sI);
+        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
+        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
+        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
     });
 
     it("registers a functional component", () => {
@@ -26,9 +29,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component", Comp);
-        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.sI);
-        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.sI);
-        expect(registration).toHaveProperty("type", defaultNS.ex("TestClass").sI);
+        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
+        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
+        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
     });
 
     it("registers a class component", () => {
@@ -40,9 +43,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component", Comp);
-        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.sI);
-        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.sI);
-        expect(registration).toHaveProperty("type", defaultNS.ex("TestClass").sI);
+        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
+        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
+        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
     });
 
     it("wraps passed hocs", () => {

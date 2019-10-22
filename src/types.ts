@@ -1,7 +1,7 @@
+import { BlankNode, Literal, NamedNode, SomeTerm } from "@ontologies/core";
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
-import { BlankNode, Literal, NamedNode, SomeTerm } from "rdflib";
 import * as React from "react";
-import { ComponentClass, ElementType, FunctionComponent, Ref } from "react";
+import { ElementType, FunctionComponent, Ref } from "react";
 import { Overwrite } from "type-zoo";
 import { higherOrderWrapper } from "./register";
 
@@ -28,6 +28,9 @@ export type TopologyContextType = NamedNode | undefined;
 export type TopologyRenderer = (subject: SomeNode) => React.ReactNode | React.ReactNode[];
 
 export type TopologyType = TopologyContextType | null;
+
+export type ToJSOutputTypes = string | number | Date | boolean | object |
+  string[] | number[] | Date[] | boolean[] | object[];
 
 export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext;
 
@@ -73,7 +76,7 @@ export interface MapDataToPropsParamObject {
     [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
-export interface RegistrableComponentClass<P = {}> extends ComponentClass<P>, RegistrationOpts<P> {}
+export interface RegistrableComponentClass<P = {}> extends React.Component<P>, RegistrationOpts<P> {}
 
 export interface RegistrableStatelessComponent<P = {}> extends FunctionComponent<P>, RegistrationOpts<P> {}
 

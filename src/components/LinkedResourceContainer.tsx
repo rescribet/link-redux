@@ -7,8 +7,8 @@ import { useDataInvalidation } from "../hooks/useDataInvalidation";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
 import {
-    DataInvalidationProps,
-    LinkReduxLRSType,
+  DataInvalidationProps,
+  LinkReduxLRSType,
 } from "../types";
 
 import {
@@ -54,7 +54,7 @@ function useCalculatedViewWithState(props: InjectedPropTypes,
     return renderNoView(props, lrs);
 }
 
-export function LRC<T = {}>(props: LRCPropTypes & T, _?: any): ReactElement<any> | null {
+export function LRC<P, R>(props: LRCPropTypes<R> & P, _?: any): ReactElement | null {
     const context = useLinkRenderContext();
     const [error, setError] = React.useState<Error|undefined>(undefined);
 
@@ -66,7 +66,7 @@ export function LRC<T = {}>(props: LRCPropTypes & T, _?: any): ReactElement<any>
         topology: true,
     };
     const lrs = useLRS();
-    const childProps = useCalculateChildProps(props, context, options) as InjectedPropTypes;
+    const childProps = useCalculateChildProps<P>(props, context, options);
     const lastUpdate = useDataInvalidation(childProps);
     useDataFetching(childProps, lastUpdate, setError);
 
@@ -85,5 +85,5 @@ LRC.defaultProps = {
 LRC.displayName = "LinkedResourceContainer";
 
 export const LinkedResourceContainer = React.forwardRef(
-  (props: LRCPropTypes<unknown>, ref) => <LRC innerRef={ref} {...props} />,
+  (props: any, ref) => <LRC innerRef={ref} {...props} />,
 );

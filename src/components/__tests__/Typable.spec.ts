@@ -1,6 +1,8 @@
+import "../../__tests__/useHashFactory";
+
+import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import { defaultNS } from "link-lib";
-import { BlankNode } from "rdflib";
 import { createElement } from "react";
 
 import * as ctx from "../../../test/fixtures";
@@ -21,7 +23,7 @@ describe("Typable", () => {
             errorComp.topology = defaultNS.ex("t");
             opts.lrs.registerAll(register(errorComp));
             const element = renderNoView({
-                subject: new BlankNode(),
+                subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
 
@@ -36,7 +38,7 @@ describe("Typable", () => {
             const opts = ctx.empty();
 
             const element = renderError({
-                subject: new BlankNode(),
+                subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
 
@@ -48,7 +50,7 @@ describe("Typable", () => {
             const errorComp = () => createElement("span", { className: "error-comp" });
             const element = renderError({
                 onError: errorComp,
-                subject: new BlankNode(),
+                subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
 
@@ -62,7 +64,7 @@ describe("Typable", () => {
         it("returns null without onError and registered resource", () => {
             const opts = ctx.empty();
             const resolved = errorComponent({
-                subject: new BlankNode(),
+                subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
 
@@ -74,7 +76,7 @@ describe("Typable", () => {
         it("returns null without onError and registered resource", () => {
             const opts = ctx.empty();
             const resolved = loadingComponent({
-                subject: new BlankNode(),
+                subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
 

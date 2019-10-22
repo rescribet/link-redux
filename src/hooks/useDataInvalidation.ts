@@ -1,3 +1,5 @@
+import rdfFactory, { BlankNode, doc, NamedNode, TermType } from "@ontologies/core";
+import { normalizeType } from "link-lib";
 import * as React from "react";
 
 import { DataInvalidationProps, SubjectType } from "../types";
@@ -21,10 +23,10 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
         result = [props.subject];
     }
 
-    if (props.subject && props.subject.termType === "NamedNode") {
-        const doc = props.subject.doc();
-        if (doc !== props.subject) {
-            result.push(doc);
+    if (props.subject && props.subject.termType === TermType.NamedNode) {
+        const document = rdfFactory.namedNode(doc(props.subject));
+        if (!rdfFactory.equals(document, props.subject)) {
+            result.push(document);
         }
     }
 
@@ -38,8 +40,9 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
  */
 export function useDataInvalidation(props: DataInvalidationProps) {
     const lrs = useLRS();
+    const subId = props.subject ? rdfFactory.id(props.subject) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(
-        (lrs as any).store.changeTimestamps[props.subject.sI],
+        (lrs as any).store.changeTimestamps[subId],
     );
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
@@ -56,7 +59,13 @@ export function useDataInvalidation(props: DataInvalidationProps) {
             onlySubjects: true,
             subjectFilter: subscriptionSubjects.filter(Boolean),
         });
-    }, [props.subject, props.dataSubjects]);
+    }, [
+      subId,
+      normalizeType(props.dataSubjects)
+        .filter<NamedNode | BlankNode>(Boolean as any)
+        .map<number>((n: NamedNode | BlankNode) => rdfFactory.id(n))
+        .reduce((a: number, b: number) => a + b, 0),
+    ]);
 
     return lastUpdate;
 }

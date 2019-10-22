@@ -1,6 +1,6 @@
+import rdfFactory, { NamedNode, Quad, SomeTerm } from "@ontologies/core";
 import { SomeNode } from "link-lib";
 import * as ReactPropTypes from "prop-types";
-import { NamedNode, SomeTerm, Statement } from "rdflib";
 import { ReactElement } from "react";
 import * as React from "react";
 
@@ -57,7 +57,7 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
             return false;
         }
 
-        return this.props.subject !== nextProps.subject;
+        return !rdfFactory.equals(this.props.subject, nextProps.subject);
     }
 
     protected getLinkedObjectProperty(property?: NamedNode): SomeTerm | undefined {
@@ -71,7 +71,7 @@ export class PropertyBase<T extends PropTypes> extends React.Component<T> {
         );
     }
 
-    protected getLinkedObjectPropertyRaw(property?: SomeNode): Statement[] {
+    protected getLinkedObjectPropertyRaw(property?: SomeNode): Quad[] {
         return this.context.getResourcePropertyRaw(
             this.props.subject,
             property || this.props.label,

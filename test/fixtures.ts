@@ -1,3 +1,4 @@
+import rdfFactory, { NamedNode, Quad } from "@ontologies/core";
 import {
     ComponentStoreTestProxy,
     defaultNS as NS,
@@ -6,11 +7,6 @@ import {
     Schema,
     SomeNode,
 } from "link-lib";
-import {
-    Literal,
-    NamedNode,
-    Statement,
-} from "rdflib";
 import { createElement, ReactElement, ReactType } from "react";
 
 import { LinkedResourceContainer } from "../src/components/LinkedResourceContainer";
@@ -25,30 +21,60 @@ import { TestContext } from "./types";
 
 const exNS = NS.example;
 
+interface CWOpts {
+  author?: string;
+  title?: string;
+  text?: string;
+}
+
+interface CWResource extends CWOpts {
+  id: NamedNode;
+}
+
 const typeObject = (id: NamedNode) => [
-    new Statement(id, NS.rdf("type"), NS.schema("CreativeWork")),
+    rdfFactory.quad(id, NS.rdf("type"), NS.schema("CreativeWork")),
 ];
 
 const sTitle = (id: NamedNode, title: string) => [
-    new Statement(id, NS.schema("name"), new Literal(title)),
+    rdfFactory.quad(id, NS.schema("name"), rdfFactory.literal(title)),
 ];
 
-const sFull = (id: NamedNode, attrs: Test) => {
+const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
     return [
         typeObject(id)[0],
-        new Statement(id, NS.schema("name"), new Literal(attrs.title || "title"), NS.example("default")),
-        new Statement(id, NS.schema("text"), new Literal(attrs.text || "text"), NS.example("default")),
-        new Statement(id, NS.schema("author"), new NamedNode(attrs.author || "http://example.org/people/0"), NS.example("default")),
-        new Statement(id, NS.schema("dateCreated"), Literal.fromDate(new Date("2019-01-01")), NS.example("default")),
-        new Statement(id, NS.ex("timesRead"), Literal.fromValue(5), NS.example("default")),
-        new Statement(id, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
-        new Statement(id, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
-        new Statement(id, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
-        new Statement(id, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
+        rdfFactory.quad(
+          id,
+          NS.schema("name"),
+          rdfFactory.literal(attrs.title || "title"),
+          NS.example("default"),
+        ),
+        rdfFactory.quad(
+          id,
+          NS.schema("text"),
+          rdfFactory.literal(attrs.text || "text"),
+          NS.example("default"),
+        ),
+        rdfFactory.quad(
+          id,
+          NS.schema("author"),
+          rdfFactory.namedNode(attrs.author || "http://example.org/people/0"),
+          NS.example("default"),
+        ),
+        rdfFactory.quad(
+          id,
+          NS.schema("dateCreated"),
+          rdfFactory.literal(new Date("2019-01-01")),
+          NS.example("default"),
+        ),
+        rdfFactory.quad(id, NS.ex("timesRead"), rdfFactory.literal(5), NS.example("default")),
+        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
+        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
+        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
+        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
     ];
 };
 
-export function chargeLRS(statements: Statement[] = [], subject: SomeNode): TestContext<ReactType> {
+export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<ReactType> {
     const store = new RDFStore();
     const schema = new Schema(store);
     const mapping = new ComponentStoreTestProxy<ReactType>(schema);
@@ -93,28 +119,21 @@ export const name = (id = exNS("2"), title: string) => chargeLRS(
     id,
 );
 
-export const fullCW = (id = exNS("3"), attrs = {}) => chargeLRS(
+export const fullCW = (id = exNS("3"), attrs: CWOpts = {}) => chargeLRS(
     sFull(id, attrs),
     id,
 );
 
-export const multipleCW = (id = exNS("3"), attrs: { [k: string]: string } = {}) => {
+export const multipleCW = (id = exNS("3"), attrs: CWOpts & { second?: CWResource } = {}) => {
     const opts = chargeLRS(sFull(id, attrs), id);
-    const second = attrs.second || { id: "4" };
-    opts.store.addStatements(sFull(exNS(second.id), second));
+    const second = attrs.second || { id: exNS("4") };
+    opts.store.addStatements(sFull(exNS(second.id.value), second));
     opts.store.flush();
 
     return opts;
 };
 
-interface Test {
-    id: NamedNode;
-    author?: string;
-    title?: string;
-    text?: string;
-}
-
-export const multipleCWArr = (attrs: Test[] = []) => {
+export const multipleCWArr = (attrs: CWResource[] = []) => {
     const first = attrs.pop()!;
     const opts = chargeLRS(sFull(first.id, first), first.id);
     attrs.forEach((obj) => {

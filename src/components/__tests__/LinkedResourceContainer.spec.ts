@@ -1,7 +1,10 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
+import rdfFactory from "@ontologies/core";
+import schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
-import { BlankNode, Literal, Statement } from "rdflib";
 import { createElement } from "react";
 
 import * as ctx from "../../../test/fixtures";
@@ -59,7 +62,7 @@ describe("LinkedResourceContainer component", () => {
         const opts = ctx.fullCW(iri);
 
         const comp = createTestElement();
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
+        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
 
         const elem = mount(opts.wrapComponent());
 
@@ -68,17 +71,17 @@ describe("LinkedResourceContainer component", () => {
     });
 
     it("renders blank nodes", () => {
-        const bn = new BlankNode();
+        const bn = rdfFactory.blankNode();
         const opts = ctx.chargeLRS(
             [
-                new Statement(bn, defaultNS.rdf("type"), defaultNS.schema("Thing")),
-                new Statement(bn, defaultNS.schema("name"), new Literal("title")),
+                rdfFactory.quad(bn, defaultNS.rdf("type"), schema.Thing),
+                rdfFactory.quad(bn, schema.name, rdfFactory.literal("title")),
             ],
             bn,
         );
 
         const comp = createTestElement();
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
+        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
         const elem = mount(
             opts.wrapComponent(createElement(LinkedResourceContainer, {
                 loadLinkedObject,
@@ -102,14 +105,14 @@ describe("LinkedResourceContainer component", () => {
     });
 
     it("renders correct topology through children", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: "resources/10" } });
+        const opts = ctx.multipleCW(iri, { second: { id: rdfFactory.namedNode("resources/10") } });
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
         ));
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("collectionRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
             RENDER_CLASS_NAME,
             defaultNS.argu("collection"),
         ));
@@ -133,14 +136,14 @@ describe("LinkedResourceContainer component", () => {
     });
 
     it("renders default topology through children", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: "resources/10" } });
+        const opts = ctx.multipleCW(iri, { second: { id: rdfFactory.namedNode("resources/10") } });
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
         ));
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("collectionRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
             RENDER_CLASS_NAME,
             defaultNS.argu("collection"),
         ));

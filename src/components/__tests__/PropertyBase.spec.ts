@@ -1,14 +1,17 @@
 /* eslint no-magic-numbers: 0 */
+import "../../__tests__/useHashFactory";
+
+import rdfFactory, { SomeTerm } from "@ontologies/core";
+import schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { DEFAULT_TOPOLOGY, defaultNS as NS } from "link-lib";
-import { Literal, SomeTerm, Statement } from "rdflib";
 import * as React from "react";
 
 import * as ctx from "../../../test/fixtures";
 import { withLRS } from "../../hocs/withLRS";
 import { PropertyBase } from "../PropertyBase";
 
-const label = NS.schema("name");
+const label = schema.name;
 const subject = NS.example("41");
 
 class CustomClass extends PropertyBase {
@@ -55,7 +58,7 @@ describe("PropertyBase component", () => {
         it("returns linkedProp when present", () => {
             const opts = ctx.fullCW(subject);
 
-            const linkedProp = new Literal("Some prop");
+            const linkedProp = rdfFactory.literal("Some prop");
             const comp = getComp(linkedProp);
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
@@ -65,11 +68,11 @@ describe("PropertyBase component", () => {
         it("uses the render store when the property argument is given", () => {
             const opts = ctx.fullCW(subject);
 
-            const linkedProp = new Literal("Some prop");
+            const linkedProp = rdfFactory.literal("Some prop");
             const comp = getComp(linkedProp);
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            expect(elem.getLinkedObjectProperty(NS.schema("text"))).toEqual(new Literal("text"));
+            expect(elem.getLinkedObjectProperty(NS.schema("text"))).toEqual(rdfFactory.literal("text"));
         });
 
         it("uses the render store when linkedProp is not present", () => {
@@ -78,7 +81,7 @@ describe("PropertyBase component", () => {
             const comp = getComp();
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
-            expect(elem.getLinkedObjectProperty()).toEqual(new Literal("title"));
+            expect(elem.getLinkedObjectProperty()).toEqual(rdfFactory.literal("title"));
         });
     });
 
@@ -90,7 +93,7 @@ describe("PropertyBase component", () => {
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
             expect(elem.getLinkedObjectPropertyRaw()).toEqual([
-                new Statement(subject, label, new Literal("title"), NS.example("default")),
+                rdfFactory.quad(subject, label, rdfFactory.literal("title"), NS.example("default")),
             ]);
         });
 
@@ -101,10 +104,10 @@ describe("PropertyBase component", () => {
             const elem = mount(opts.wrapComponent(comp)).find(CustomClass).instance();
 
             expect(elem.getLinkedObjectPropertyRaw(NS.example("tags"))).toEqual([
-                new Statement(subject, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
-                new Statement(subject, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
-                new Statement(subject, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
-                new Statement(subject, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
+                rdfFactory.quad(subject, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
+                rdfFactory.quad(subject, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
+                rdfFactory.quad(subject, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
+                rdfFactory.quad(subject, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
             ]);
         });
     });
