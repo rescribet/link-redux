@@ -75,6 +75,11 @@ register(MyPersonView)
 That's it! There's a lot more you can do with Link, though.
 You can create custom Property renderers, dispatch actions, and specify which views should render where using Topologies.
 
+## Debugging
+
+Make sure to install the [link-devtools](https://github.com/ontola/link-devtools).
+These enable useful console commands.
+
 ## Usage
 `npm install link-lib link-redux rdflib` V `yarn add link-lib link-redux rdflib`
 
