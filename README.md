@@ -56,7 +56,9 @@ import { register } from "link-redux"
 
 const MyPersonView = ({ birthPlace, name }) => (
   <div>
+    {/**Will render the string representation: "Jane Doe"*/}
     <p>{name.value}</p>
+    {/** Will render the schema:birthPlace property, London */}
     <LinkedResourceContainer subject={birthPlace} />
   </div>
 )
@@ -65,8 +67,8 @@ const MyPersonView = ({ birthPlace, name }) => (
 MyPersonView.type = Person // => http://xmlns.com/foaf/0.1/Person
 // mapDataToProps makes the property values available in the component
 MyPersonView.mapDataToProps = {
-   birthPlace: schema.birthPlace,
-   name: schema.name
+   birthPlace: schema.birthPlace, // => http://schema.org/birthPlace
+   name: schema.name // => http://schema.org/name
 }
 // The component is registered as a View in Link
 register(MyPersonView)
@@ -74,6 +76,11 @@ register(MyPersonView)
 
 That's it! There's a lot more you can do with Link, though.
 You can create custom Property renderers, dispatch actions, and specify which views should render where using Topologies.
+
+## Debugging
+
+Make sure to install the [link-devtools](https://github.com/ontola/link-devtools).
+These enable useful console commands.
 
 ## Usage
 `npm install link-lib link-redux rdflib` V `yarn add link-lib link-redux rdflib`
