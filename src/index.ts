@@ -1,5 +1,3 @@
-import { Requireable } from "prop-types";
-
 import { getLinkedObjectClass } from "./components/Property";
 import {
     errorComponent,

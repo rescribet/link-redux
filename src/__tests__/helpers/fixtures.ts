@@ -7,15 +7,15 @@ import {
     Schema,
     SomeNode,
 } from "link-lib";
-import { createElement, ReactElement, ReactType } from "react";
+import React from "react";
 
-import { LinkedResourceContainer } from "../src/components/LinkedResourceContainer";
-import { RenderStoreProvider } from "../src/components/RenderStoreProvider";
+import { LinkedResourceContainer } from "../../components/LinkedResourceContainer";
+import { RenderStoreProvider } from "../../components/RenderStoreProvider";
 import {
     LinkContext,
-    LinkCtxOverrides,
+    LinkCtxOverrides, LinkReduxLRSType,
     TopologyContextType,
-} from "../src/link-redux";
+} from "../../index";
 
 import { TestContext } from "./types";
 
@@ -74,12 +74,12 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
     ];
 };
 
-export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<ReactType> {
+export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ReactType> {
     const store = new RDFStore();
     const schema = new Schema(store);
-    const mapping = new ComponentStoreTestProxy<ReactType>(schema);
-    const lrs = new LinkedRenderStore<ReactType>({ mapping, schema, store });
-    store.addStatements(statements);
+    const mapping = new ComponentStoreTestProxy<React.ReactType>(schema);
+    const lrs = new LinkedRenderStore<React.ReactType>({ mapping, schema, store });
+    store.addQuads(statements);
     store.flush();
 
     return {
@@ -95,19 +95,19 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
         schema,
         store,
         subject,
-        wrapComponent: (children?: ReactElement<any>,
+        wrapComponent: (children?: React.ReactElement<any>,
                         topology?: TopologyContextType,
-                        lrsOverride?: unknown): ReactElement<any> => {
+                        lrsOverride?: LinkReduxLRSType): React.ReactElement<any> => {
 
-            return createElement(RenderStoreProvider, { value: lrsOverride || lrs },
-                createElement("div", { className: "root" },
-                    createElement(
+            return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
+                React.createElement("div", { className: "root" },
+                    React.createElement(
                         LinkedResourceContainer,
                         { forceRender: true, subject, topology },
                         children,
                     )));
         },
-    } as TestContext<ReactType>;
+    } as TestContext<React.ReactType>;
 }
 
 export const empty = (id = exNS("0")) => chargeLRS([], id);
@@ -127,7 +127,7 @@ export const fullCW = (id = exNS("3"), attrs: CWOpts = {}) => chargeLRS(
 export const multipleCW = (id = exNS("3"), attrs: CWOpts & { second?: CWResource } = {}) => {
     const opts = chargeLRS(sFull(id, attrs), id);
     const second = attrs.second || { id: exNS("4") };
-    opts.store.addStatements(sFull(exNS(second.id.value), second));
+    opts.store.addQuads(sFull(exNS(second.id.value), second));
     opts.store.flush();
 
     return opts;
@@ -137,7 +137,7 @@ export const multipleCWArr = (attrs: CWResource[] = []) => {
     const first = attrs.pop()!;
     const opts = chargeLRS(sFull(first.id, first), first.id);
     attrs.forEach((obj) => {
-        opts.store.addStatements(sFull(obj.id, obj));
+        opts.store.addQuads(sFull(obj.id, obj));
     });
     opts.store.flush();
 

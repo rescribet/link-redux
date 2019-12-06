@@ -1,38 +1,47 @@
 {
   "name": "link-redux",
   "version": "1.0.0-rc4",
-  "description": "React/Redux extensions for the Link library",
-  "main": "dist/link-redux.umd.js",
-  "module": "dist/link-redux.es6.js",
+  "description": "React library to make rendering linked data easy",
   "sideEffects": false,
-  "typings": "dist/typings/link-redux.d.ts",
-  "files": [
-    "@types",
-    "dist/link-redux.es6.js",
-    "dist/link-redux.umd.js",
-    "dist/typings/**/*.*",
-    "package.json",
-    "tsconfig.json",
-    "yarn.lock"
-  ],
   "repository": "https://github.com/fletcher91/link-redux.git",
   "scripts": {
-    "build": "rollup -c && tsc -p tsconfig-types.json",
+    "build": "pika build",
     "doc": "rm -rf dist/docs/* && typedoc --tsconfig tsconfig-types.json --exclude **/*.spec.ts --excludeExternals --excludePrivate --mode file --theme minimal --target ES6 --includeDeclarations --out dist/docs/ src/",
     "doc:deploy": "gh-pages -d ./dist/docs",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "prebuild": "rm -rf dist/*",
     "prepublish": "npm run build",
     "pretest": "npm run lint",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "version": "npm run build"
   },
   "author": "Fletcher91 <thom@argu.co>",
   "license": "LGPL-3.0",
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg",
+        {
+          "exclude": [
+            "__tests__/**/*"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-bundle-web"
+      ]
+    ]
+  },
   "peerDependencies": {
-    "es6-promise": ">= 4.x",
     "hoist-non-react-statics": ">=3.x",
     "http-status-codes": ">= 1.x",
-    "link-lib": ">=1.0.0-rc3",
+    "link-lib": ">=1.0.0-rc4-light-5",
     "prop-types": ">= 15.x",
     "react": ">= 16.10.x"
   },
@@ -40,21 +49,28 @@
     "@ontola/memoized-hash-factory": "^1.2.1",
     "@ontologies/as": "^1.0.1",
     "@ontologies/core": "^2.0.0-2",
+    "@ontologies/ld": "^1.0.0",
+    "@ontologies/owl": "^1.0.0",
     "@ontologies/rdf": "^1.0.0",
     "@ontologies/rdfs": "^1.0.0",
     "@ontologies/schema": "^1.0.0",
     "@ontologies/shacl": "^1.0.0",
     "@ontologies/xsd": "^1.0.0",
+    "@pika/pack": "^0.5.0",
+    "@pika/plugin-build-node": "^0.8.1",
+    "@pika/plugin-build-web": "^0.8.1",
+    "@pika/plugin-bundle-web": "^0.8.1",
+    "@pika/plugin-ts-standard-pkg": "^0.8.1",
     "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/jest": "^24.0.17",
     "@types/prop-types": "^15.7.1",
     "@types/react": "*",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
-    "es6-promise": "4.x",
     "gh-pages": "^2.0.1",
-    "hoist-non-react-statics": "^3.3.0",
+    "hoist-non-react-statics": "^3.3.1",
     "http-status-codes": "1.x",
     "jest": "^24.8.0",
     "jest-enzyme": "^7.1.0",
@@ -64,11 +80,6 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-test-renderer": "^16.12.0",
-    "rollup": "^1.27.8",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.25.3",
     "ts-jest": "^24.0.2",
     "tslint": "^5.20.0",
     "tslint-react": "^4.1.0",
@@ -80,8 +91,7 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
+      "/node_modules/"
     ],
     "coverageThreshold": {
       "global": {
@@ -106,7 +116,7 @@
       "tsx"
     ],
     "setupFilesAfterEnv": [
-      "./test/setup.ts"
+      "./src/__tests__/helpers/setup.ts"
     ],
     "testURL": "http://example.org/resources/5",
     "transform": {

@@ -6,14 +6,14 @@ import {
     Schema,
     SomeNode,
 } from "link-lib";
-import { ReactElement } from "react";
+import React from "react";
 
 import {
     LinkContext,
     LinkCtxOverrides,
     TopologyContextType,
     TopologyType,
-} from "../src/types";
+} from "../../types";
 
 export interface TestContext<T> {
     contextProps: (topology?: TopologyContextType) => LinkContext & LinkCtxOverrides;
@@ -22,5 +22,9 @@ export interface TestContext<T> {
     store: RDFStore;
     schema: Schema;
     subject: SomeNode | undefined;
-    wrapComponent: (children?: ReactElement<any>, topology?: TopologyType, lrsOverride?: unknown) => ReactElement<any>;
+    wrapComponent: (
+        children?: React.ReactElement<any>,
+        topology?: TopologyType,
+        lrsOverride?: unknown,
+    ) => React.ReactElement<any>;
 }
