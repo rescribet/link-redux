@@ -1,5 +1,5 @@
 import rdfFactory, { NamedNode, TermType } from "@ontologies/core";
-import * as React from "react";
+import React from "react";
 
 import { LRCPropTypes } from "../components/LinkedResourceContainer";
 

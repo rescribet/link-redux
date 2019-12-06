@@ -1,14 +1,16 @@
 import "./useHashFactory";
 
 import rdfFactory from "@ontologies/core";
+import { mount } from "enzyme";
 import {
     DEFAULT_TOPOLOGY,
     defaultNS,
     RENDER_CLASS_NAME,
 } from "link-lib";
-import { Component } from "react";
+import React from "react";
 
 import { register } from "../register";
+import { FC } from "../types";
 
 describe("register.spec.ts", () => {
     it("registers built-in functions", () => {
@@ -35,7 +37,7 @@ describe("register.spec.ts", () => {
     });
 
     it("registers a class component", () => {
-        class Comp extends Component {
+        class Comp extends React.Component {
             public static type = defaultNS.ex("TestClass");
 
             public render() { return null; }
@@ -49,21 +51,25 @@ describe("register.spec.ts", () => {
     });
 
     it("wraps passed hocs", () => {
-        const Comp = () => "value";
-        Comp.type = defaultNS.ex("TestClass");
-
         let hoc2Inner;
+        const hoc1 = <P>(comp: React.ComponentType<P & { prop1: string }>): React.ComponentType<P> => (props: P) =>
+            React.createElement(comp,  { ...props, prop1: "hoc1" }, null);
 
-        const hoc1 = (comp) => () => comp() + ".hoc1";
-        const hoc2 = (comp) => {
-            hoc2Inner = () => comp() + ".hoc2";
+        const hoc2 = <P>(comp: React.ComponentType<P & { prop2: string }>): React.ComponentType<P> => {
+            hoc2Inner = (props: P) => React.createElement(comp,  { ...props, prop2: "hoc2" }, null);
 
             return hoc2Inner;
         };
 
-        const [ registration ] = register(Comp, hoc1, hoc2);
+        const Comp: FC<{ prop1: string, prop2: string }> = ({ prop1, prop2 }) =>
+            React.createElement("p", null, `value.${prop1}.${prop2}`);
+        Comp.type = defaultNS.ex("TestClass");
+        Comp.hocs = [hoc1, hoc2];
+
+        const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component", hoc2Inner);
-        expect(registration.component()).toEqual("value.hoc1.hoc2");
+        const elem = mount(React.createElement(registration.component, null, null));
+        expect(elem.find(registration.component)).toHaveText("value.hoc1.hoc2");
     });
 });

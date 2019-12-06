@@ -1,7 +1,7 @@
 import hoistNonReactStatics from "hoist-non-react-statics";
-import * as React from "react";
-import { useLRS } from "../hooks/useLRS";
+import React from "react";
 
+import { useLRS } from "../hooks/useLRS";
 import { LinkedRenderStoreContext, Omit } from "../types";
 
 export function withLRS<P extends LinkedRenderStoreContext>(Component: React.ComponentType<P>):

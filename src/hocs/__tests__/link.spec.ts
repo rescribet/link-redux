@@ -4,16 +4,15 @@ import "../../__tests__/useHashFactory";
 import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
-import * as React from "react";
-import { Component } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { dataPropsToPropMap, link } from "../link";
 
 const id = "resources/5";
 const iri = defaultNS.example(id);
 
-class TestComponent extends Component {
+class TestComponent extends React.Component {
     public render() {
         return React.createElement("span", { className: "testComponent" });
     }

@@ -5,15 +5,15 @@ import rdfFactory from "@ontologies/core";
 import schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
-import { createElement } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { LinkedResourceContainer } from "../LinkedResourceContainer";
 
 const id = "resources/5";
 const iri = defaultNS.example(id);
 
-const createTestElement = (className = "testComponent") => () => createElement(
+const createTestElement = (className = "testComponent") => () => React.createElement(
     "span",
     { className },
 );
@@ -22,7 +22,7 @@ const loadLinkedObject = () => undefined;
 describe("LinkedResourceContainer component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty(iri);
-        const comp = createElement(LinkedResourceContainer, {
+        const comp = React.createElement(LinkedResourceContainer, {
             className: "testmarker",
             loadLinkedObject,
             subject: iri,
@@ -48,7 +48,7 @@ describe("LinkedResourceContainer component", () => {
         const spy = jest.fn();
         const opts = ctx.fullCW(iri);
         opts.lrs.getEntity = spy;
-        const comp = createElement(
+        const comp = React.createElement(
             LinkedResourceContainer,
             opts.contextProps(),
         );
@@ -83,7 +83,7 @@ describe("LinkedResourceContainer component", () => {
         const comp = createTestElement();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
         const elem = mount(
-            opts.wrapComponent(createElement(LinkedResourceContainer, {
+            opts.wrapComponent(React.createElement(LinkedResourceContainer, {
                 loadLinkedObject,
                 subject: bn,
             })),
@@ -94,10 +94,10 @@ describe("LinkedResourceContainer component", () => {
 
     it("renders children when present", () => {
         const opts = ctx.fullCW(iri);
-        const loc = createElement(
+        const loc = React.createElement(
             LinkedResourceContainer,
             { loadLinkedObject, subject: iri },
-            createElement("span", null, "override"),
+            React.createElement("span", null, "override"),
         );
         const elem = mount(opts.wrapComponent(loc));
 
@@ -117,13 +117,13 @@ describe("LinkedResourceContainer component", () => {
             defaultNS.argu("collection"),
         ));
 
-        const comp = createElement(
+        const comp = React.createElement(
             LinkedResourceContainer,
             { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection") },
-            createElement(
+            React.createElement(
                 LinkedResourceContainer,
                 { loadLinkedObject, subject: iri },
-                createElement(
+                React.createElement(
                     LinkedResourceContainer,
                     { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),
@@ -148,13 +148,13 @@ describe("LinkedResourceContainer component", () => {
             defaultNS.argu("collection"),
         ));
 
-        const comp = createElement(
+        const comp = React.createElement(
             LinkedResourceContainer,
             { loadLinkedObject, subject: iri },
-            createElement
+            React.createElement
             (LinkedResourceContainer,
                 { loadLinkedObject, subject: iri },
-                createElement(
+                React.createElement(
                     LinkedResourceContainer,
                     { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),

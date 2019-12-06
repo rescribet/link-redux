@@ -3,20 +3,20 @@ import "../../__tests__/useHashFactory";
 
 import { mount, shallow } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
-import { createElement, ReactType } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { Type } from "../Type";
 
-function createComponent(className: string): ReactType {
-    return () => createElement("span", { className });
+function createComponent(className: string): React.ReactType {
+    return () => React.createElement("span", { className });
 }
 
 describe("Type component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty();
 
-        const elem = shallow(opts.wrapComponent(createElement(Type)));
+        const elem = shallow(opts.wrapComponent(React.createElement(Type)));
 
         expect(elem.find("span")).not.toExist();
     });
@@ -24,7 +24,7 @@ describe("Type component", () => {
     it("renders no view when no class matches", () => {
         const opts = ctx.fullCW(undefined);
 
-        const elem = mount(opts.wrapComponent(createElement(Type)));
+        const elem = mount(opts.wrapComponent(React.createElement(Type)));
 
         expect(elem.find("div.no-view")).toExist();
     });
@@ -36,7 +36,7 @@ describe("Type component", () => {
             defaultNS.schema("Thing"),
         ));
 
-        const elem = mount(opts.wrapComponent(createElement(Type)));
+        const elem = mount(opts.wrapComponent(React.createElement(Type)));
 
         expect(elem.find("span")).toHaveClassName("thing");
     });
@@ -48,7 +48,7 @@ describe("Type component", () => {
             defaultNS.schema("CreativeWork"),
         ));
 
-        const elem = mount(opts.wrapComponent(createElement(Type)));
+        const elem = mount(opts.wrapComponent(React.createElement(Type)));
 
         expect(elem.find(".creativeWork")).toExist();
     });

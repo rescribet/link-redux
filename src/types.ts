@@ -1,8 +1,8 @@
 import { BlankNode, Literal, NamedNode, SomeTerm } from "@ontologies/core";
 import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
-import * as React from "react";
-import { ElementType, FunctionComponent, Ref } from "react";
+import React from "react";
 import { Overwrite } from "type-zoo";
+
 import { higherOrderWrapper } from "./register";
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -13,13 +13,13 @@ export type LabelType = NamedNode | NamedNode[];
 
 export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
-export type LinkReduxLRSType = LinkedRenderStore<ElementType>;
+export type LinkReduxLRSType = LinkedRenderStore<React.ElementType>;
 
 export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
 export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
-export type RegistrableComponent<P = {}> = RegistrableComponentClass<P> | RegistrableStatelessComponent<P>;
+export type RegistrableComponent<P = {}> = RegistrableClassComponent<P>; // | RegistrableFunctionComponent<P>;
 
 export type SubjectType = SomeNode;
 
@@ -76,9 +76,11 @@ export interface MapDataToPropsParamObject {
     [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
-export interface RegistrableComponentClass<P = {}> extends React.Component<P>, RegistrationOpts<P> {}
+export type RegistrableClassComponent<P = {}> = React.ComponentType<P> & RegistrationOpts<P>;
 
-export interface RegistrableStatelessComponent<P = {}> extends FunctionComponent<P>, RegistrationOpts<P> {}
+export interface RegistrableFunctionComponent<P = {}> extends React.FunctionComponent<P>, RegistrationOpts<P> {}
+
+export type FC<P = {}> = RegistrableFunctionComponent<P>;
 
 export interface RegistrationOpts<P> {
     hocs?: Array<higherOrderWrapper<P>>;
@@ -115,5 +117,5 @@ export interface TopologyProp {
 }
 
 export interface PassableRef<T> {
-  innerRef: Ref<T>;
+  innerRef: React.Ref<T>;
 }

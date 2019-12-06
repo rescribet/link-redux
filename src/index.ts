@@ -10,7 +10,6 @@ import { LinkRenderCtx, useCalculateChildProps } from "./hocs/withLinkCtx";
 export { link } from "./hocs/link";
 export { LinkedResourceContainer } from "./components/LinkedResourceContainer";
 export { Property, PropertyPropTypes } from "./components/Property";
-export { PropertyBase } from "./components/PropertyBase";
 export { RenderStoreProvider } from "./components/RenderStoreProvider";
 export { TopologyProvider, TopologyProviderProps } from "./components/TopologyProvider";
 export { Type } from "./components/Type";

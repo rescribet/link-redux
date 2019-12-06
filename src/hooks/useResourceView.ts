@@ -1,6 +1,6 @@
 import rdfFactory, { BlankNode, NamedNode } from "@ontologies/core";
 import { DEFAULT_TOPOLOGY } from "link-lib";
-import * as React from "react";
+import React from "react";
 
 import { useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useLRS } from "./useLRS";

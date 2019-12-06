@@ -6,8 +6,7 @@ import {
     normalizeType,
     SomeNode,
 } from "link-lib";
-import { ReactElement, ReactNode } from "react";
-import * as React from "react";
+import React from "react";
 
 import { useCalculateChildProps, useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
@@ -27,7 +26,7 @@ import { LinkedResourceContainer as LRC } from "./LinkedResourceContainer";
 import { renderError } from "./Typable";
 
 export interface PropertyPropTypes extends Partial<DataInvalidationProps>, Partial<TopologyProp> {
-    children?: ReactNode;
+    children?: React.ReactNode;
 
     /**
      * Pass `true` if the property should render if no data is found.
@@ -126,7 +125,7 @@ function renderChildrenOrValue(props: PropertyWrappedProps, lrs: LinkReduxLRSTyp
     };
 }
 
-export function Prop(props: PropertyPropTypes & any): ReactElement<any> | null {
+export function Prop(props: PropertyPropTypes & any): React.ReactElement<any> | null {
     const options = { topology: true };
 
     const lrs = useLRS();

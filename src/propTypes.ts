@@ -1,60 +1,60 @@
 import { LinkedRenderStore } from "link-lib";
-import * as ReactPropTypes from "prop-types";
+import PropTypes from "prop-types";
 
-const BlankNode = ReactPropTypes.shape({
-  termType: ReactPropTypes.oneOf(["BlankNode"]),
-  value: ReactPropTypes.string,
+const BlankNode = PropTypes.shape({
+  termType: PropTypes.oneOf(["BlankNode"]),
+  value: PropTypes.string,
 });
 
-const NamedNode = ReactPropTypes.shape({
-  termType: ReactPropTypes.oneOf(["NamedNode"]),
-  value: ReactPropTypes.string,
+const NamedNode = PropTypes.shape({
+  termType: PropTypes.oneOf(["NamedNode"]),
+  value: PropTypes.string,
 });
 
-const Literal = ReactPropTypes.shape({
+const Literal = PropTypes.shape({
   datatype: NamedNode,
-  language: ReactPropTypes.string,
-  termType: ReactPropTypes.oneOf(["Literal"]),
-  value: ReactPropTypes.string,
+  language: PropTypes.string,
+  termType: PropTypes.oneOf(["Literal"]),
+  value: PropTypes.string,
 });
 
-const Statement = ReactPropTypes.shape({
-  subject: ReactPropTypes.oneOfType([BlankNode, NamedNode]),
+const Statement = PropTypes.shape({
+  subject: PropTypes.oneOfType([BlankNode, NamedNode]),
 
-  predicate: ReactPropTypes.oneOfType([BlankNode, NamedNode]),
+  predicate: PropTypes.oneOfType([BlankNode, NamedNode]),
 
-  object: ReactPropTypes.oneOfType([BlankNode, NamedNode, Literal]),
+  object: PropTypes.oneOfType([BlankNode, NamedNode, Literal]),
 
-  graph: ReactPropTypes.oneOfType([BlankNode, NamedNode]),
+  graph: PropTypes.oneOfType([BlankNode, NamedNode]),
 });
 
-const namedOrBlankNode = ReactPropTypes.oneOfType([
+const namedOrBlankNode = PropTypes.oneOfType([
     NamedNode,
     BlankNode,
 ]);
 
-export const linkType = ReactPropTypes.oneOfType([
+export const linkType = PropTypes.oneOfType([
     NamedNode,
     BlankNode,
     Literal,
     Statement,
-    ReactPropTypes.string,
-    ReactPropTypes.arrayOf(NamedNode),
-    ReactPropTypes.arrayOf(BlankNode),
-    ReactPropTypes.arrayOf(Literal),
-    ReactPropTypes.arrayOf(Statement),
-    ReactPropTypes.arrayOf(ReactPropTypes.string),
+    PropTypes.string,
+    PropTypes.arrayOf(NamedNode),
+    PropTypes.arrayOf(BlankNode),
+    PropTypes.arrayOf(Literal),
+    PropTypes.arrayOf(Statement),
+    PropTypes.arrayOf(PropTypes.string),
 ]);
 
-export const labelType = ReactPropTypes.oneOfType([
+export const labelType = PropTypes.oneOfType([
     NamedNode,
-    ReactPropTypes.arrayOf(NamedNode),
+    PropTypes.arrayOf(NamedNode),
 ]);
-export const linkedPropType = ReactPropTypes.oneOfType([
+export const linkedPropType = PropTypes.oneOfType([
     NamedNode,
     BlankNode,
     Literal,
 ]);
-export const lrsType = ReactPropTypes.instanceOf(LinkedRenderStore);
+export const lrsType = PropTypes.instanceOf(LinkedRenderStore);
 export const subjectType = namedOrBlankNode;
 export const topologyType = namedOrBlankNode;

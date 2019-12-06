@@ -7,9 +7,9 @@ import schema from "@ontologies/schema";
 import xsd from "@ontologies/xsd";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
-import * as React from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { Property } from "../Property";
 
 const subject = defaultNS.example("41");

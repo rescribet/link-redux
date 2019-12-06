@@ -1,18 +1,19 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
+import rdf from "@ontologies/core";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
-import { createElement } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { LinkedResourceContainer } from "../LinkedResourceContainer";
 import { TopologyProvider } from "../TopologyProvider";
 
 const id = "resources/5";
 const iri = defaultNS.example(id);
 
-const createTestElement = (className = "testComponent") => () => createElement(
+const createTestElement = (className = "testComponent") => () => React.createElement(
     "span",
     { className },
 );
@@ -32,16 +33,16 @@ describe("TopologyProvider component", () => {
         ));
 
         class CollectionProvider extends TopologyProvider {
-            constructor(props) {
+            constructor(props: any) {
                 super(props);
                 this.topology = defaultNS.example("collection");
             }
         }
 
-        const comp = createElement(
+        const comp = React.createElement(
             CollectionProvider,
             null,
-            createElement(
+            React.createElement(
                 LinkedResourceContainer,
                 { subject: defaultNS.example("resources/10") },
             ),
@@ -53,7 +54,7 @@ describe("TopologyProvider component", () => {
     });
 
     it("sets a class name", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: "resources/10" } });
+        const opts = ctx.multipleCW(iri, { second: { id: rdf.namedNode("about:resources/10") } });
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
             defaultNS.schema("CreativeWork"),
@@ -61,16 +62,16 @@ describe("TopologyProvider component", () => {
 
         // tslint:disable-next-line max-classes-per-file
         class ClassNameProvider extends TopologyProvider {
-            constructor(props) {
+            constructor(props: any) {
                 super(props);
                 this.className = "test-class";
             }
         }
 
-        const comp = createElement(
+        const comp = React.createElement(
             ClassNameProvider,
             null,
-            createElement("span", null),
+            React.createElement("span", null),
         );
 
         const elem = mount(opts.wrapComponent(comp));

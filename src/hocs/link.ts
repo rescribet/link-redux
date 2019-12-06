@@ -2,8 +2,7 @@ import rdfFactory, { isLiteral, isNamedNode, Literal, NamedNode, Quad, SomeTerm 
 import xsd from "@ontologies/xsd";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { getPropBestLangRaw, normalizeType } from "link-lib";
-import { ComponentType } from "react";
-import * as React from "react";
+import React from "react";
 
 import { PropertyWrappedProps } from "../components/Property";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
@@ -225,7 +224,7 @@ export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globa
         return acc;
     }
 
-    return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): ComponentType<any> {
+    return function wrapWithConnect<P>(wrappedComponent: React.ComponentType<P>): React.ComponentType<any> {
         const comp = React.forwardRef((props: P & PropertyWrappedProps, ref: unknown) => {
             const lrs = useLRS();
             const context = useLinkRenderContext();

@@ -3,9 +3,9 @@ import "../../__tests__/useHashFactory";
 import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import { defaultNS } from "link-lib";
-import { createElement } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { register } from "../../register";
 import {
     errorComponent,
@@ -18,7 +18,7 @@ describe("Typable", () => {
     describe("renderNoView", () => {
         it("renders a registered no-view component", () => {
             const opts = ctx.empty();
-            const errorComp = () => createElement("span", { className: "custom-no-view" });
+            const errorComp = () => React.createElement("span", { className: "custom-no-view" });
             errorComp.type = defaultNS.ll("NoView");
             errorComp.topology = defaultNS.ex("t");
             opts.lrs.registerAll(register(errorComp));
@@ -47,12 +47,16 @@ describe("Typable", () => {
 
         it("renders the passed error component", () => {
             const opts = ctx.empty();
-            const errorComp = () => createElement("span", { className: "error-comp" });
+            const errorComp = () => React.createElement("span", { className: "error-comp" });
             const element = renderError({
                 onError: errorComp,
                 subject: rdfFactory.blankNode(),
                 topology: defaultNS.ex("t"),
             }, opts.lrs);
+
+            if (element === null) {
+                throw new Error();
+            }
 
             const tree = mount(element);
 

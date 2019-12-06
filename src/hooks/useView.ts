@@ -1,6 +1,6 @@
 import { NamedNode } from "@ontologies/core";
 import { RENDER_CLASS_NAME } from "link-lib";
-import * as React from "react";
+import React from "react";
 
 import { useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useLRS } from "./useLRS";

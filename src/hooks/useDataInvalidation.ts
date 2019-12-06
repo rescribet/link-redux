@@ -1,6 +1,6 @@
 import rdfFactory, { BlankNode, doc, NamedNode, TermType } from "@ontologies/core";
 import { normalizeType } from "link-lib";
-import * as React from "react";
+import React from "react";
 
 import { DataInvalidationProps, SubjectType } from "../types";
 import { useLRS } from "./useLRS";

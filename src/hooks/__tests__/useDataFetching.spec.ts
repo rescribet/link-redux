@@ -2,9 +2,9 @@ import "../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
-import { createElement } from "react";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { useDataFetching } from "../useDataFetching";
 
 describe("useDataFetching", () => {
@@ -18,7 +18,7 @@ describe("useDataFetching", () => {
             return null;
         };
 
-        mount(opts.wrapComponent(createElement(comp)));
+        mount(opts.wrapComponent(React.createElement(comp)));
 
         expect(setError).toHaveBeenCalledTimes(1);
     });

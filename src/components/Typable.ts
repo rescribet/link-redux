@@ -1,5 +1,5 @@
 import { defaultNS as NS, RENDER_CLASS_NAME, RequestStatus } from "link-lib";
-import * as React from "react";
+import React from "react";
 
 import { Provider } from "../hocs/withLinkCtx";
 import {

@@ -1,17 +1,16 @@
-import * as React from "react";
+import React from "react";
 
 import { LRSCtx } from "../contexts/LRSCtx";
 import { LinkReduxLRSType } from "../types";
 
 export interface RenderStoreProviderProps {
-    children: React.ReactChild;
     value: LinkReduxLRSType;
 }
 
-export function RenderStoreProvider({ children, value }: RenderStoreProviderProps) {
+export const RenderStoreProvider: React.FC<RenderStoreProviderProps> = ({ children, value }) => {
     return React.createElement(
         LRSCtx.Provider,
         { value },
         children,
     );
-}
+};

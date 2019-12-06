@@ -1,5 +1,5 @@
 import { ACCEPTED, BAD_REQUEST } from "http-status-codes";
-import { default as React, ReactElement } from "react";
+import React from "react";
 import {
     loadingComponent,
     renderError,
@@ -11,7 +11,7 @@ import {
 import { useLRS } from "./useLRS";
 
 export function useRenderLoadingOrError(props: TypableProps & TypableInjectedProps,
-                                        error?: Error): ReactElement<any> | null | undefined {
+                                        error?: Error): React.ReactElement<any> | null | undefined {
 
     const lrs = useLRS();
 

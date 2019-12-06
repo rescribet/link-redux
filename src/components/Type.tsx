@@ -1,8 +1,6 @@
 import { NamedNode } from "@ontologies/core";
 import { RENDER_CLASS_NAME } from "link-lib";
-import { ReactElement } from "react";
-import * as React from "react";
-import { createElement } from "react";
+import React from "react";
 
 import {
     useCalculateChildProps,
@@ -29,7 +27,7 @@ export interface PropTypesWithInjected extends
     SubjectProp,
     Omit<TypableInjectedProps, "subject"> {}
 
-export function Type(props: PropTypes, _?: any): ReactElement<any> | null {
+export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null {
     const options = {};
     const lrs = useLRS();
     const context = useLinkRenderContext();
@@ -52,7 +50,7 @@ export function Type(props: PropTypes, _?: any): ReactElement<any> | null {
             ...rest // tslint:disable-line trailing-comma
         } = childProps as {} & PropTypesWithInjected;
 
-        return createElement(
+        return React.createElement(
             component,
             rest,
             children,

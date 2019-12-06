@@ -1,5 +1,4 @@
-import { ReactElement } from "react";
-import * as React from "react";
+import React from "react";
 
 import { useCalculateChildProps, useLinkRenderContext } from "../hocs/withLinkCtx";
 import { useDataFetching } from "../hooks/useDataFetching";
@@ -29,7 +28,7 @@ export interface InjectedPropTypes extends LRCPropTypes, DataInvalidationProps, 
 
 function useCalculatedViewWithState(props: InjectedPropTypes,
                                     lrs: LinkReduxLRSType,
-                                    error?: Error): ReactElement<any> | null {
+                                    error?: Error): React.ReactElement<any> | null {
 
     if (props.forceRender && props.children) {
         return React.createElement(React.Fragment, null, props.children);
@@ -54,7 +53,7 @@ function useCalculatedViewWithState(props: InjectedPropTypes,
     return renderNoView(props, lrs);
 }
 
-export function LRC<P, R>(props: LRCPropTypes<R> & P, _?: any): ReactElement | null {
+export function LRC<P, R>(props: LRCPropTypes<R> & P, _?: any): React.ReactElement | null {
     const context = useLinkRenderContext();
     const [error, setError] = React.useState<Error|undefined>(undefined);
 

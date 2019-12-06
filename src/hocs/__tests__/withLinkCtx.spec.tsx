@@ -3,10 +3,10 @@ import "../../__tests__/useHashFactory";
 
 import { mount } from "enzyme";
 import { DEFAULT_TOPOLOGY, defaultNS } from "link-lib";
-import * as PropTypes from "prop-types";
-import * as React from "react";
+import PropTypes from "prop-types";
+import React from "react";
 
-import * as ctx from "../../../test/fixtures";
+import * as ctx from "../../__tests__/helpers/fixtures";
 import { LinkContext, LinkCtxOverrides } from "../../types";
 import { withLinkCtx } from "../withLinkCtx";
 
@@ -82,7 +82,7 @@ describe("withLinkCtx hoc", () => {
             const opts = ctx.fullCW();
             const getEntity = jest.fn();
             const lrs = new Proxy(opts.lrs, {
-                get(obj, prop) {
+                get(obj, prop: keyof typeof obj) {
                     return prop === "getEntity" ? getEntity : obj[prop];
                 },
             });

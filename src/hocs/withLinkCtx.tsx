@@ -1,7 +1,7 @@
 import { NamedNode } from "@ontologies/core";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { DEFAULT_TOPOLOGY } from "link-lib";
-import * as React from "react";
+import React from "react";
 
 import { useLRS } from "../hooks/useLRS";
 import {
