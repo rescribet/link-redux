@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 
 import {
@@ -8,10 +7,6 @@ import {
 } from "../types";
 
 import { Consumer, Provider } from "../hocs/withLinkCtx";
-
-export interface TopologyProviderProps {
-    elementProps?: object;
-}
 
 /**
  * Inherit from this component to set the topology.
@@ -27,12 +22,7 @@ export interface TopologyProviderProps {
  *   }
  * ```
  */
-export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> extends React.Component<T, S> {
-    public static propTypes = {
-        children: PropTypes.node,
-        elementProps: PropTypes.object,
-    };
-
+export class TopologyProvider<P = {}, S = {}> extends React.Component<P, S> {
     protected className: string | undefined = undefined;
     protected elementType = "div";
     protected topology: TopologyType = null;
@@ -61,7 +51,7 @@ export class TopologyProvider<T extends TopologyProviderProps = {}, S = {}> exte
         if (this.className !== undefined) {
             children = React.createElement(
                 this.elementType,
-                { className: this.className, ...(this.props.elementProps || {}) },
+                { className: this.className, ...(this.props || {}) },
                 this.props.children,
             );
         }

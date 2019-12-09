@@ -1,5 +1,12 @@
 import { BlankNode, Literal, NamedNode, SomeTerm } from "@ontologies/core";
-import { LazyNNArgument, LinkedRenderStore, SomeNode } from "link-lib";
+import {
+  EmptyRequestStatus,
+  ErrorReporter,
+  FulfilledRequestStatus,
+  LazyNNArgument,
+  LinkedRenderStore,
+  SomeNode,
+} from "link-lib";
 import React from "react";
 import { Overwrite } from "type-zoo";
 
@@ -19,7 +26,11 @@ export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
 export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
 
-export type RegistrableComponent<P = {}> = RegistrableClassComponent<P>; // | RegistrableFunctionComponent<P>;
+export type RegistrableClassComponent<P = {}> = React.ComponentType<P & SubjectProp> & RegistrationOpts<P>;
+
+export type FC<P = {}> = React.FC<P & SubjectProp> & RegistrationOpts<P>;
+
+export type RegistrableComponent<P = {}> = RegistrableClassComponent<P> | FC<P>;
 
 export type SubjectType = SomeNode;
 
@@ -76,16 +87,25 @@ export interface MapDataToPropsParamObject {
     [k: string]: NamedNode | NamedNode[] | LinkOpts;
 }
 
-export type RegistrableClassComponent<P = {}> = React.ComponentType<P> & RegistrationOpts<P>;
+export interface PropertyProps {
+  linkedProp: SomeTerm;
+}
 
-export interface RegistrableFunctionComponent<P = {}> extends React.FunctionComponent<P>, RegistrationOpts<P> {}
+export interface PropertyPropsArr {
+  linkedProp: SomeTerm[];
+}
 
-export type FC<P = {}> = RegistrableFunctionComponent<P>;
+/** Props passed to the error handling component (type ll:ErrorResource). */
+export interface ErrorProps extends SubjectProp {
+  error?: Error;
+  linkRequestStatus: EmptyRequestStatus | FulfilledRequestStatus;
+  report: ErrorReporter;
+}
 
 export interface RegistrationOpts<P> {
     hocs?: Array<higherOrderWrapper<P>>;
     linkOpts?: LinkOpts;
-    mapDataToProps?: MapDataToPropsParam;
+    mapDataToProps?: MapDataToPropsParamObject;
     property?: LazyNNArgument;
     topology?: LazyNNArgument | Array<NamedNode | undefined>;
     type: LazyNNArgument;

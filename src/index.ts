@@ -11,7 +11,7 @@ export { link } from "./hocs/link";
 export { LinkedResourceContainer } from "./components/LinkedResourceContainer";
 export { Property, PropertyPropTypes } from "./components/Property";
 export { RenderStoreProvider } from "./components/RenderStoreProvider";
-export { TopologyProvider, TopologyProviderProps } from "./components/TopologyProvider";
+export { TopologyProvider } from "./components/TopologyProvider";
 export { Type } from "./components/Type";
 export { useLinkRenderContext, withLinkCtx } from "./hocs/withLinkCtx";
 export { withLRS } from "./hocs/withLRS";
