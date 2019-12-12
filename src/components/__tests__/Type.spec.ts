@@ -29,8 +29,22 @@ describe("Type component", () => {
         expect(elem.find("div.no-view")).toExist();
     });
 
+    it("renders error on server errors", () => {
+        const subj = defaultNS.example("3");
+        const opts = ctx.fullCW(subj);
+        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+            createComponent("loading"),
+            defaultNS.ll("ErrorResource"),
+        ));
+        (opts.lrs.api as any).setStatus(subj, 500);
+
+        const elem = mount(opts.wrapComponent(React.createElement(Type)));
+
+        expect(elem.find("span")).toHaveClassName("loading");
+    });
+
     it("renders default when set", () => {
-        const opts = ctx.type(undefined);
+        const opts = ctx.fullCW();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createComponent("thing"),
             defaultNS.schema("Thing"),

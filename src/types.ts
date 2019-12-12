@@ -14,7 +14,7 @@ import { higherOrderWrapper } from "./register";
 
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-/****** Types & Composite types ******/
+/****** General types ******/
 
 export type LabelType = NamedNode | NamedNode[];
 
@@ -23,14 +23,6 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
 export type LinkReturnType = "term" | "statement" | "literal" | "value";
-
-export type MapDataToPropsParam = MapDataToPropsParamObject | NamedNode[];
-
-export type RegistrableClassComponent<P = {}> = React.ComponentType<P & SubjectProp> & RegistrationOpts<P>;
-
-export type FC<P = {}> = React.FC<P & SubjectProp> & RegistrationOpts<P>;
-
-export type RegistrableComponent<P = {}> = RegistrableClassComponent<P> | FC<P>;
 
 export type SubjectType = SomeNode;
 
@@ -42,6 +34,40 @@ export type TopologyType = TopologyContextType | null;
 
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
+
+/****** Property registration ******/
+
+export interface RegistrationOpts<P> {
+  hocs?: Array<higherOrderWrapper<P>>;
+  linkOpts?: LinkOpts;
+  mapDataToProps?: MapDataToPropsParam;
+  property?: LazyNNArgument;
+  topology?: LazyNNArgument;
+  type: LazyNNArgument;
+}
+
+export interface TypeRegistrationOpts<P> extends RegistrationOpts<P> {
+  property?: undefined;
+}
+
+export interface PropertyRegistrationOpts<P> extends RegistrationOpts<P> {
+  property: LazyNNArgument;
+}
+
+export type TypeFC<P = {}> = TypeRegistrationOpts<P> & React.FC<P & Partial<SubjectProp>>;
+
+// export type PropertyFC<P extends PropertyProps = PropertyProps> = PropertyRegistrationOpts<P>
+//   & React.FC<P & Partial<SubjectProp> & PropertyProps>;
+
+export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & Partial<SubjectProp> & PropertyProps>;
+
+export type FC<P = {}> = P extends InferProperty ? PropertyFC<P> : TypeFC<P>;
+
+export type RegistrableComponent<P = {}> = Component<P> | FC<P>;
+
+export type Component<P = {}> = React.ComponentType<P & SubjectProp> & RegistrationOpts<P>;
+
+/****** Types & Composite types ******/
 
 export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext;
 
@@ -83,8 +109,16 @@ export interface LinkOpts {
     returnType?: LinkReturnType;
 }
 
-export interface MapDataToPropsParamObject {
+export interface MapDataToPropsParam {
     [k: string]: NamedNode | NamedNode[] | LinkOpts;
+}
+
+/**
+ * Used to determine if a component is a property component, that is to say it triggers for
+ * properties or datatypes and receives the `linkedProp` prop.
+ */
+interface InferProperty {
+  linkedProp: object;
 }
 
 export interface PropertyProps {
@@ -100,15 +134,6 @@ export interface ErrorProps extends SubjectProp {
   error?: Error;
   linkRequestStatus: EmptyRequestStatus | FulfilledRequestStatus;
   report: ErrorReporter;
-}
-
-export interface RegistrationOpts<P> {
-    hocs?: Array<higherOrderWrapper<P>>;
-    linkOpts?: LinkOpts;
-    mapDataToProps?: MapDataToPropsParamObject;
-    property?: LazyNNArgument;
-    topology?: LazyNNArgument | Array<NamedNode | undefined>;
-    type: LazyNNArgument;
 }
 
 export interface URLConverter {

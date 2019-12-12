@@ -8,12 +8,14 @@ import { PropertyWrappedProps } from "../components/Property";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
 import { useLRS } from "../hooks/useLRS";
 import {
-    LinkOpts,
-    LinkReduxLRSType,
-    LinkRenderContext,
-    LinkReturnType,
-    MapDataToPropsParam,
-    ToJSOutputTypes,
+  LinkedPropType,
+  LinkOpts,
+  LinkReduxLRSType,
+  LinkRenderContext,
+  LinkReturnType,
+  MapDataToPropsParam,
+  SubjectProp,
+  ToJSOutputTypes,
 } from "../types";
 
 import { useCalculateChildProps, useLinkRenderContext } from "./withLinkCtx";
@@ -94,62 +96,48 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
     const propMap: DataToPropsMapping = {};
     const requestedProperties = Array.isArray(mapDataToProps) ? mapDataToProps.map((p) => rdfFactory.id(p)) : [];
 
-    if (Array.isArray(mapDataToProps)) {
-        if (mapDataToProps.length === 0) {
-            throw new TypeError("Props array must contain at least one predicate");
+    for (const propKey in mapDataToProps) {
+        if (!mapDataToProps.hasOwnProperty(propKey)) {
+            continue;
         }
-        mapDataToProps.forEach((prop) => {
-            propMap[term(prop)] = {
+        const predObj = mapDataToProps[propKey];
+        if (Array.isArray(predObj)) {
+            if (predObj.length === 0) {
+                throw new TypeError("Props array must contain at least one predicate");
+            }
+            requestedProperties.push(...predObj.map((p) => rdfFactory.id(p)));
+            propMap[propKey || term(predObj[0])] = {
                 forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                label: [prop],
+                label: predObj,
                 limit: opts.limit || globalLinkOptsDefaults.limit,
-                name: term(prop),
+                name: propKey || term(predObj[0]),
+                returnType: opts.returnType || globalLinkOptsDefaults.returnType,
             };
-        });
-    } else {
-        for (const propKey in mapDataToProps) {
-            if (!mapDataToProps.hasOwnProperty(propKey)) {
-                continue;
+        } else if (isNamedNode(predObj)) {
+            requestedProperties.push(rdfFactory.id(predObj));
+            propMap[propKey || term(predObj)] = {
+                forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
+                label: [predObj],
+                limit: opts.limit || globalLinkOptsDefaults.limit,
+                name: propKey || term(predObj),
+            };
+        } else {
+            if (predObj.label === undefined) {
+                throw new TypeError("Inner opts label must be a single NamedNode");
             }
-            const predObj = mapDataToProps[propKey];
-            if (Array.isArray(predObj)) {
-                if (predObj.length === 0) {
-                    throw new TypeError("Props array must contain at least one predicate");
-                }
-                requestedProperties.push(...predObj.map((p) => rdfFactory.id(p)));
-                propMap[propKey || term(predObj[0])] = {
-                    forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                    label: predObj,
-                    limit: opts.limit || globalLinkOptsDefaults.limit,
-                    name: propKey || term(predObj[0]),
-                    returnType: opts.returnType || globalLinkOptsDefaults.returnType,
-                };
-            } else if (isNamedNode(predObj)) {
-                requestedProperties.push(rdfFactory.id(predObj));
-                propMap[propKey || term(predObj)] = {
-                    forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
-                    label: [predObj],
-                    limit: opts.limit || globalLinkOptsDefaults.limit,
-                    name: propKey || term(predObj),
-                };
-            } else {
-                if (predObj.label === undefined) {
-                    throw new TypeError("Inner opts label must be a single NamedNode");
-                }
-                const labelArr = Array.isArray(predObj.label) ? predObj.label : [predObj.label];
+            const labelArr = Array.isArray(predObj.label) ? predObj.label : [predObj.label];
 
-                labelArr.forEach((label) => {
-                    requestedProperties.push(rdfFactory.id(label));
-                });
-                propMap[propKey || predObj.name || term(labelArr[0])] = {
-                    forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
-                    label: normalizeType(predObj.label),
-                    limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
-                    linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
-                    name: propKey || predObj.name || term(labelArr[0]),
-                    returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
-                } as ProcessedLinkOpts;
-            }
+            labelArr.forEach((label) => {
+                requestedProperties.push(rdfFactory.id(label));
+            });
+            propMap[propKey || predObj.name || term(labelArr[0])] = {
+                forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
+                label: normalizeType(predObj.label),
+                limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
+                linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
+                name: propKey || predObj.name || term(labelArr[0]),
+                returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
+            } as ProcessedLinkOpts;
         }
     }
 
@@ -178,13 +166,25 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
  * @param {NamedNode[]} mapDataToProps The properties to bind to the component, only NamedNode[] is currently supported.
  * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
  */
-export function link(mapDataToProps: MapDataToPropsParam, opts: LinkOpts = globalLinkOptsDefaults):
-    <P>(p: React.ComponentType<P>) => React.ComponentType<P> {
+export function link(
+  mapDataToProps: MapDataToPropsParam = {},
+  opts: LinkOpts = globalLinkOptsDefaults):
+  <P>(p: React.ComponentType<P & Partial<SubjectProp>>) =>
+    React.ComponentType<P & { [k in keyof MapDataToPropsParam]: LinkedPropType }> {
 
     const [ propMap, requestedProperties ] = dataPropsToPropMap(mapDataToProps, opts);
 
     if (requestedProperties.length === 0) {
-        throw new TypeError("Props array must contain at least one predicate");
+      if (opts !== globalLinkOptsDefaults) {
+        throw new TypeError("Bind at least one prop to use render opts");
+      }
+
+      return <P>(WrappedComponent: React.ComponentType<P & Partial<SubjectProp>>) => (props: P) => {
+        const { subject } = useLinkRenderContext();
+        const shared = { ...props, subject };
+
+        return React.createElement(WrappedComponent, shared);
+      };
     }
 
     const returnType = opts.returnType || "term";

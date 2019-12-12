@@ -124,7 +124,7 @@ function renderChildrenOrValue(props: PropertyWrappedProps, lrs: LinkReduxLRSTyp
     };
 }
 
-export function Prop(props: PropertyPropTypes & any): React.ReactElement<any> | null {
+export const Property: React.ComponentType<PropertyPropTypes & any> = (props): React.ReactElement<any> | null => {
     const options = { topology: true };
 
     const lrs = useLRS();
@@ -211,13 +211,11 @@ export function Prop(props: PropertyPropTypes & any): React.ReactElement<any> | 
     }
 
     return null;
-}
+};
 
-Prop.defaultProps = {
+Property.defaultProps = {
     forceRender: false,
     limit: 1,
     linkedProp: undefined,
 };
-Prop.displayName = "Property";
-
-export const Property = React.memo(Prop);
+Property.displayName = "Property";

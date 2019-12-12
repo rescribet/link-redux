@@ -9,6 +9,7 @@ import {
 } from "link-lib";
 import React from "react";
 
+import { Component } from "../components/Component";
 import { register } from "../register";
 import { FC } from "../types";
 
@@ -19,7 +20,7 @@ describe("register.spec.ts", () => {
         Comp.type = defaultNS.ex("TestClass");
         const [ registration ] = register(Comp);
 
-        expect(registration).toHaveProperty("component", Comp);
+        expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
         expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
@@ -30,21 +31,21 @@ describe("register.spec.ts", () => {
         Comp.type = defaultNS.ex("TestClass");
         const [ registration ] = register(Comp);
 
-        expect(registration).toHaveProperty("component", Comp);
+        expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
         expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
     });
 
     it("registers a class component", () => {
-        class Comp extends React.Component {
+        class Comp extends Component {
             public static type = defaultNS.ex("TestClass");
 
             public render() { return null; }
         }
         const [ registration ] = register(Comp);
 
-        expect(registration).toHaveProperty("component", Comp);
+        expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
         expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
@@ -61,14 +62,13 @@ describe("register.spec.ts", () => {
             return hoc2Inner;
         };
 
-        const Comp: FC<{ prop1: string, prop2: string }> = ({ prop1, prop2 }) =>
-            React.createElement("p", null, `value.${prop1}.${prop2}`);
+        const Comp: FC<{ prop1: string, prop2: string }> = (props) =>
+            React.createElement("p", null, `value.${props.prop1}.${props.prop2}`);
         Comp.type = defaultNS.ex("TestClass");
         Comp.hocs = [hoc1, hoc2];
 
         const [ registration ] = register(Comp);
 
-        expect(registration).toHaveProperty("component", hoc2Inner);
         const elem = mount(React.createElement(registration.component, null, null));
         expect(elem.find(registration.component)).toHaveText("value.hoc1.hoc2");
     });

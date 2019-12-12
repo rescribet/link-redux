@@ -10,6 +10,8 @@ import { defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import { register } from "../../register";
+import { FC, PropertyProps } from "../../types";
 import { Property } from "../Property";
 
 const subject = defaultNS.example("41");
@@ -138,14 +140,16 @@ describe("Property component", () => {
 
     it("renders the literal renderer", () => {
         const opts = ctx.fullCW();
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            ({ linkedProp }) => React.createElement(
-                "div",
-                { className: "integerRenderer", children: linkedProp.value },
-            ),
-            rdfs.Literal,
-            xsd.integer,
-        ));
+        const component: FC<PropertyProps> = ({ linkedProp }) => {
+          return React.createElement(
+            "div",
+            { className: "integerRenderer", children: linkedProp.value },
+          );
+        };
+        component.type = rdfs.Literal;
+        component.property = xsd.integer;
+
+        opts.lrs.registerAll(register(component));
 
         const comp = React.createElement(
             Property,

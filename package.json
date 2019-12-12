@@ -65,8 +65,8 @@
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/jest": "^24.0.17",
-    "@types/prop-types": "^15.7.1",
-    "@types/react": "*",
+    "@types/prop-types": "^15.7.3",
+    "@types/react": "^16.9.15",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "gh-pages": "^2.0.1",
@@ -74,7 +74,7 @@
     "http-status-codes": "1.x",
     "jest": "^24.8.0",
     "jest-enzyme": "^7.1.0",
-    "link-lib": "=1.0.0-rc4-light-5",
+    "link-lib": "=1.0.0-rc4-light-6",
     "n-quads-parser": "^2.1.0-0",
     "prop-types": "^15.x",
     "react": "^16.12.0",
@@ -91,7 +91,8 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      "/__tests__/"
     ],
     "coverageThreshold": {
       "global": {

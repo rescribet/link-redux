@@ -20,122 +20,92 @@ class TestComponent extends React.Component {
 
 describe("link", () => {
     describe("dataPropsToPropMap", () => {
-        describe("with array mapping", () => {
-            it("throws with an empty map", () => {
-                expect(() => {
-                    dataPropsToPropMap([], {});
-                }).toThrowError(TypeError);
-            });
-        });
+      it("processes an empty map", () => {
+          const [ propMap, requestedProperties ] = dataPropsToPropMap({}, {});
 
-        describe("with object mapping", () => {
-            it("processes an empty map", () => {
-                const [ propMap, requestedProperties ] = dataPropsToPropMap({}, {});
+          expect(propMap).toEqual({});
+          expect(requestedProperties).toHaveLength(0);
+      });
 
-                expect(propMap).toEqual({});
-                expect(requestedProperties).toHaveLength(0);
-            });
+      it("processes a map with an array value", () => {
+          const [ propMap, requestedProperties ] = dataPropsToPropMap({
+              cLabel: [defaultNS.ex("p"), defaultNS.ex("q")],
+          }, {});
 
-            it("processes a map with an array value", () => {
-                const [ propMap, requestedProperties ] = dataPropsToPropMap({
-                    cLabel: [defaultNS.ex("p"), defaultNS.ex("q")],
-                }, {});
+          expect(propMap).toHaveProperty("cLabel");
+          expect(requestedProperties).toEqual([
+              rdfFactory.id(defaultNS.ex("p")),
+              rdfFactory.id(defaultNS.ex("q")),
+          ]);
 
-                expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([
-                    rdfFactory.id(defaultNS.ex("p")),
-                    rdfFactory.id(defaultNS.ex("q")),
-                ]);
+          const { cLabel } = propMap;
+          expect(cLabel).toHaveProperty("label", [defaultNS.ex("p"), defaultNS.ex("q")]);
+          expect(cLabel).toHaveProperty("name", "cLabel");
+      });
 
-                const { cLabel } = propMap;
-                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p"), defaultNS.ex("q")]);
-                expect(cLabel).toHaveProperty("name", "cLabel");
-            });
+      it("throws when a map with an array value has no members", () => {
+          expect(() => {
+              dataPropsToPropMap({
+                  cLabel: [],
+              }, {});
+          }).toThrowError(TypeError);
+      });
 
-            it("throws when a map with an array value has no members", () => {
-                expect(() => {
-                    dataPropsToPropMap({
-                        cLabel: [],
-                    }, {});
-                }).toThrowError(TypeError);
-            });
+      it("processes a map with a NamedNode value", () => {
+          const [ propMap, requestedProperties ] = dataPropsToPropMap({
+              cLabel: defaultNS.ex("p"),
+          }, {});
 
-            it("processes a map with a NamedNode value", () => {
-                const [ propMap, requestedProperties ] = dataPropsToPropMap({
-                    cLabel: defaultNS.ex("p"),
-                }, {});
+          expect(propMap).toHaveProperty("cLabel");
+          expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
-                expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+          const { cLabel } = propMap;
+          expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+          expect(cLabel).toHaveProperty("name", "cLabel");
+      });
 
-                const { cLabel } = propMap;
-                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
-                expect(cLabel).toHaveProperty("name", "cLabel");
-            });
+      it("skips others' properties", () => {
+          const dataProps = Object.create({ oLabel: defaultNS.ex("o") });
+          dataProps.cLabel = defaultNS.ex("p");
 
-            it("skips others' properties", () => {
-                const dataProps = Object.create({ oLabel: defaultNS.ex("o") });
-                dataProps.cLabel = defaultNS.ex("p");
+          const [ propMap, requestedProperties ] = dataPropsToPropMap(dataProps, {});
 
-                const [ propMap, requestedProperties ] = dataPropsToPropMap(dataProps, {});
+          expect(propMap).toHaveProperty("cLabel");
+          expect(propMap).not.toHaveProperty("oLabel");
+          expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
-                expect(propMap).toHaveProperty("cLabel");
-                expect(propMap).not.toHaveProperty("oLabel");
-                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+          const { cLabel } = propMap;
+          expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+          expect(cLabel).toHaveProperty("name", "cLabel");
+      });
 
-                const { cLabel } = propMap;
-                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
-                expect(cLabel).toHaveProperty("name", "cLabel");
-            });
+      it("processes a map with object value", () => {
+          const [ propMap, requestedProperties ] = dataPropsToPropMap({
+              cLabel: {
+                  label: defaultNS.ex("p"),
+              },
+          }, {});
 
-            it("processes a map with object value", () => {
-                const [ propMap, requestedProperties ] = dataPropsToPropMap({
-                    cLabel: {
-                        label: defaultNS.ex("p"),
-                    },
-                }, {});
+          expect(propMap).toHaveProperty("cLabel");
+          expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
 
-                expect(propMap).toHaveProperty("cLabel");
-                expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+          const { cLabel } = propMap;
+          expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+          expect(cLabel).toHaveProperty("name", "cLabel");
+      });
 
-                const { cLabel } = propMap;
-                expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
-                expect(cLabel).toHaveProperty("name", "cLabel");
-            });
-
-            it("throws when a map with object value has no label", () => {
-                expect(() => {
-                    dataPropsToPropMap({
-                        cLabel: {
-                            label: undefined,
-                        },
-                    }, {});
-                }).toThrowError(TypeError);
-            });
-        });
+      it("throws when a map with object value has no label", () => {
+          expect(() => {
+              dataPropsToPropMap({
+                  cLabel: {
+                      label: undefined,
+                  },
+              }, {});
+          }).toThrowError(TypeError);
+      });
     });
 
     describe("link HOC", () => {
-        it("passes named node array as terms", () => {
-            const opts = ctx.fullCW(iri);
-
-            const comp = link([
-                defaultNS.schema("name"),
-                defaultNS.schema("text"),
-                defaultNS.schema("author"),
-                defaultNS.example("tags"),
-            ])(TestComponent);
-            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-            const elem = mount(opts.wrapComponent());
-
-            expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
-        });
-
         it("passes object as terms", () => {
             const opts = ctx.fullCW(iri);
 
@@ -211,12 +181,12 @@ describe("link", () => {
                 const opts = ctx.fullCW(iri);
 
                 const comp = link(
-                    [
-                        defaultNS.schema("name"),
-                        defaultNS.ex("timesRead"),
-                        defaultNS.schema("dateCreated"),
-                        defaultNS.schema("author"),
-                    ],
+                    {
+                        author: defaultNS.schema("author"),
+                        dateCreated: defaultNS.schema("dateCreated"),
+                        name: defaultNS.schema("name"),
+                        timesRead: defaultNS.ex("timesRead"),
+                    },
                     { returnType: "literal" },
                 )(TestComponent);
                 opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
@@ -235,7 +205,7 @@ describe("link", () => {
                 const opts = ctx.fullCW(iri);
 
                 const comp = link(
-                    [defaultNS.schema("name")],
+                    { name: defaultNS.schema("name") },
                     { returnType: "value" },
                 )(TestComponent);
                 opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
@@ -250,7 +220,7 @@ describe("link", () => {
                 const opts = ctx.fullCW(iri);
 
                 const comp = link(
-                    [defaultNS.schema("name")],
+                    { name: defaultNS.schema("name") },
                     { returnType: "term" },
                 )(TestComponent);
                 opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
@@ -265,7 +235,7 @@ describe("link", () => {
                 const opts = ctx.fullCW(iri);
 
                 const comp = link(
-                    [defaultNS.schema("name")],
+                    { name: defaultNS.schema("name") },
                     { returnType: "statement" },
                 )(TestComponent);
                 opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
