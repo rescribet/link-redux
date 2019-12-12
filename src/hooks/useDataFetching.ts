@@ -1,7 +1,7 @@
 import rdfFactory, { NamedNode, TermType } from "@ontologies/core";
 import React from "react";
 
-import { LRCPropTypes } from "../components/LinkedResourceContainer";
+import { ResourcePropTypes } from "../components/Resource";
 
 import { useLRS } from "./useLRS";
 
@@ -15,7 +15,7 @@ const blankNodeWarn = "Cannot load a blank node since it has no defined way to b
  *
  * @see {LinkedRenderStore#shouldLoadResource} for the triggering mechanism.
  */
-export function useDataFetching(props: LRCPropTypes,
+export function useDataFetching(props: ResourcePropTypes,
                                 lastUpdate?: number,
                                 setError?: (e: Error) => void) {
     const lrs = useLRS();

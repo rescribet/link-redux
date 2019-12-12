@@ -169,7 +169,7 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
  *     <div>
  *         <h1>{props.name.value}</h1>
  *         <p>{props.text.value}</p>
- *         <LinkedResourceContainer subject={props.author} />
+ *         <Resource subject={props.author} />
  *     </div
  *   )
  *

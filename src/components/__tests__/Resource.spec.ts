@@ -8,7 +8,7 @@ import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { LinkedResourceContainer } from "../LinkedResourceContainer";
+import { Resource } from "../Resource";
 
 const id = "resources/5";
 const iri = defaultNS.example(id);
@@ -19,10 +19,10 @@ const createTestElement = (className = "testComponent") => () => React.createEle
 );
 const loadLinkedObject = () => undefined;
 
-describe("LinkedResourceContainer component", () => {
+describe("Resource component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty(iri);
-        const comp = React.createElement(LinkedResourceContainer, {
+        const comp = React.createElement(Resource, {
             className: "testmarker",
             loadLinkedObject,
             subject: iri,
@@ -30,7 +30,7 @@ describe("LinkedResourceContainer component", () => {
 
         const elem = mount(opts.wrapComponent(comp));
 
-        expect(elem.find("LinkedResourceContainer.testmarker").children())
+        expect(elem.find("Resource.testmarker").children())
             .toHaveLength(0);
     });
 
@@ -49,7 +49,7 @@ describe("LinkedResourceContainer component", () => {
         const opts = ctx.fullCW(iri);
         opts.lrs.getEntity = spy;
         const comp = React.createElement(
-            LinkedResourceContainer,
+            Resource,
             opts.contextProps(),
         );
 
@@ -66,7 +66,7 @@ describe("LinkedResourceContainer component", () => {
 
         const elem = mount(opts.wrapComponent());
 
-        expect(elem.find(LinkedResourceContainer)).toExist();
+        expect(elem.find(Resource)).toExist();
         expect(elem.find("span.testComponent")).toHaveLength(1);
     });
 
@@ -83,7 +83,7 @@ describe("LinkedResourceContainer component", () => {
         const comp = createTestElement();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
         const elem = mount(
-            opts.wrapComponent(React.createElement(LinkedResourceContainer, {
+            opts.wrapComponent(React.createElement(Resource, {
                 loadLinkedObject,
                 subject: bn,
             })),
@@ -92,10 +92,31 @@ describe("LinkedResourceContainer component", () => {
         expect(elem.find("span.testComponent")).toExist();
     });
 
+    it("renders error component when mounting unfetched blank node", () => {
+        const bn = rdfFactory.blankNode();
+        const opts = ctx.chargeLRS(
+            [],
+            bn,
+        );
+
+        opts.lrs.registerAll(
+          LinkedRenderStore.registerRenderer(createTestElement(), schema.Thing),
+          LinkedRenderStore.registerRenderer(createTestElement("error"), defaultNS.ll("ErrorResource")),
+        );
+        const elem = mount(
+            opts.wrapComponent(React.createElement(Resource, {
+              loadLinkedObject,
+              subject: bn,
+            })),
+        );
+
+        expect(elem.find("span.error")).toExist();
+    });
+
     it("renders children when present", () => {
         const opts = ctx.fullCW(iri);
         const loc = React.createElement(
-            LinkedResourceContainer,
+            Resource,
             { loadLinkedObject, subject: iri },
             React.createElement("span", null, "override"),
         );
@@ -118,13 +139,13 @@ describe("LinkedResourceContainer component", () => {
         ));
 
         const comp = React.createElement(
-            LinkedResourceContainer,
+            Resource,
             { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection") },
             React.createElement(
-                LinkedResourceContainer,
+                Resource,
                 { loadLinkedObject, subject: iri },
                 React.createElement(
-                    LinkedResourceContainer,
+                    Resource,
                     { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),
             ),
@@ -149,13 +170,13 @@ describe("LinkedResourceContainer component", () => {
         ));
 
         const comp = React.createElement(
-            LinkedResourceContainer,
+            Resource,
             { loadLinkedObject, subject: iri },
             React.createElement
-            (LinkedResourceContainer,
+            (Resource,
                 { loadLinkedObject, subject: iri },
                 React.createElement(
-                    LinkedResourceContainer,
+                    Resource,
                     { loadLinkedObject, subject: defaultNS.example("resources/10") },
                 ),
             ),

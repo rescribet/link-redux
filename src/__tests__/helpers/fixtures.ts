@@ -103,7 +103,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
             return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
                 React.createElement("div", { className: "root" },
                     React.createElement(
-                        LinkedResourceContainer,
+                        Resource,
                         { forceRender: true, subject, topology },
                         children,
                     )));

@@ -7,7 +7,7 @@ import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { LinkedResourceContainer } from "../LinkedResourceContainer";
+import { Resource } from "../Resource";
 import { TopologyProvider } from "../TopologyProvider";
 
 const id = "resources/5";
@@ -43,7 +43,7 @@ describe("TopologyProvider component", () => {
             CollectionProvider,
             null,
             React.createElement(
-                LinkedResourceContainer,
+                Resource,
                 { subject: defaultNS.example("resources/10") },
             ),
         );

@@ -22,7 +22,7 @@ import {
     TopologyProp,
 } from "../types";
 
-import { LinkedResourceContainer as LRC } from "./LinkedResourceContainer";
+import { Resource } from "./Resource";
 import { renderError } from "./Typable";
 
 export interface PropertyPropTypes extends Partial<DataInvalidationProps>, Partial<TopologyProp> {
@@ -35,7 +35,7 @@ export interface PropertyPropTypes extends Partial<DataInvalidationProps>, Parti
     forceRender?: boolean;
     /**
      * The property of the surrounding subject to render.
-     * @see LinkedResourceContainer#subject
+     * @see Resource#subject
      */
     label: LabelType;
     /**
@@ -80,8 +80,7 @@ function limitTimes<P extends PropertyWrappedProps>(
         return React.createElement(
             associationRenderer,
             associationProps,
-            // @ts-ignore
-            func(getTermBestLang(objRaw, lrs.store.langPrefs)),
+            func(getTermBestLang(objRaw, (lrs.store as any).langPrefs) as SomeTerm),
         );
     }
     const pLimit = Math.min(...[props.limit, objRaw.length].filter(Number) as number[]);
@@ -193,7 +192,7 @@ export function Prop(props: PropertyPropTypes & any): React.ReactElement<any> | 
                 };
 
                 // return React.createElement(LRC, lrcProps, childComp);
-                return <LRC {...lrcProps}>{childComp}</LRC>;
+                return <Resource {...lrcProps}>{childComp}</Resource>;
             };
 
             return limitTimes(childProps, objRaw, lrs, wrapLOC, associationRenderer);

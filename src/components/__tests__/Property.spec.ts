@@ -167,7 +167,7 @@ describe("Property component", () => {
 
             const elem = mount(opts.wrapComponent(comp));
 
-            expect(elem.find(Property).find("LinkedResourceContainer")).toHaveLength(2);
+            expect(elem.find(Property).find("Resource")).toHaveLength(2);
         });
 
         it("renders all components", () => {
@@ -179,7 +179,7 @@ describe("Property component", () => {
 
             const elem = mount(opts.wrapComponent(comp));
 
-            expect(elem.find(Property).find("LinkedResourceContainer")).toHaveLength(4);
+            expect(elem.find(Property).find("Resource")).toHaveLength(4);
         });
     });
 

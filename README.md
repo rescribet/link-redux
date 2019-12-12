@@ -33,7 +33,7 @@ Say we want to render this bit of linked data:
 <https://example.com/somePerson> <http://schema.org/birthPlace> <http://dbpedia.org/page/London> .
 ```
 
-In our app we create a `LinkedResourceContainer` to render our subject:
+In our app we create a `Resource` to render our subject:
 
 ```javascript
 import LinkedResoureContainer from "link-redux"
@@ -57,7 +57,7 @@ import { register } from "link-redux"
 const MyPersonView = ({ birthPlace, name }) => (
   <div>
     <p>{name.value}</p>
-    <LinkedResourceContainer subject={birthPlace} />
+    <Resource subject={birthPlace} />
   </div>
 )
 
@@ -162,14 +162,14 @@ to register a component with it, otherwise no view can be found an an error will
 appropriate format.
 
 ### Resource renderers
-To tell link to fetch and render a resource, just mount a `LinkedResourceContainer` (LRC) anywhere
+To tell link to fetch and render a resource, just mount a `Resource` anywhere
 in your react app. Because the component will try to render every IRI passed, a good place for the
-initial mount would be in the router, especially the fallback route. If choosing to use the LRC as a
-router, make sure all your resources are resolvable (including the fragment), otherwise a 404 will
-occur.
+initial mount would be in the router, especially the fallback route. If choosing to use the Resource
+as a router, make sure all your resources are resolvable (including the fragment), otherwise a 404
+will occur.
 
 ```JSX Harmony
-import { namedNodeByIRI, LinkedResourceContainer } from 'link-redux';
+import { namedNodeByIRI, Resource } from 'link-redux';
 
 class OurTeamPage extends React.PureComponent {
   /* details omitted */
@@ -180,7 +180,7 @@ class OurTeamPage extends React.PureComponent {
     * the registered views for their class (probably <schema:Person>) they'll probably render as a
     * card with their profile picture, name and a small description.
     *
-    * The LRC component expects `subject` to be an instance of rdflib/NamedNode. Obtain one by either:
+    * The {Resource} component expects `subject` to be an instance of rdflib/NamedNode. Obtain one by either:
     * - Using a namespace, e.g. NS.app('person/alice')
     * - Using namedNodeByIRI to get one from a string
     *
@@ -190,8 +190,8 @@ class OurTeamPage extends React.PureComponent {
       <div>
         <h1>Our team:</h1>
         <Grid>
-            <LinkedResourceContainer subject={NS.app('person/alice')} />
-            <LinkedResourceContainer subject={namedNodeByIRI('https://example.com/person/bob')} />
+            <Resource subject={NS.app('person/alice')} />
+            <Resource subject={namedNodeByIRI('https://example.com/person/bob')} />
         </Grid>
       </div>
     );
@@ -200,7 +200,7 @@ class OurTeamPage extends React.PureComponent {
 ```
 
 So all the underlying logic of managing API calls, data fetching, views selecting etc will be
-handled by the `LinkedResourceContainer` component. To show a loading indicator (or an error) for
+handled by the `Resource` component. To show a loading indicator (or an error) for
 grid mounted resources while alice and bob are loading, see [Loading and error handling](https://github.com/fletcher91/link-redux#loading-and-error-handling).
 
 ### Property renderers
@@ -212,7 +212,7 @@ resource, rather than an entire resource. This can be useful in a diverse range 
 * When combining multiple properties into a single view - e.g. geo-coordinates (latd, latm, latns, longd, longew, longm)
 
 When a property has no view registered, and the resolved value is a NamedNode (a link/href), it'll
-automatically mount a LinkedResourceContainer so the nested resource is rendered.
+automatically mount a Resource so the nested resource is rendered.
 
 ```JSX Harmony
 import { Property } from 'link-redux';
@@ -373,9 +373,9 @@ After setting up, you can wrap your favorite popup library with the `link` metho
 state from the store;
 
 ```JSX Harmony
-// Mount `<LinkedResourceContainer subject={NS.popup('manager')} />` somewhere in your app
+// Mount `<Resource subject={NS.popup('manager')} />` somewhere in your app
 
-import { LinkedResourceContainer } from 'link-redux';
+import { Resource } from 'link-redux';
 import { NS } from '../LRS.jsx';
 
 class PopupManager extends React.PureComponent {
@@ -391,11 +391,11 @@ class PopupManager extends React.PureComponent {
     }
 
     // The <Popup /> wrapper here is a TopologyProvider. If we were lazy, we could omit this and set
-    //  the `topology` prop on LinkedResourceContainer, but consistency is maintainability.
+    //  the `topology` prop on Resource, but consistency is maintainability.
     return (
       <PopupLibrary>
         <Popup>
-          <LinkedResourceContainer
+          <Resource
             close={this.props.lrs.exec(NS.popup('close'))}
             subject={resource}
           />
@@ -499,7 +499,7 @@ Write some views to render resources:
 
 ```JSX harmony
 import LinkedRenderStore, { RENDER_CLASS_NAME } from 'link-lib';
-import { link, register, Property, LinkedResourceContainer } from 'link-redux';
+import { link, register, Property, Resource } from 'link-redux';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import FontAwesome from 'react-fontawesome';
@@ -525,7 +525,7 @@ class Thing extends React.PureComponent {
       <div>
         <Property label={NS.schema('name')}/> // Delegate the rendering of the name to another dynamically resolved component
         <p>{text.value}</p>
-        <LinkedResourceContainer subject={creator} />
+        <Resource subject={creator} />
       </div>
     );
   }
@@ -636,8 +636,8 @@ import LRS from './LRS';
 
 // Either with react-router, or without and just take the current location (but listen for pushstate).
 const App = ReactRouter
-  ? withRouter(() => <LinkedResourceContainer subject={} />)
-  : () => <LinkedResourceContainer subject={new NamedNode(window.location.href)} />;
+  ? withRouter(() => <Resource subject={} />)
+  : () => <Resource subject={new NamedNode(window.location.href)} />;
 
 export default () => (
   <RenderStoreProvider value={LRS}>
@@ -649,10 +649,10 @@ export default () => (
 ```
 
 ### 5. Start the application
-It should render (and fetch) resources passed as `subject` to a `LinkedResourceContainer` (The
+It should render (and fetch) resources passed as `subject` to a `Resource` (The
 type of `subject` MUST be a NamedNode instance, e.g. `NS.api('todos/5')`).
 
-Note that each `LinkedResourceContainer` also acts as a [React error boundary](https://reactjs.org/docs/error-boundaries.html),
+Note that each `Resource` also acts as a [React error boundary](https://reactjs.org/docs/error-boundaries.html),
 so errors should automatically be contained rather than crash your entire app.
 
 ## Further usage
