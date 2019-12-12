@@ -18,7 +18,7 @@ import {
 } from "./Typable";
 
 export interface PropTypes extends Partial<TypableProps> {
-    children?: React.ReactType;
+    children?: React.ComponentType;
     label?: NamedNode;
 }
 

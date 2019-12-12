@@ -14,8 +14,8 @@ import {
 
 export interface TypableProps extends DataInvalidationProps {
     linkVersion?: number;
-    onError?: React.ReactType;
-    onLoad?: React.ReactType;
+    onError?: React.ComponentType;
+    onLoad?: React.ComponentType;
 }
 
 export interface TypableInjectedProps extends SubjectProp, Partial<TopologyProp>, Partial<LinkCtxOverrides>  {}

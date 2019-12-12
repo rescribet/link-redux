@@ -10,7 +10,7 @@ export function useResourceView(subject?: NamedNode | BlankNode,
 
     const lrs = useLRS();
     const context = useLinkRenderContext();
-    const [view, setView] = React.useState<React.ReactType | undefined>(undefined);
+    const [view, setView] = React.useState<React.ComponentType | undefined>(undefined);
 
     React.useEffect(() => {
         setView(lrs.resourceComponent(

@@ -54,7 +54,7 @@ const nodeTypes: string[] = [TermType.NamedNode, TermType.BlankNode];
 
 export function getLinkedObjectClass({ label, subject, topology, topologyCtx }: PropertyWrappedProps,
                                      lrs: LinkReduxLRSType,
-                                     labelOverride?: NamedNode): React.ReactType | undefined {
+                                     labelOverride?: NamedNode): React.ComponentType | undefined {
     return lrs.resourcePropertyComponent(
         subject,
         labelOverride || label,
@@ -67,8 +67,8 @@ function limitTimes<P extends PropertyWrappedProps>(
     objRaw: SomeTerm[],
     lrs: LinkReduxLRSType,
     func: (prop: SomeTerm) => React.ReactNode,
-    associationRenderer: React.ReactType,
-): React.ReactElement<any> | null {
+    associationRenderer: React.ComponentType<P>,
+): React.ReactElement<P> | null {
 
     const associationProps = associationRenderer !== React.Fragment ? props : null;
 

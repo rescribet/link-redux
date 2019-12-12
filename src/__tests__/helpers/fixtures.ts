@@ -9,11 +9,12 @@ import {
 } from "link-lib";
 import React from "react";
 
-import { LinkedResourceContainer } from "../../components/LinkedResourceContainer";
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
+import { Resource } from "../../components/Resource";
 import {
     LinkContext,
-    LinkCtxOverrides, LinkReduxLRSType,
+    LinkCtxOverrides,
+    LinkReduxLRSType,
     TopologyContextType,
 } from "../../index";
 
@@ -74,11 +75,11 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
     ];
 };
 
-export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ReactType> {
+export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
     const schema = new Schema(store);
-    const mapping = new ComponentStoreTestProxy<React.ReactType>(schema);
-    const lrs = new LinkedRenderStore<React.ReactType>({ mapping, schema, store });
+    const mapping = new ComponentStoreTestProxy<React.ComponentType>(schema);
+    const lrs = new LinkedRenderStore<React.ComponentType>({ mapping, schema, store });
     store.addQuads(statements);
     store.flush();
 
@@ -107,7 +108,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
                         children,
                     )));
         },
-    } as TestContext<React.ReactType>;
+    } as TestContext<React.ComponentType<any>>;
 }
 
 export const empty = (id = exNS("0")) => chargeLRS([], id);

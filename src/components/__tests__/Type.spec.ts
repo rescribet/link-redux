@@ -8,7 +8,7 @@ import React from "react";
 import * as ctx from "../../__tests__/helpers/fixtures";
 import { Type } from "../Type";
 
-function createComponent(className: string): React.ReactType {
+function createComponent(className: string): React.ComponentType {
     return () => React.createElement("span", { className });
 }
 

@@ -20,7 +20,7 @@ export type LabelType = NamedNode | NamedNode[];
 
 export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
-export type LinkReduxLRSType = LinkedRenderStore<React.ElementType>;
+export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
 export type LinkReturnType = "term" | "statement" | "literal" | "value";
 
