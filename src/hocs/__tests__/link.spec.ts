@@ -2,11 +2,13 @@
 import "../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
+import schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import { LinkOpts, MapDataToPropsParam } from "../../types";
 import { dataPropsToPropMap, link } from "../link";
 
 const id = "resources/5";
@@ -106,18 +108,22 @@ describe("link", () => {
     });
 
     describe("link HOC", () => {
-        it("passes object as terms", () => {
+        const renderWithProps = (props: MapDataToPropsParam, renderOpts?: LinkOpts) => {
             const opts = ctx.fullCW(iri);
 
-            const comp = link({
-                author: defaultNS.schema("author"),
-                name: defaultNS.schema("name"),
-                tags: defaultNS.example("tags"),
-                text: defaultNS.schema("text"),
-            })(TestComponent);
-            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
+            const comp = link(props, renderOpts)(TestComponent);
+            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
 
-            const elem = mount(opts.wrapComponent());
+            return mount(opts.wrapComponent());
+        };
+
+        it("passes object as terms", () => {
+            const elem = renderWithProps({
+                author: schema.author,
+                name: schema.name,
+                tags: defaultNS.example("tags"),
+                text: schema.text,
+            });
 
             expect(elem.find(TestComponent)).toHaveLength(1);
             expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
@@ -127,17 +133,12 @@ describe("link", () => {
         });
 
         it("passes object as terms under custom keys", () => {
-            const opts = ctx.fullCW(iri);
-
-            const comp = link({
-                author: defaultNS.schema("author"),
+            const elem = renderWithProps({
+                author: schema.author,
                 tags: defaultNS.example("tags"),
-                text: defaultNS.schema("text"),
-                title: defaultNS.schema("name"),
-            })(TestComponent);
-            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-            const elem = mount(opts.wrapComponent());
+                text: schema.text,
+                title: schema.name,
+            });
 
             expect(elem.find(TestComponent)).toHaveLength(1);
             expect(elem.find(TestComponent)).toHaveProp("title", rdfFactory.literal("title"));
@@ -148,20 +149,15 @@ describe("link", () => {
         });
 
         it("passes object with custom options", () => {
-            const opts = ctx.fullCW(iri);
-
-            const comp = link({
-                author: defaultNS.schema("author"),
-                name: [defaultNS.schema("name"), defaultNS.rdfs("label")],
+            const elem = renderWithProps({
+                author: schema.author,
+                name: [schema.name, defaultNS.rdfs("label")],
                 tags: {
                     label: defaultNS.example("tags"),
                     limit: Infinity,
                 },
-                text: defaultNS.schema("text"),
-            })(TestComponent);
-            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-            const elem = mount(opts.wrapComponent());
+                text: schema.text,
+            });
 
             expect(elem.find(TestComponent)).toHaveLength(1);
             expect(elem.find(TestComponent)).not.toHaveProp("label");
@@ -178,20 +174,15 @@ describe("link", () => {
 
         describe("returnType option", () => {
             it("can return JS native objects", () => {
-                const opts = ctx.fullCW(iri);
-
-                const comp = link(
+                const elem = renderWithProps(
                     {
-                        author: defaultNS.schema("author"),
-                        dateCreated: defaultNS.schema("dateCreated"),
-                        name: defaultNS.schema("name"),
+                        author: schema.author,
+                        dateCreated: schema.dateCreated,
+                        name: schema.name,
                         timesRead: defaultNS.ex("timesRead"),
                     },
                     { returnType: "literal" },
-                )(TestComponent);
-                opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-                const elem = mount(opts.wrapComponent());
+                );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
                 expect(elem.find(TestComponent)).toHaveProp("name", "title");
@@ -202,50 +193,35 @@ describe("link", () => {
             });
 
             it("can return values", () => {
-                const opts = ctx.fullCW(iri);
-
-                const comp = link(
-                    { name: defaultNS.schema("name") },
+                const elem = renderWithProps(
+                    { name: schema.name },
                     { returnType: "value" },
-                )(TestComponent);
-                opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-                const elem = mount(opts.wrapComponent());
+                );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
                 expect(elem.find(TestComponent)).toHaveProp("name", "title");
             });
 
             it("can return terms", () => {
-                const opts = ctx.fullCW(iri);
-
-                const comp = link(
-                    { name: defaultNS.schema("name") },
+                const elem = renderWithProps(
+                    { name: schema.name },
                     { returnType: "term" },
-                )(TestComponent);
-                opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-                const elem = mount(opts.wrapComponent());
+                );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
                 expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
             });
 
             it("can return statements", () => {
-                const opts = ctx.fullCW(iri);
-
-                const comp = link(
-                    { name: defaultNS.schema("name") },
+                const elem = renderWithProps(
+                    { name: schema.name },
                     { returnType: "statement" },
-                )(TestComponent);
-                opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, defaultNS.schema("Thing")));
-
-                const elem = mount(opts.wrapComponent());
+                );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
                 expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.quad(
-                    opts.subject,
-                    defaultNS.schema("name"),
+                    iri,
+                    schema.name,
                     rdfFactory.literal("title"),
                     defaultNS.example("default"),
                 ));

@@ -15,6 +15,11 @@ import {
 } from "../Typable";
 
 describe("Typable", () => {
+    const props = {
+        subject: rdfFactory.blankNode(),
+        topology: defaultNS.ex("t"),
+    };
+
     describe("renderNoView", () => {
         it("renders a registered no-view component", () => {
             const opts = ctx.empty();
@@ -22,10 +27,7 @@ describe("Typable", () => {
             errorComp.type = defaultNS.ll("NoView");
             errorComp.topology = defaultNS.ex("t");
             opts.lrs.registerAll(register(errorComp));
-            const element = renderNoView({
-                subject: rdfFactory.blankNode(),
-                topology: defaultNS.ex("t"),
-            }, opts.lrs);
+            const element = renderNoView(props, opts.lrs);
 
             const tree = mount(element);
 
@@ -35,12 +37,7 @@ describe("Typable", () => {
 
     describe("renderError", () => {
         it("returns null without any error component", () => {
-            const opts = ctx.empty();
-
-            const element = renderError({
-                subject: rdfFactory.blankNode(),
-                topology: defaultNS.ex("t"),
-            }, opts.lrs);
+            const element = renderError(props, ctx.empty().lrs);
 
             expect(element).toBeNull();
         });
@@ -66,25 +63,13 @@ describe("Typable", () => {
 
     describe("errorComponent", () => {
         it("returns null without onError and registered resource", () => {
-            const opts = ctx.empty();
-            const resolved = errorComponent({
-                subject: rdfFactory.blankNode(),
-                topology: defaultNS.ex("t"),
-            }, opts.lrs);
-
-            expect(resolved).toBeNull();
+            expect(errorComponent(props, ctx.empty().lrs)).toBeNull();
         });
     });
 
     describe("loadingComponent", () => {
         it("returns null without onError and registered resource", () => {
-            const opts = ctx.empty();
-            const resolved = loadingComponent({
-                subject: rdfFactory.blankNode(),
-                topology: defaultNS.ex("t"),
-            }, opts.lrs);
-
-            expect(resolved).toBeNull();
+            expect(loadingComponent(props, ctx.empty().lrs)).toBeNull();
         });
     });
 });

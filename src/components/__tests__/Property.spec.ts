@@ -6,7 +6,7 @@ import rdfs from "@ontologies/rdfs";
 import schema from "@ontologies/schema";
 import xsd from "@ontologies/xsd";
 import { mount } from "enzyme";
-import { defaultNS, LinkedRenderStore } from "link-lib";
+import { ComponentRegistration, defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
@@ -17,63 +17,51 @@ import { Property } from "../Property";
 const subject = defaultNS.example("41");
 
 describe("Property component", () => {
-    it("renders null when label and data are not present", () => {
-        const opts = ctx.empty();
-        const elem = mount(opts.wrapComponent(React.createElement(
+    const render = (props: object = {}, registrations: Array<ComponentRegistration<any>> = []) => {
+        const opts = ctx.fullCW();
+        opts.lrs.registerAll(registrations);
+
+        return mount(opts.wrapComponent(React.createElement(
             Property,
-            { subject, ...opts.contextProps() },
+            {
+                forceRender: true,
+                label: defaultNS.ex("nonexistent"),
+                subject,
+                ...opts.contextProps(),
+                ...props,
+            },
         )));
+    };
+
+    it("renders null when label and data are not present", () => {
+        const elem = render({
+            forceRender: false,
+            label: undefined,
+        });
         expect(elem.find(Property).children()).toHaveLength(0);
     });
 
     it("renders null when data is not present with forceRender", () => {
-        const opts = ctx.fullCW();
-        const elem = mount(opts.wrapComponent(React.createElement(
-            Property,
-            {
-                forceRender: true,
-                label: defaultNS.ex("nonexistent"),
-                subject,
-                ...opts.contextProps(),
-            },
-        )));
+        const elem = render();
         expect(elem.find(Property).children()).toHaveLength(0);
     });
 
     it("renders the children when data is not present with forceRender and children", () => {
-        const opts = ctx.fullCW();
-        const elem = mount(opts.wrapComponent(React.createElement(
-            Property,
-            {
-                children: React.createElement("span", { className: "child-elem" }),
-                forceRender: true,
-                label: defaultNS.ex("nonexistent"),
-                subject,
-                ...opts.contextProps(),
-            },
-        )));
+        const elem = render({ children: React.createElement("span", { className: "child-elem" }) });
+
         expect(elem).toContainMatchingElement(".child-elem");
     });
 
     it("renders the children and association renderer when data is not present with forceRender and children", () => {
-        const opts = ctx.fullCW();
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            ({ children }) => React.createElement("div", { className: "association" }, children),
+        const regs = LinkedRenderStore.registerRenderer(
+            ({ children }: any) => React.createElement("div", { className: "association" }, children),
             schema.CreativeWork,
             rdf.predicate,
-        ));
-        const elem = mount(opts.wrapComponent(React.createElement(
-            Property,
-            {
-                children: React.createElement("span", { className: "child-elem" }),
-                forceRender: true,
-                label: defaultNS.ex("nonexistent"),
-                subject,
-                ...opts.contextProps(),
-            },
-        )));
+        );
+        const elem = render({ children: React.createElement("span", { className: "association-child" }) }, regs);
+
         expect(elem).toContainMatchingElement(".association");
-        expect(elem).toContainMatchingElement(".child-elem");
+        expect(elem).toContainMatchingElement(".association-child");
     });
 
     it("renders null when the given property is not present", () => {
@@ -188,8 +176,8 @@ describe("Property component", () => {
     });
 
     describe("with children", () => {
-        it("renders the children", () => {
-            const title = "The title";
+        const title = "The title";
+        const renderWithChildren = (registrations: Array<ComponentRegistration<any>> = []) => {
             const opts = ctx.name(subject, title);
 
             const comp = React.createElement(
@@ -197,26 +185,24 @@ describe("Property component", () => {
                 { forceRender: true, label: schema.name, ...opts.contextProps() },
                 React.createElement("p", { className: "childComponent" }, null),
             );
-            const elem = mount(opts.wrapComponent(comp));
+            opts.lrs.registerAll(registrations);
+
+            return mount(opts.wrapComponent(comp));
+        };
+
+        it("renders the children", () => {
+            const elem = renderWithChildren();
 
             expect(elem.find("p.childComponent")).toExist();
         });
 
         it("renders the children when a component was found", () => {
-            const title = "The title";
-            const opts = ctx.name(subject, title);
-            opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-                (props) => React.createElement("div", { className: "nameProp" }, props.children),
+            const regs = LinkedRenderStore.registerRenderer(
+                (props: any) => React.createElement("div", { className: "nameProp" }, props.children),
                 schema.Thing,
                 schema.name,
-            ));
-
-            const comp = React.createElement(
-                Property,
-                { forceRender: true, label: schema.name, ...opts.contextProps() },
-                React.createElement("p", { className: "childComponent" }, null),
             );
-            const elem = mount(opts.wrapComponent(comp));
+            const elem = renderWithChildren(regs);
 
             expect(elem.find("p.childComponent")).toExist();
         });
