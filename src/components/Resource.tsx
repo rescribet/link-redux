@@ -1,8 +1,9 @@
 import React from "react";
 
-import { useCalculateChildProps, useLinkRenderContext } from "../hocs/withLinkCtx";
+import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataFetching } from "../hooks/useDataFetching";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
 import {

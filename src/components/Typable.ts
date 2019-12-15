@@ -1,7 +1,7 @@
 import { defaultNS as NS, RENDER_CLASS_NAME, RequestStatus } from "link-lib";
 import React from "react";
 
-import { Provider } from "../hocs/withLinkCtx";
+import { LinkRenderCtx } from "../contexts/LinkRenderCtx";
 import {
     DataInvalidationProps,
     LabelType,
@@ -30,7 +30,7 @@ export function nextRenderContext(props: TypableInjectedProps): LinkRenderContex
 export function wrapRenderContext(props: TypableInjectedProps,
                                   comp: React.ReactNode) {
     return React.createElement(
-        Provider,
+        LinkRenderCtx.Provider,
         { value: nextRenderContext(props) },
         comp,
     );

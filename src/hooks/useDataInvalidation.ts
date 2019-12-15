@@ -3,6 +3,7 @@ import { normalizeType } from "link-lib";
 import React from "react";
 
 import { DataInvalidationProps, SubjectType } from "../types";
+
 import { useLRS } from "./useLRS";
 
 /**
@@ -14,16 +15,12 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
         return [];
     }
 
-    let result;
+    const result = [props.subject];
     if (props.dataSubjects) {
-        result = Array.isArray(props.dataSubjects)
-            ? [props.subject, ...props.dataSubjects]
-            : [props.subject, props.dataSubjects];
-    } else {
-        result = [props.subject];
+        result.push(...normalizeType(props.dataSubjects));
     }
 
-    if (props.subject && props.subject.termType === TermType.NamedNode) {
+    if (props.subject?.termType === TermType.NamedNode) {
         const document = rdfFactory.namedNode(doc(props.subject));
         if (!rdfFactory.equals(document, props.subject)) {
             result.push(document);

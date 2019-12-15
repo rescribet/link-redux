@@ -8,8 +8,9 @@ import {
 } from "link-lib";
 import React from "react";
 
-import { useCalculateChildProps, useLinkRenderContext } from "../hocs/withLinkCtx";
+import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useLRS } from "../hooks/useLRS";
 
 import {

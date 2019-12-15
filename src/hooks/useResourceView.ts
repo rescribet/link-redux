@@ -2,7 +2,7 @@ import rdfFactory, { BlankNode, NamedNode } from "@ontologies/core";
 import { DEFAULT_TOPOLOGY } from "link-lib";
 import React from "react";
 
-import { useLinkRenderContext } from "../hocs/withLinkCtx";
+import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useLRS } from "./useLRS";
 
 export function useResourceView(subject?: NamedNode | BlankNode,

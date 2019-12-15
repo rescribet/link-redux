@@ -1,6 +1,7 @@
 import React from "react";
+
+import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { SubjectProp } from "../../types";
-import { useLinkRenderContext } from "../withLinkCtx";
 
 export const wrapWithSubject = <P>(WrappedComponent: React.ComponentType<P & Partial<SubjectProp>>) => {
     const Comp = (props: P) => {

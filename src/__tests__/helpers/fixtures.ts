@@ -1,4 +1,6 @@
-import rdfFactory, { NamedNode, Quad } from "@ontologies/core";
+import rdfFactory, { NamedNode, Quad, SomeTerm } from "@ontologies/core";
+import rdfx from "@ontologies/rdf";
+import schema from "@ontologies/schema";
 import {
     ComponentStoreTestProxy,
     defaultNS as NS,
@@ -33,53 +35,40 @@ interface CWResource extends CWOpts {
 }
 
 const typeObject = (id: NamedNode) => [
-    rdfFactory.quad(id, NS.rdf("type"), NS.schema("CreativeWork")),
+    rdfFactory.quad(id, rdfx.type, schema.CreativeWork),
 ];
 
 const sTitle = (id: NamedNode, title: string) => [
-    rdfFactory.quad(id, NS.schema("name"), rdfFactory.literal(title)),
+    rdfFactory.quad(id, schema.name, rdfFactory.literal(title)),
 ];
 
 const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
+    const createQuad = (predicate: NamedNode, object: SomeTerm) => rdfFactory.quad(
+        id,
+        predicate,
+        object,
+        NS.example("default"),
+    );
+
     return [
         typeObject(id)[0],
-        rdfFactory.quad(
-          id,
-          NS.schema("name"),
-          rdfFactory.literal(attrs.title || "title"),
-          NS.example("default"),
-        ),
-        rdfFactory.quad(
-          id,
-          NS.schema("text"),
-          rdfFactory.literal(attrs.text || "text"),
-          NS.example("default"),
-        ),
-        rdfFactory.quad(
-          id,
-          NS.schema("author"),
-          rdfFactory.namedNode(attrs.author || "http://example.org/people/0"),
-          NS.example("default"),
-        ),
-        rdfFactory.quad(
-          id,
-          NS.schema("dateCreated"),
-          rdfFactory.literal(new Date("2019-01-01")),
-          NS.example("default"),
-        ),
-        rdfFactory.quad(id, NS.ex("timesRead"), rdfFactory.literal(5), NS.example("default")),
-        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/0"), NS.example("default")),
-        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/1"), NS.example("default")),
-        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/2"), NS.example("default")),
-        rdfFactory.quad(id, NS.example("tags"), NS.example("tag/3"), NS.example("default")),
+        createQuad(schema.name, rdfFactory.literal(attrs.title || "title")),
+        createQuad(schema.text, rdfFactory.literal(attrs.text || "text")),
+        createQuad(schema.author, rdfFactory.namedNode(attrs.author || "http://example.org/people/0")),
+        createQuad(schema.dateCreated, rdfFactory.literal(new Date("2019-01-01"))),
+        createQuad(NS.ex("timesRead"), rdfFactory.literal(5)),
+        createQuad(NS.example("tags"), NS.example("tag/0")),
+        createQuad(NS.example("tags"), NS.example("tag/1")),
+        createQuad(NS.example("tags"), NS.example("tag/2")),
+        createQuad(NS.example("tags"), NS.example("tag/3")),
     ];
 };
 
 export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
-    const schema = new Schema(store);
-    const mapping = new ComponentStoreTestProxy<React.ComponentType>(schema);
-    const lrs = new LinkedRenderStore<React.ComponentType>({ mapping, schema, store });
+    const s = new Schema(store);
+    const mapping = new ComponentStoreTestProxy<React.ComponentType>(s);
+    const lrs = new LinkedRenderStore<React.ComponentType>({ mapping, schema: s, store });
     store.addQuads(statements);
     store.flush();
 
@@ -93,7 +82,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
         }),
         lrs,
         mapping,
-        schema,
+        schema: s,
         store,
         subject,
         wrapComponent: (children?: React.ReactElement<any>,

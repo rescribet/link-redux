@@ -3,13 +3,14 @@ import hoistNonReactStatics from "hoist-non-react-statics";
 import React from "react";
 
 import { PropertyWrappedProps } from "../../components/Property";
+import { useCalculateChildProps } from "../../hooks/useCalculateChildProps";
 import { useDataInvalidation } from "../../hooks/useDataInvalidation";
+import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
+import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { useLRS } from "../../hooks/useLRS";
 import { LinkOpts } from "../../types";
-import { useCalculateChildProps, useLinkRenderContext } from "../withLinkCtx";
-import { DataToPropsMapping } from "./dataPropsToPropMap";
 
-import { getLinkedObjectProperties } from "./getLinkedObjectProperties";
+import { DataToPropsMapping } from "./dataPropsToPropMap";
 
 export const wrapWithConnect = <P>(
     propMap: DataToPropsMapping,
@@ -26,7 +27,7 @@ export const wrapWithConnect = <P>(
             .filter((s: Quad) => requestedProperties.includes(rdfFactory.id(s.predicate)));
         const mappedProps = {
             ...childProps,
-            ...getLinkedObjectProperties(lrs, context, subjProps, propMap, opts.returnType || "term"),
+            ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || "term"),
         };
 
         const linkVersion = useDataInvalidation(mappedProps);

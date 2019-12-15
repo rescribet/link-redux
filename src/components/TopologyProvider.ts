@@ -1,12 +1,11 @@
 import React from "react";
 
+import { LinkRenderCtx } from "../contexts/LinkRenderCtx";
 import {
     LinkRenderContext,
     TopologyRenderer,
     TopologyType,
 } from "../types";
-
-import { Consumer, Provider } from "../hocs/withLinkCtx";
 
 /**
  * Inherit from this component to set the topology.
@@ -29,11 +28,11 @@ export class TopologyProvider<P = {}, S = {}> extends React.Component<P, S> {
 
     public wrap(children: TopologyRenderer | React.ReactNode | React.ReactNode[]) {
         return React.createElement(
-            Consumer,
+            LinkRenderCtx.Consumer,
             null,
             ({ subject }: LinkRenderContext) =>
                 React.createElement(
-                    Provider,
+                    LinkRenderCtx.Provider,
                     {
                         value: {
                             subject,

@@ -1,22 +1,26 @@
 import rdfFactory, { Quad, SomeTerm } from "@ontologies/core";
 import { getPropBestLangRaw } from "link-lib";
 
-import { LinkReduxLRSType, LinkRenderContext, LinkReturnType, ToJSOutputTypes } from "../../types";
+import { LinkReturnType, ToJSOutputTypes } from "../types";
 
-import { DataToPropsMapping } from "./dataPropsToPropMap";
-import { toReturnType } from "./toReturnType";
+import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
+import { toReturnType } from "../hocs/link/toReturnType";
+
+import { useLinkRenderContext } from "./useLinkRenderContext";
+import { useLRS } from "./useLRS";
 
 export interface PropertyBoundProps {
     [k: string]: Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 }
 
-export function getLinkedObjectProperties(
-    lrs: LinkReduxLRSType,
-    context: LinkRenderContext,
+export function useLinkedObjectProperties(
     subjProps: Quad[],
     propMap: DataToPropsMapping,
     returnType: LinkReturnType,
 ): PropertyBoundProps {
+    const lrs = useLRS();
+    const context = useLinkRenderContext();
+
     const acc: PropertyBoundProps = {};
 
     for (const propOpts of Object.values(propMap)) {
@@ -37,9 +41,7 @@ export function getLinkedObjectProperties(
             } else {
                 acc[propOpts.name] = subjProps
                     .filter((s: Quad) => rdfFactory.id(s.predicate) === rdfFactory.id(cur))
-                    .map(
-                        (s: Quad) => toReturnType(returnType, s),
-                    ) as Quad[] | SomeTerm[] | string[];
+                    .map((s: Quad) => toReturnType(returnType, s)) as Quad[] | SomeTerm[] | string[];
             }
         }
     }
