@@ -109,8 +109,10 @@ export interface LinkOpts {
     returnType?: LinkReturnType;
 }
 
+export type PropParam = NamedNode | NamedNode[] | LinkOpts;
+
 export interface MapDataToPropsParam {
-    [k: string]: NamedNode | NamedNode[] | LinkOpts;
+    [k: string]: PropParam;
 }
 
 /**

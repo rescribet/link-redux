@@ -31,6 +31,14 @@ export const useLinkRenderContext = () => React.useContext(LinkRenderCtx);
 
 export const { Consumer, Provider } = LinkRenderCtx;
 
+type Overrides<R> = Partial<
+    LinkRenderContext
+        & LinkedRenderStoreContext
+        & LinkCtxOverrides
+        & React.RefAttributes<R>
+        & { innerRef: undefined }
+    >;
+
 export function useCalculateChildProps<P, R = any>(
   props: P & Partial<SubjectProp & TopologyProp & PassableRef<R>>,
   context: LinkRenderContext,
@@ -39,11 +47,7 @@ export function useCalculateChildProps<P, R = any>(
 
     const lrs = useLRS();
     const { subject, topology } = context;
-    const overrides: Partial<LinkRenderContext
-      & LinkedRenderStoreContext
-      & LinkCtxOverrides
-      & React.RefAttributes<R>
-      & { innerRef: undefined }> = {};
+    const overrides: Overrides<R> = {};
 
     if (typeof props.innerRef !== "undefined") {
       overrides.ref = props.innerRef;
