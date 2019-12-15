@@ -1,8 +1,10 @@
 # Link-Redux
 *A Link to the Web*
 
-[![CircleCI](https://circleci.com/gh/fletcher91/link-redux.svg?style=svg)](https://circleci.com/gh/fletcher91/link-redux)
+[![CircleCI](https://img.shields.io/circleci/build/gh/fletcher91/link-redux)](https://circleci.com/gh/fletcher91/link-redux)
 [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://fletcher91.github.io/link-redux/)
+![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/fletcher91/link-redux)
+![Code Climate coverage](https://img.shields.io/codeclimate/coverage/fletcher91/link-redux)
 ![npm version](https://img.shields.io/npm/v/link-lib.svg)
 ![npm type definitions](https://img.shields.io/npm/types/link-redux.svg)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
