@@ -1,6 +1,4 @@
 /* eslint no-magic-numbers: 0 */
-import "../../__tests__/useHashFactory";
-
 import rdfFactory from "@ontologies/core";
 import schema from "@ontologies/schema";
 import { mount } from "enzyme";
@@ -8,7 +6,7 @@ import { defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { LinkOpts, MapDataToPropsParam } from "../../types";
+import { LinkOpts, MapDataToPropsParam, ReturnType } from "../../types";
 import { link } from "../link";
 
 const id = "resources/5";
@@ -95,7 +93,7 @@ describe("link", () => {
                         name: schema.name,
                         timesRead: defaultNS.ex("timesRead"),
                     },
-                    { returnType: "literal" },
+                    { returnType: ReturnType.Literal },
                 );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
@@ -109,7 +107,7 @@ describe("link", () => {
             it("can return values", () => {
                 const elem = renderWithProps(
                     { name: schema.name },
-                    { returnType: "value" },
+                    { returnType: ReturnType.Value },
                 );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
@@ -119,7 +117,7 @@ describe("link", () => {
             it("can return terms", () => {
                 const elem = renderWithProps(
                     { name: schema.name },
-                    { returnType: "term" },
+                    { returnType: ReturnType.Term },
                 );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);
@@ -129,7 +127,7 @@ describe("link", () => {
             it("can return statements", () => {
                 const elem = renderWithProps(
                     { name: schema.name },
-                    { returnType: "statement" },
+                    { returnType: ReturnType.Statement },
                 );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);

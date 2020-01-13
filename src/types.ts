@@ -22,7 +22,12 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
-export type LinkReturnType = "term" | "statement" | "literal" | "value";
+export const enum ReturnType {
+  Term = "term",
+  Statement = "statement",
+  Literal = "literal",
+  Value = "value",
+}
 
 export type SubjectType = SomeNode;
 
@@ -104,9 +109,9 @@ export interface LinkOpts {
     forceRender?: boolean;
     label?: LabelType;
     limit?: number;
+    returnType?: ReturnType;
     linkedProp?: LinkedPropType;
     name?: string;
-    returnType?: LinkReturnType;
 }
 
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;

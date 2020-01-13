@@ -8,7 +8,7 @@ import { useDataInvalidation } from "../../hooks/useDataInvalidation";
 import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
 import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { useLRS } from "../../hooks/useLRS";
-import { LinkOpts } from "../../types";
+import { LinkOpts, ReturnType } from "../../types";
 
 import { DataToPropsMapping } from "./dataPropsToPropMap";
 
@@ -27,7 +27,7 @@ export const wrapWithConnect = <P>(
             .filter((s: Quad) => requestedProperties.includes(rdfFactory.id(s.predicate)));
         const mappedProps = {
             ...childProps,
-            ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || "term"),
+            ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || ReturnType.Term),
         };
 
         const linkVersion = useDataInvalidation(mappedProps);

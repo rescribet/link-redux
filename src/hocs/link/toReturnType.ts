@@ -1,6 +1,6 @@
 import rdfFactory, { isLiteral, Literal, Quad, SomeTerm } from "@ontologies/core";
 import xsd from "@ontologies/xsd";
-import { LinkReturnType, ToJSOutputTypes } from "../../types";
+import { ReturnType, ToJSOutputTypes } from "../../types";
 
 const numberTypes = [
     xsd.integer,
@@ -34,15 +34,15 @@ function toJS(obj: Literal | unknown): any {
     return obj.value;
 }
 
-export function toReturnType(returnType: LinkReturnType, p: Quad): Quad | SomeTerm | ToJSOutputTypes {
+export function toReturnType(returnType: ReturnType, p: Quad): Quad | SomeTerm | ToJSOutputTypes {
     switch (returnType) {
-        case "literal":
+        case ReturnType.Literal:
             return toJS(p.object);
-        case "value":
+        case ReturnType.Value:
             return p.object.value;
-        case "term":
+        case ReturnType.Term:
             return p.object;
-        case "statement":
+        case ReturnType.Statement:
             return p;
     }
 }

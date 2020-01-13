@@ -1,7 +1,7 @@
 import rdfFactory, { Quad, SomeTerm } from "@ontologies/core";
 import { getPropBestLangRaw } from "link-lib";
 
-import { LinkReturnType, ToJSOutputTypes } from "../types";
+import { ReturnType, ToJSOutputTypes } from "../types";
 
 import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
 import { toReturnType } from "../hocs/link/toReturnType";
@@ -16,7 +16,7 @@ export interface PropertyBoundProps {
 export function useLinkedObjectProperties(
     subjProps: Quad[],
     propMap: DataToPropsMapping,
-    returnType: LinkReturnType,
+    returnType: ReturnType,
 ): PropertyBoundProps {
     const lrs = useLRS();
     const context = useLinkRenderContext();
