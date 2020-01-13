@@ -37,7 +37,7 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
  */
 export function useDataInvalidation(props: DataInvalidationProps) {
     const lrs = useLRS();
-    const subId = props.subject ? rdfFactory.id(props.subject) : undefined;
+    const subId = props.subject ? rdfFactory.id(lrs.store.canon(props.subject)) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(
         (lrs as any).store.changeTimestamps[subId],
     );

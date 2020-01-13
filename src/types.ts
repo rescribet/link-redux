@@ -1,4 +1,4 @@
-import { BlankNode, Literal, NamedNode, SomeTerm } from "@ontologies/core";
+import { BlankNode, Literal, NamedNode, Quad, SomeTerm, Term } from "@ontologies/core";
 import {
   EmptyRequestStatus,
   ErrorReporter,
@@ -39,6 +39,23 @@ export type TopologyType = TopologyContextType | null;
 
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
+
+export interface TermOpts extends DataOpts {
+  returnType: ReturnType.Term;
+}
+export interface StatementOpts extends DataOpts {
+  returnType: ReturnType.Statement;
+}
+export interface LiteralOpts extends DataOpts {
+  returnType: ReturnType.Literal;
+}
+export interface ValueOpts extends DataOpts {
+  returnType: ReturnType.Value;
+}
+
+export const defaultOptions: DataOpts = {
+  returnType: ReturnType.Term,
+};
 
 /****** Property registration ******/
 
@@ -104,6 +121,12 @@ export interface LinkCtxOverrides {
     subjectCtx: SubjectType;
     topologyCtx: TopologyContextType;
 }
+
+export interface DataOpts {
+  returnType: ReturnType;
+}
+
+export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 
 export interface LinkOpts {
     forceRender?: boolean;
