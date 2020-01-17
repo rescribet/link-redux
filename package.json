@@ -38,7 +38,7 @@
   "peerDependencies": {
     "hoist-non-react-statics": ">=3.x",
     "http-status-codes": ">= 1.x",
-    "link-lib": ">=1.0.0-rc4-light-5",
+    "link-lib": ">=2.0.0-0.6",
     "prop-types": ">= 15.x",
     "react": ">= 16.10.x"
   },
@@ -57,6 +57,7 @@
     "@pika/plugin-build-node": "^0.8.1",
     "@pika/plugin-build-web": "^0.8.1",
     "@pika/plugin-ts-standard-pkg": "^0.8.1",
+    "@rdfdev/iri": "^1.0.0",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/hoist-non-react-statics": "^3.3.1",
@@ -70,7 +71,7 @@
     "http-status-codes": "1.x",
     "jest": "^24.8.0",
     "jest-enzyme": "^7.1.0",
-    "link-lib": "=1.0.0-rc4-light-6",
+    "link-lib": "^2.0.0-0.6",
     "n-quads-parser": "^2.1.0-0",
     "prop-types": "^15.x",
     "react": "^16.12.0",

@@ -986,6 +986,11 @@
   resolved "https://registry.yarnpkg.com/@pika/types/-/types-0.8.1.tgz#ac24b9a73e6712d638cbc124b6b1d6a1ade51bb0"
   integrity sha512-xQNGUA9CAHmbI6tO9weu088pX3PbrRgYZs68FXAqkJXodNyEy7Ju8LU191MZOS6MZreA1PElPd2evsgQ6Wl/cA==
 
+"@rdfdev/iri@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@rdfdev/iri/-/iri-1.0.0.tgz#fdeacce2f070fd6e2e51408582459e3f7f47a6a6"
+  integrity sha512-kpT9iNFscwUBdiX2C/z3Nc4pyih72ogf9jM8uexKzRR/vMGTRP9Xnag7xwtQ73n8/KL9PTZsQ/sBKy+ZRJcOQA==
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -4192,12 +4197,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-link-lib@=1.0.0-rc4-light-6:
-  version "1.0.0-rc4-light-6"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-1.0.0-rc4-light-6.tgz#510da04fb6fc0157f1d1718c0b1f25f4baf7d930"
-  integrity sha512-9xSAS+EPfjn+8e491vsFPwCXXlZfFiqmvzk9JuFQ11H40jERWrbgr/aHrY/OrzWaKtEjxQQDY9RtE+QBQTThFQ==
-  dependencies:
-    murmurhash-js "^1.0.0"
+link-lib@^2.0.0-0.6:
+  version "2.0.0-0.6"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-2.0.0-0.6.tgz#2b64a7ba90220ea18008ccbccdb97a744a8d88ef"
+  integrity sha512-ke41qreqrIto/qANqlqRxjDj5mJ9sHh09QK9l2advywrDflXS7PE8vyB6+kYxSBIsi6r1rZsrNQ5vHcY817SMg==
 
 listr-input@^0.2.0:
   version "0.2.0"
