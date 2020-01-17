@@ -10,6 +10,7 @@ import { ComponentRegistration, defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ll from "../../ontology/ll";
 import { register } from "../../register";
 import { FC, PropertyProps } from "../../types";
 import { Property } from "../Property";
@@ -113,7 +114,7 @@ describe("Property component", () => {
         opts.lrs.registerAll(
             LinkedRenderStore.registerRenderer(
                 () => React.createElement("p", null, "loading"),
-                defaultNS.ll("LoadingResource"),
+                ll.LoadingResource,
             ),
         );
 

@@ -6,6 +6,7 @@ import { defaultNS, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ll from "../../ontology/ll";
 import { Type } from "../Type";
 
 function createComponent(className: string): React.ComponentType {
@@ -34,7 +35,7 @@ describe("Type component", () => {
         const opts = ctx.fullCW(subj);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createComponent("loading"),
-            defaultNS.ll("ErrorResource"),
+            ll.ErrorResource,
         ));
         (opts.lrs.api as any).setStatus(subj, 500);
 

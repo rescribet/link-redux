@@ -6,6 +6,7 @@ import { defaultNS } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ll from "../../ontology/ll";
 import { register } from "../../register";
 import {
     errorComponent,
@@ -24,7 +25,7 @@ describe("Typable", () => {
         it("renders a registered no-view component", () => {
             const opts = ctx.empty();
             const errorComp = () => React.createElement("span", { className: "custom-no-view" });
-            errorComp.type = defaultNS.ll("NoView");
+            errorComp.type = ll.NoView;
             errorComp.topology = defaultNS.ex("t");
             opts.lrs.registerAll(register(errorComp));
             const element = renderNoView(props, opts.lrs);

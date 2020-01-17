@@ -8,6 +8,7 @@ import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ll from "../../ontology/ll";
 import { Resource } from "../Resource";
 
 const id = "resources/5";
@@ -101,7 +102,7 @@ describe("Resource component", () => {
 
         opts.lrs.registerAll(
           LinkedRenderStore.registerRenderer(createTestElement(), schema.Thing),
-          LinkedRenderStore.registerRenderer(createTestElement("error"), defaultNS.ll("ErrorResource")),
+          LinkedRenderStore.registerRenderer(createTestElement("error"), ll.ErrorResource),
         );
         const elem = mount(
             opts.wrapComponent(React.createElement(Resource, {

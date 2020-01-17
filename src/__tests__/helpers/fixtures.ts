@@ -67,8 +67,14 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
 export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
     const s = new Schema(store);
+    const report = jest.fn();
     const mapping = new ComponentStoreTestProxy<React.ComponentType>(s);
-    const lrs = new LinkedRenderStore<React.ComponentType>({ mapping, schema: s, store });
+    const lrs = new LinkedRenderStore<React.ComponentType>({
+      mapping,
+      report,
+      schema: s,
+      store,
+    });
     store.addQuads(statements);
     store.flush();
 
@@ -82,6 +88,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
         }),
         lrs,
         mapping,
+        report,
         schema: s,
         store,
         subject,

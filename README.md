@@ -662,13 +662,15 @@ so errors should automatically be contained rather than crash your entire app.
 ### Loading and error handling
 Since all data fetching is handled at deeper layers, link also exposes some API's to render different
 views when an error occurred or when component is loading. Just register a component under
-`NS.ll('ErrorResource')` for error handling and `NS.ll('LoadingResource')` for loading states
+`ll.ErrorResource` for error handling and `ll.LoadingResource` for loading states
 respectively. Different views can be registered for different topologies as well.
+
+The view for when no view could be found can be registered on the type `ll.NoView`
 
 ```JSX Harmony
 class ThingNavigation extends React.PureComponent {
   // The magical type to catch errors.
-  static type = NS.ll('ErrorResource');
+  static type = ll.ErrorResource;
 
   // We can switch views so it renders with appropriate formatting for its location.
   static topology = NS.app('navigation');

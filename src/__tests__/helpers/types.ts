@@ -19,6 +19,7 @@ export interface TestContext<T> {
     contextProps: (topology?: TopologyContextType) => LinkContext & LinkCtxOverrides;
     lrs: LinkedRenderStore<T>;
     mapping: ComponentStoreTestProxy<T>;
+    report: jest.MockedFunction<any>;
     store: RDFStore;
     schema: Schema;
     subject: SomeNode | undefined;
