@@ -20,7 +20,8 @@ export function useRenderLoadingOrError(props: TypableProps & TypableInjectedPro
     }
 
     const status = lrs.getStatus(props.subject);
-    if (status.status === ACCEPTED || lrs.shouldLoadResource(props.subject)) {
+    if (status.status === ACCEPTED
+      || (lrs.shouldLoadResource(props.subject) || (status.status === null && status.requested))) {
         const loadComp = loadingComponent(props, lrs);
 
         return loadComp === null
