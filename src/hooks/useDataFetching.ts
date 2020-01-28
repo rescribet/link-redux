@@ -1,7 +1,8 @@
-import rdfFactory, { NamedNode, TermType } from "@ontologies/core";
+import { NamedNode, TermType } from "@ontologies/core";
 import React from "react";
 
 import { ResourcePropTypes } from "../components/Resource";
+import { id } from "../factoryHelpers";
 
 import { useLRS } from "./useLRS";
 
@@ -31,6 +32,6 @@ export function useDataFetching(props: ResourcePropTypes,
                 }
             }
         },
-        [rdfFactory.id(props.subject), lastUpdate],
+        [id(props.subject), lastUpdate],
     );
 }

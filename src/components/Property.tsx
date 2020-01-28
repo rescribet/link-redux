@@ -3,10 +3,10 @@ import rdf from "@ontologies/rdf";
 import rdfs from "@ontologies/rdfs";
 import {
     getTermBestLang,
-    normalizeType,
     SomeNode,
 } from "link-lib";
 import React from "react";
+import { id } from "../factoryHelpers";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataInvalidation } from "../hooks/useDataInvalidation";
@@ -139,13 +139,26 @@ export const Property: React.ComponentType<PropertyPropTypes & any> = (props): R
     } catch (e) {
         setError(e);
     }
-    if (subjectData.length === 0) {
+    const sdLength = subjectData.length;
+    if (sdLength === 0) {
         return null;
     }
-    const labels = normalizeType(childProps.label).filter(Boolean).map((l) => l.value);
-    const objRaw = subjectData
-        .filter((s) => labels.includes(s.predicate.value))
-        .map((s) => s.object);
+    const labelIds = [] .filter(Boolean).map(id);
+    if (Array.isArray(childProps.label)) {
+      for (let i = 0; i < childProps.label.length; i++) {
+        if (childProps.label[i]) {
+          labelIds.push(id(childProps.label[i]));
+        }
+      }
+    } else {
+      labelIds.push(id(childProps.label));
+    }
+    const objRaw = [];
+    for (let i = 0; i < sdLength; i++) {
+      if (labelIds.includes(id(subjectData[i].predicate))) {
+        objRaw.push(subjectData[i].object);
+      }
+    }
 
     if (error) {
         return renderError(childProps, lrs, error);

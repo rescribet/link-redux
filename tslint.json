@@ -11,6 +11,7 @@
     "no-inferrable-types": true,
     "no-null-keyword": false,
     "only-arrow-functions": false,
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "prefer-for-of": false
   }
 }

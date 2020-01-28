@@ -1,7 +1,8 @@
-import rdfFactory, { NamedNode, Quad, Term } from "@ontologies/core";
+import { NamedNode, Quad, Term } from "@ontologies/core";
 import { SomeNode } from "link-lib";
 import React from "react";
 
+import { id } from "../factoryHelpers";
 import { toReturnType } from "../hocs/link/toReturnType";
 import {
   DataHookReturnType,
@@ -14,8 +15,8 @@ import {
   ToJSOutputTypes,
   ValueOpts,
 } from "../types";
-import { useDataInvalidation } from "./useDataInvalidation";
 
+import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
 
 export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: TermOpts): Term[];
@@ -43,8 +44,8 @@ export function useResourceProperty(subject: SomeNode,
 
     setValue(returnValue as unknown as (Quad[] | Term[] | string[] | ToJSOutputTypes[]));
   }, [
-    rdfFactory.id(subject),
-    rdfFactory.id(property),
+    id(subject),
+    id(property),
     lastUpdate,
   ]);
 

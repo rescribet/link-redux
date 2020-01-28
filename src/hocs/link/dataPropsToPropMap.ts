@@ -1,6 +1,7 @@
-import rdfFactory, { isNamedNode, NamedNode } from "@ontologies/core";
+import { isNamedNode, NamedNode } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 
+import { id } from "../../factoryHelpers";
 import { LinkOpts, MapDataToPropsParam, PropParam } from "../../types";
 import { ProcessedLinkOpts } from "../link";
 
@@ -22,7 +23,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
     }
 
     return [
-        predObj.map((p) => rdfFactory.id(p)),
+        predObj.map(id),
         propKey || term(predObj[0]),
         {
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -36,7 +37,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 
 function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
     return [
-        [rdfFactory.id(predObj)],
+        [id(predObj)],
         propKey || term(predObj),
         {
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -55,7 +56,7 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
     }
 
     return [
-        labels.map((label) => rdfFactory.id(label)),
+        labels.map(id),
         propKey || predObj.name || term(labels[0]),
         {
             forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -83,7 +84,7 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
 
     const propMap: DataToPropsMapping = {};
     let requestedProperties: number[] = Array.isArray(mapDataToProps)
-        ? mapDataToProps.map((p) => rdfFactory.id(p))
+        ? mapDataToProps.map(id)
         : [];
 
     for (const propKey in mapDataToProps) {

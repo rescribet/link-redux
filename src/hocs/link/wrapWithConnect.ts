@@ -1,8 +1,9 @@
-import rdfFactory, { Quad } from "@ontologies/core";
+import { Quad } from "@ontologies/core";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import React from "react";
 
 import { PropertyWrappedProps } from "../../components/Property";
+import { id } from "../../factoryHelpers";
 import { useCalculateChildProps } from "../../hooks/useCalculateChildProps";
 import { useDataInvalidation } from "../../hooks/useDataInvalidation";
 import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
@@ -23,8 +24,12 @@ export const wrapWithConnect = <P>(
         const childProps = useCalculateChildProps({ ...props, innerRef: ref}, context, { lrs: true });
         const subjectData = lrs.tryEntity(childProps.subject);
 
-        const subjProps = subjectData
-            .filter((s: Quad) => requestedProperties.includes(rdfFactory.id(s.predicate)));
+        const subjProps: Quad[] = [];
+        for (let i = 0; i < subjectData.length; i++) {
+          if (requestedProperties.includes(id(subjectData[i].predicate))) {
+            subjProps.push(subjectData[i]);
+          }
+        }
         const mappedProps = {
             ...childProps,
             ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || ReturnType.Term),

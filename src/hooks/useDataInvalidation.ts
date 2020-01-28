@@ -1,7 +1,8 @@
-import rdfFactory, { BlankNode, doc, NamedNode, TermType } from "@ontologies/core";
+import rdfFactory, { doc, TermType } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
 
+import { equals, id } from "../factoryHelpers";
 import { DataInvalidationProps, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
@@ -22,7 +23,7 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
 
     if (props.subject?.termType === TermType.NamedNode) {
         const document = rdfFactory.namedNode(doc(props.subject));
-        if (!rdfFactory.equals(document, props.subject)) {
+        if (!equals(document, props.subject)) {
             result.push(document);
         }
     }
@@ -37,13 +38,24 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
  */
 export function useDataInvalidation(props: DataInvalidationProps) {
     const lrs = useLRS();
-    const subId = props.subject ? rdfFactory.id(lrs.store.canon(props.subject)) : undefined;
+    const subId = props.subject ? id(lrs.store.canon(props.subject)) : -1;
     const [lastUpdate, setInvalidate] = React.useState<number>(
         (lrs as any).store.changeTimestamps[subId],
     );
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
         setInvalidate(lastUpdateAt!);
+    }
+
+    let subjSum = 0;
+    if (Array.isArray(props.dataSubjects)) {
+      for (let i = 0; i < props.dataSubjects.length; i++) {
+        if (props.dataSubjects[i]) {
+          subjSum += id(props.dataSubjects[i]);
+        }
+      }
+    } else if (props.dataSubjects) {
+      subjSum += id(props.dataSubjects);
     }
 
     React.useEffect(() => {
@@ -58,10 +70,7 @@ export function useDataInvalidation(props: DataInvalidationProps) {
         });
     }, [
       subId,
-      normalizeType(props.dataSubjects)
-        .filter<NamedNode | BlankNode>(Boolean as any)
-        .map<number>((n: NamedNode | BlankNode) => rdfFactory.id(n))
-        .reduce((a: number, b: number) => a + b, 0),
+      subjSum,
     ]);
 
     return lastUpdate;

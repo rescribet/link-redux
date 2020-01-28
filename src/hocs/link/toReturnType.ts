@@ -1,5 +1,7 @@
-import rdfFactory, { isLiteral, Literal, Quad, SomeTerm } from "@ontologies/core";
+import { isLiteral, Literal, Quad, SomeTerm } from "@ontologies/core";
 import xsd from "@ontologies/xsd";
+
+import { equals } from "../../factoryHelpers";
 import { ReturnType, ToJSOutputTypes } from "../../types";
 
 const numberTypes = [
@@ -20,14 +22,14 @@ function toJS(obj: Literal | unknown): any {
         return obj;
     }
 
-    if (rdfFactory.equals(obj.datatype, xsd.boolean)) {
+    if (equals(obj.datatype, xsd.boolean)) {
         return obj.value === "true" || obj.value === "1" || obj.value === "t";
     }
-    if (rdfFactory.equals(obj.datatype, xsd.dateTime) ||
-        rdfFactory.equals(obj.datatype, xsd.date)) {
+    if (equals(obj.datatype, xsd.dateTime) ||
+        equals(obj.datatype, xsd.date)) {
         return new Date(obj.value);
     }
-    if (numberTypes.some((type) => rdfFactory.equals(obj.datatype, type))) {
+    if (numberTypes.some((type) => equals(obj.datatype, type))) {
         return Number(obj.value);
     }
 

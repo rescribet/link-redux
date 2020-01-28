@@ -20,7 +20,7 @@ type Overrides<R> = Partial<
     & LinkCtxOverrides
     & React.RefAttributes<R>
     & { innerRef: undefined }
-    >;
+>;
 
 export function useCalculateChildProps<P, R = any>(
     props: P & Partial<SubjectProp & TopologyProp & PassableRef<R>>,
