@@ -80,10 +80,10 @@ describe("withLinkCtx hoc", () => {
 
         it("adds the helpers", () => {
             const opts = ctx.fullCW();
-            const getEntity = jest.fn();
+            const queueEntity = jest.fn();
             const lrs = new Proxy(opts.lrs, {
                 get(obj, prop: keyof typeof obj) {
-                    return prop === "getEntity" ? getEntity : obj[prop];
+                    return prop === "queueEntity" ? queueEntity : obj[prop];
                 },
             });
 
@@ -97,9 +97,9 @@ describe("withLinkCtx hoc", () => {
             expect(node).toHaveProp("reset", reset);
             const rlo = (node.props() as any).reloadLinkedObject;
             expect(rlo).toBeInstanceOf(Function);
-            expect(getEntity).not.toHaveBeenCalled();
+            expect(queueEntity).not.toHaveBeenCalled();
             rlo();
-            expect(getEntity).toHaveBeenCalledWith(opts.subject, { reload: true });
+            expect(queueEntity).toHaveBeenCalledWith(opts.subject, { reload: true });
         });
     });
 });
