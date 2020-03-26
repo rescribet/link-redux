@@ -22,7 +22,7 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
-export const enum ReturnType {
+export enum ReturnType {
   Term = "term",
   Statement = "statement",
   Literal = "literal",
