@@ -9,19 +9,19 @@ import { toReturnType } from "../hocs/link/toReturnType";
 import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useLRS } from "./useLRS";
 
-export interface PropertyBoundProps {
-    [k: string]: Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
-}
+type Test = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
+
+export type PropertyBoundProps<T> = { [K in keyof T]: Test };
 
 export function useLinkedObjectProperties(
     subjProps: Quad[],
     propMap: DataToPropsMapping,
     returnType: ReturnType,
-): PropertyBoundProps {
+): PropertyBoundProps<typeof propMap> {
     const lrs = useLRS();
     const context = useLinkRenderContext();
 
-    const acc: PropertyBoundProps = {};
+    const acc: PropertyBoundProps<typeof propMap> = {};
 
     for (const propOpts of Object.values(propMap)) {
         for (const cur of propOpts.label) {

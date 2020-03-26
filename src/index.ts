@@ -24,7 +24,7 @@ export { LinkRenderCtx } from "./contexts/LinkRenderCtx";
 
 /* HOCs */
 
-export { link } from "./hocs/link";
+export { DataToPropsMapping, link } from "./hocs/link";
 export { withLinkCtx } from "./hocs/withLinkCtx";
 export { withLRS } from "./hocs/withLRS";
 export { withTopology } from "./hocs/withTopology";
@@ -35,6 +35,8 @@ export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
 export { useLinkRenderContext } from "./hooks/useLinkRenderContext";
+export { useLink } from "./hooks/useLink";
+export { useResourceLinks } from "./hooks/useResourceLinks";
 export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
 export { useResourceProperty } from "./hooks/useResourceProperty";

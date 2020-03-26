@@ -60,5 +60,4 @@ export function link(
 }
 
 export { DataToPropsMapping } from "./link/dataPropsToPropMap";
-export { PropertyBoundProps } from "../hooks/useLinkedObjectProperties";
 export { globalLinkOptsDefaults } from "./link/globalLinkOptsDefaults";

@@ -11,4 +11,10 @@ export default {
   NoView: ll("NoView"),
 
   /* properties */
+  /** Used internally by link to ensure data consistency */
+  dataSubject: ll("dataSubject"),
+
+  /* individuals */
+  /** No-operation, used internally by link when information is not needed. */
+  nop: ll("nop"),
 };

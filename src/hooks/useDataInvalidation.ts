@@ -35,7 +35,7 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
  *
  * Be sure to keep undefined values in subject or dataSubjects to ensure useEffect DependencyList consistency.
  */
-export function useDataInvalidation(props: DataInvalidationProps) {
+export function useDataInvalidation(props: DataInvalidationProps): number {
     const lrs = useLRS();
     const subId = props.subject ? rdfFactory.id(lrs.store.canon(props.subject)) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(
