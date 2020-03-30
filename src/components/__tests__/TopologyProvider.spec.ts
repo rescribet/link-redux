@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
-import rdf from "@ontologies/core";
+import rdf, { NamedNode } from "@ontologies/core";
 import schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
@@ -79,5 +79,32 @@ describe("TopologyProvider component", () => {
         const elem = mount(opts.wrapComponent(comp));
 
         expect(elem.find("div").last()).toHaveClassName("test-class");
+    });
+
+    describe("#wrap", () => {
+      it("allows a render function", () => {
+        const opts = ctx.multipleCW(iri);
+        // tslint:disable-next-line:max-classes-per-file
+        class TestProvider extends TopologyProvider {
+          constructor(props: any) {
+            super(props);
+            this.topology = example.ns("test");
+          }
+        }
+
+        const comp = React.createElement(
+          TestProvider,
+          null,
+          (subject: NamedNode) => React.createElement(
+            "span",
+            { dataTest: subject.value },
+            null,
+          ),
+        );
+
+        const elem = mount(opts.wrapComponent(comp));
+
+        expect(elem.find("span").last()).toHaveProp({ dataTest: iri.value });
+      });
     });
 });

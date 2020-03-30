@@ -47,9 +47,10 @@ describe("Typable", () => {
             const opts = ctx.empty();
             const errorComp = () => React.createElement("span", { className: "error-comp" });
             const element = renderError({
-                onError: errorComp,
-                subject: rdfFactory.blankNode(),
-                topology: ex.ns("t"),
+              onError: errorComp,
+              subject: undefined!,
+              subjectCtx: rdfFactory.blankNode(),
+              topology: ex.ns("t"),
             }, opts.lrs);
 
             if (element === null) {
