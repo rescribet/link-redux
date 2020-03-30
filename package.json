@@ -45,7 +45,7 @@
   "devDependencies": {
     "@ontola/memoized-hash-factory": "^1.2.1",
     "@ontologies/as": "^1.0.1",
-    "@ontologies/core": "^2.0.0-2",
+    "@ontologies/core": "2.0.0-9",
     "@ontologies/ld": "^1.0.0",
     "@ontologies/owl": "^1.0.0",
     "@ontologies/rdf": "^1.0.0",

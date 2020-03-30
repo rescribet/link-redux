@@ -2,11 +2,12 @@
 import "../../__tests__/useHashFactory";
 
 import { mount } from "enzyme";
-import { DEFAULT_TOPOLOGY, defaultNS } from "link-lib";
+import { DEFAULT_TOPOLOGY } from "link-lib";
 import PropTypes from "prop-types";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
 import { LinkContext, LinkCtxOverrides } from "../../types";
 import { withLinkCtx } from "../withLinkCtx";
 
@@ -38,13 +39,13 @@ describe("withLinkCtx hoc", () => {
             const opts = ctx.fullCW();
 
             const Comp = withLinkCtx(TestComponent, { subject: true, lrs: true });
-            const elem = <Comp subject={defaultNS.ex("override")} />;
+            const elem = <Comp subject={ex.ns("override")} />;
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
             // enzyme-matchers' `toHaveProps` does a slow recursive deep compare
             expect((node.props() as any).lrs).toEqual(opts.lrs);
-            expect(node).toHaveProp("subject", defaultNS.ex("override"));
+            expect(node).toHaveProp("subject", ex.ns("override"));
             expect(node).toHaveProp("topology", DEFAULT_TOPOLOGY);
 
             expect(node).toHaveProp("subjectCtx", opts.subject);
@@ -55,13 +56,13 @@ describe("withLinkCtx hoc", () => {
             const opts = ctx.fullCW();
 
             const Comp = withLinkCtx(TestComponent, { topology: true, lrs: true });
-            const elem = <Comp topology={defaultNS.ex("override")} />;
+            const elem = <Comp topology={ex.ns("override")} />;
             const tree = mount(opts.wrapComponent(elem));
             const node = tree.find("TestComponent");
 
             expect((node.props() as any).lrs).toEqual(opts.lrs);
             expect(node).toHaveProp("subject", opts.subject);
-            expect(node).toHaveProp("topology", defaultNS.ex("override"));
+            expect(node).toHaveProp("topology", ex.ns("override"));
 
             expect(node).not.toHaveProp("subjectCtx");
             expect(node).toHaveProp("topologyCtx", DEFAULT_TOPOLOGY);

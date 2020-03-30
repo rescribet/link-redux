@@ -1,6 +1,6 @@
 import "../../__tests__/useHashFactory";
 
-import { defaultNS } from "link-lib";
+import example from "../../ontology/example";
 
 import { DataInvalidationProps } from "../../types";
 import { normalizeDataSubjects } from "../useDataInvalidation";
@@ -13,26 +13,26 @@ describe("useDataInvalidation", () => {
         });
 
         it("makes an array from the subject", () => {
-            expect(normalizeDataSubjects({ subject: defaultNS.example("Tim") }))
-                .toEqual([defaultNS.example("Tim")]);
+            expect(normalizeDataSubjects({ subject: example.ns("Tim") }))
+                .toEqual([example.ns("Tim")]);
         });
 
         it("merges dataSubjects with the subject", () => {
             expect(normalizeDataSubjects({
-                dataSubjects: [defaultNS.example("Roy")],
-                subject: defaultNS.example("Tim"),
+                dataSubjects: [example.ns("Roy")],
+                subject: example.ns("Tim"),
             })).toEqual([
-                defaultNS.example("Tim"),
-                defaultNS.example("Roy"),
+                example.ns("Tim"),
+                example.ns("Roy"),
             ]);
         });
 
         it("adds the base document for the subject", () => {
             expect(normalizeDataSubjects({
-                subject: defaultNS.example("Tim#me"),
+                subject: example.ns("Tim#me"),
             })).toEqual([
-                defaultNS.example("Tim#me"),
-                defaultNS.example("Tim"),
+                example.ns("Tim#me"),
+                example.ns("Tim"),
             ]);
         });
     });

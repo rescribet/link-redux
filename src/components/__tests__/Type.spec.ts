@@ -1,11 +1,13 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
+import schema from "@ontologies/schema";
 import { mount, shallow } from "enzyme";
-import { defaultNS, LinkedRenderStore } from "link-lib";
+import { LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import example from "../../ontology/example";
 import ll from "../../ontology/ll";
 import { Type } from "../Type";
 
@@ -31,7 +33,7 @@ describe("Type component", () => {
     });
 
     it("renders error on server errors", () => {
-        const subj = defaultNS.example("3");
+        const subj = example.ns("3");
         const opts = ctx.fullCW(subj);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createComponent("loading"),
@@ -48,7 +50,7 @@ describe("Type component", () => {
         const opts = ctx.fullCW();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createComponent("thing"),
-            defaultNS.schema("Thing"),
+            schema.Thing,
         ));
 
         const elem = mount(opts.wrapComponent(React.createElement(Type)));
@@ -60,7 +62,7 @@ describe("Type component", () => {
         const opts = ctx.fullCW();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createComponent("creativeWork"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
         ));
 
         const elem = mount(opts.wrapComponent(React.createElement(Type)));

@@ -6,16 +6,18 @@ import rdfs from "@ontologies/rdfs";
 import schema from "@ontologies/schema";
 import xsd from "@ontologies/xsd";
 import { mount } from "enzyme";
-import { ComponentRegistration, defaultNS, LinkedRenderStore } from "link-lib";
+import { ComponentRegistration, LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
+import example from "../../ontology/example";
 import ll from "../../ontology/ll";
 import { register } from "../../register";
 import { FC, PropertyProps } from "../../types";
 import { Property } from "../Property";
 
-const subject = defaultNS.example("41");
+const subject = example.ns("41");
 
 describe("Property component", () => {
     const render = (props: object = {}, registrations: Array<ComponentRegistration<any>> = []) => {
@@ -26,7 +28,7 @@ describe("Property component", () => {
             Property,
             {
                 forceRender: true,
-                label: defaultNS.ex("nonexistent"),
+                label: ex.ns("nonexistent"),
                 subject,
                 ...opts.contextProps(),
                 ...props,
@@ -142,7 +144,7 @@ describe("Property component", () => {
 
         const comp = React.createElement(
             Property,
-            { label: defaultNS.ex("timesRead"), ...opts.contextProps() },
+            { label: ex.ns("timesRead"), ...opts.contextProps() },
         );
         const elem = mount(opts.wrapComponent(comp));
 
@@ -155,7 +157,7 @@ describe("Property component", () => {
             const opts = ctx.fullCW(subject);
             const comp = React.createElement(
                 Property,
-                { label: defaultNS.example("tags"), limit: 2, ...opts.contextProps() },
+                { label: example.ns("tags"), limit: 2, ...opts.contextProps() },
             );
 
             const elem = mount(opts.wrapComponent(comp));
@@ -167,7 +169,7 @@ describe("Property component", () => {
             const opts = ctx.fullCW(subject);
             const comp = React.createElement(
                 Property,
-                { label: defaultNS.example("tags"), limit: Infinity, ...opts.contextProps() },
+                { label: example.ns("tags"), limit: Infinity, ...opts.contextProps() },
             );
 
             const elem = mount(opts.wrapComponent(comp));

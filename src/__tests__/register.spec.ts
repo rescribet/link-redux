@@ -4,12 +4,12 @@ import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import {
     DEFAULT_TOPOLOGY,
-    defaultNS,
     RENDER_CLASS_NAME,
 } from "link-lib";
 import React from "react";
 
 import { Component } from "../components/Component";
+import ex from "../ontology/ex";
 import { register } from "../register";
 import { FC } from "../types";
 
@@ -17,29 +17,29 @@ describe("register.spec.ts", () => {
     it("registers built-in functions", () => {
         // tslint:disable-next-line:no-console
         const Comp: any = console.log;
-        Comp.type = defaultNS.ex("TestClass");
+        Comp.type = ex.ns("TestClass");
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
+        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
     });
 
     it("registers a functional component", () => {
         const Comp = () => null;
-        Comp.type = defaultNS.ex("TestClass");
+        Comp.type = ex.ns("TestClass");
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
+        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
     });
 
     it("registers a class component", () => {
         class Comp extends Component {
-            public static type = defaultNS.ex("TestClass");
+            public static type = ex.ns("TestClass");
 
             public render() { return null; }
         }
@@ -48,7 +48,7 @@ describe("register.spec.ts", () => {
         expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
         expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(defaultNS.ex("TestClass")));
+        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
     });
 
     it("wraps passed hocs", () => {
@@ -64,7 +64,7 @@ describe("register.spec.ts", () => {
 
         const Comp: FC<{ prop1: string, prop2: string }> = (props) =>
             React.createElement("p", null, `value.${props.prop1}.${props.prop2}`);
-        Comp.type = defaultNS.ex("TestClass");
+        Comp.type = ex.ns("TestClass");
         Comp.hocs = [hoc1, hoc2];
 
         const [ registration ] = register(Comp);

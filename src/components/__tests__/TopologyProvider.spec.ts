@@ -2,16 +2,18 @@
 import "../../__tests__/useHashFactory";
 
 import rdf from "@ontologies/core";
+import schema from "@ontologies/schema";
 import { mount } from "enzyme";
-import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
+import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import example from "../../ontology/example";
 import { Resource } from "../Resource";
 import { TopologyProvider } from "../TopologyProvider";
 
 const id = "resources/5";
-const iri = defaultNS.example(id);
+const iri = example.ns(id);
 
 const createTestElement = (className = "testComponent") => () => React.createElement(
     "span",
@@ -20,22 +22,22 @@ const createTestElement = (className = "testComponent") => () => React.createEle
 
 describe("TopologyProvider component", () => {
     it("sets the topology", () => {
-        const opts = ctx.multipleCWArr([{ id: iri }, { id: defaultNS.example("resources/10") }]);
+        const opts = ctx.multipleCWArr([{ id: iri }, { id: example.ns("resources/10") }]);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
         ));
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("collectionRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
             RENDER_CLASS_NAME,
-            defaultNS.example("collection"),
+            example.ns("collection"),
         ));
 
         class CollectionProvider extends TopologyProvider {
             constructor(props: any) {
                 super(props);
-                this.topology = defaultNS.example("collection");
+                this.topology = example.ns("collection");
             }
         }
 
@@ -44,7 +46,7 @@ describe("TopologyProvider component", () => {
             null,
             React.createElement(
                 Resource,
-                { subject: defaultNS.example("resources/10") },
+                { subject: example.ns("resources/10") },
             ),
         );
 
@@ -57,7 +59,7 @@ describe("TopologyProvider component", () => {
         const opts = ctx.multipleCW(iri, { second: { id: rdf.namedNode("about:resources/10") } });
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
             createTestElement("normalRendered"),
-            defaultNS.schema("CreativeWork"),
+            schema.CreativeWork,
         ));
 
         // tslint:disable-next-line max-classes-per-file

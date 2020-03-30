@@ -1,16 +1,19 @@
 /* eslint no-magic-numbers: 0 */
 import rdfFactory from "@ontologies/core";
+import rdfs from "@ontologies/rdfs";
 import schema from "@ontologies/schema";
 import { mount } from "enzyme";
-import { defaultNS, LinkedRenderStore } from "link-lib";
+import { LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
+import example from "../../ontology/example";
 import { LinkOpts, MapDataToPropsParam, ReturnType } from "../../types";
 import { link } from "../link";
 
 const id = "resources/5";
-const iri = defaultNS.example(id);
+const iri = example.ns(id);
 
 class TestComponent extends React.Component {
     public render() {
@@ -33,7 +36,7 @@ describe("link", () => {
             const elem = renderWithProps({
                 author: schema.author,
                 name: schema.name,
-                tags: defaultNS.example("tags"),
+                tags: example.ns("tags"),
                 text: schema.text,
             });
 
@@ -41,13 +44,13 @@ describe("link", () => {
             expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
             expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
             expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
+            expect(elem.find(TestComponent)).toHaveProp("tags", example.ns("tag/0"));
         });
 
         it("passes object as terms under custom keys", () => {
             const elem = renderWithProps({
                 author: schema.author,
-                tags: defaultNS.example("tags"),
+                tags: example.ns("tags"),
                 text: schema.text,
                 title: schema.name,
             });
@@ -57,15 +60,15 @@ describe("link", () => {
             expect(elem.find(TestComponent)).not.toHaveProp("name", rdfFactory.literal("title"));
             expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
             expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", defaultNS.example("tag/0"));
+            expect(elem.find(TestComponent)).toHaveProp("tags", example.ns("tag/0"));
         });
 
         it("passes object with custom options", () => {
             const elem = renderWithProps({
                 author: schema.author,
-                name: [schema.name, defaultNS.rdfs("label")],
+                name: [schema.name, rdfs.label],
                 tags: {
-                    label: defaultNS.example("tags"),
+                    label: example.ns("tags"),
                     limit: Infinity,
                 },
                 text: schema.text,
@@ -77,10 +80,10 @@ describe("link", () => {
             expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
             expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
             expect(elem.find(TestComponent)).toHaveProp("tags", [
-                defaultNS.example("tag/0"),
-                defaultNS.example("tag/1"),
-                defaultNS.example("tag/2"),
-                defaultNS.example("tag/3"),
+                example.ns("tag/0"),
+                example.ns("tag/1"),
+                example.ns("tag/2"),
+                example.ns("tag/3"),
             ]);
         });
 
@@ -91,7 +94,7 @@ describe("link", () => {
                         author: schema.author,
                         dateCreated: schema.dateCreated,
                         name: schema.name,
-                        timesRead: defaultNS.ex("timesRead"),
+                        timesRead: ex.ns("timesRead"),
                     },
                     { returnType: ReturnType.Literal },
                 );
@@ -135,7 +138,7 @@ describe("link", () => {
                     iri,
                     schema.name,
                     rdfFactory.literal("title"),
-                    defaultNS.example("default"),
+                    example.ns("default"),
                 ));
             });
         });

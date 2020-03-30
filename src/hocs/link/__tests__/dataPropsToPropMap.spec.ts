@@ -1,7 +1,7 @@
 import "../../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
-import { defaultNS } from "link-lib";
+import ex from "../../../ontology/ex";
 
 import { dataPropsToPropMap } from "../dataPropsToPropMap";
 
@@ -15,17 +15,17 @@ describe("dataPropsToPropMap", () => {
 
     it("processes a map with an array value", () => {
         const [ propMap, requestedProperties ] = dataPropsToPropMap({
-            cLabel: [defaultNS.ex("p"), defaultNS.ex("q")],
+            cLabel: [ex.ns("p"), ex.ns("q")],
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
         expect(requestedProperties).toEqual([
-            rdfFactory.id(defaultNS.ex("p")),
-            rdfFactory.id(defaultNS.ex("q")),
+            rdfFactory.id(ex.ns("p")),
+            rdfFactory.id(ex.ns("q")),
         ]);
 
         const { cLabel } = propMap;
-        expect(cLabel).toHaveProperty("label", [defaultNS.ex("p"), defaultNS.ex("q")]);
+        expect(cLabel).toHaveProperty("label", [ex.ns("p"), ex.ns("q")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
     });
 
@@ -39,44 +39,44 @@ describe("dataPropsToPropMap", () => {
 
     it("processes a map with a NamedNode value", () => {
         const [ propMap, requestedProperties ] = dataPropsToPropMap({
-            cLabel: defaultNS.ex("p"),
+            cLabel: ex.ns("p"),
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
 
         const { cLabel } = propMap;
-        expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+        expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
     });
 
     it("skips others' properties", () => {
-        const dataProps = Object.create({ oLabel: defaultNS.ex("o") });
-        dataProps.cLabel = defaultNS.ex("p");
+        const dataProps = Object.create({ oLabel: ex.ns("o") });
+        dataProps.cLabel = ex.ns("p");
 
         const [ propMap, requestedProperties ] = dataPropsToPropMap(dataProps, {});
 
         expect(propMap).toHaveProperty("cLabel");
         expect(propMap).not.toHaveProperty("oLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
 
         const { cLabel } = propMap;
-        expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+        expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
     });
 
     it("processes a map with object value", () => {
         const [ propMap, requestedProperties ] = dataPropsToPropMap({
             cLabel: {
-                label: defaultNS.ex("p"),
+                label: ex.ns("p"),
             },
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(defaultNS.ex("p"))]);
+        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
 
         const { cLabel } = propMap;
-        expect(cLabel).toHaveProperty("label", [defaultNS.ex("p")]);
+        expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
     });
 

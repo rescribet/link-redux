@@ -2,17 +2,20 @@
 import "../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
+import rdfx from "@ontologies/rdf";
 import schema from "@ontologies/schema";
 import { mount } from "enzyme";
-import { defaultNS, LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
+import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
+import example from "../../ontology/example";
 import ll from "../../ontology/ll";
 import { Resource } from "../Resource";
 
 const id = "resources/5";
-const iri = defaultNS.example(id);
+const iri = example.ns(id);
 
 const createTestElement = (className = "testComponent") => () => React.createElement(
     "span",
@@ -75,7 +78,7 @@ describe("Resource component", () => {
         const bn = rdfFactory.blankNode();
         const opts = ctx.chargeLRS(
             [
-                rdfFactory.quad(bn, defaultNS.rdf("type"), schema.Thing),
+                rdfFactory.quad(bn, rdfx.type, schema.Thing),
                 rdfFactory.quad(bn, schema.name, rdfFactory.literal("title")),
             ],
             bn,
@@ -136,18 +139,18 @@ describe("Resource component", () => {
             createTestElement("collectionRendered"),
             schema.CreativeWork,
             RENDER_CLASS_NAME,
-            defaultNS.argu("collection"),
+            ex.ns("collection"),
         ));
 
         const comp = React.createElement(
             Resource,
-            { loadLinkedObject, subject: iri, topology: defaultNS.argu("collection") },
+            { loadLinkedObject, subject: iri, topology: ex.ns("collection") },
             React.createElement(
                 Resource,
                 { loadLinkedObject, subject: iri },
                 React.createElement(
                     Resource,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10") },
+                    { loadLinkedObject, subject: example.ns("resources/10") },
                 ),
             ),
         );
@@ -167,7 +170,7 @@ describe("Resource component", () => {
             createTestElement("collectionRendered"),
             schema.CreativeWork,
             RENDER_CLASS_NAME,
-            defaultNS.argu("collection"),
+            ex.ns("collection"),
         ));
 
         const comp = React.createElement(
@@ -178,7 +181,7 @@ describe("Resource component", () => {
                 { loadLinkedObject, subject: iri },
                 React.createElement(
                     Resource,
-                    { loadLinkedObject, subject: defaultNS.example("resources/10") },
+                    { loadLinkedObject, subject: example.ns("resources/10") },
                 ),
             ),
         );

@@ -2,10 +2,10 @@ import "../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
-import { defaultNS } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
 import ll from "../../ontology/ll";
 import { register } from "../../register";
 import {
@@ -18,7 +18,7 @@ import {
 describe("Typable", () => {
     const props = {
         subject: rdfFactory.blankNode(),
-        topology: defaultNS.ex("t"),
+        topology: ex.ns("t"),
     };
 
     describe("renderNoView", () => {
@@ -26,7 +26,7 @@ describe("Typable", () => {
             const opts = ctx.empty();
             const errorComp = () => React.createElement("span", { className: "custom-no-view" });
             errorComp.type = ll.NoView;
-            errorComp.topology = defaultNS.ex("t");
+            errorComp.topology = ex.ns("t");
             opts.lrs.registerAll(register(errorComp));
             const element = renderNoView(props, opts.lrs);
 
@@ -49,7 +49,7 @@ describe("Typable", () => {
             const element = renderError({
                 onError: errorComp,
                 subject: rdfFactory.blankNode(),
-                topology: defaultNS.ex("t"),
+                topology: ex.ns("t"),
             }, opts.lrs);
 
             if (element === null) {

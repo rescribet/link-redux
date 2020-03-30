@@ -3,7 +3,6 @@ import rdfx from "@ontologies/rdf";
 import schema from "@ontologies/schema";
 import {
     ComponentStoreTestProxy,
-    defaultNS as NS,
     LinkedRenderStore,
     RDFStore,
     Schema,
@@ -19,10 +18,10 @@ import {
     LinkReduxLRSType,
     TopologyContextType,
 } from "../../index";
+import ex from "../../ontology/ex";
+import example from "../../ontology/example";
 
 import { TestContext } from "./types";
-
-const exNS = NS.example;
 
 interface CWOpts {
   author?: string;
@@ -47,7 +46,7 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
         id,
         predicate,
         object,
-        NS.example("default"),
+        example.ns("default"),
     );
 
     return [
@@ -56,11 +55,11 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
         createQuad(schema.text, rdfFactory.literal(attrs.text || "text")),
         createQuad(schema.author, rdfFactory.namedNode(attrs.author || "http://example.org/people/0")),
         createQuad(schema.dateCreated, rdfFactory.literal(new Date("2019-01-01"))),
-        createQuad(NS.ex("timesRead"), rdfFactory.literal(5)),
-        createQuad(NS.example("tags"), NS.example("tag/0")),
-        createQuad(NS.example("tags"), NS.example("tag/1")),
-        createQuad(NS.example("tags"), NS.example("tag/2")),
-        createQuad(NS.example("tags"), NS.example("tag/3")),
+        createQuad(ex.ns("timesRead"), rdfFactory.literal(5)),
+        createQuad(example.ns("tags"), example.ns("tag/0")),
+        createQuad(example.ns("tags"), example.ns("tag/1")),
+        createQuad(example.ns("tags"), example.ns("tag/2")),
+        createQuad(example.ns("tags"), example.ns("tag/3")),
     ];
 };
 
@@ -107,24 +106,24 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
     } as TestContext<React.ComponentType<any>>;
 }
 
-export const empty = (id = exNS("0")) => chargeLRS([], id);
+export const empty = (id = example.ns("0")) => chargeLRS([], id);
 
-export const type = (id = exNS("1")) => chargeLRS(typeObject(id), id);
+export const type = (id = example.ns("1")) => chargeLRS(typeObject(id), id);
 
-export const name = (id = exNS("2"), title: string) => chargeLRS(
+export const name = (id = example.ns("2"), title: string) => chargeLRS(
     typeObject(id).concat(sTitle(id, title)),
     id,
 );
 
-export const fullCW = (id = exNS("3"), attrs: CWOpts = {}) => chargeLRS(
+export const fullCW = (id = example.ns("3"), attrs: CWOpts = {}) => chargeLRS(
     sFull(id, attrs),
     id,
 );
 
-export const multipleCW = (id = exNS("3"), attrs: CWOpts & { second?: CWResource } = {}) => {
+export const multipleCW = (id = example.ns("3"), attrs: CWOpts & { second?: CWResource } = {}) => {
     const opts = chargeLRS(sFull(id, attrs), id);
-    const second = attrs.second || { id: exNS("4") };
-    opts.store.addQuads(sFull(exNS(second.id.value), second));
+    const second = attrs.second || { id: example.ns("4") };
+    opts.store.addQuads(sFull(example.ns(second.id.value), second));
     opts.store.flush();
 
     return opts;
