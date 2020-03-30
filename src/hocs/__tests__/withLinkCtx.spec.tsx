@@ -83,6 +83,7 @@ describe("withLinkCtx hoc", () => {
             const opts = ctx.fullCW();
             const queueEntity = jest.fn();
             const lrs = new Proxy(opts.lrs, {
+                // @ts-ignore
                 get(obj, prop: keyof typeof obj) {
                     return prop === "queueEntity" ? queueEntity : obj[prop];
                 },
