@@ -12,10 +12,6 @@ export interface DataToPropsMapping {
 
 type PropMapTuple = [number[], string, ProcessedLinkOpts];
 
-function term(iri: NamedNode): string {
-    return (iri as any).term || iri.value.split(/[\/#]/).pop()!.split("?").shift() || "";
-}
-
 function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts): PropMapTuple {
     if (predObj.length === 0) {
         throw new TypeError("Props array must contain at least one predicate");
@@ -23,12 +19,12 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 
     return [
         predObj.map((p) => rdfFactory.id(p)),
-        propKey || term(predObj[0]),
+        propKey,
         {
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: predObj,
             limit: opts.limit || globalLinkOptsDefaults.limit,
-            name: propKey || term(predObj[0]),
+            name: propKey,
             returnType: opts.returnType || globalLinkOptsDefaults.returnType,
         },
     ];
@@ -37,12 +33,12 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
     return [
         [rdfFactory.id(predObj)],
-        propKey || term(predObj),
+        propKey,
         {
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: [predObj],
             limit: opts.limit || globalLinkOptsDefaults.limit,
-            name: propKey || term(predObj),
+            name: propKey,
         },
     ];
 }
@@ -56,13 +52,13 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
 
     return [
         labels.map((label) => rdfFactory.id(label)),
-        propKey || predObj.name || term(labels[0]),
+      predObj.name || propKey,
         {
             forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: normalizeType(predObj.label),
             limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
             linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
-            name: propKey || predObj.name || term(labels[0]),
+            name: predObj.name || propKey,
             returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
         },
     ];
@@ -89,6 +85,9 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
     for (const propKey in mapDataToProps) {
         if (!mapDataToProps.hasOwnProperty(propKey)) {
             continue;
+        }
+        if (propKey.trim().length === 0) {
+          throw new Error("Pass a valid prop label");
         }
         const predObj = mapDataToProps[propKey];
         const [ properties, label, mapping ] = dataPropToPropMap(propKey, predObj, opts);
