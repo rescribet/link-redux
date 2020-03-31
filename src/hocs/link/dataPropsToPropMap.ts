@@ -78,19 +78,17 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
                                    opts: LinkOpts): [DataToPropsMapping, number[]] {
 
     const propMap: DataToPropsMapping = {};
-    let requestedProperties: number[] = Array.isArray(mapDataToProps)
-        ? mapDataToProps.map((p) => rdfFactory.id(p))
-        : [];
+    let requestedProperties: number[] = [];
 
     for (const propKey in mapDataToProps) {
         if (!mapDataToProps.hasOwnProperty(propKey)) {
             continue;
         }
-        if (propKey.trim().length === 0) {
-          throw new Error("Pass a valid prop label");
-        }
         const predObj = mapDataToProps[propKey];
         const [ properties, label, mapping ] = dataPropToPropMap(propKey, predObj, opts);
+        if (label.trim().length === 0) {
+          throw new TypeError("Pass a valid prop label");
+        }
         requestedProperties = requestedProperties.concat(...properties);
         propMap[label] = mapping;
     }

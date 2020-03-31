@@ -7,6 +7,7 @@ import { LinkedRenderStore } from "link-lib";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import { ResourcePropTypes } from "../../components/Resource";
 import ex from "../../ontology/ex";
 import example from "../../ontology/example";
 import { LinkOpts, MapDataToPropsParam, ReturnType } from "../../types";
@@ -23,13 +24,23 @@ class TestComponent extends React.Component {
 
 describe("link", () => {
     describe("link HOC", () => {
-        const renderWithProps = (props: MapDataToPropsParam, renderOpts?: LinkOpts) => {
-            const opts = ctx.fullCW(iri);
+        const renderWithProps = (
+          props: MapDataToPropsParam,
+          renderOpts?: LinkOpts,
+          data: ctx.TestCtxCreator = ctx.fullCW,
+          resourceProps?: Partial<ResourcePropTypes<any>>,
+        ) => {
+            const opts = data(iri);
 
             const comp = link(props, renderOpts)(TestComponent);
             opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
 
-            return mount(opts.wrapComponent());
+            return mount(opts.wrapComponent(
+              undefined,
+              undefined,
+              undefined,
+              resourceProps,
+            ));
         };
 
         it("passes object as terms", () => {
@@ -87,6 +98,24 @@ describe("link", () => {
             ]);
         });
 
+        it("renders null without data nor forced rendering", () => {
+          const elem = renderWithProps(
+            { author: schema.author },
+            undefined,
+              ctx.empty,
+            { forceRender: false },
+            );
+
+          expect(elem.find(TestComponent)).toHaveLength(0);
+        });
+
+        it("throws without properties and custom opts", () => {
+
+          expect(() => {
+            renderWithProps({}, {});
+          }).toThrowError("Bind at least one prop to use render opts");
+        });
+
         describe("returnType option", () => {
             it("can return JS native objects", () => {
                 const elem = renderWithProps(
@@ -121,6 +150,16 @@ describe("link", () => {
                 const elem = renderWithProps(
                     { name: schema.name },
                     { returnType: ReturnType.Term },
+                );
+
+                expect(elem.find(TestComponent)).toHaveLength(1);
+                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+            });
+
+            it("defaults to terms", () => {
+                const elem = renderWithProps(
+                    { name: schema.name },
+                  {},
                 );
 
                 expect(elem.find(TestComponent)).toHaveLength(1);

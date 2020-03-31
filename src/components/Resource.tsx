@@ -2,7 +2,7 @@ import React from "react";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataFetching } from "../hooks/useDataFetching";
-import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
@@ -67,8 +67,7 @@ export function LRC<P, R>(props: ResourcePropTypes<R> & P, _?: any): React.React
     };
     const lrs = useLRS();
     const childProps = useCalculateChildProps<P>(props, context, options);
-    const lastUpdate = useDataInvalidation(childProps);
-    useDataFetching(childProps, lastUpdate, setError);
+    useDataFetching(normalizeDataSubjects(childProps), setError);
 
     const comp = useCalculatedViewWithState(childProps, lrs, error);
 

@@ -7,12 +7,13 @@ import {
     SomeNode,
 } from "link-lib";
 import React from "react";
+import { ResourcePropTypes } from "../../components/Resource";
 
 import {
-    LinkContext,
-    LinkCtxOverrides,
-    TopologyContextType,
-    TopologyType,
+  LinkContext,
+  LinkCtxOverrides,
+  TopologyContextType,
+  TopologyType,
 } from "../../types";
 
 export interface TestContext<T> {
@@ -27,5 +28,6 @@ export interface TestContext<T> {
         children?: React.ReactElement<any>,
         topology?: TopologyType,
         lrsOverride?: unknown,
+        resourceProps?: Partial<ResourcePropTypes<any>>,
     ) => React.ReactElement<any>;
 }

@@ -1,25 +1,27 @@
 import "../../__tests__/useHashFactory";
 
-import rdfFactory from "@ontologies/core";
 import { mount } from "enzyme";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { useDataFetching } from "../useDataFetching";
+import { useCalculateChildProps } from "../useCalculateChildProps";
+import { useLinkRenderContext } from "../useLinkRenderContext";
 
-describe("useDataFetching", () => {
-    it("sets an error for blank node subjects", () => {
-        const opts = ctx.fullCW();
+describe("useCalculateChildProps", () => {
+    it("allows an empty defaults", () => {
+      const opts = ctx.fullCW();
 
-        const setError = jest.fn();
-        const comp = () => {
-            useDataFetching({ subject: rdfFactory.blankNode() }, 0, setError);
+      opts.lrs.queueEntity = jest.fn();
+      const comp = () => {
+        const context = useLinkRenderContext();
+        const childProps = useCalculateChildProps({}, context);
 
-            return null;
-        };
+        return Object.keys(childProps).join();
+      };
 
-        mount(opts.wrapComponent(React.createElement(comp)));
+      // @ts-ignore
+      const elem = mount(opts.wrapComponent(React.createElement(comp)));
 
-        expect(setError).toHaveBeenCalledTimes(1);
+      expect(elem).toHaveText("subject,topology");
     });
 });

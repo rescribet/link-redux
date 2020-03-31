@@ -45,12 +45,12 @@ export class TopologyProvider<P = {}, S = {}> extends React.Component<P, S> {
     }
 
     public render() {
-        let children = this.props.children || null;
+        let children = this.props.children;
 
         if (this.className !== undefined) {
             children = React.createElement(
                 this.elementType,
-                { className: this.className, ...(this.props || {}) },
+                { className: this.className, ...this.props },
                 this.props.children,
             );
         }

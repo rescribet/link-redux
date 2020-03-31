@@ -1,6 +1,7 @@
-import rdfFactory, { BlankNode, doc, NamedNode, TermType } from "@ontologies/core";
+import rdfFactory, { doc, TermType } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
+import { reduceDataSubjects } from "../helpers";
 
 import { DataInvalidationProps, SubjectType } from "../types";
 
@@ -59,10 +60,7 @@ export function useDataInvalidation(props: Partial<DataInvalidationProps>): numb
         });
     }, [
       subId,
-      normalizeType(props.dataSubjects)
-        .filter<NamedNode | BlankNode>(Boolean as any)
-        .map<number>((n: NamedNode | BlankNode) => rdfFactory.id(n))
-        .reduce((a: number, b: number) => a + b, 0),
+      reduceDataSubjects(props.dataSubjects),
     ]);
 
     return lastUpdate;

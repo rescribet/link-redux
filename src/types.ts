@@ -180,7 +180,7 @@ export interface SubjectProp {
 }
 
 export interface DataInvalidationProps extends SubjectProp {
-    dataSubjects?: SubjectType | SubjectType[];
+    dataSubjects?: SubjectType[];
 }
 
 export interface TopologyContextProp {

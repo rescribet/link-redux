@@ -11,7 +11,7 @@ import {
 import React from "react";
 
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
-import { Resource } from "../../components/Resource";
+import { Resource, ResourcePropTypes } from "../../components/Resource";
 import {
     LinkContext,
     LinkCtxOverrides,
@@ -32,6 +32,7 @@ interface CWOpts {
 interface CWResource extends CWOpts {
   id: NamedNode;
 }
+export type TestCtxCreator = (id?: NamedNode, attrs?: CWOpts) => TestContext<React.ComponentType<any>>;
 
 const typeObject = (id: NamedNode) => [
     rdfFactory.quad(id, rdfx.type, schema.CreativeWork),
@@ -93,13 +94,14 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
         subject,
         wrapComponent: (children?: React.ReactElement<any>,
                         topology?: TopologyContextType,
-                        lrsOverride?: LinkReduxLRSType): React.ReactElement<any> => {
+                        lrsOverride?: LinkReduxLRSType,
+                        resourceProps?: Partial<ResourcePropTypes<any>>): React.ReactElement<any> => {
 
             return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
                 React.createElement("div", { className: "root" },
                     React.createElement(
                         Resource,
-                        { forceRender: true, subject, topology },
+                        { forceRender: true, subject, topology, ...resourceProps },
                         children,
                     )));
         },
