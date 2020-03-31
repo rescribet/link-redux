@@ -10,12 +10,15 @@ import { useLRS } from "./useLRS";
  * The subjects this component subscribes to.
  * Includes the subject by default.
  */
-export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType[] {
+export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): SubjectType[] {
     if (!(props.subject || props.dataSubjects)) {
         return [];
     }
 
-    const result = [props.subject];
+    const result = [];
+    if (props.subject) {
+      result.push(props.subject);
+    }
     if (props.dataSubjects) {
         result.push(...normalizeType(props.dataSubjects));
     }
@@ -33,7 +36,7 @@ export function normalizeDataSubjects(props: DataInvalidationProps): SubjectType
 /**
  * Re-renders when {props.subject} or a resource mentioned in {props.dataSubjects} changes in the store.
  */
-export function useDataInvalidation(props: DataInvalidationProps): number {
+export function useDataInvalidation(props: Partial<DataInvalidationProps>): number {
     const lrs = useLRS();
     const subId = props.subject ? rdfFactory.id(lrs.store.canon(props.subject)) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(

@@ -18,13 +18,16 @@ import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLRS } from "./useLRS";
 
-export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: TermOpts): Term[];
-export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: StatementOpts): Quad[];
-export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: LiteralOpts): ToJSOutputTypes[];
-export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: ValueOpts): string[];
-export function useResourceProperty(subject: SomeNode, property: NamedNode, opts?: DataOpts): DataHookReturnType;
-export function useResourceProperty(subject: SomeNode,
-                                    property: NamedNode,
+type LaxNode = SomeNode | undefined;
+type LaxProperty = NamedNode | undefined;
+
+export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: TermOpts): Term[];
+export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: StatementOpts): Quad[];
+export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: LiteralOpts): ToJSOutputTypes[];
+export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: ValueOpts): string[];
+export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: DataOpts): DataHookReturnType;
+export function useResourceProperty(subject: LaxNode,
+                                    property: LaxProperty,
                                     opts: DataOpts = defaultOptions): DataHookReturnType {
 
   const lrs = useLRS();
@@ -32,9 +35,13 @@ export function useResourceProperty(subject: SomeNode,
   const [value, setValue] = React.useState<Quad[] | Term[] | string[] | ToJSOutputTypes[]>([]);
 
   React.useEffect(() => {
+    if (!subject) {
+      return;
+    }
+
     const prop = lrs.getResourcePropertyRaw(
       subject,
-      property,
+      property || [],
     );
 
     const returnValue = opts.returnType === ReturnType.Statement
@@ -43,8 +50,8 @@ export function useResourceProperty(subject: SomeNode,
 
     setValue(returnValue as unknown as (Quad[] | Term[] | string[] | ToJSOutputTypes[]));
   }, [
-    rdfFactory.id(subject),
-    rdfFactory.id(property),
+    subject ? rdfFactory.id(subject) : undefined,
+    property ? rdfFactory.id(property) : undefined,
     lastUpdate,
   ]);
 
