@@ -32,6 +32,7 @@ export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
 export { useLinkRenderContext } from "./hooks/useLinkRenderContext";
 export { useLink } from "./hooks/useLink";
+export { useResourceLink } from "./hooks/useResourceLink";
 export { useResourceLinks } from "./hooks/useResourceLinks";
 export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
