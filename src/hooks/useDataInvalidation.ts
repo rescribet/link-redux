@@ -1,5 +1,5 @@
 import rdfFactory, { doc, TermType } from "@ontologies/core";
-import { normalizeType } from "link-lib";
+import { normalizeType, SomeNode } from "link-lib";
 import React from "react";
 import { reduceDataSubjects } from "../helpers";
 
@@ -35,11 +35,12 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 }
 
 /**
- * Re-renders when {props.subject} or a resource mentioned in {props.dataSubjects} changes in the store.
+ * Re-renders when one of the given {resources} changes in the store.
  */
-export function useDataInvalidation(props: Partial<DataInvalidationProps>): number {
+export function useDataInvalidation(subjects: undefined | SomeNode | SomeNode[]): number {
+    const resources = normalizeType(subjects!).filter(Boolean);
     const lrs = useLRS();
-    const subId = props.subject ? rdfFactory.id(lrs.store.canon(props.subject)) : undefined;
+    const subId = resources.length > 0 ? rdfFactory.id(lrs.store.canon(resources[0])) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(
         (lrs as any).store.changeTimestamps[subId],
     );
@@ -49,18 +50,16 @@ export function useDataInvalidation(props: Partial<DataInvalidationProps>): numb
     }
 
     React.useEffect(() => {
-        const subscriptionSubjects = normalizeDataSubjects(props);
-
         return lrs.subscribe({
             callback: handleStatusChange,
             lastUpdateAt: undefined,
             markedForDelete: false,
             onlySubjects: true,
-            subjectFilter: subscriptionSubjects.filter(Boolean),
+            subjectFilter: resources,
         });
     }, [
       subId,
-      reduceDataSubjects(props.dataSubjects),
+      reduceDataSubjects(resources),
     ]);
 
     return lastUpdate;

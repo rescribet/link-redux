@@ -9,7 +9,7 @@ import {
 import React from "react";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
-import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { normalizeDataSubjects, useDataInvalidation } from "../hooks/useDataInvalidation";
 import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useLRS } from "../hooks/useLRS";
 
@@ -135,7 +135,7 @@ export const Property: React.ComponentType<PropertyPropTypes & any> = (props): R
 
     const childProps = useCalculateChildProps(props, context, options);
     try {
-        useDataInvalidation(childProps);
+        useDataInvalidation(normalizeDataSubjects(childProps));
     } catch (e) {
         setError(e);
     }

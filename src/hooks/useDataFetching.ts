@@ -14,13 +14,14 @@ const blankNodeWarn = "Cannot load a blank node since it has no defined way to b
  *
  * @param resources The resources to fetch.
  * @param setError Is called when trying to load blank nodes, otherwise the request will fail.
+ * @return The last update stamp, useful in a hook dependency list.
  *
  * @see {LinkedRenderStore#shouldLoadResource} for the triggering mechanism.
  */
 export function useDataFetching(resources: SomeNode | SomeNode[],
-                                setError?: (e: Error) => void) {
+                                setError?: (e: Error) => void): number {
     const lrs = useLRS();
-    const lastUpdate = useDataInvalidation({ dataSubjects: normalizeType(resources) });
+    const lastUpdate = useDataInvalidation(resources);
 
     React.useEffect(
         () => {

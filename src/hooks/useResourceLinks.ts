@@ -1,10 +1,10 @@
-import rdfFactory, { Node } from "@ontologies/core";
+import rdfFactory, { isNamedNode, Node } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
 
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import ll from "../ontology/ll";
-import { LinkOpts, MapDataToPropsParam, ReturnType } from "../types";
+import { LinkOpts, MapDataToPropsParam } from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
 
 import { PropertyBoundProps } from "./useLinkedObjectProperties";
@@ -22,7 +22,7 @@ export function useResourceLinks(
     () => dataPropsToPropMap(mapDataToProps, opts),
     [mapDataToProps],
   );
-  const lastUpdate = useDataInvalidation({ subject: dataSubjects[0], dataSubjects });
+  const lastUpdate = useDataInvalidation(dataSubjects);
 
   const propSets = React.useMemo(
     () => {

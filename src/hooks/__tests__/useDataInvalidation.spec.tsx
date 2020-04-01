@@ -69,8 +69,7 @@ describe("useDataInvalidation", () => {
         opts.lrs.subscribe = subscribe;
 
         const UpdateComp = () => {
-          // @ts-ignore
-          const lastUpdate = useDataInvalidation({ dataSubjects: [iri] });
+          const lastUpdate = useDataInvalidation(iri);
 
           return <div id="update">{lastUpdate}</div>;
         };

@@ -3,7 +3,7 @@ import { RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
-import { useDataInvalidation } from "../hooks/useDataInvalidation";
+import { normalizeDataSubjects, useDataInvalidation } from "../hooks/useDataInvalidation";
 import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
@@ -30,7 +30,7 @@ export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null 
     const lrs = useLRS();
     const context = useLinkRenderContext();
     const childProps = useCalculateChildProps(props, context, options) as PropTypesWithInjected;
-    useDataInvalidation(childProps);
+    useDataInvalidation(normalizeDataSubjects(childProps));
 
     const notReadyComponent = useRenderLoadingOrError(childProps);
     if (notReadyComponent !== undefined) {

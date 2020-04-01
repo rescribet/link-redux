@@ -31,8 +31,8 @@ export function useResourceProperty(subject: LaxNode,
                                     opts: DataOpts = defaultOptions): DataHookReturnType {
 
   const lrs = useLRS();
-  const lastUpdate = useDataInvalidation({ subject });
   const [value, setValue] = React.useState<Quad[] | Term[] | string[] | ToJSOutputTypes[]>([]);
+  const lastUpdate = useDataInvalidation(subject);
 
   React.useEffect(() => {
     if (!subject) {

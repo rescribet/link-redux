@@ -4,7 +4,7 @@ import React from "react";
 
 import { PropertyWrappedProps } from "../../components/Property";
 import { useCalculateChildProps } from "../../hooks/useCalculateChildProps";
-import { useDataInvalidation } from "../../hooks/useDataInvalidation";
+import { normalizeDataSubjects, useDataInvalidation } from "../../hooks/useDataInvalidation";
 import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
 import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { useLRS } from "../../hooks/useLRS";
@@ -30,7 +30,7 @@ export const wrapWithConnect = <P>(
             ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || ReturnType.Term),
         };
 
-        const linkVersion = useDataInvalidation(mappedProps);
+        const linkVersion = useDataInvalidation(normalizeDataSubjects(mappedProps));
 
         if ((props.forceRender || opts.forceRender) !== true && subjProps.length === 0) {
             return null;
