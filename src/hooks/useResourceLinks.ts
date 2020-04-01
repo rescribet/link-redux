@@ -14,13 +14,13 @@ import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 export function useResourceLinks(
   subjects: Node | Node[],
   mapDataToProps: MapDataToPropsParam,
-  opts: LinkOpts = {},
+  opts: LinkOpts = { fetch: true },
 ): Array<PropertyBoundProps<typeof mapDataToProps>> {
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
   const [propMap, requestedProperties] = React.useMemo(
     () => dataPropsToPropMap(mapDataToProps, opts),
-    [mapDataToProps],
+    [mapDataToProps, opts],
   );
   const lastUpdate = useDataInvalidation(dataSubjects);
 
@@ -52,6 +52,6 @@ export function useResourceLinks(
   return useManyLinkedObjectProperties(
     propSets,
     propMap,
-    opts.returnType || ReturnType.Literal,
+    opts.returnType,
   );
 }

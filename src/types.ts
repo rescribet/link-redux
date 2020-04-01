@@ -128,7 +128,15 @@ export interface DataOpts {
 
 export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 
-export interface LinkOpts {
+export interface GlobalLinkOpts {
+    fetch: boolean;
+    forceRender: boolean;
+    limit: number;
+    returnType: ReturnType;
+}
+
+export interface LinkOpts extends Partial<GlobalLinkOpts> {
+    fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
     limit?: number;

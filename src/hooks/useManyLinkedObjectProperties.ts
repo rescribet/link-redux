@@ -11,7 +11,7 @@ import { useLRS } from "./useLRS";
 export function useManyLinkedObjectProperties(
   subjPropsArr: Quad[][],
   propMap: DataToPropsMapping,
-  returnType: ReturnType,
+  returnType?: ReturnType,
 ) {
   const lrs = useLRS();
   const values = React.useMemo(() => Object.values(propMap), [propMap]);
@@ -42,13 +42,13 @@ export function useManyLinkedObjectProperties(
                 (lrs.store as any).langPrefs,
               );
               if (p) {
-                acc[propOpts.name] = toReturnType(returnType, p);
+                acc[propOpts.name] = toReturnType(propOpts.returnType || returnType, p);
               }
             } else {
               const nextName = [];
               for (let k = 0, klen = subjProps.length; k < klen; k++) {
                 if (subjProps[k].predicate === cur) {
-                  nextName.push(toReturnType(returnType, subjProps[k]));
+                  nextName.push(toReturnType(propOpts.returnType || returnType, subjProps[k]));
                 }
               }
               acc[propOpts.name] = nextName;

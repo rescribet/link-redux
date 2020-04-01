@@ -1,9 +1,8 @@
-import { LinkOpts, ReturnType } from "../../types";
+import { GlobalLinkOpts, ReturnType } from "../../types";
 
-export const globalLinkOptsDefaults: LinkOpts = {
+export const globalLinkOptsDefaults: GlobalLinkOpts = {
+    fetch: true,
     forceRender: false,
-    label: undefined,
     limit: 1,
-    name: undefined,
     returnType: ReturnType.Term,
 };

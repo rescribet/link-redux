@@ -2,6 +2,7 @@ import "../../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
 import ex from "../../../ontology/ex";
+import { ReturnType } from "../../../types";
 
 import { dataPropsToPropMap } from "../dataPropsToPropMap";
 
@@ -78,6 +79,7 @@ describe("dataPropsToPropMap", () => {
         const { cLabel } = propMap;
         expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
+        expect(cLabel).toHaveProperty("returnType", ReturnType.Term);
     });
 
     it("throws when a map with object value has no label", () => {
@@ -99,5 +101,22 @@ describe("dataPropsToPropMap", () => {
                 },
             }, {});
         }).toThrowError(TypeError);
+    });
+
+    it("allows setting the returnType", () => {
+        const [ propMap, requestedProperties ] = dataPropsToPropMap({
+            cLabel: {
+                label: ex.ns("p"),
+                returnType: ReturnType.Statement,
+            },
+        }, {});
+
+        expect(propMap).toHaveProperty("cLabel");
+        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
+
+        const { cLabel } = propMap;
+        expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
+        expect(cLabel).toHaveProperty("name", "cLabel");
+        expect(cLabel).toHaveProperty("returnType", ReturnType.Statement);
     });
 });

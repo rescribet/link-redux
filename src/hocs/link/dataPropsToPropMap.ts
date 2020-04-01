@@ -21,6 +21,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
         predObj.map((p) => rdfFactory.id(p)),
         propKey,
         {
+            fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: predObj,
             limit: opts.limit || globalLinkOptsDefaults.limit,
@@ -35,10 +36,12 @@ function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropM
         [rdfFactory.id(predObj)],
         propKey,
         {
+            fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: [predObj],
             limit: opts.limit || globalLinkOptsDefaults.limit,
             name: propKey,
+            returnType: opts.returnType || globalLinkOptsDefaults.returnType,
         },
     ];
 }
@@ -54,10 +57,11 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
         labels.map((label) => rdfFactory.id(label)),
       predObj.name || propKey,
         {
+            fetch: predObj.fetch || opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: normalizeType(predObj.label),
             limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
-            linkedProp: predObj.linkedProp || opts.linkedProp || globalLinkOptsDefaults.linkedProp,
+            linkedProp: predObj.linkedProp || opts.linkedProp,
             name: predObj.name || propKey,
             returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
         },

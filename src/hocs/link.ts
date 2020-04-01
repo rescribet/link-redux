@@ -5,6 +5,7 @@ import {
   LinkedPropType,
   LinkOpts,
   MapDataToPropsParam,
+  ReturnType,
   SubjectProp,
 } from "../types";
 
@@ -14,8 +15,11 @@ import { wrapWithConnect } from "./link/wrapWithConnect";
 import { wrapWithSubject } from "./link/wrapWithSubject";
 
 export interface ProcessedLinkOpts extends LinkOpts {
+    fetch: boolean;
     label: NamedNode[];
+    limit: number;
     name: string;
+    returnType: ReturnType;
 }
 
 /**
