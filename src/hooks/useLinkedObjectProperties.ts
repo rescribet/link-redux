@@ -1,5 +1,5 @@
-import rdfFactory, { Quad, SomeTerm } from "@ontologies/core";
-import { getPropBestLangRaw } from "link-lib";
+import { Quad, SomeTerm } from "@ontologies/core";
+import { getPropBestLangRaw, id } from "link-lib";
 
 import { ReturnType, ToJSOutputTypes } from "../types";
 
@@ -40,7 +40,7 @@ export function useLinkedObjectProperties(
                 }
             } else {
                 acc[propOpts.name] = subjProps
-                    .filter((s: Quad) => rdfFactory.id(s.predicate) === rdfFactory.id(cur))
+                    .filter((s: Quad) => id(s.predicate) === id(cur))
                     .map((s: Quad) => toReturnType(returnType, s)) as Quad[] | SomeTerm[] | string[];
             }
         }

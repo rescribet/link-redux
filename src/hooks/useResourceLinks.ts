@@ -1,5 +1,5 @@
 import rdfFactory, { isNamedNode, Node } from "@ontologies/core";
-import { normalizeType } from "link-lib";
+import { id, normalizeType } from "link-lib";
 import React from "react";
 
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
@@ -46,7 +46,7 @@ export function useResourceLinks(
         ];
 
         for (let j = 0; j < subjectData.length; j++) {
-          if (requestedProperties.includes(rdfFactory.id(subjectData[j].predicate))) {
+          if (requestedProperties.includes(id(subjectData[j].predicate))) {
             subjProps.push(subjectData[j]);
           }
         }

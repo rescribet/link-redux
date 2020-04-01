@@ -1,5 +1,6 @@
-import rdfFactory, { Quad } from "@ontologies/core";
+import { Quad } from "@ontologies/core";
 import hoistNonReactStatics from "hoist-non-react-statics";
+import { id } from "link-lib";
 import React from "react";
 
 import { PropertyWrappedProps } from "../../components/Property";
@@ -24,7 +25,7 @@ export const wrapWithConnect = <P>(
         const subjectData = lrs.tryEntity(childProps.subject);
 
         const subjProps = subjectData
-            .filter((s: Quad) => requestedProperties.includes(rdfFactory.id(s.predicate)));
+            .filter((s: Quad) => requestedProperties.includes(id(s.predicate)));
         const mappedProps = {
             ...childProps,
             ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || ReturnType.Term),

@@ -1,5 +1,5 @@
-import rdfFactory, { isNamedNode, NamedNode } from "@ontologies/core";
-import { normalizeType } from "link-lib";
+import { isNamedNode, NamedNode } from "@ontologies/core";
+import { id, normalizeType } from "link-lib";
 
 import { LinkOpts, MapDataToPropsParam, PropParam } from "../../types";
 import { ProcessedLinkOpts } from "../link";
@@ -18,7 +18,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
     }
 
     return [
-        predObj.map((p) => rdfFactory.id(p)),
+        predObj.map(id),
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -32,7 +32,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 
 function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
     return [
-        [rdfFactory.id(predObj)],
+        [id(predObj)],
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -52,7 +52,7 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
     }
 
     return [
-        labels.map((label) => rdfFactory.id(label)),
+        labels.map(id),
         {
             fetch: predObj.fetch || opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,

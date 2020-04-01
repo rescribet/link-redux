@@ -1,5 +1,5 @@
-import rdfFactory, { NamedNode, Quad, Term } from "@ontologies/core";
-import { SomeNode } from "link-lib";
+import { NamedNode, Quad, Term } from "@ontologies/core";
+import { id, SomeNode } from "link-lib";
 import React from "react";
 
 import { toReturnType } from "../hocs/link/toReturnType";
@@ -63,8 +63,8 @@ export function useResourceProperty(subject: LaxNode,
 
     setValue(returnValue as unknown as (Quad[] | Term[] | string[] | ToJSOutputTypes[]));
   }, [
-    subject ? rdfFactory.id(subject) : undefined,
-    property ? rdfFactory.id(property) : undefined,
+    subject ? id(subject) : undefined,
+    property ? id(property) : undefined,
     lastUpdate,
   ]);
 

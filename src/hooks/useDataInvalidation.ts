@@ -1,8 +1,8 @@
 import rdfFactory, { doc, TermType } from "@ontologies/core";
-import { normalizeType, SomeNode } from "link-lib";
+import { equals, id, normalizeType, SomeNode } from "link-lib";
 import React from "react";
-import { reduceDataSubjects } from "../helpers";
 
+import { reduceDataSubjects } from "../helpers";
 import { DataInvalidationProps, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
@@ -26,7 +26,7 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 
     if (props.subject?.termType === TermType.NamedNode) {
         const document = rdfFactory.namedNode(doc(props.subject));
-        if (!rdfFactory.equals(document, props.subject)) {
+        if (!equals(document, props.subject)) {
             result.push(document);
         }
     }
@@ -40,9 +40,9 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 export function useDataInvalidation(subjects: undefined | SomeNode | SomeNode[]): number {
     const resources = normalizeType(subjects!).filter(Boolean);
     const lrs = useLRS();
-    const subId = resources.length > 0 ? rdfFactory.id(lrs.store.canon(resources[0])) : undefined;
+    const subId = resources.length > 0 ? id(lrs.store.canon(resources[0])) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(
-        (lrs as any).store.changeTimestamps[subId],
+        subId ? (lrs as any).store.changeTimestamps[subId] : 0,
     );
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
