@@ -142,7 +142,6 @@ export interface LinkOpts extends Partial<GlobalLinkOpts> {
     limit?: number;
     returnType?: ReturnType;
     linkedProp?: LinkedPropType;
-    name?: string;
 }
 
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;

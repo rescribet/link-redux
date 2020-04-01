@@ -95,9 +95,8 @@ describe("dataPropsToPropMap", () => {
     it("throws when a map with object value has an empty name", () => {
         expect(() => {
             dataPropsToPropMap({
-                cLabel: {
+                " \t\v\r\n ": {
                   label: ex.ns("p"),
-                  name: " \t\v\r\n ",
                 },
             }, {});
         }).toThrowError(TypeError);

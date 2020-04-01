@@ -10,7 +10,7 @@ export interface DataToPropsMapping {
     [k: string]: ProcessedLinkOpts;
 }
 
-type PropMapTuple = [number[], string, ProcessedLinkOpts];
+type PropMapTuple = [number[], ProcessedLinkOpts];
 
 function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts): PropMapTuple {
     if (predObj.length === 0) {
@@ -19,7 +19,6 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 
     return [
         predObj.map((p) => rdfFactory.id(p)),
-        propKey,
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -34,7 +33,6 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
 function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
     return [
         [rdfFactory.id(predObj)],
-        propKey,
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -55,14 +53,13 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
 
     return [
         labels.map((label) => rdfFactory.id(label)),
-      predObj.name || propKey,
         {
             fetch: predObj.fetch || opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
             label: normalizeType(predObj.label),
             limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
             linkedProp: predObj.linkedProp || opts.linkedProp,
-            name: predObj.name || propKey,
+            name: propKey,
             returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
         },
     ];
@@ -89,12 +86,12 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
             continue;
         }
         const predObj = mapDataToProps[propKey];
-        const [ properties, label, mapping ] = dataPropToPropMap(propKey, predObj, opts);
-        if (label.trim().length === 0) {
+        const [ properties, mapping ] = dataPropToPropMap(propKey, predObj, opts);
+        if (mapping.name.trim().length === 0) {
           throw new TypeError("Pass a valid prop label");
         }
         requestedProperties = requestedProperties.concat(...properties);
-        propMap[label] = mapping;
+        propMap[mapping.name] = mapping;
     }
 
     return [ propMap, requestedProperties ];
