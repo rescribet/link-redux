@@ -142,7 +142,9 @@ export const Property: React.ComponentType<PropertyPropTypes & any> = (props): R
     if (subjectData.length === 0) {
         return null;
     }
-    const labels = normalizeType(childProps.label).filter(Boolean).map((l) => l.value);
+    const labels = normalizeType(childProps.label)
+        .filter(Boolean)
+        .map((l) => l.value);
     const objRaw = subjectData
         .filter((s) => labels.includes(s.predicate.value))
         .map((s) => s.object);

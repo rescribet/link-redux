@@ -4,11 +4,7 @@
 export { Component } from "./components/Component";
 export { getLinkedObjectClass, Property, PropertyPropTypes } from "./components/Property";
 export { RenderStoreProvider } from "./components/RenderStoreProvider";
-export {
-  /** @deprecated use {Resource} */
-  Resource as LinkedResourceContainer,
-  Resource,
-} from "./components/Resource";
+export { Resource } from "./components/Resource";
 export { TopologyProvider } from "./components/TopologyProvider";
 export {
     errorComponent,
