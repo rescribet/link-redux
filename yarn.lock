@@ -1132,10 +1132,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@ontola/memoized-hash-factory@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@ontola/memoized-hash-factory/-/memoized-hash-factory-1.2.1.tgz#d8b5340b5c2d4b5700c1745f4c4cb51cf19dd164"
-  integrity sha512-w+IF5MegiooFslUZhJ4qk69e4YALGwSCPDIG4GHFMUaG76FB9rJLkaJhAoOGxZ/IOKs02VLF4Yk4kHPvIlhRVw==
+"@ontola/memoized-hash-factory@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ontola/memoized-hash-factory/-/memoized-hash-factory-2.0.0.tgz#91bba2b1cfca8c98c299ea13ab96bd772ec7ff0a"
+  integrity sha512-6BeLYdqi9g8iS6GfkiUXM9Dv2GBFWkrHYFCIW38TbnDl8HPiB5DNN8/LKWzUwQXM5sPOSjIxiTlBQVK4whGXuQ==
   dependencies:
     murmurhash-js "^1.0.0"
 
@@ -1144,17 +1144,10 @@
   resolved "https://registry.yarnpkg.com/@ontologies/as/-/as-1.0.1.tgz#f60489dcb1e3603d33d8bf7df73b325d8868b45e"
   integrity sha512-EqgREbZegZD2qH7byPLkpEk9cK/PV9ctpTt0qrqK4bMk7rumAdKI0Er4te5tZpejWBrTg+uWR193r+5zWl44dw==
 
-"@ontologies/core@2.0.0-9":
-  version "2.0.0-9"
-  resolved "https://registry.yarnpkg.com/@ontologies/core/-/core-2.0.0-9.tgz#8dd8ee8daefc639571ab28434d2e1faef119b5c3"
-  integrity sha512-876Wl4cyXenjt0NcONIY1idNLVjIumsNuG+QYGdcNPVftrYmmX9sFZPL5tSiTu7gDhhAcYJ6VSADEWUo2zGAIw==
-  dependencies:
-    "@ungap/global-this" "^0.3.1"
-
-"@ontologies/core@>=2.0.0-6":
-  version "2.0.0-plain.1"
-  resolved "https://registry.yarnpkg.com/@ontologies/core/-/core-2.0.0-plain.1.tgz#156b9f518b73e9dd2101d208b6705e7518280a73"
-  integrity sha512-+s1pQIbMVNyr5wPOdQzUykpXerwqfqWMf9ndp77H8blmQLkGFNY77kD6EU9Z4QJafvO9vBphbd1ALRmbIsJ6mg==
+"@ontologies/core@2.0.0", "@ontologies/core@>=2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ontologies/core/-/core-2.0.0.tgz#f2d0ac0882040651e7ad621fa9b075b7f1175b0c"
+  integrity sha512-SSBZTvzOFTytls90A89dpzhoiRnDlLNvLDRuOdT8T60bOlYJlI/mdspYOngEZhTzA8UBcHoxgRqQZZONksAFbw==
   dependencies:
     "@ungap/global-this" "^0.3.1"
 
@@ -4646,10 +4639,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-link-lib@2.0.0-0.9:
-  version "2.0.0-0.9"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-2.0.0-0.9.tgz#9538f4dd17dbe846a6e64acbf362ea5727cfb545"
-  integrity sha512-rTzbbMPzLNpz/Pw6ii/g3ozNUfWTnu2r7WzZXskqfeGek4dlQlQ60wG5mTD0PbF1vs6qcEfAmwFk6Ppj8t6vMQ==
+link-lib@2.0.0-1:
+  version "2.0.0-1"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-2.0.0-1.tgz#62f75533b77bd36ba6b242f5e10a4ac32f131013"
+  integrity sha512-7bTpTLTcGuRASl5yA091yWeFkYNe/QKGSCU0K8bqo6RshxbZH1xb7/Yl6W5Zu1PR9//5fGxXFf7y31sar7k+tg==
 
 listr-input@^0.2.0:
   version "0.2.1"
@@ -5110,12 +5103,12 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-n-quads-parser@^2.1.0-2:
-  version "2.1.0-3"
-  resolved "https://registry.yarnpkg.com/n-quads-parser/-/n-quads-parser-2.1.0-3.tgz#4f7dc172e50be3340fc70ec89c04e560594bd125"
-  integrity sha512-qQD5UF+myY2IMSqf2rdEcy0G9REth2wwh0HL5SwWnl6pGZQ0DNOCkS/Lg6q5suwPQvybVqroJ47k6O70DDJ0YQ==
+n-quads-parser@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/n-quads-parser/-/n-quads-parser-2.1.0.tgz#ddb34026627458fe56ca45098e8bc0d59b6e6a69"
+  integrity sha512-slsvxgeCf2eeRPuh64nPY52EyLkQUgbjOmnoAHwdUydICNZcm7jZY47vk0Zhv+iMlpjRCtsZsqM7U/0txO/N3w==
   dependencies:
-    "@ontologies/core" ">=2.0.0-6"
+    "@ontologies/core" ">=2.0.0"
 
 nan@^2.12.1:
   version "2.14.0"

@@ -36,6 +36,7 @@
     ]
   },
   "peerDependencies": {
+    "@ontologies/core": ">= 2.0.0",
     "hoist-non-react-statics": ">=3.x",
     "http-status-codes": ">= 1.x",
     "link-lib": ">=2.0.0-0.7",
@@ -44,9 +45,9 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.9.4",
-    "@ontola/memoized-hash-factory": "^1.2.1",
+    "@ontola/memoized-hash-factory": "^2.0.0",
     "@ontologies/as": "^1.0.1",
-    "@ontologies/core": "2.0.0-9",
+    "@ontologies/core": "2.0.0",
     "@ontologies/ld": "^1.0.0",
     "@ontologies/owl": "^1.0.0",
     "@ontologies/rdf": "^1.0.0",
@@ -74,8 +75,8 @@
     "http-status-codes": "1.x",
     "jest": "^25.2.4",
     "jest-enzyme": "^7.1.2",
-    "link-lib": "2.0.0-0.9",
-    "n-quads-parser": "^2.1.0-2",
+    "link-lib": "2.0.0-1",
+    "n-quads-parser": "^2.1.0",
     "prop-types": "^15.x",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
