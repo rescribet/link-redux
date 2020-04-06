@@ -1,6 +1,6 @@
 {
   "name": "link-redux",
-  "version": "1.0.0-rc4",
+  "version": "2.0.0-3",
   "description": "React library to make rendering linked data easy",
   "sideEffects": false,
   "repository": "https://github.com/fletcher91/link-redux.git",
