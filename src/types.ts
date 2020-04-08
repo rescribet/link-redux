@@ -104,10 +104,19 @@ export type OutputFromReturnType<T, Default> =
   Default;
 
 export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-  [K in keyof T]: OutputTypeFromOpts<T[K]> extends never ?
+  [K in keyof T]: T[K] extends NamedNode ? Default :
+    OutputTypeFromOpts<T[K]> extends never ?
     OutputFromReturnType<T[K], Default> :
     OutputTypeFromOpts<T[K]>;
 };
+
+// export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
+//   [K in keyof T]: OutputTypeFromOpts<T[K]> extends never ?
+//     OutputFromReturnType<T[K], Default> :
+//     OutputTypeFromOpts<T[K]>;
+// };
+
+export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D>>;
 
 /****** Property registration ******/
 
@@ -223,12 +232,12 @@ export enum Dereference {
 }
 // tslint:enable:no-bitwise
 
-export interface LinkOpts extends Partial<GlobalLinkOpts>, DataOpts {
+export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
     fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
     limit?: number;
-    returnType: ReturnTypes;
+    returnType?: ReturnTypes;
     linkedProp?: LinkedPropType;
 }
 

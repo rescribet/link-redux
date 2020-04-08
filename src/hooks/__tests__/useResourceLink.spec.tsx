@@ -28,9 +28,9 @@ describe("useLink", () => {
         opts.subject,
         {
           commentsCount: schema.commentCount,
-          // defaultSecond: {
-          //   label: schema.name,
-          // },
+          defaultSecond: {
+            label: schema.name,
+          },
           name: {
             label: schema.name,
             returnType: ReturnType.Term,
@@ -45,7 +45,7 @@ describe("useLink", () => {
 
       return (
         <div id="test">
-          {props.name.termType}           // Term
+          {props.name.termType.fixed()}   // Term
           {props.commentsCount.graph}     // Default (Statement)
           {props.defaultSecond.predicate} // Default (Statement)
           {props.whatever.charAt(4)}      // string
