@@ -1,9 +1,9 @@
-import rdfFactory, { doc, TermType } from "@ontologies/core";
-import { equals, id, normalizeType, SomeNode } from "link-lib";
+import rdfFactory, { doc, Node, TermType } from "@ontologies/core";
+import { equals, id, normalizeType } from "link-lib";
 import React from "react";
 
 import { reduceDataSubjects } from "../helpers";
-import { DataInvalidationProps, SubjectType } from "../types";
+import { DataInvalidationProps, LaxNode, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
 
@@ -37,8 +37,8 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 /**
  * Re-renders when one of the given {resources} changes in the store.
  */
-export function useDataInvalidation(subjects: undefined | SomeNode | SomeNode[]): number {
-    const resources = normalizeType(subjects!).filter(Boolean);
+export function useDataInvalidation(subjects: LaxNode | LaxNode[]): number {
+    const resources = normalizeType(subjects!).filter<Node>(Boolean as any);
     const lrs = useLRS();
     const subId = resources.length > 0 ? id(lrs.store.canon(resources[0])) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(

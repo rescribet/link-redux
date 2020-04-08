@@ -5,18 +5,29 @@ import React from "react";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import ll from "../ontology/ll";
-import { LinkOpts, MapDataToPropsParam } from "../types";
+import {
+  LaxNode,
+  LinkOpts,
+  MapDataToPropsParam,
+  OutputTypeFromOpts,
+  PropertyBoundProps,
+  SubjectProp,
+  TermOpts,
+} from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
 
-import { PropertyBoundProps } from "./useLinkedObjectProperties";
 import { useLRS } from "./useLRS";
 import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 
-export function useResourceLinks(
-  subjects: Node | Node[],
-  mapDataToProps: MapDataToPropsParam,
-  opts: LinkOpts = { fetch: true },
-): Array<PropertyBoundProps<typeof mapDataToProps>> {
+export function useResourceLinks<
+  T extends MapDataToPropsParam = {},
+  D extends LinkOpts = TermOpts,
+>(
+  subjects: LaxNode | Node[],
+  mapDataToProps: T,
+  opts: D,
+): Array<PropertyBoundProps<typeof mapDataToProps & SubjectProp, OutputTypeFromOpts<typeof opts>>> {
+
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
   const [propMap, requestedProperties] = React.useMemo(
@@ -32,6 +43,11 @@ export function useResourceLinks(
 
       for (let i = 0; i < len; i++) {
         const subject = dataSubjects[i];
+        if (!subject) {
+          // Preserve order
+          sets.push([]);
+          continue;
+        }
 
         if ((opts.fetch ?? globalLinkOptsDefaults.fetch)
             && isNamedNode(subject)

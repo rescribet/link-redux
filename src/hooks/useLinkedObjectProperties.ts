@@ -1,17 +1,16 @@
 import { Quad, SomeTerm } from "@ontologies/core";
 import { getPropBestLangRaw, id } from "link-lib";
 
-import { ReturnType, ToJSOutputTypes } from "../types";
+import {
+  PropertyBoundProps,
+  ReturnType,
+} from "../types";
 
 import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
 import { toReturnType } from "../hocs/link/toReturnType";
 
 import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useLRS } from "./useLRS";
-
-type Test = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
-
-export type PropertyBoundProps<T> = { [K in keyof T]: Test };
 
 export function useLinkedObjectProperties(
     subjProps: Quad[],

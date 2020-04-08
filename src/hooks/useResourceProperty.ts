@@ -1,5 +1,5 @@
-import { NamedNode, Quad, Term } from "@ontologies/core";
-import { id, SomeNode } from "link-lib";
+import { Quad, Term } from "@ontologies/core";
+import { id } from "link-lib";
 import React from "react";
 
 import { toReturnType } from "../hocs/link/toReturnType";
@@ -7,6 +7,8 @@ import {
   DataHookReturnType,
   DataOpts,
   defaultOptions,
+  LaxNode,
+  LaxProperty,
   LinkReduxLRSType,
   LiteralOpts,
   ReturnType,
@@ -18,9 +20,6 @@ import {
 import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLRS } from "./useLRS";
-
-type LaxNode = SomeNode | undefined;
-type LaxProperty = NamedNode | undefined;
 
 const calculate = (
   lrs: LinkReduxLRSType,
@@ -42,14 +41,37 @@ const calculate = (
     : prop.map((p) => toReturnType(opts.returnType, p));
 };
 
-export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: TermOpts): Term[];
-export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: StatementOpts): Quad[];
-export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: LiteralOpts): ToJSOutputTypes[];
-export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: ValueOpts): string[];
-export function useResourceProperty(subject: LaxNode, property: LaxProperty, opts?: DataOpts): DataHookReturnType;
-export function useResourceProperty(subject: LaxNode,
-                                    property: LaxProperty,
-                                    opts: DataOpts = defaultOptions): DataHookReturnType {
+export function useResourceProperty<T extends Term[] = Term[]>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts?: TermOpts,
+): T;
+export function useResourceProperty<T extends Quad[] = Quad[]>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts?: StatementOpts,
+): T;
+export function useResourceProperty<T extends ToJSOutputTypes[] = ToJSOutputTypes[]>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts?: LiteralOpts,
+): T;
+export function useResourceProperty<T extends string[] = string[]>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts?: ValueOpts,
+): T;
+export function useResourceProperty<T extends DataHookReturnType = DataHookReturnType>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts?: DataOpts,
+): T;
+// @ts-ignore TS6133 Used in overloads
+export function useResourceProperty<T extends DataHookReturnType = DataHookReturnType>(
+  subject: LaxNode,
+  property: LaxProperty,
+  opts: DataOpts = defaultOptions,
+): Quad[] | Term[] | string[] | ToJSOutputTypes[] {
 
   const lrs = useLRS();
   const lastUpdate = useDataInvalidation(subject);

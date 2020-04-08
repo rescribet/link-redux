@@ -23,11 +23,32 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
 export enum ReturnType {
-  Term = "term",
-  Statement = "statement",
-  Literal = "literal",
-  Value = "value",
+  Term,
+  Statement,
+  Literal,
+  Value,
 }
+
+// Prevent type widening of enum.
+
+export type ReturnLiteralType = ReturnType.Literal;
+export type ReturnTermType = ReturnType.Term;
+export type ReturnStatementType = ReturnType.Statement;
+export type ReturnValueType = ReturnType.Value;
+
+export type ReturnTypes = ReturnLiteralType |
+  ReturnTermType |
+  ReturnStatementType |
+  ReturnValueType;
+
+export const ReturnLiteral: ReturnLiteralType = ReturnType.Literal;
+export const ReturnTerm: ReturnTermType = ReturnType.Term;
+export const ReturnStatement: ReturnStatementType = ReturnType.Statement;
+export const ReturnValue: ReturnValueType = ReturnType.Value;
+
+export type LaxNode = SomeNode | undefined;
+
+export type LaxProperty = NamedNode | undefined;
 
 export type SubjectType = SomeNode;
 
@@ -40,21 +61,52 @@ export type TopologyType = TopologyContextType | null;
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
 
-export interface TermOpts extends DataOpts {
-  returnType: ReturnType.Term;
+export interface DataOpts {
+  returnType: ReturnTypes;
 }
-export interface StatementOpts extends DataOpts {
-  returnType: ReturnType.Statement;
+
+export type DataOptsV = TermOpts |
+  StatementOpts |
+  LiteralOpts |
+  ValueOpts;
+
+export interface TermOpts {
+  returnType: ReturnTermType;
 }
-export interface LiteralOpts extends DataOpts {
-  returnType: ReturnType.Literal;
+export interface StatementOpts {
+  returnType: ReturnStatementType;
 }
-export interface ValueOpts extends DataOpts {
-  returnType: ReturnType.Value;
+export interface LiteralOpts {
+  returnType: ReturnLiteralType;
+}
+export interface ValueOpts {
+  returnType: ReturnValueType;
 }
 
 export const defaultOptions: DataOpts = {
   returnType: ReturnType.Term,
+};
+
+export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
+
+export type OutputTypeFromOpts<T extends Readonly<DataOptsV | {}>> =
+  T extends ValueOpts ? string :
+  T extends LiteralOpts ? ToJSOutputTypes :
+  T extends StatementOpts ? Quad :
+  T extends TermOpts ? SomeTerm :
+  never;
+
+export type OutputFromReturnType<T, Default> =
+  T extends ReturnType.Value ? string :
+  T extends ReturnType.Literal ? ToJSOutputTypes :
+  T extends ReturnType.Statement ? Quad :
+  T extends ReturnType.Term ? SomeTerm :
+  Default;
+
+export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
+  [K in keyof T]: OutputTypeFromOpts<T[K]> extends never ?
+    OutputFromReturnType<T[K], Default> :
+    OutputTypeFromOpts<T[K]>;
 };
 
 /****** Property registration ******/
@@ -122,25 +174,61 @@ export interface LinkCtxOverrides {
     topologyCtx: TopologyContextType;
 }
 
-export interface DataOpts {
-  returnType: ReturnType;
-}
-
 export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 
-export interface GlobalLinkOpts {
+export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
     forceRender: boolean;
     limit: number;
-    returnType: ReturnType;
 }
 
-export interface LinkOpts extends Partial<GlobalLinkOpts> {
+export enum FetchOpts {
+  /** Only fetch when stale */
+  stale,
+  fetch,
+  hold,
+  force,
+}
+
+// tslint:disable:no-bitwise
+export enum Dereference {
+  /** Only use data present in-memory */
+  MemoryOnly = 0,
+
+  /** Show loading indicators while fetching, but use back-ups when fails */
+  NetworkFirst = 1 << 0,
+  /** Show loading indicators while fetching, but use back-ups when fails */
+  NetworkOnly = 1 << 1,
+  /** Use data from memory while fetching in background */
+  MemoryFirst = 1 << 2,
+
+  /** Don't use proxies for dereferencing. */
+  NoProxy = 1 << 3,
+  /** Prefer proxy for dereferencing. */
+  PreferProxy = 1 << 4,
+  /** Only use proxies for dereferencing. */
+  ProxyOnly = 1 << 5,
+
+  /** Don't cross the current origin when dereferencing. */
+  NoOrigin = 1 << 6,
+  /** Prefer origin when dereferencing. */
+  PreferOrigin = 1 << 7,
+  /** Only use origin for dereferencing. */
+  OriginOnly = 1 << 8,
+
+  /** Disable use of cached resources */
+  NoCache = 1 << 9,
+
+  Default = Dereference.NetworkFirst + Dereference.NoCache,
+}
+// tslint:enable:no-bitwise
+
+export interface LinkOpts extends Partial<GlobalLinkOpts>, DataOpts {
     fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
     limit?: number;
-    returnType?: ReturnType;
+    returnType: ReturnTypes;
     linkedProp?: LinkedPropType;
 }
 

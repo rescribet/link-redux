@@ -1,9 +1,12 @@
-import { isLiteral, Literal, Quad, SomeTerm } from "@ontologies/core";
+import { isLiteral, Literal, Quad } from "@ontologies/core";
 import xsd from "@ontologies/xsd";
 import { equals } from "link-lib";
 
-import { ReturnType, ToJSOutputTypes } from "../../types";
-import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
+import {
+  OutputFromReturnType,
+  ReturnType,
+  ToJSOutputTypes,
+} from "../../types";
 
 const numberTypes = [
     xsd.integer,
@@ -18,9 +21,9 @@ const numberTypes = [
 ];
 
 // From rdflib.js with modifications
-function toJS(obj: Literal | unknown): any {
+function toJS(obj: Literal | unknown): ToJSOutputTypes {
     if (!isLiteral(obj)) {
-        return obj;
+        return obj as object;
     }
 
     if (equals(obj.datatype, xsd.boolean)) {
@@ -37,8 +40,11 @@ function toJS(obj: Literal | unknown): any {
     return obj.value;
 }
 
-export function toReturnType(returnType: ReturnType | undefined, p: Quad): Quad | SomeTerm | ToJSOutputTypes {
-    switch (returnType || globalLinkOptsDefaults.returnType!) {
+export function toReturnType(
+  returnType: ReturnType,
+  p: Quad,
+): OutputFromReturnType<typeof returnType, ReturnType.Term> {
+    switch (returnType) {
         case ReturnType.Literal:
             return toJS(p.object);
         case ReturnType.Value:
@@ -47,5 +53,7 @@ export function toReturnType(returnType: ReturnType | undefined, p: Quad): Quad 
             return p.object;
         case ReturnType.Statement:
             return p;
+      default:
+            return p.object;
     }
 }
