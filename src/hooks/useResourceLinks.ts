@@ -7,11 +7,9 @@ import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import ll from "../ontology/ll";
 import {
   LaxNode,
+  LinkedDataObject,
   LinkOpts,
   MapDataToPropsParam,
-  OutputTypeFromOpts,
-  PropertyBoundProps,
-  SubjectProp,
   TermOpts,
 } from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -26,7 +24,7 @@ export function useResourceLinks<
   subjects: LaxNode | Node[],
   mapDataToProps: T,
   opts: D,
-): Array<PropertyBoundProps<typeof mapDataToProps & SubjectProp, OutputTypeFromOpts<typeof opts>>> {
+): Array<LinkedDataObject<T, typeof opts>> {
 
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
