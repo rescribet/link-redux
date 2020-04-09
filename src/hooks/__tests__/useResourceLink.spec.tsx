@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { ReturnLiteral, ReturnStatement, ReturnTerm, ReturnType, ReturnValue } from "../../types";
+import { ReturnType } from "../../types";
 import { useResourceLink } from "../useResourceLink";
 
 describe("useLink", () => {
@@ -45,11 +45,11 @@ describe("useLink", () => {
 
       return (
         <div id="test">
-          {props.name.termType.fixed()}   // Term
-          {props.commentsCount.graph}     // Default (Statement)
-          {props.defaultSecond.predicate} // Default (Statement)
-          {props.whatever.charAt(4)}      // string
-          {props.subject.predicate.value} // Default (Statement)
+          {props.name?.termType.fixed()}   // Term
+          {props.commentsCount?.graph}     // Default (Statement)
+          {props.defaultSecond?.predicate} // Default (Statement)
+          {props.whatever?.charAt(4)}      // string
+          {props.subject.predicate.value}  // Default (Statement)
         </div>
       );
     };

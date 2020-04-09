@@ -3,8 +3,6 @@ import {
   LinkedDataObject,
   LinkOpts,
   MapDataToPropsParam,
-  OutputFromReturnType, OutputTypeFromOpts,
-  ReturnType,
   TermOpts,
 } from "../types";
 
@@ -17,7 +15,7 @@ export function useResourceLink<
   subject: LaxNode,
   dataToProps: T,
   opts: D,
-): LinkedDataObject<T, typeof opts> & { subject: OutputTypeFromOpts<D> extends never ? ReturnType.Term : OutputTypeFromOpts<D> } {
+): LinkedDataObject<T, typeof opts> {
   const [data] = useResourceLinks(subject, dataToProps, opts);
 
   return data;

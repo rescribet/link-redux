@@ -22,10 +22,15 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
+/** Data types to which the data can be converted before inserting into a data map */
 export enum ReturnType {
+  /** Return the `object`, keeping the underlying rdf data model. */
   Term,
+  /** Keep the underlying rdf data model */
   Statement,
+  /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
   Literal,
+  /** Return the `object` as a string value. */
   Value,
 }
 
@@ -87,6 +92,7 @@ export const defaultOptions: DataOpts = {
   returnType: ReturnType.Term,
 };
 
+/** All possible return types from data mapping functions */
 export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 
 export type OutputTypeFromOpts<T extends Readonly<DataOptsV | {}>> =
@@ -103,20 +109,22 @@ export type OutputFromReturnType<T, Default> =
   T extends ReturnType.Term ? SomeTerm :
   Default;
 
+/**
+ * Maps the prop map returnType settings to corresponding values in the data object.
+ */
 export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-  [K in keyof T]: T[K] extends NamedNode ? Default :
+  [K in keyof T]: undefined | (T[K] extends NamedNode ? Default :
     OutputTypeFromOpts<T[K]> extends never ?
     OutputFromReturnType<T[K], Default> :
-    OutputTypeFromOpts<T[K]>;
+    OutputTypeFromOpts<T[K]>);
 };
 
-// export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-//   [K in keyof T]: OutputTypeFromOpts<T[K]> extends never ?
-//     OutputFromReturnType<T[K], Default> :
-//     OutputTypeFromOpts<T[K]>;
-// };
-
-export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D>>;
+/**
+ * An object with the requested properties assigned to their names, or undefined if not present.
+ * Also includes a non-overrideable `subject` key which corresponds to the resource the properties were taken from.
+ */
+export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D> | undefined>
+  & { subject: OutputTypeFromOpts<D> extends never ? ReturnType.Term : OutputTypeFromOpts<D> };
 
 /****** Property registration ******/
 
