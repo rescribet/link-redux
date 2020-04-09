@@ -6,15 +6,25 @@ import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import { toReturnType } from "../hocs/link/toReturnType";
 import ll from "../ontology/ll";
-import { PropertyBoundProps, ReturnType, SubjectProp } from "../types";
+import {
+  LinkedDataObject,
+  LinkOpts,
+  PropertyBoundProps,
+  ReturnType,
+  SubjectProp,
+  TermOpts,
+} from "../types";
 
 import { useLRS } from "./useLRS";
 
-export function useManyLinkedObjectProperties(
+export function useManyLinkedObjectProperties<
+  T extends DataToPropsMapping = {},
+  D extends LinkOpts = TermOpts,
+>(
   subjPropsArr: Quad[][],
-  propMap: DataToPropsMapping,
+  propMap: T,
   returnType: ReturnType = globalLinkOptsDefaults.returnType,
-): Array<PropertyBoundProps<Exclude<typeof propMap & SubjectProp, SubjectProp>, typeof returnType> & SubjectProp> {
+): Array<LinkedDataObject<T, typeof returnType>> {
   const lrs = useLRS();
   const values = React.useMemo(() => Object.values(propMap), [propMap]);
   const length = subjPropsArr.length;

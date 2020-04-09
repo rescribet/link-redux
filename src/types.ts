@@ -97,21 +97,23 @@ export type OutputTypeFromOpts<T extends Readonly<DataOptsV | {}>> =
   T extends TermOpts ? SomeTerm :
   never;
 
-export type OutputFromReturnType<T, Default> =
+export type OutputTypeFromReturnType<T, Default> =
   T extends ReturnType.Value ? string :
   T extends ReturnType.Literal ? ToJSOutputTypes :
   T extends ReturnType.Statement ? Quad :
   T extends ReturnType.Term ? SomeTerm :
   Default;
 
+export type ExtractOutputType<T, Default = never> =
+  T extends NamedNode | BlankNode | Literal ? Default :
+  T extends ReturnType ? OutputTypeFromReturnType<T, Default> :
+  OutputTypeFromOpts<T> extends never ? Default : OutputTypeFromOpts<T>;
+
 /**
  * Maps the prop map returnType settings to corresponding values in the data object.
  */
 export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-  [K in keyof T]: undefined | (T[K] extends NamedNode ? Default :
-    OutputTypeFromOpts<T[K]> extends never ?
-    OutputFromReturnType<T[K], Default> :
-    OutputTypeFromOpts<T[K]>);
+  [K in keyof T]: undefined | ExtractOutputType<T[K], Default>;
 };
 
 /**

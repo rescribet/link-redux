@@ -6,7 +6,7 @@ import { ProcessedLinkOpts } from "../link";
 
 import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
 
-export interface DataToPropsMapping {
+export interface DataToPropsMapping extends MapDataToPropsParam {
     [k: string]: ProcessedLinkOpts;
 }
 

@@ -3,7 +3,7 @@ import xsd from "@ontologies/xsd";
 import { equals } from "link-lib";
 
 import {
-  OutputFromReturnType,
+  OutputTypeFromReturnType,
   ReturnType,
   ToJSOutputTypes,
 } from "../../types";
@@ -43,7 +43,7 @@ function toJS(obj: Literal | unknown): ToJSOutputTypes {
 export function toReturnType(
   returnType: ReturnType,
   p: Quad,
-): OutputFromReturnType<typeof returnType, ReturnType.Term> {
+): OutputTypeFromReturnType<typeof returnType, ReturnType.Term> {
     switch (returnType) {
         case ReturnType.Literal:
             return toJS(p.object);
