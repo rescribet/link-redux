@@ -40,20 +40,44 @@ function toJS(obj: Literal | unknown): ToJSOutputTypes {
     return obj.value;
 }
 
-export function toReturnType(
+export function toReturnType<
+  D extends ReturnType,
+  R = OutputTypeFromReturnType<D, never>,
+>(
   returnType: ReturnType,
   p: Quad,
-): OutputTypeFromReturnType<typeof returnType, ReturnType.Term> {
+): R {
     switch (returnType) {
         case ReturnType.Literal:
-            return toJS(p.object);
+            return toJS(p.object) as unknown as R;
         case ReturnType.Value:
-            return p.object.value;
+            return p.object.value as unknown as R;
         case ReturnType.Term:
-            return p.object;
+            return p.object as unknown as R;
         case ReturnType.Statement:
-            return p;
+            return p as unknown as R;
       default:
-            return p.object;
+            return p.object as unknown as R;
     }
 }
+
+// export function toReturnType<
+//   D extends ReturnType,
+//   R extends OutputTypeFromReturnType<D, ReturnType.Term> = OutputTypeFromReturnType<D, ReturnType.Term>,
+// >(
+//   returnType: ReturnType,
+//   p: Quad,
+// ): R {
+//     switch (returnType) {
+//         case ReturnType.Literal:
+//             return toJS(p.object) as R;
+//         case ReturnType.Value:
+//             return p.object.value as R;
+//         case ReturnType.Term:
+//             return p.object as R;
+//         case ReturnType.Statement:
+//             return p as R;
+//       default:
+//             return p.object as R;
+//     }
+// }

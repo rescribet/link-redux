@@ -97,7 +97,7 @@ export type OutputTypeFromOpts<T extends Readonly<DataOptsV | {}>> =
   T extends TermOpts ? SomeTerm :
   never;
 
-export type OutputTypeFromReturnType<T, Default> =
+export type OutputTypeFromReturnType<T, Default = never> =
   T extends ReturnType.Value ? string :
   T extends ReturnType.Literal ? ToJSOutputTypes :
   T extends ReturnType.Statement ? Quad :

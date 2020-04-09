@@ -6,13 +6,15 @@ import { ProcessedLinkOpts } from "../link";
 
 import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
 
-export interface DataToPropsMapping extends MapDataToPropsParam {
-    [k: string]: ProcessedLinkOpts;
-}
+// export interface DataToPropsMapping extends MapDataToPropsParam {
+//     [k: string]: ProcessedLinkOpts;
+// }
 
-type PropMapTuple = [number[], ProcessedLinkOpts];
+export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
 
-function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts): PropMapTuple {
+type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];
+
+function mapMultiLabelMap<K>(propKey: K, predObj: NamedNode[], opts: LinkOpts): PropMapTuple<K> {
     if (predObj.length === 0) {
         throw new TypeError("Props array must contain at least one predicate");
     }
@@ -30,7 +32,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
     ];
 }
 
-function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
+function mapLabelMap<K>(propKey: K, predObj: NamedNode, opts: LinkOpts): PropMapTuple<K> {
     return [
         [id(predObj)],
         {
@@ -44,7 +46,7 @@ function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropM
     ];
 }
 
-function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): PropMapTuple {
+function mapLinkOptsMap<K>(propKey: K, predObj: LinkOpts, opts: LinkOpts): PropMapTuple<K> {
     const labels = normalizeType(predObj.label).filter(Boolean) as NamedNode[];
 
     if (predObj.label === undefined) {
@@ -65,7 +67,7 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
     ];
 }
 
-function dataPropToPropMap(propKey: string, predObj: PropParam, opts: LinkOpts): PropMapTuple {
+function dataPropToPropMap<T>(propKey: T, predObj: PropParam, opts: LinkOpts): PropMapTuple<T> {
     if (Array.isArray(predObj)) {
         return mapMultiLabelMap(propKey, predObj, opts);
     } else if (isNamedNode(predObj)) {
@@ -75,10 +77,12 @@ function dataPropToPropMap(propKey: string, predObj: PropParam, opts: LinkOpts):
     return mapLinkOptsMap(propKey, predObj, opts);
 }
 
-export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
-                                   opts: LinkOpts): [DataToPropsMapping, number[]] {
+export function dataPropsToPropMap(
+  mapDataToProps: MapDataToPropsParam,
+  opts: LinkOpts,
+): [DataToPropsMapping<typeof mapDataToProps>, number[]] {
 
-    const propMap: DataToPropsMapping = {};
+    const propMap: DataToPropsMapping<typeof mapDataToProps> = {};
     let requestedProperties: number[] = [];
 
     for (const propKey in mapDataToProps) {
@@ -86,8 +90,8 @@ export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
             continue;
         }
         const predObj = mapDataToProps[propKey];
-        const [ properties, mapping ] = dataPropToPropMap(propKey, predObj, opts);
-        if (mapping.name.trim().length === 0) {
+        const [ properties, mapping ] = dataPropToPropMap<keyof typeof mapDataToProps>(propKey, predObj, opts);
+        if (typeof mapping.name === "number" || mapping.name.trim().length === 0) {
           throw new TypeError("Pass a valid prop label");
         }
         requestedProperties = requestedProperties.concat(...properties);

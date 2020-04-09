@@ -14,11 +14,11 @@ import { globalLinkOptsDefaults } from "./link/globalLinkOptsDefaults";
 import { wrapWithConnect } from "./link/wrapWithConnect";
 import { wrapWithSubject } from "./link/wrapWithSubject";
 
-export interface ProcessedLinkOpts extends LinkOpts {
+export interface ProcessedLinkOpts<T = string> extends LinkOpts {
     fetch: boolean;
     label: NamedNode[];
     limit: number;
-    name: string;
+    name: T;
     returnType: ReturnType;
 }
 
