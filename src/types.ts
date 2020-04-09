@@ -46,11 +46,6 @@ export type ReturnTypes = ReturnLiteralType |
   ReturnStatementType |
   ReturnValueType;
 
-export const ReturnLiteral: ReturnLiteralType = ReturnType.Literal;
-export const ReturnTerm: ReturnTermType = ReturnType.Term;
-export const ReturnStatement: ReturnStatementType = ReturnType.Statement;
-export const ReturnValue: ReturnValueType = ReturnType.Value;
-
 export type LaxNode = SomeNode | undefined;
 
 export type LaxProperty = NamedNode | undefined;
