@@ -10,6 +10,7 @@ import {
   LinkedDataObject,
   LinkOpts,
   MapDataToPropsParam,
+  ReturnType,
   TermOpts,
 } from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -20,11 +21,12 @@ import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 export function useResourceLinks<
   T extends MapDataToPropsParam = {},
   D extends LinkOpts = TermOpts,
+  RT extends NonNullable<ReturnType> & D["returnType"] = NonNullable<D["returnType"]>,
 >(
   subjects: LaxNode | Node[],
   mapDataToProps: T,
   opts: D,
-): Array<LinkedDataObject<T, typeof opts>> {
+): Array<LinkedDataObject<T, D>> {
 
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
@@ -73,9 +75,11 @@ export function useResourceLinks<
     [dataSubjects, requestedProperties, lastUpdate],
   );
 
-  return useManyLinkedObjectProperties(
+  const test = useManyLinkedObjectProperties<T, RT>(
     propSets,
     propMap,
     opts.returnType,
   );
+
+  return test;
 }

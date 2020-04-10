@@ -6,10 +6,6 @@ import { ProcessedLinkOpts } from "../link";
 
 import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
 
-// export interface DataToPropsMapping extends MapDataToPropsParam {
-//     [k: string]: ProcessedLinkOpts;
-// }
-
 export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
 
 type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];

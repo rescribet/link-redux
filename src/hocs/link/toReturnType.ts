@@ -1,6 +1,6 @@
 import { isLiteral, Literal, Quad } from "@ontologies/core";
 import xsd from "@ontologies/xsd";
-import { equals } from "link-lib";
+import { equals, normalizeType } from "link-lib";
 
 import {
   OutputTypeFromReturnType,
@@ -45,19 +45,30 @@ export function toReturnType<
   R = OutputTypeFromReturnType<D, never>,
 >(
   returnType: ReturnType,
-  p: Quad,
+  p: Quad | Quad[],
 ): R {
+    const stmts = normalizeType(p);
     switch (returnType) {
         case ReturnType.Literal:
-            return toJS(p.object) as unknown as R;
+            return toJS(stmts[0].object) as unknown as R;
         case ReturnType.Value:
-            return p.object.value as unknown as R;
+            return stmts[0].object.value as unknown as R;
         case ReturnType.Term:
-            return p.object as unknown as R;
+            return stmts[0].object as unknown as R;
         case ReturnType.Statement:
             return p as unknown as R;
-      default:
-            return p.object as unknown as R;
+
+        case ReturnType.AllLiterals:
+          return stmts.map((s) => toJS(s.object)) as unknown as R;
+        case ReturnType.AllValues:
+          return stmts.map((s) => s.object.value) as unknown as R;
+        case ReturnType.AllTerms:
+          return stmts.map((s) => s.object) as unknown as R;
+        case ReturnType.AllStatements:
+          return stmts as unknown as R;
+
+        default:
+            return stmts[0].object as unknown as R;
     }
 }
 

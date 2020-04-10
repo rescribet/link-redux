@@ -217,6 +217,7 @@ export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
     forceRender: boolean;
+    limit: number;
 }
 
 export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {

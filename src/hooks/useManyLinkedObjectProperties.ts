@@ -1,5 +1,5 @@
 import rdf, { Quad } from "@ontologies/core";
-import { getPropBestLangRaw } from "link-lib";
+import { equals, getPropBestLangRaw } from "link-lib";
 import React from "react";
 import { ProcessedLinkOpts } from "../hocs/link";
 
@@ -7,30 +7,28 @@ import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import { toReturnType } from "../hocs/link/toReturnType";
 import ll from "../ontology/ll";
-import {
-  LinkedDataObject,
-  OutputTypeFromReturnType,
-  ReturnType,
-  SubjectProp,
-} from "../types";
+import { LinkedDataObject, ReturnType } from "../types";
 
 import { useLRS } from "./useLRS";
 
 export function useManyLinkedObjectProperties<
   T extends DataToPropsMapping = {},
+  D extends ReturnType = ReturnType.Term,
 >(
   subjPropsArr: Quad[][],
   propMap: T,
-  returnType: ReturnType = globalLinkOptsDefaults.returnType,
-): Array<LinkedDataObject<T, typeof returnType>> {
-  type DataObjectType = LinkedDataObject<T, typeof returnType>;
+  returnType?: D,
+): Array<LinkedDataObject<T, D>> {
+  type DataObjectType = LinkedDataObject<T, D>;
+
+  const returnTypeOrDefault = returnType || globalLinkOptsDefaults.returnType;
   const lrs = useLRS();
   const values = React.useMemo(() => Object.values(propMap), [propMap]);
   const length = subjPropsArr.length;
 
   return React.useMemo(
     () => {
-      const propMaps: Array<DataObjectType & SubjectProp> = [];
+      const propMaps: DataObjectType[] = [];
 
       for (let h = 0; h < length; h++) {
         const subjProps = subjPropsArr[h];
@@ -38,7 +36,7 @@ export function useManyLinkedObjectProperties<
         const acc: Partial<DataObjectType> = {};
 
         acc.subject = toReturnType(
-          returnType,
+          returnTypeOrDefault,
           rdf.quad(subject, ll.nop, subject),
         );
 
@@ -50,23 +48,23 @@ export function useManyLinkedObjectProperties<
               // TODO: Merge
               continue;
             }
-            if (propOpts.limit === 1) {
-              const p = getPropBestLangRaw(
-                lrs.getResourcePropertyRaw(subject, cur),
-                (lrs.store as any).langPrefs,
-              );
-              if (p) {
-                acc[propOpts.name] = toReturnType(propOpts.returnType || returnType, p);
+
+            const data: Quad[] = [];
+            for (let k = 0, klen = subjProps.length; k < klen; k++) {
+              if (equals(subjProps[k].predicate, cur)) {
+                data.push(subjProps[k]);
               }
-            } else {
-              const nextName: Array<OutputTypeFromReturnType<typeof returnType>> = [];
-              for (let k = 0, klen = subjProps.length; k < klen; k++) {
-                if (subjProps[k].predicate === cur) {
-                  nextName.push(toReturnType(propOpts.returnType || returnType, subjProps[k]));
-                }
-              }
-              acc[propOpts.name] = nextName;
             }
+            const best = data.length === 1 ? data[0] : getPropBestLangRaw(data, (lrs.store as any).langPrefs);
+            if (data[0] !== best) {
+              data[data.indexOf(best)] = data[0];
+              data[0] = best;
+            }
+
+            acc[propOpts.name] = toReturnType(
+              propOpts.returnType || returnTypeOrDefault,
+              propOpts.limit !== Infinity  ? data.slice(0, propOpts.limit) : data,
+            );
           }
         }
         propMaps.push(acc as DataObjectType);
