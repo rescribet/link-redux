@@ -61,14 +61,31 @@ export type TopologyType = TopologyContextType | null;
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
 
-export interface DataOpts {
+export enum Amount {
+  One = 1,
+  Some = 10,
+  Many = 100,
+  All = 1_000_000_000_000,
+}
+
+export interface LimitOpt {
+  limit: Amount;
+}
+
+export interface DataOpts extends LimitOpt {
   returnType: ReturnTypes;
 }
 
-export type DataOptsV = TermOpts |
+export type DataOptsV = Partial<LimitOpt> & (TermOpts |
   StatementOpts |
   LiteralOpts |
-  ValueOpts;
+  ValueOpts
+);
+
+export interface SingleTermOpts {
+  limit: Amount.One;
+  returnType: ReturnTermType;
+}
 
 export interface TermOpts {
   returnType: ReturnTermType;
@@ -84,13 +101,18 @@ export interface ValueOpts {
 }
 
 export const defaultOptions: DataOpts = {
+  limit: Amount.One,
   returnType: ReturnType.Term,
 };
 
 /** All possible return types from data mapping functions */
 export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 
-export type OutputTypeFromOpts<T extends Readonly<DataOptsV | {}>> =
+export type OnlyOneProp<O, T> = O extends { limit: Amount.One } ? T :
+  O extends never ? T :
+  T[];
+
+export type OutputTypeFromOpts<T extends Partial<DataOptsV>> =
   T extends ValueOpts ? string :
   T extends LiteralOpts ? ToJSOutputTypes :
   T extends StatementOpts ? Quad :
@@ -105,23 +127,28 @@ export type OutputTypeFromReturnType<T, Default = never> =
   Default;
 
 export type ExtractOutputType<T, Default = never> =
+  T extends LimitOpt & TermOpts ? OutputTypeFromOpts<T> :
   T extends NamedNode | BlankNode | Literal ? Default :
   T extends ReturnType ? OutputTypeFromReturnType<T, Default> :
   OutputTypeFromOpts<T> extends never ? Default : OutputTypeFromOpts<T>;
 
 /**
  * Maps the prop map returnType settings to corresponding values in the data object.
+ *
+ * When requesting more than one property, an empty array represents the empty set.
  */
 export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-  [K in keyof T]: undefined | ExtractOutputType<T[K], Default>;
+  [K in keyof T]: T[K] extends { limit: Amount.One }
+    ? ExtractOutputType<T[K], Default>
+    : Array<ExtractOutputType<T[K], Default>>;
 };
 
 /**
  * An object with the requested properties assigned to their names, or undefined if not present.
  * Also includes a non-overrideable `subject` key which corresponds to the resource the properties were taken from.
  */
-export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D> | undefined>
-  & { subject: OutputTypeFromOpts<D> extends never ? ReturnType.Term : OutputTypeFromOpts<D> };
+export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D>>
+  & { subject: OutputTypeFromOpts<D> extends never ? ReturnType.Term : OutputTypeFromOpts<D & { limit: Amount.One }> };
 
 /****** Property registration ******/
 
@@ -193,7 +220,7 @@ export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
     forceRender: boolean;
-    limit: number;
+    limit: Amount;
 }
 
 export enum FetchOpts {
@@ -241,7 +268,7 @@ export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
     fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
-    limit?: number;
+    limit?: Amount;
     returnType?: ReturnTypes;
     linkedProp?: LinkedPropType;
 }

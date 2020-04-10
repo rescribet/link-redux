@@ -8,8 +8,9 @@ import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import { toReturnType } from "../hocs/link/toReturnType";
 import ll from "../ontology/ll";
 import {
-  LinkedDataObject, OutputTypeFromOpts, OutputTypeFromReturnType,
-  ReturnType, ReturnValueTypes,
+  LinkedDataObject,
+  OutputTypeFromReturnType,
+  ReturnType,
   SubjectProp,
 } from "../types";
 

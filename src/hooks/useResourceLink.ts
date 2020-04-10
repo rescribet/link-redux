@@ -3,14 +3,14 @@ import {
   LinkedDataObject,
   LinkOpts,
   MapDataToPropsParam,
-  TermOpts,
+  SingleTermOpts,
 } from "../types";
 
 import { useResourceLinks } from "./useResourceLinks";
 
 export function useResourceLink<
   T extends MapDataToPropsParam = {},
-  D extends LinkOpts = TermOpts,
+  D extends LinkOpts = SingleTermOpts,
 >(
   subject: LaxNode,
   dataToProps: T,
