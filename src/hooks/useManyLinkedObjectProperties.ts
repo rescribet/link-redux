@@ -1,13 +1,16 @@
 import rdf, { Quad } from "@ontologies/core";
 import { equals, getPropBestLangRaw } from "link-lib";
 import React from "react";
-import { ProcessedLinkOpts } from "../hocs/link";
 
-import { DataToPropsMapping } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import { toReturnType } from "../hocs/link/toReturnType";
 import ll from "../ontology/ll";
-import { LinkedDataObject, ReturnType } from "../types";
+import {
+  DataToPropsMapping,
+  LinkedDataObject,
+  ProcessedLinkOpts,
+  ReturnType,
+} from "../types";
 
 import { useLRS } from "./useLRS";
 

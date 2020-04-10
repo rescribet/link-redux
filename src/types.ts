@@ -229,6 +229,18 @@ export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
     linkedProp?: LinkedPropType;
 }
 
+export interface ProcessedLinkOpts<T = string> extends LinkOpts {
+  fetch: boolean;
+  label: NamedNode[];
+  limit: number;
+  name: T;
+  returnType: ReturnType;
+}
+
+export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
+
+export type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];
+
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;
 
 export interface MapDataToPropsParam {

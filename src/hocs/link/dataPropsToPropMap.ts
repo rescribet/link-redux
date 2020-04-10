@@ -1,14 +1,15 @@
 import { isNamedNode, NamedNode } from "@ontologies/core";
 import { id, normalizeType } from "link-lib";
 
-import { LinkOpts, MapDataToPropsParam, PropParam } from "../../types";
-import { ProcessedLinkOpts } from "../link";
+import {
+  DataToPropsMapping,
+  LinkOpts,
+  MapDataToPropsParam,
+  PropMapTuple,
+  PropParam,
+} from "../../types";
 
 import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
-
-export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
-
-type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];
 
 function mapMultiLabelMap<K>(propKey: K, predObj: NamedNode[], opts: LinkOpts): PropMapTuple<K> {
     if (predObj.length === 0) {
@@ -73,26 +74,26 @@ function dataPropToPropMap<T>(propKey: T, predObj: PropParam, opts: LinkOpts): P
     return mapLinkOptsMap(propKey, predObj, opts);
 }
 
-export function dataPropsToPropMap(
-  mapDataToProps: MapDataToPropsParam,
+export function dataPropsToPropMap<
+  T extends MapDataToPropsParam = MapDataToPropsParam,
+>(
+  mapDataToProps: T,
   opts: LinkOpts,
-): [DataToPropsMapping<typeof mapDataToProps>, number[]] {
-
-    const propMap: DataToPropsMapping<typeof mapDataToProps> = {};
+): [DataToPropsMapping<T>, number[]] {
     let requestedProperties: number[] = [];
 
-    for (const propKey in mapDataToProps) {
-        if (!mapDataToProps.hasOwnProperty(propKey)) {
-            continue;
-        }
+    const propMap = Object
+      .keys(mapDataToProps)
+      .reduce<DataToPropsMapping<T>>((acc, propKey) => {
         const predObj = mapDataToProps[propKey];
-        const [ properties, mapping ] = dataPropToPropMap<keyof typeof mapDataToProps>(propKey, predObj, opts);
-        if (typeof mapping.name === "number" || mapping.name.trim().length === 0) {
-          throw new TypeError("Pass a valid prop label");
-        }
+        const [ properties, mapping ] = dataPropToPropMap<keyof T>(propKey, predObj, opts);
         requestedProperties = requestedProperties.concat(...properties);
-        propMap[mapping.name] = mapping;
-    }
+
+        return {
+          ...acc,
+          [mapping.name]: mapping,
+        };
+      }, {} as any);
 
     return [ propMap, requestedProperties ];
 }
