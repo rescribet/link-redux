@@ -23,13 +23,13 @@ export function useResourceLinks<
 >(
   subjects: LaxNode | Node[],
   mapDataToProps: T,
-  opts: D,
+  opts?: D,
 ): Array<LinkedDataObject<T, D>> {
-
+  const defaultedOpts = opts ?? globalLinkOptsDefaults;
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
   const [propMap, requestedProperties] = React.useMemo(
-    () => dataPropsToPropMap(mapDataToProps, opts),
+    () => dataPropsToPropMap(mapDataToProps, defaultedOpts),
     [mapDataToProps, opts],
   );
   const lastUpdate = useDataInvalidation(dataSubjects);
@@ -47,7 +47,7 @@ export function useResourceLinks<
           continue;
         }
 
-        if ((opts.fetch ?? globalLinkOptsDefaults.fetch)
+        if ((defaultedOpts.fetch ?? globalLinkOptsDefaults.fetch)
             && isNamedNode(subject)
             && lrs.shouldLoadResource(subject)) {
           lrs.queueEntity(subject);
@@ -56,7 +56,7 @@ export function useResourceLinks<
         const subjectData = lrs.tryEntity(subject);
         const subjProps = [
           // Ensure the first item's subject is always the data subject
-          rdfFactory.quad(subject, ll.dataSubject, ll.nop),
+          rdfFactory.quad(subject, ll.dataSubject, subject),
         ];
 
         for (let j = 0; j < subjectData.length; j++) {
@@ -76,5 +76,6 @@ export function useResourceLinks<
   return useManyLinkedObjectProperties<typeof propMap, any, LinkedDataObject<T, D>>(
     propSets,
     propMap,
+    defaultedOpts.returnType,
   );
 }

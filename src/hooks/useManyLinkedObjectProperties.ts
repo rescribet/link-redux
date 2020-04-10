@@ -41,7 +41,7 @@ export function useManyLinkedObjectProperties<
 
         acc.subject = toReturnType(
           returnTypeOrDefault,
-          rdf.quad(subject, ll.nop, subject),
+          [rdf.quad(subject, ll.dataSubject, subject)],
         );
 
         for (let i = 0, ilen = values.length; i < ilen; i++) {
@@ -66,7 +66,7 @@ export function useManyLinkedObjectProperties<
             }
 
             acc[propOpts.name] = toReturnType(
-              propOpts.returnType || returnTypeOrDefault,
+              propOpts.returnType ?? returnTypeOrDefault,
               propOpts.limit !== Infinity  ? data.slice(0, propOpts.limit) : data,
             );
           }

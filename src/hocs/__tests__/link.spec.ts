@@ -80,7 +80,7 @@ describe("link", () => {
                 name: [schema.name, rdfs.label],
                 tags: {
                     label: example.ns("tags"),
-                    limit: Infinity,
+                    returnType: ReturnType.AllLiterals,
                 },
                 text: schema.text,
             });
@@ -106,7 +106,8 @@ describe("link", () => {
             { forceRender: false },
             );
 
-          expect(elem.find(TestComponent)).toHaveLength(0);
+          expect(elem.find(TestComponent)).toHaveLength(1);
+          expect(elem.find(TestComponent)).toEqual({});
         });
 
         it("throws without properties and custom opts", () => {

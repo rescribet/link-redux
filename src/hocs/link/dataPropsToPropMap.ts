@@ -53,13 +53,13 @@ function mapLinkOptsMap<K>(propKey: K, predObj: LinkOpts, opts: LinkOpts): PropM
     return [
         labels.map(id),
         {
-            fetch: predObj.fetch || opts.fetch || globalLinkOptsDefaults.fetch,
-            forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
+            fetch: predObj.fetch ?? opts.fetch ?? globalLinkOptsDefaults.fetch,
+            forceRender: predObj.forceRender ?? opts.forceRender ?? globalLinkOptsDefaults.forceRender,
             label: normalizeType(predObj.label),
-            limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
+            limit: predObj.limit ?? opts.limit ?? globalLinkOptsDefaults.limit,
             linkedProp: predObj.linkedProp || opts.linkedProp,
             name: propKey,
-            returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
+            returnType: predObj.returnType ?? opts.returnType ?? globalLinkOptsDefaults.returnType,
         },
     ];
 }
@@ -87,6 +87,9 @@ export function dataPropsToPropMap<
       .reduce<DataToPropsMapping<T>>((acc, propKey) => {
         const predObj = mapDataToProps[propKey];
         const [ properties, mapping ] = dataPropToPropMap<keyof T>(propKey, predObj, opts);
+        if ((mapping.name as string).trim().length === 0) {
+          throw new TypeError("Pass a valid prop label");
+        }
         requestedProperties = requestedProperties.concat(...properties);
 
         return {

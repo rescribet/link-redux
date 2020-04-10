@@ -50,13 +50,13 @@ export function toReturnType<
     const stmts = normalizeType(p);
     switch (returnType) {
         case ReturnType.Literal:
-            return toJS(stmts[0].object) as unknown as R;
+            return toJS(stmts[0]?.object) as unknown as R;
         case ReturnType.Value:
-            return stmts[0].object.value as unknown as R;
+            return stmts[0]?.object.value as unknown as R;
         case ReturnType.Term:
-            return stmts[0].object as unknown as R;
+            return stmts[0]?.object as unknown as R;
         case ReturnType.Statement:
-            return p as unknown as R;
+            return stmts[0] as unknown as R;
 
         case ReturnType.AllLiterals:
           return stmts.map((s) => toJS(s.object)) as unknown as R;

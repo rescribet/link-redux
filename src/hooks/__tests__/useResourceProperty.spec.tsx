@@ -44,7 +44,7 @@ describe("useResourceProperty", () => {
       const [test] = useResourceProperty(
         opts.subject,
         schema.name,
-        { returnType: ReturnType.Statement },
+        { returnType: ReturnType.AllStatements },
       );
 
       return (

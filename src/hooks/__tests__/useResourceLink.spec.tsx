@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import ex from "../../ontology/ex";
+import example from "../../ontology/example";
 import { ReturnType } from "../../types";
 import { useResourceLink } from "../useResourceLink";
 
@@ -27,14 +29,18 @@ describe("useLink", () => {
       const props = useResourceLink(
         opts.subject,
         {
-          commentsCount: schema.commentCount,
-          defaultSecond: {
-            label: schema.name,
-            returnType: ReturnType.AllStatements,
-          },
+          creation: schema.dateCreated,
           name: {
             label: schema.name,
             returnType: ReturnType.Term,
+          },
+          read: {
+            label: ex.ns("timesRead"),
+            returnType: ReturnType.Literal,
+          },
+          taggings: {
+            label: example.ns("tags"),
+            returnType: ReturnType.AllStatements,
           },
           whatever: {
             label: schema.name,
@@ -45,14 +51,14 @@ describe("useLink", () => {
       );
 
       return (
-        <div id="test">
-          {props.name?.termType.fixed()}   // Term
-          {props.commentsCount?.graph}     // Default (Statement)
-          {props.defaultSecond[0]?.predicate} // Default (Statement)
-          {props.defaultSecond[1]?.predicate} // Default (Statement)
-          {props.whatever?.charAt(4)}      // string
-          {props.whatever?.[2].charAt(4)}      // string
-          {props.subject.predicate.value}  // Default (Statement)
+        <div>
+          <p id="id0">{(props.read as number)?.toFixed(2)}</p>
+          <p id="id1">{props.name?.termType}</p>
+          <p id="id2">{props.creation?.subject.value}</p>
+          <p id="id3">{props.taggings[0]?.object?.value}</p>
+          <p id="id4">{props.taggings[1]?.object?.value}</p>
+          <p id="id5">{props.whatever?.charAt(4)}</p>
+          <p id="id6">{props.subject.predicate.value}</p>
         </div>
       );
     };
@@ -62,6 +68,12 @@ describe("useLink", () => {
       ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
     });
 
-    expect(container!.querySelector("#test")!.textContent).toBe("title");
+    expect(container!.querySelector("#id0")!.textContent).toBe("5.00");
+    expect(container!.querySelector("#id1")!.textContent).toBe("Literal");
+    expect(container!.querySelector("#id2")!.textContent).toBe(opts.subject!.value);
+    expect(container!.querySelector("#id3")!.textContent).toBe(example.ns("tag/0").value);
+    expect(container!.querySelector("#id4")!.textContent).toBe(example.ns("tag/1").value);
+    expect(container!.querySelector("#id5")!.textContent).toBe("e");
+    expect(container!.querySelector("#id6")!.textContent).toBe("http://purl.org/link-lib/dataSubject");
   });
 });

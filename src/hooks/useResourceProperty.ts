@@ -8,7 +8,7 @@ import {
   LaxNode,
   LaxProperty,
   LinkReduxLRSType,
-  OutputTypeFromOpts,
+  OutputTypeFromOpts, OutputTypeFromReturnType,
   ReturnType,
 } from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -49,7 +49,7 @@ export function useResourceProperty<
   subject: LaxNode,
   property: LaxProperty,
   opts?: T,
-): OutputTypeFromOpts<T> {
+): OutputTypeFromOpts<T, OutputTypeFromReturnType<ReturnType.AllTerms>> {
   const t = opts || defaultOptions as T;
 
   const lrs = useLRS();

@@ -89,7 +89,7 @@ export interface AllValuesOpts {
 }
 
 export const defaultOptions: DataOpts = {
-  returnType: ReturnType.Term,
+  returnType: ReturnType.AllTerms,
 };
 
 /** All possible return types from data mapping functions */

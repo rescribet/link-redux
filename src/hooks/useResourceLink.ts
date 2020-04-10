@@ -14,7 +14,7 @@ export function useResourceLink<
 >(
   subject: LaxNode,
   dataToProps: T,
-  opts: D,
+  opts?: D,
 ): LinkedDataObject<T, typeof opts> {
   const [data] = useResourceLinks(subject, dataToProps, opts);
 
