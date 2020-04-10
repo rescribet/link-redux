@@ -17,28 +17,28 @@ describe("types", () => {
     }
 
     const term = toOutputType(ReturnType.Term);
-    ignore(term.value);
+    ignore(term?.value);
     // @ts-expect-error
-    ignore(term[0]);
+    ignore(term?.[0]);
     // @ts-expect-error
     ignore(term.whatever());
 
     const value = toOutputType(ReturnType.Value);
-    ignore(value.fixed());
-    ignore(value[0]);
+    ignore(value?.fixed());
+    ignore(value?.[0]);
     // @ts-expect-error
-    ignore(value.whatever());
+    ignore(value?.whatever());
     // @ts-expect-error
-    ignore(value.value);
+    ignore(value?.value);
 
     const quad = toOutputType(ReturnType.Statement);
-    ignore(quad.subject);
+    ignore(quad?.subject);
     // @ts-expect-error
-    ignore(quad[0]);
+    ignore(quad?.[0]);
     // @ts-expect-error
-    ignore(quad.whatever());
+    ignore(quad?.whatever());
     // @ts-expect-error
-    ignore(quad.value);
+    ignore(quad?.value);
 
     const termArr = toOutputType(ReturnType.AllTerms);
     ignore(termArr[0].value);

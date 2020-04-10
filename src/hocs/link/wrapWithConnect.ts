@@ -9,9 +9,11 @@ import { normalizeDataSubjects, useDataInvalidation } from "../../hooks/useDataI
 import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
 import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { useLRS } from "../../hooks/useLRS";
-import { LinkOpts, ReturnType } from "../../types";
-
-import { DataToPropsMapping } from "./dataPropsToPropMap";
+import {
+  DataToPropsMapping,
+  LinkOpts,
+  ReturnType,
+} from "../../types";
 
 export const wrapWithConnect = <P>(
     propMap: DataToPropsMapping,

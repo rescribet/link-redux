@@ -17,12 +17,13 @@ import { useLRS } from "./useLRS";
 export function useManyLinkedObjectProperties<
   T extends DataToPropsMapping = {},
   D extends ReturnType = ReturnType.Term,
+  OutVal = LinkedDataObject<T, D>,
 >(
   subjPropsArr: Quad[][],
   propMap: T,
   returnType?: D,
-): Array<LinkedDataObject<T, D>> {
-  type DataObjectType = LinkedDataObject<T, D>;
+): OutVal[] {
+  type DataObjectType = OutVal;
 
   const returnTypeOrDefault = returnType || globalLinkOptsDefaults.returnType;
   const lrs = useLRS();
@@ -36,7 +37,7 @@ export function useManyLinkedObjectProperties<
       for (let h = 0; h < length; h++) {
         const subjProps = subjPropsArr[h];
         const subject = subjProps[0].subject;
-        const acc: Partial<DataObjectType> = {};
+        const acc: any = {};
 
         acc.subject = toReturnType(
           returnTypeOrDefault,

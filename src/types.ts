@@ -92,16 +92,6 @@ export const defaultOptions: DataOpts = {
   returnType: ReturnType.Term,
 };
 
-// Prevent type widening of enum.
-export type ReturnLiteralType = ReturnType.Literal;
-export type ReturnTermType = ReturnType.Term;
-export type ReturnStatementType = ReturnType.Statement;
-export type ReturnValueType = ReturnType.Value;
-export type ReturnAllLiteralsType = ReturnType.AllLiterals;
-export type ReturnAllTermsType = ReturnType.AllTerms;
-export type ReturnAllStatementsType = ReturnType.AllStatements;
-export type ReturnAllValuesType = ReturnType.AllValues;
-
 /** All possible return types from data mapping functions */
 export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 
@@ -145,7 +135,9 @@ export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
 
 /**
  * An object with the requested properties assigned to their names, or undefined if not present.
- * Also includes a non-overrideable `subject` key which corresponds to the resource the properties were taken from.
+ *
+ * Also includes a non-overrideable `subject` key which corresponds to the resource the properties
+ *   were taken from.
  */
 export type LinkedDataObject<T, D, Out extends ReturnValueTypes = OutputTypeFromOpts<D>> = PropertyBoundProps<T, Out>
   & { subject: Out extends never ? ReturnType.Term : NonNullable<Out> };

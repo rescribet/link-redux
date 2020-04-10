@@ -73,10 +73,8 @@ export function useResourceLinks<
     [dataSubjects, requestedProperties, lastUpdate],
   );
 
-  const test = useManyLinkedObjectProperties<typeof propMap>(
+  return useManyLinkedObjectProperties<typeof propMap, any, LinkedDataObject<T, D>>(
     propSets,
     propMap,
   );
-
-  return test;
 }

@@ -20,7 +20,7 @@ export { LinkRenderCtx } from "./contexts/LinkRenderCtx";
 
 /* HOCs */
 
-export { DataToPropsMapping, link } from "./hocs/link";
+export { link } from "./hocs/link";
 export { withLinkCtx } from "./hocs/withLinkCtx";
 export { withLRS } from "./hocs/withLRS";
 export { withTopology } from "./hocs/withTopology";
