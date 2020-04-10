@@ -16,6 +16,5 @@
     "strict": true,
     "target": "es2019"
   },
-  "include": ["src"],
-  "exclude": ["__test__"]
+  "include": ["src"]
 }

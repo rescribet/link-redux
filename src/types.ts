@@ -22,6 +22,17 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
+// Prevent type widening of enum.
+
+export type ReturnLiteralType = ReturnType.Literal;
+export type ReturnTermType = ReturnType.Term;
+export type ReturnStatementType = ReturnType.Statement;
+export type ReturnValueType = ReturnType.Value;
+export type ReturnAllLiteralsType = ReturnType.AllLiterals;
+export type ReturnAllTermsType = ReturnType.AllTerms;
+export type ReturnAllStatementsType = ReturnType.AllStatements;
+export type ReturnAllValuesType = ReturnType.AllValues;
+
 /** Data types to which the data can be converted before inserting into a data map */
 export enum ReturnType {
   /** Return the `object`, keeping the underlying rdf data model. */
@@ -32,19 +43,16 @@ export enum ReturnType {
   Literal,
   /** Return the `object` as a string value. */
   Value,
+
+  /** Return the `object`, keeping the underlying rdf data model. */
+  AllTerms,
+  /** Keep the underlying rdf data model */
+  AllStatements,
+  /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
+  AllLiterals,
+  /** Return the `object` as a string value. */
+  AllValues,
 }
-
-// Prevent type widening of enum.
-
-export type ReturnLiteralType = ReturnType.Literal;
-export type ReturnTermType = ReturnType.Term;
-export type ReturnStatementType = ReturnType.Statement;
-export type ReturnValueType = ReturnType.Value;
-
-export type ReturnTypes = ReturnLiteralType |
-  ReturnTermType |
-  ReturnStatementType |
-  ReturnValueType;
 
 export type LaxNode = SomeNode | undefined;
 
@@ -61,30 +69,8 @@ export type TopologyType = TopologyContextType | null;
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
 
-export enum Amount {
-  One = 1,
-  Some = 10,
-  Many = 100,
-  All = 1_000_000_000_000,
-}
-
-export interface LimitOpt {
-  limit: Amount;
-}
-
-export interface DataOpts extends LimitOpt {
-  returnType: ReturnTypes;
-}
-
-export type DataOptsV = Partial<LimitOpt> & (TermOpts |
-  StatementOpts |
-  LiteralOpts |
-  ValueOpts
-);
-
-export interface SingleTermOpts {
-  limit: Amount.One;
-  returnType: ReturnTermType;
+export interface DataOpts {
+  returnType: ReturnType;
 }
 
 export interface TermOpts {
@@ -100,37 +86,54 @@ export interface ValueOpts {
   returnType: ReturnValueType;
 }
 
+export interface AllTermsOpts {
+  returnType: ReturnAllTermsType;
+}
+export interface AllStatementsOpts {
+  returnType: ReturnAllStatementsType;
+}
+export interface AllLiteralsOpts {
+  returnType: ReturnAllLiteralsType;
+}
+export interface AllValuesOpts {
+  returnType: ReturnAllValuesType;
+}
+
 export const defaultOptions: DataOpts = {
-  limit: Amount.One,
   returnType: ReturnType.Term,
 };
 
 /** All possible return types from data mapping functions */
 export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 
-export type OnlyOneProp<O, T> = O extends { limit: Amount.One } ? T :
-  O extends never ? T :
-  T[];
-
-export type OutputTypeFromOpts<T extends Partial<DataOptsV>> =
+export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
   T extends ValueOpts ? string :
   T extends LiteralOpts ? ToJSOutputTypes :
   T extends StatementOpts ? Quad :
   T extends TermOpts ? SomeTerm :
-  never;
+  T extends AllValuesOpts ? string[] :
+  T extends AllLiteralsOpts ? ToJSOutputTypes[] :
+  T extends AllStatementsOpts ? Quad[] :
+  T extends AllTermsOpts ? SomeTerm[] :
+  Default;
 
-export type OutputTypeFromReturnType<T, Default = never> =
-  T extends ReturnType.Value ? string :
-  T extends ReturnType.Literal ? ToJSOutputTypes :
-  T extends ReturnType.Statement ? Quad :
-  T extends ReturnType.Term ? SomeTerm :
+export type OutputTypeFromReturnType<
+  T extends ReturnType,
+  Default = never
+> = T extends ReturnTermType ? SomeTerm :
+  T extends ReturnValueType ? string :
+  T extends ReturnLiteralType ? ToJSOutputTypes :
+  T extends ReturnStatementType ? Quad :
+  T extends ReturnAllValuesType ? string[] :
+  T extends ReturnAllLiteralsType ? ToJSOutputTypes[] :
+  T extends ReturnAllStatementsType ? Quad[] :
+  T extends ReturnAllTermsType ? SomeTerm[] :
   Default;
 
 export type ExtractOutputType<T, Default = never> =
-  T extends LimitOpt & TermOpts ? OutputTypeFromOpts<T> :
-  T extends NamedNode | BlankNode | Literal ? Default :
-  T extends ReturnType ? OutputTypeFromReturnType<T, Default> :
-  OutputTypeFromOpts<T> extends never ? Default : OutputTypeFromOpts<T>;
+  T extends DataOpts ? OutputTypeFromOpts<T, Default> :
+  T extends ReturnType ? OutputTypeFromReturnType<T> :
+  Default;
 
 /**
  * Maps the prop map returnType settings to corresponding values in the data object.
@@ -138,17 +141,15 @@ export type ExtractOutputType<T, Default = never> =
  * When requesting more than one property, an empty array represents the empty set.
  */
 export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
-  [K in keyof T]: T[K] extends { limit: Amount.One }
-    ? ExtractOutputType<T[K], Default>
-    : Array<ExtractOutputType<T[K], Default>>;
+  [K in keyof T]: ExtractOutputType<T[K], Default>;
 };
 
 /**
  * An object with the requested properties assigned to their names, or undefined if not present.
  * Also includes a non-overrideable `subject` key which corresponds to the resource the properties were taken from.
  */
-export type LinkedDataObject<T, D> = PropertyBoundProps<T, OutputTypeFromOpts<D>>
-  & { subject: OutputTypeFromOpts<D> extends never ? ReturnType.Term : OutputTypeFromOpts<D & { limit: Amount.One }> };
+export type LinkedDataObject<T, D, Out = OutputTypeFromOpts<D>> = PropertyBoundProps<T, Out>
+  & { subject: Out extends never ? ReturnType.Term : Out };
 
 /****** Property registration ******/
 
@@ -170,9 +171,6 @@ export interface PropertyRegistrationOpts<P> extends RegistrationOpts<P> {
 }
 
 export type TypeFC<P = {}> = TypeRegistrationOpts<P> & React.FC<P & Partial<SubjectProp>>;
-
-// export type PropertyFC<P extends PropertyProps = PropertyProps> = PropertyRegistrationOpts<P>
-//   & React.FC<P & Partial<SubjectProp> & PropertyProps>;
 
 export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & Partial<SubjectProp> & PropertyProps>;
 
@@ -220,56 +218,14 @@ export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
     forceRender: boolean;
-    limit: Amount;
 }
-
-export enum FetchOpts {
-  /** Only fetch when stale */
-  stale,
-  fetch,
-  hold,
-  force,
-}
-
-// tslint:disable:no-bitwise
-export enum Dereference {
-  /** Only use data present in-memory */
-  MemoryOnly = 0,
-
-  /** Show loading indicators while fetching, but use back-ups when fails */
-  NetworkFirst = 1 << 0,
-  /** Show loading indicators while fetching, but use back-ups when fails */
-  NetworkOnly = 1 << 1,
-  /** Use data from memory while fetching in background */
-  MemoryFirst = 1 << 2,
-
-  /** Don't use proxies for dereferencing. */
-  NoProxy = 1 << 3,
-  /** Prefer proxy for dereferencing. */
-  PreferProxy = 1 << 4,
-  /** Only use proxies for dereferencing. */
-  ProxyOnly = 1 << 5,
-
-  /** Don't cross the current origin when dereferencing. */
-  NoOrigin = 1 << 6,
-  /** Prefer origin when dereferencing. */
-  PreferOrigin = 1 << 7,
-  /** Only use origin for dereferencing. */
-  OriginOnly = 1 << 8,
-
-  /** Disable use of cached resources */
-  NoCache = 1 << 9,
-
-  Default = Dereference.NetworkFirst + Dereference.NoCache,
-}
-// tslint:enable:no-bitwise
 
 export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
     fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
-    limit?: Amount;
-    returnType?: ReturnTypes;
+    limit?: number;
+    returnType?: ReturnType;
     linkedProp?: LinkedPropType;
 }
 
