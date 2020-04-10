@@ -139,8 +139,12 @@ export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
  * Also includes a non-overrideable `subject` key which corresponds to the resource the properties
  *   were taken from.
  */
-export type LinkedDataObject<T, D, Out extends ReturnValueTypes = OutputTypeFromOpts<D>> = PropertyBoundProps<T, Out>
-  & { subject: Out extends never ? ReturnType.Term : NonNullable<Out> };
+export type LinkedDataObject<
+  T,
+  D,
+  Out extends ReturnValueTypes = OutputTypeFromOpts<D>
+> = PropertyBoundProps<T, Out>
+  & { subject: Out extends never ? ReturnType.Term : Out };
 
 /****** Property registration ******/
 

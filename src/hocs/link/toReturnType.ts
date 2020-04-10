@@ -68,27 +68,6 @@ export function toReturnType<
           return stmts as unknown as R;
 
         default:
-            return stmts[0].object as unknown as R;
+            throw new TypeError(`Unknown returnType '${returnType}' given`);
     }
 }
-
-// export function toReturnType<
-//   D extends ReturnType,
-//   R extends OutputTypeFromReturnType<D, ReturnType.Term> = OutputTypeFromReturnType<D, ReturnType.Term>,
-// >(
-//   returnType: ReturnType,
-//   p: Quad,
-// ): R {
-//     switch (returnType) {
-//         case ReturnType.Literal:
-//             return toJS(p.object) as R;
-//         case ReturnType.Value:
-//             return p.object.value as R;
-//         case ReturnType.Term:
-//             return p.object as R;
-//         case ReturnType.Statement:
-//             return p as R;
-//       default:
-//             return p.object as R;
-//     }
-// }

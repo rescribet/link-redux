@@ -58,7 +58,7 @@ describe("useLink", () => {
           <p id="id3">{props.taggings[0]?.object?.value}</p>
           <p id="id4">{props.taggings[1]?.object?.value}</p>
           <p id="id5">{props.whatever?.charAt(4)}</p>
-          <p id="id6">{props.subject.predicate.value}</p>
+          <p id="id6">{props.subject?.predicate.value}</p>
         </div>
       );
     };

@@ -32,16 +32,16 @@ export function useManyLinkedObjectProperties<
 
   return React.useMemo(
     () => {
-      const propMaps: DataObjectType[] = [];
+      const propMaps: OutVal[] = [];
 
       for (let h = 0; h < length; h++) {
         const subjProps = subjPropsArr[h];
-        const subject = subjProps[0].subject;
+        const subject = subjProps[0]?.subject;
         const acc: any = {};
 
         acc.subject = toReturnType(
           returnTypeOrDefault,
-          [rdf.quad(subject, ll.dataSubject, subject)],
+          subject ? [rdf.quad(subject, ll.dataSubject, subject)] : [],
         );
 
         for (let i = 0, ilen = values.length; i < ilen; i++) {

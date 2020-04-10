@@ -15,7 +15,7 @@ export function useLinkedObjectProperties<
     subjProps: Quad[],
     propMap: T,
     returnType: D,
-): LinkedDataObject<T, D> {
+): LinkedDataObject<T, D> | undefined {
     const [data] = useManyLinkedObjectProperties([subjProps], propMap, returnType);
 
     return data;
