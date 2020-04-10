@@ -22,17 +22,6 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
-// Prevent type widening of enum.
-
-export type ReturnLiteralType = ReturnType.Literal;
-export type ReturnTermType = ReturnType.Term;
-export type ReturnStatementType = ReturnType.Statement;
-export type ReturnValueType = ReturnType.Value;
-export type ReturnAllLiteralsType = ReturnType.AllLiterals;
-export type ReturnAllTermsType = ReturnType.AllTerms;
-export type ReturnAllStatementsType = ReturnType.AllStatements;
-export type ReturnAllValuesType = ReturnType.AllValues;
-
 /** Data types to which the data can be converted before inserting into a data map */
 export enum ReturnType {
   /** Return the `object`, keeping the underlying rdf data model. */
@@ -74,43 +63,53 @@ export interface DataOpts {
 }
 
 export interface TermOpts {
-  returnType: ReturnTermType;
+  returnType: ReturnType.Term;
 }
 export interface StatementOpts {
-  returnType: ReturnStatementType;
+  returnType: ReturnType.Statement;
 }
 export interface LiteralOpts {
-  returnType: ReturnLiteralType;
+  returnType: ReturnType.Literal;
 }
 export interface ValueOpts {
-  returnType: ReturnValueType;
+  returnType: ReturnType.Value;
 }
 
 export interface AllTermsOpts {
-  returnType: ReturnAllTermsType;
+  returnType: ReturnType.AllTerms;
 }
 export interface AllStatementsOpts {
-  returnType: ReturnAllStatementsType;
+  returnType: ReturnType.AllStatements;
 }
 export interface AllLiteralsOpts {
-  returnType: ReturnAllLiteralsType;
+  returnType: ReturnType.AllLiterals;
 }
 export interface AllValuesOpts {
-  returnType: ReturnAllValuesType;
+  returnType: ReturnType.AllValues;
 }
 
 export const defaultOptions: DataOpts = {
   returnType: ReturnType.Term,
 };
 
+// Prevent type widening of enum.
+export type ReturnLiteralType = ReturnType.Literal;
+export type ReturnTermType = ReturnType.Term;
+export type ReturnStatementType = ReturnType.Statement;
+export type ReturnValueType = ReturnType.Value;
+export type ReturnAllLiteralsType = ReturnType.AllLiterals;
+export type ReturnAllTermsType = ReturnType.AllTerms;
+export type ReturnAllStatementsType = ReturnType.AllStatements;
+export type ReturnAllValuesType = ReturnType.AllValues;
+
 /** All possible return types from data mapping functions */
 export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
 
 export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
-  T extends ValueOpts ? string :
-  T extends LiteralOpts ? ToJSOutputTypes :
-  T extends StatementOpts ? Quad :
-  T extends TermOpts ? SomeTerm :
+  T extends ValueOpts ? string | undefined :
+  T extends LiteralOpts ? ToJSOutputTypes | undefined :
+  T extends StatementOpts ? Quad | undefined :
+  T extends TermOpts ? SomeTerm | undefined :
   T extends AllValuesOpts ? string[] :
   T extends AllLiteralsOpts ? ToJSOutputTypes[] :
   T extends AllStatementsOpts ? Quad[] :
@@ -120,14 +119,14 @@ export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
 export type OutputTypeFromReturnType<
   T extends ReturnType,
   Default = never
-> = T extends ReturnTermType ? SomeTerm :
-  T extends ReturnValueType ? string :
-  T extends ReturnLiteralType ? ToJSOutputTypes :
-  T extends ReturnStatementType ? Quad :
-  T extends ReturnAllValuesType ? string[] :
-  T extends ReturnAllLiteralsType ? ToJSOutputTypes[] :
-  T extends ReturnAllStatementsType ? Quad[] :
-  T extends ReturnAllTermsType ? SomeTerm[] :
+> = T extends ReturnType.Term ? SomeTerm | undefined :
+  T extends ReturnType.Value ? string | undefined :
+  T extends ReturnType.Literal ? ToJSOutputTypes | undefined :
+  T extends ReturnType.Statement ? Quad | undefined :
+  T extends ReturnType.AllValues ? string[] :
+  T extends ReturnType.AllLiterals ? ToJSOutputTypes[] :
+  T extends ReturnType.AllStatements ? Quad[] :
+  T extends ReturnType.AllTerms ? SomeTerm[] :
   Default;
 
 export type ExtractOutputType<T, Default = never> =
@@ -148,8 +147,8 @@ export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
  * An object with the requested properties assigned to their names, or undefined if not present.
  * Also includes a non-overrideable `subject` key which corresponds to the resource the properties were taken from.
  */
-export type LinkedDataObject<T, D, Out = OutputTypeFromOpts<D>> = PropertyBoundProps<T, Out>
-  & { subject: Out extends never ? ReturnType.Term : Out };
+export type LinkedDataObject<T, D, Out extends ReturnValueTypes = OutputTypeFromOpts<D>> = PropertyBoundProps<T, Out>
+  & { subject: Out extends never ? ReturnType.Term : NonNullable<Out> };
 
 /****** Property registration ******/
 

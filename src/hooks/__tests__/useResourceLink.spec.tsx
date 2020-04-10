@@ -51,7 +51,7 @@ describe("useLink", () => {
           {props.defaultSecond[0]?.predicate} // Default (Statement)
           {props.defaultSecond[1]?.predicate} // Default (Statement)
           {props.whatever?.charAt(4)}      // string
-          {props.whatever[2].charAt(4)}      // string
+          {props.whatever?.[2].charAt(4)}      // string
           {props.subject.predicate.value}  // Default (Statement)
         </div>
       );
