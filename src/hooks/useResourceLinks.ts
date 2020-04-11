@@ -5,22 +5,31 @@ import React from "react";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import ll from "../ontology/ll";
-import { LinkOpts, MapDataToPropsParam } from "../types";
+import {
+  LaxNode,
+  LinkedDataObject,
+  LinkOpts,
+  MapDataToPropsParam,
+  TermOpts,
+} from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
 
-import { PropertyBoundProps } from "./useLinkedObjectProperties";
 import { useLRS } from "./useLRS";
 import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 
-export function useResourceLinks(
-  subjects: Node | Node[],
-  mapDataToProps: MapDataToPropsParam,
-  opts: LinkOpts = { fetch: true },
-): Array<PropertyBoundProps<typeof mapDataToProps>> {
+export function useResourceLinks<
+  T extends MapDataToPropsParam = {},
+  D extends LinkOpts = TermOpts,
+>(
+  subjects: LaxNode | Node[],
+  mapDataToProps: T,
+  opts?: D,
+): Array<LinkedDataObject<T, D>> {
+  const defaultedOpts = opts ?? globalLinkOptsDefaults;
   const dataSubjects = normalizeType(subjects);
   const lrs = useLRS();
   const [propMap, requestedProperties] = React.useMemo(
-    () => dataPropsToPropMap(mapDataToProps, opts),
+    () => dataPropsToPropMap(mapDataToProps, defaultedOpts),
     [mapDataToProps, opts],
   );
   const lastUpdate = useDataInvalidation(dataSubjects);
@@ -32,8 +41,13 @@ export function useResourceLinks(
 
       for (let i = 0; i < len; i++) {
         const subject = dataSubjects[i];
+        if (!subject) {
+          // Preserve order
+          sets.push([]);
+          continue;
+        }
 
-        if ((opts.fetch ?? globalLinkOptsDefaults.fetch)
+        if ((defaultedOpts.fetch ?? globalLinkOptsDefaults.fetch)
             && isNamedNode(subject)
             && lrs.shouldLoadResource(subject)) {
           lrs.queueEntity(subject);
@@ -42,7 +56,7 @@ export function useResourceLinks(
         const subjectData = lrs.tryEntity(subject);
         const subjProps = [
           // Ensure the first item's subject is always the data subject
-          rdfFactory.quad(subject, ll.dataSubject, ll.nop),
+          rdfFactory.quad(subject, ll.dataSubject, subject),
         ];
 
         for (let j = 0; j < subjectData.length; j++) {
@@ -59,9 +73,9 @@ export function useResourceLinks(
     [dataSubjects, requestedProperties, lastUpdate],
   );
 
-  return useManyLinkedObjectProperties(
+  return useManyLinkedObjectProperties<typeof propMap, any, LinkedDataObject<T, D>>(
     propSets,
     propMap,
-    opts.returnType,
+    defaultedOpts.returnType,
   );
 }

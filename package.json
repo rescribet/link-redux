@@ -85,7 +85,7 @@
     "tslint-react": "^4.1.0",
     "type-zoo": "^3.4.1",
     "typedoc": "^0.15.0",
-    "typescript": "^3.7.3",
+    "typescript": "^3.8.3",
     "whatwg-fetch": "^3.0.0",
     "whatwg-url": "^7.0.0"
   },

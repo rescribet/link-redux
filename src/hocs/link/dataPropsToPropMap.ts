@@ -1,18 +1,17 @@
 import { isNamedNode, NamedNode } from "@ontologies/core";
 import { id, normalizeType } from "link-lib";
 
-import { LinkOpts, MapDataToPropsParam, PropParam } from "../../types";
-import { ProcessedLinkOpts } from "../link";
+import {
+  DataToPropsMapping,
+  LinkOpts,
+  MapDataToPropsParam,
+  PropMapTuple,
+  PropParam,
+} from "../../types";
 
 import { globalLinkOptsDefaults } from "./globalLinkOptsDefaults";
 
-export interface DataToPropsMapping {
-    [k: string]: ProcessedLinkOpts;
-}
-
-type PropMapTuple = [number[], ProcessedLinkOpts];
-
-function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts): PropMapTuple {
+function mapMultiLabelMap<K>(propKey: K, predObj: NamedNode[], opts: LinkOpts): PropMapTuple<K> {
     if (predObj.length === 0) {
         throw new TypeError("Props array must contain at least one predicate");
     }
@@ -30,7 +29,7 @@ function mapMultiLabelMap(propKey: string, predObj: NamedNode[], opts: LinkOpts)
     ];
 }
 
-function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropMapTuple {
+function mapLabelMap<K>(propKey: K, predObj: NamedNode, opts: LinkOpts): PropMapTuple<K> {
     return [
         [id(predObj)],
         {
@@ -44,7 +43,7 @@ function mapLabelMap(propKey: string, predObj: NamedNode, opts: LinkOpts): PropM
     ];
 }
 
-function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): PropMapTuple {
+function mapLinkOptsMap<K>(propKey: K, predObj: LinkOpts, opts: LinkOpts): PropMapTuple<K> {
     const labels = normalizeType(predObj.label).filter(Boolean) as NamedNode[];
 
     if (predObj.label === undefined) {
@@ -54,18 +53,18 @@ function mapLinkOptsMap(propKey: string, predObj: LinkOpts, opts: LinkOpts): Pro
     return [
         labels.map(id),
         {
-            fetch: predObj.fetch || opts.fetch || globalLinkOptsDefaults.fetch,
-            forceRender: predObj.forceRender || opts.forceRender || globalLinkOptsDefaults.forceRender,
+            fetch: predObj.fetch ?? opts.fetch ?? globalLinkOptsDefaults.fetch,
+            forceRender: predObj.forceRender ?? opts.forceRender ?? globalLinkOptsDefaults.forceRender,
             label: normalizeType(predObj.label),
-            limit: predObj.limit || opts.limit || globalLinkOptsDefaults.limit,
+            limit: predObj.limit ?? opts.limit ?? globalLinkOptsDefaults.limit,
             linkedProp: predObj.linkedProp || opts.linkedProp,
             name: propKey,
-            returnType: predObj.returnType || opts.returnType || globalLinkOptsDefaults.returnType,
+            returnType: predObj.returnType ?? opts.returnType ?? globalLinkOptsDefaults.returnType,
         },
     ];
 }
 
-function dataPropToPropMap(propKey: string, predObj: PropParam, opts: LinkOpts): PropMapTuple {
+function dataPropToPropMap<T>(propKey: T, predObj: PropParam, opts: LinkOpts): PropMapTuple<T> {
     if (Array.isArray(predObj)) {
         return mapMultiLabelMap(propKey, predObj, opts);
     } else if (isNamedNode(predObj)) {
@@ -75,24 +74,29 @@ function dataPropToPropMap(propKey: string, predObj: PropParam, opts: LinkOpts):
     return mapLinkOptsMap(propKey, predObj, opts);
 }
 
-export function dataPropsToPropMap(mapDataToProps: MapDataToPropsParam,
-                                   opts: LinkOpts): [DataToPropsMapping, number[]] {
-
-    const propMap: DataToPropsMapping = {};
+export function dataPropsToPropMap<
+  T extends MapDataToPropsParam = MapDataToPropsParam,
+>(
+  mapDataToProps: T,
+  opts: LinkOpts,
+): [DataToPropsMapping<T>, number[]] {
     let requestedProperties: number[] = [];
 
-    for (const propKey in mapDataToProps) {
-        if (!mapDataToProps.hasOwnProperty(propKey)) {
-            continue;
-        }
+    const propMap = Object
+      .keys(mapDataToProps)
+      .reduce<DataToPropsMapping<T>>((acc, propKey) => {
         const predObj = mapDataToProps[propKey];
-        const [ properties, mapping ] = dataPropToPropMap(propKey, predObj, opts);
-        if (mapping.name.trim().length === 0) {
+        const [ properties, mapping ] = dataPropToPropMap<keyof T>(propKey, predObj, opts);
+        if ((mapping.name as string).trim().length === 0) {
           throw new TypeError("Pass a valid prop label");
         }
         requestedProperties = requestedProperties.concat(...properties);
-        propMap[mapping.name] = mapping;
-    }
+
+        return {
+          ...acc,
+          [mapping.name]: mapping,
+        };
+      }, {} as any);
 
     return [ propMap, requestedProperties ];
 }

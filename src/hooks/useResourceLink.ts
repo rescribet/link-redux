@@ -1,14 +1,21 @@
-import { Node } from "@ontologies/core";
-import { LinkOpts, MapDataToPropsParam } from "../types";
-import { PropertyBoundProps } from "./useLinkedObjectProperties";
+import {
+  LaxNode,
+  LinkedDataObject,
+  LinkOpts,
+  MapDataToPropsParam,
+  ReturnType,
+} from "../types";
 
 import { useResourceLinks } from "./useResourceLinks";
 
-export function useResourceLink(
-  subject: Node,
-  dataToProps: MapDataToPropsParam,
-  opts: LinkOpts = {},
-): PropertyBoundProps<typeof dataToProps> {
+export function useResourceLink<
+  T extends MapDataToPropsParam = {},
+  D extends LinkOpts = { returnType: ReturnType.Term },
+>(
+  subject: LaxNode,
+  dataToProps: T,
+  opts?: D,
+): LinkedDataObject<T, typeof opts> {
   const [data] = useResourceLinks(subject, dataToProps, opts);
 
   return data;

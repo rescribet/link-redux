@@ -1,4 +1,4 @@
-import { Quad } from "@ontologies/core";
+import rdf, { Quad } from "@ontologies/core";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { id } from "link-lib";
 import React from "react";
@@ -9,9 +9,12 @@ import { normalizeDataSubjects, useDataInvalidation } from "../../hooks/useDataI
 import { useLinkedObjectProperties } from "../../hooks/useLinkedObjectProperties";
 import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
 import { useLRS } from "../../hooks/useLRS";
-import { LinkOpts, ReturnType } from "../../types";
-
-import { DataToPropsMapping } from "./dataPropsToPropMap";
+import ll from "../../ontology/ll";
+import {
+  DataToPropsMapping,
+  LinkOpts,
+  ReturnType,
+} from "../../types";
 
 export const wrapWithConnect = <P>(
     propMap: DataToPropsMapping,
@@ -26,9 +29,11 @@ export const wrapWithConnect = <P>(
 
         const subjProps = subjectData
             .filter((s: Quad) => requestedProperties.includes(id(s.predicate)));
+        subjProps.unshift(rdf.quad(childProps.subject, ll.dataSubject, childProps.subject));
         const mappedProps = {
             ...childProps,
-            ...useLinkedObjectProperties(subjProps, propMap, opts.returnType || ReturnType.Term),
+            ...useLinkedObjectProperties(subjProps, propMap, opts.returnType ?? ReturnType.Term),
+            subject: childProps.subject,
         };
 
         const linkVersion = useDataInvalidation(normalizeDataSubjects(mappedProps));

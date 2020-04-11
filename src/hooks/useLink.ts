@@ -1,13 +1,20 @@
-import { LinkOpts, MapDataToPropsParam } from "../types";
-import { PropertyBoundProps } from "./useLinkedObjectProperties";
+import {
+  LinkedDataObject,
+  LinkOpts,
+  MapDataToPropsParam,
+  TermOpts,
+} from "../types";
 
 import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useResourceLinks } from "./useResourceLinks";
 
-export function useLink(
-  dataToProps: MapDataToPropsParam,
+export function useLink<
+  T extends MapDataToPropsParam = MapDataToPropsParam,
+  D extends LinkOpts = TermOpts,
+>(
+  dataToProps: T,
   opts: LinkOpts = {},
-): PropertyBoundProps<typeof dataToProps> {
+): LinkedDataObject<T, D> {
   const { subject } = useLinkRenderContext();
   const [data] = useResourceLinks(subject, dataToProps, opts);
 

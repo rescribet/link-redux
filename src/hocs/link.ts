@@ -1,11 +1,9 @@
-import { NamedNode } from "@ontologies/core";
 import React from "react";
 
 import {
   LinkedPropType,
   LinkOpts,
   MapDataToPropsParam,
-  ReturnType,
   SubjectProp,
 } from "../types";
 
@@ -13,14 +11,6 @@ import { dataPropsToPropMap } from "./link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "./link/globalLinkOptsDefaults";
 import { wrapWithConnect } from "./link/wrapWithConnect";
 import { wrapWithSubject } from "./link/wrapWithSubject";
-
-export interface ProcessedLinkOpts extends LinkOpts {
-    fetch: boolean;
-    label: NamedNode[];
-    limit: number;
-    name: string;
-    returnType: ReturnType;
-}
 
 /**
  * Binds a react component to data properties.
@@ -63,5 +53,4 @@ export function link(
     return wrapWithConnect(propMap, requestedProperties, opts);
 }
 
-export { DataToPropsMapping } from "./link/dataPropsToPropMap";
 export { globalLinkOptsDefaults } from "./link/globalLinkOptsDefaults";

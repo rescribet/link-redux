@@ -22,12 +22,30 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
 export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
 
+/** Data types to which the data can be converted before inserting into a data map */
 export enum ReturnType {
-  Term = "term",
-  Statement = "statement",
-  Literal = "literal",
-  Value = "value",
+  /** Return the `object`, keeping the underlying rdf data model. */
+  Term,
+  /** Keep the underlying rdf data model */
+  Statement,
+  /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
+  Literal,
+  /** Return the `object` as a string value. */
+  Value,
+
+  /** Return the `object`, keeping the underlying rdf data model. */
+  AllTerms,
+  /** Keep the underlying rdf data model */
+  AllStatements,
+  /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
+  AllLiterals,
+  /** Return the `object` as a string value. */
+  AllValues,
 }
+
+export type LaxNode = SomeNode | undefined;
+
+export type LaxProperty = NamedNode | undefined;
 
 export type SubjectType = SomeNode;
 
@@ -40,22 +58,93 @@ export type TopologyType = TopologyContextType | null;
 export type ToJSOutputTypes = string | number | Date | boolean | object |
   string[] | number[] | Date[] | boolean[] | object[];
 
-export interface TermOpts extends DataOpts {
+export interface DataOpts {
+  returnType: ReturnType;
+}
+
+export interface TermOpts {
   returnType: ReturnType.Term;
 }
-export interface StatementOpts extends DataOpts {
+export interface StatementOpts {
   returnType: ReturnType.Statement;
 }
-export interface LiteralOpts extends DataOpts {
+export interface LiteralOpts {
   returnType: ReturnType.Literal;
 }
-export interface ValueOpts extends DataOpts {
+export interface ValueOpts {
   returnType: ReturnType.Value;
 }
 
+export interface AllTermsOpts {
+  returnType: ReturnType.AllTerms;
+}
+export interface AllStatementsOpts {
+  returnType: ReturnType.AllStatements;
+}
+export interface AllLiteralsOpts {
+  returnType: ReturnType.AllLiterals;
+}
+export interface AllValuesOpts {
+  returnType: ReturnType.AllValues;
+}
+
 export const defaultOptions: DataOpts = {
-  returnType: ReturnType.Term,
+  returnType: ReturnType.AllTerms,
 };
+
+/** All possible return types from data mapping functions */
+export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
+
+export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
+  T extends ValueOpts ? string | undefined :
+  T extends LiteralOpts ? ToJSOutputTypes | undefined :
+  T extends StatementOpts ? Quad | undefined :
+  T extends TermOpts ? SomeTerm | undefined :
+  T extends AllValuesOpts ? string[] :
+  T extends AllLiteralsOpts ? ToJSOutputTypes[] :
+  T extends AllStatementsOpts ? Quad[] :
+  T extends AllTermsOpts ? SomeTerm[] :
+  Default;
+
+export type OutputTypeFromReturnType<
+  T extends ReturnType,
+  Default = never
+> = T extends ReturnType.Term ? SomeTerm | undefined :
+  T extends ReturnType.Value ? string | undefined :
+  T extends ReturnType.Literal ? ToJSOutputTypes | undefined :
+  T extends ReturnType.Statement ? Quad | undefined :
+  T extends ReturnType.AllValues ? string[] :
+  T extends ReturnType.AllLiterals ? ToJSOutputTypes[] :
+  T extends ReturnType.AllStatements ? Quad[] :
+  T extends ReturnType.AllTerms ? SomeTerm[] :
+  Default;
+
+export type ExtractOutputType<T, Default = never> =
+  T extends DataOpts ? OutputTypeFromOpts<T, Default> :
+  T extends ReturnType ? OutputTypeFromReturnType<T> :
+  Default;
+
+/**
+ * Maps the prop map returnType settings to corresponding values in the data object.
+ *
+ * When requesting more than one property, an empty array represents the empty set.
+ */
+export type PropertyBoundProps<T, Default extends ReturnValueTypes> = {
+  [K in keyof T]: ExtractOutputType<T[K], Default>;
+};
+
+/**
+ * An object with the requested properties assigned to their names, or undefined if not present.
+ *
+ * Also includes a non-overrideable `subject` key which corresponds to the resource the properties
+ *   were taken from.
+ */
+export type LinkedDataObject<
+  T,
+  D,
+  Out extends ReturnValueTypes = OutputTypeFromOpts<D>
+> = PropertyBoundProps<T, Out>
+  & { subject: Out extends never ? ReturnType.Term : Out };
 
 /****** Property registration ******/
 
@@ -77,9 +166,6 @@ export interface PropertyRegistrationOpts<P> extends RegistrationOpts<P> {
 }
 
 export type TypeFC<P = {}> = TypeRegistrationOpts<P> & React.FC<P & Partial<SubjectProp>>;
-
-// export type PropertyFC<P extends PropertyProps = PropertyProps> = PropertyRegistrationOpts<P>
-//   & React.FC<P & Partial<SubjectProp> & PropertyProps>;
 
 export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & Partial<SubjectProp> & PropertyProps>;
 
@@ -122,20 +208,15 @@ export interface LinkCtxOverrides {
     topologyCtx: TopologyContextType;
 }
 
-export interface DataOpts {
-  returnType: ReturnType;
-}
-
 export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 
-export interface GlobalLinkOpts {
+export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
     forceRender: boolean;
     limit: number;
-    returnType: ReturnType;
 }
 
-export interface LinkOpts extends Partial<GlobalLinkOpts> {
+export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
     fetch?: boolean;
     forceRender?: boolean;
     label?: LabelType;
@@ -143,6 +224,18 @@ export interface LinkOpts extends Partial<GlobalLinkOpts> {
     returnType?: ReturnType;
     linkedProp?: LinkedPropType;
 }
+
+export interface ProcessedLinkOpts<T = string> extends LinkOpts {
+  fetch: boolean;
+  label: NamedNode[];
+  limit: number;
+  name: T;
+  returnType: ReturnType;
+}
+
+export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
+
+export type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];
 
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;
 
