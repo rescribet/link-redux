@@ -70,28 +70,6 @@ jobs:
       - run: yarn test
       - run: yarn build
 
-  build-node-10:
-    <<: *defaults
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-10-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-10-
-
-      - run: yarn install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-10-{{ checksum "package.json" }}
-      - run: yarn lint
-      - run: yarn test
-      - run: yarn build
-
   upload-coverage:
     <<: *defaults
     environment:
@@ -114,7 +92,6 @@ workflows:
           requires:
             - build
       - build-node-12
-      - build-node-10
       - upload-coverage:
           requires:
             - build-node-13
