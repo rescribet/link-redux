@@ -175,16 +175,12 @@ export type RegistrableComponent<P = {}> = Component<P> | FC<P>;
 
 export type Component<P = {}> = React.ComponentType<P & SubjectProp> & RegistrationOpts<P>;
 
-/****** Types & Composite types ******/
-
 export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext;
 
 export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> = Overwrite<
     Omit<P, keyof UninheritableLinkCtxProps>,
     Partial<SubjectProp & TopologyProp>
 >;
-
-/****** Others ******/
 
 export interface LinkRenderContext {
     subject: SubjectType;
@@ -207,6 +203,11 @@ export interface LinkCtxOverrides {
     subjectCtx: SubjectType;
     topologyCtx: TopologyContextType;
 }
+
+export type CalculatedChildProps<P> = P &
+  LinkRenderContext &
+  Partial<LinkedRenderStoreContext> &
+  Partial<LinkCtxOverrides>;
 
 export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
 

@@ -4,12 +4,13 @@ import React from "react";
 
 import { WithLinkCtxOptions } from "../hocs/withLinkCtx";
 import {
-    LinkCtxOverrides,
-    LinkedRenderStoreContext,
-    LinkRenderContext,
-    PassableRef,
-    SubjectProp,
-    TopologyProp,
+  CalculatedChildProps,
+  LinkCtxOverrides,
+  LinkedRenderStoreContext,
+  LinkRenderContext,
+  PassableRef,
+  SubjectProp,
+  TopologyProp,
 } from "../types";
 
 import { useLRS } from "./useLRS";
@@ -26,7 +27,7 @@ export function useCalculateChildProps<P, R = any>(
     props: P & Partial<SubjectProp & TopologyProp & PassableRef<R>>,
     context: LinkRenderContext,
     options: WithLinkCtxOptions = {},
-): P & LinkRenderContext & Partial<LinkedRenderStoreContext> & Partial<LinkCtxOverrides> {
+): CalculatedChildProps<P> {
 
     const lrs = useLRS();
     const { subject, topology } = context;
