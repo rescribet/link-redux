@@ -13,10 +13,10 @@ import React from "react";
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
 import { Resource, ResourcePropTypes } from "../../components/Resource";
 import {
-    LinkContext,
-    LinkCtxOverrides,
-    LinkReduxLRSType,
-    TopologyContextType,
+  LinkContext,
+  LinkCtxOverrides,
+  LinkReduxLRSType, SubjectType,
+  TopologyContextType,
 } from "../../index";
 import ex from "../../ontology/ex";
 import example from "../../ontology/example";
@@ -64,6 +64,22 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
     ];
 };
 
+function createComponentWrapper(lrs: LinkReduxLRSType, subject: SubjectType) {
+  return (children?: React.ReactElement<any>,
+          topology?: TopologyContextType,
+          lrsOverride?: LinkReduxLRSType,
+          resourceProps?: Partial<ResourcePropTypes<any>>): React.ReactElement<any> => {
+
+    return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
+      React.createElement("div", { className: "root" },
+        React.createElement(
+          Resource,
+          { forceRender: true, subject, topology, ...resourceProps },
+          children,
+        )));
+  };
+}
+
 export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
     const s = new Schema(store);
@@ -92,19 +108,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
         schema: s,
         store,
         subject,
-        wrapComponent: (children?: React.ReactElement<any>,
-                        topology?: TopologyContextType,
-                        lrsOverride?: LinkReduxLRSType,
-                        resourceProps?: Partial<ResourcePropTypes<any>>): React.ReactElement<any> => {
-
-            return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
-                React.createElement("div", { className: "root" },
-                    React.createElement(
-                        Resource,
-                        { forceRender: true, subject, topology, ...resourceProps },
-                        children,
-                    )));
-        },
+        wrapComponent: createComponentWrapper(lrs, subject),
     } as TestContext<React.ComponentType<any>>;
 }
 
