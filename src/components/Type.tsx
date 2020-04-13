@@ -7,6 +7,7 @@ import { normalizeDataSubjects, useDataInvalidation } from "../hooks/useDataInva
 import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
+import { useResourcePropertyView } from "../hooks/useResourcePropertyView";
 import { SubjectProp } from "../types";
 
 import {
@@ -26,22 +27,21 @@ export interface PropTypesWithInjected extends
     Omit<TypableInjectedProps, "subject"> {}
 
 export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null {
-    const options = {};
     const lrs = useLRS();
     const context = useLinkRenderContext();
-    const childProps = useCalculateChildProps(props, context, options) as PropTypesWithInjected;
+    const childProps = useCalculateChildProps(props, context) as PropTypesWithInjected;
     useDataInvalidation(normalizeDataSubjects(childProps));
-
     const notReadyComponent = useRenderLoadingOrError(childProps);
-    if (notReadyComponent !== undefined) {
-        return notReadyComponent;
-    }
-
-    const component = lrs.resourcePropertyComponent(
+    const component = useResourcePropertyView(
         childProps.subject,
         (childProps.label || RENDER_CLASS_NAME) as NamedNode,
         childProps.topology || childProps.topologyCtx,
     );
+
+    if (notReadyComponent !== undefined) {
+        return notReadyComponent;
+    }
+
     if (component !== undefined) {
         const {
             children,

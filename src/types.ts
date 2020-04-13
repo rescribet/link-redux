@@ -88,8 +88,12 @@ export interface AllValuesOpts {
   returnType: ReturnType.AllValues;
 }
 
-export const defaultOptions: DataOpts = {
+export const defaultPropertyOptions: DataOpts = {
   returnType: ReturnType.AllTerms,
+};
+
+export const defaultLinkOptions: DataOpts = {
+  returnType: ReturnType.Term,
 };
 
 /** All possible return types from data mapping functions */

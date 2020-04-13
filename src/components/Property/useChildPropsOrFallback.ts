@@ -1,16 +1,15 @@
 import { SomeTerm } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
-import {
-  PropertyPropTypes,
-  renderError,
-  useCalculateChildProps,
-  useDataInvalidation,
-  useLinkRenderContext,
-  useLRS,
-} from "../..";
+
+import { useCalculateChildProps } from "../../hooks/useCalculateChildProps";
 import { normalizeDataSubjects } from "../../hooks/useDataInvalidation";
+import { useDataInvalidation } from "../../hooks/useDataInvalidation";
+import { useLinkRenderContext } from "../../hooks/useLinkRenderContext";
+import { useLRS } from "../../hooks/useLRS";
 import { CalculatedChildProps } from "../../types";
+import { PropertyPropTypes } from "../Property";
+import { renderError } from "../Typable";
 
 export function useChildPropsOrFallback<P extends PropertyPropTypes>(props: P):
   null | React.ReactElement | [CalculatedChildProps<P>, SomeTerm[]] {

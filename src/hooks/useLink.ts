@@ -1,4 +1,5 @@
 import {
+  defaultLinkOptions,
   LinkedDataObject,
   LinkOpts,
   MapDataToPropsParam,
@@ -13,10 +14,10 @@ export function useLink<
   D extends LinkOpts = TermOpts,
 >(
   dataToProps: T,
-  opts: LinkOpts = {},
+  opts?: D,
 ): LinkedDataObject<T, D> {
   const { subject } = useLinkRenderContext();
-  const [data] = useResourceLinks(subject, dataToProps, opts);
+  const [data] = useResourceLinks(subject, dataToProps, opts || defaultLinkOptions as D);
 
   return data;
 }

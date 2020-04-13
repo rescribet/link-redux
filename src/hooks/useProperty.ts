@@ -1,45 +1,23 @@
-import { NamedNode, Quad, Term } from "@ontologies/core";
-
 import {
-  DataHookReturnType,
   DataOpts,
-  defaultOptions,
-  LiteralOpts,
-  StatementOpts,
-  TermOpts,
-  ToJSOutputTypes,
-  ValueOpts,
+  defaultPropertyOptions,
+  LaxProperty,
+  OutputTypeFromOpts,
+  OutputTypeFromReturnType,
+  ReturnType,
 } from "../types";
 
 import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useResourceProperty } from "./useResourceProperty";
 
-export function useProperty<T extends Term[] = Term[]>(
-  property: NamedNode,
-  opts?: TermOpts,
-): Term[];
-export function useProperty<T extends Quad[] = Quad[]>(
-  property: NamedNode,
-  opts?: StatementOpts,
-): Quad[];
-export function useProperty<T extends ToJSOutputTypes[] = ToJSOutputTypes[]>(
-  property: NamedNode,
-  opts?: LiteralOpts,
-): ToJSOutputTypes[];
-export function useProperty<T extends string[] = string[]>(
-  property: NamedNode,
-  opts?: ValueOpts,
-): string[];
-export function useProperty<T extends DataHookReturnType = DataHookReturnType>(
-  property: NamedNode,
-  opts?: DataOpts,
-): DataHookReturnType;
-// @ts-ignore Used in overloads
-export function useProperty<T extends DataHookReturnType = DataHookReturnType>(
-  property: NamedNode,
-  opts: DataOpts = defaultOptions,
-): DataHookReturnType {
+export function useProperty<
+  T extends DataOpts = DataOpts,
+>(
+  property: LaxProperty,
+  opts?: T,
+): OutputTypeFromOpts<T, OutputTypeFromReturnType<ReturnType.AllTerms>> {
+  const optsOrDefault = opts || defaultPropertyOptions as T;
   const { subject } = useLinkRenderContext();
 
-  return useResourceProperty(subject, property, opts);
+  return useResourceProperty(subject, property, optsOrDefault);
 }

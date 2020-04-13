@@ -1,4 +1,4 @@
-import rdfFactory, { isNamedNode, isNode, Node, Quad } from "@ontologies/core";
+import rdfFactory, { isNamedNode, Node, Quad } from "@ontologies/core";
 import { id, normalizeType } from "link-lib";
 import React from "react";
 import { reduceDataSubjects } from "../helpers";
@@ -20,7 +20,7 @@ import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 
 const buildPropSets = <D extends LinkOpts>(
   lrs: LinkReduxLRSType,
-  dataSubjects: Node[],
+  dataSubjects: Array<Node | undefined>,
   requestedProperties: number[],
   opts: D,
 ): Quad[][] => {
@@ -30,7 +30,7 @@ const buildPropSets = <D extends LinkOpts>(
   for (let i = 0; i < len; i++) {
     const subject = dataSubjects[i];
     if (!subject) {
-      // Preserve order
+      // Preserve arity
       sets.push([]);
       continue;
     }
@@ -70,7 +70,7 @@ export function useResourceLinks<
   const defaultedOpts = opts ?? (globalLinkOptsDefaults as D);
 
   const lrs = useLRS();
-  const dataSubjects = normalizeType(subjects).filter(isNode);
+  const dataSubjects = normalizeType(subjects);
   const lastUpdate = useDataInvalidation(dataSubjects);
 
   const [propMap, requestedProperties] = React.useMemo(

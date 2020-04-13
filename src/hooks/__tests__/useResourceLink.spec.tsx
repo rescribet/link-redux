@@ -9,7 +9,7 @@ import example from "../../ontology/example";
 import { ReturnType } from "../../types";
 import { useResourceLink } from "../useResourceLink";
 
-describe("useLink", () => {
+describe("useResourceLink", () => {
   let container: HTMLElement | undefined;
 
   beforeEach(() => {

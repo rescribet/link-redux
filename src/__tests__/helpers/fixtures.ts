@@ -83,14 +83,13 @@ function createComponentWrapper(lrs: LinkReduxLRSType, subject: SubjectType) {
 export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
     const s = new Schema(store);
-    const report = jest.fn();
-    const mapping = new ComponentStoreTestProxy<React.ComponentType>(s);
-    const lrs = new LinkedRenderStore<React.ComponentType>({
-      mapping,
-      report,
+    const lrsOpts = {
+      mapping: new ComponentStoreTestProxy<React.ComponentType>(s),
+      report: jest.fn(),
       schema: s,
       store,
-    });
+    };
+    const lrs = new LinkedRenderStore<React.ComponentType>(lrsOpts);
     store.addQuads(statements);
     store.flush();
 
@@ -103,10 +102,7 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
             topologyCtx: topology,
         }),
         lrs,
-        mapping,
-        report,
-        schema: s,
-        store,
+        ...lrsOpts,
         subject,
         wrapComponent: createComponentWrapper(lrs, subject),
     } as TestContext<React.ComponentType<any>>;

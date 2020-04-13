@@ -4,7 +4,7 @@ import React from "react";
 import { toReturnType } from "../hocs/link/toReturnType";
 import {
   DataOpts,
-  defaultOptions,
+  defaultPropertyOptions,
   LaxNode,
   LaxProperty,
   LinkReduxLRSType,
@@ -50,17 +50,17 @@ export function useResourceProperty<
   property: LaxProperty,
   opts?: T,
 ): OutputTypeFromOpts<T, OutputTypeFromReturnType<ReturnType.AllTerms>> {
-  const t = opts || defaultOptions as T;
+  const optsOrDefault = opts || defaultPropertyOptions as T;
 
   const lrs = useLRS();
   const lastUpdate = useDataInvalidation(subject);
   const [
     value,
     setValue,
-  ] = React.useState(() => calculate<T>(lrs, subject, property, t));
+  ] = React.useState(() => calculate<T>(lrs, subject, property, optsOrDefault));
 
   React.useEffect(() => {
-    const returnValue = calculate(lrs, subject, property, t);
+    const returnValue = calculate(lrs, subject, property, optsOrDefault);
 
     setValue(returnValue);
   }, [

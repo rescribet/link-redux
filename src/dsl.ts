@@ -54,6 +54,30 @@ export const value = (predicate: PropParam): LinkOpts => ({
   returnType: ReturnType.Value,
 });
 
+/** Sets the return type to `ReturnType.AllTerms`. */
+export const terms = (predicate: PropParam): LinkOpts => ({
+  ...mergedMap(predicate),
+  returnType: ReturnType.AllTerms,
+});
+
+/** Sets the return type to `ReturnType.AllStatements`. */
+export const statements = (predicate: PropParam): LinkOpts => ({
+  ...mergedMap(predicate),
+  returnType: ReturnType.AllStatements,
+});
+
+/** Sets the return type to `ReturnType.AllLiterals`. */
+export const literals = (predicate: PropParam): LinkOpts => ({
+  ...mergedMap(predicate),
+  returnType: ReturnType.AllLiterals,
+});
+
+/** Sets the return type to `ReturnType.AllValues`. */
+export const values = (predicate: PropParam): LinkOpts => ({
+  ...mergedMap(predicate),
+  returnType: ReturnType.AllValues,
+});
+
 /*                              Data fetching                             */
 
 /**
@@ -61,7 +85,7 @@ export const value = (predicate: PropParam): LinkOpts => ({
  *
  * @see {hold} For opposite behaviour
  */
-export const fetch = (predicate: PropParam): LinkOpts => ({
+export const dereference = (predicate: PropParam): LinkOpts => ({
   ...mergedMap(predicate),
   fetch: true,
 });

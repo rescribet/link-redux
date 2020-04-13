@@ -1,4 +1,5 @@
 import React from "react";
+import { useResourceView } from "..";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataFetching } from "../hooks/useDataFetching";
@@ -30,23 +31,20 @@ export interface InjectedPropTypes extends ResourcePropTypes, DataInvalidationPr
 function useCalculatedViewWithState(props: InjectedPropTypes,
                                     lrs: LinkReduxLRSType,
                                     error?: Error): React.ReactElement | null {
+    const notReadyComponent = useRenderLoadingOrError(props, error);
+    const component = useResourceView(
+      props.subject,
+      props.topology || props.topologyCtx,
+    );
 
-    if (props.forceRender && props.children) {
+    if ((props.forceRender && props.children) || (notReadyComponent === undefined && props.children)) {
         return React.createElement(React.Fragment, null, props.children);
     }
 
-    const notReadyComponent = useRenderLoadingOrError(props, error);
     if (notReadyComponent !== undefined) {
         return notReadyComponent;
     }
 
-    if (props.children) {
-        return React.createElement(React.Fragment, null, props.children);
-    }
-    const component = lrs.resourceComponent(
-        props.subject,
-        props.topology || props.topologyCtx,
-    );
     if (component !== undefined) {
         return React.createElement(component, props);
     }

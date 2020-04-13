@@ -10,31 +10,39 @@ import { toReturnType } from "../toReturnType";
 
 describe("toReturnType", () => {
   describe("returnType Literal", () => {
-    it("parses true boolean value", () => {
-        const value = toReturnType(
+    describe("boolean", () => {
+      const testBool = (value: string, res: boolean) => {
+        const parsed = toReturnType(
           ReturnType.Literal,
-          rdf.quad(ex.ns(""), ex.ns(""), rdf.literal("true", xsdboolean)),
+          rdf.quad(ex.ns(""), ex.ns(""), rdf.literal(value, xsdboolean)),
         );
 
-        expect(value).toEqual(true);
-    });
+        expect(parsed).toEqual(res);
+      };
 
-    it("parses 1 boolean value", () => {
-        const value = toReturnType(
-          ReturnType.Literal,
-          rdf.quad(ex.ns(""), ex.ns(""), rdf.literal("1", xsdboolean)),
-        );
+      it("parses true", () => {
+        testBool("true", true);
+      });
 
-        expect(value).toEqual(true);
-    });
+      it("parses 1", () => {
+         testBool("1", true);
+      });
 
-    it("parses t boolean value", () => {
-        const value = toReturnType(
-          ReturnType.Literal,
-          rdf.quad(ex.ns(""), ex.ns(""), rdf.literal("t", xsdboolean)),
-        );
+      it("parses t", () => {
+         testBool("t", true);
+      });
 
-        expect(value).toEqual(true);
+      it("parses false", () => {
+        testBool("false", false);
+      });
+
+      it("parses 0", () => {
+         testBool("0", false);
+      });
+
+      it("parses f", () => {
+         testBool("f", false);
+      });
     });
   });
 });

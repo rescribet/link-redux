@@ -38,6 +38,7 @@ export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
 export { useResourceProperty } from "./hooks/useResourceProperty";
 export { useResourceView } from "./hooks/useResourceView";
+export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
 export { useView } from "./hooks/useView";
 
 /* other */
