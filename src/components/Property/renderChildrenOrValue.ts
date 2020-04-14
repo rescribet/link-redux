@@ -1,5 +1,6 @@
-import rdfFactory, { SomeTerm, TermType } from "@ontologies/core";
+import rdf, { SomeTerm, TermType } from "@ontologies/core";
 import rdfs from "@ontologies/rdfs";
+import { RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
 import { LinkReduxLRSType } from "../../types";
@@ -14,11 +15,9 @@ export function renderChildrenOrValue(props: PropertyWrappedProps, lrs: LinkRedu
     }
 
     const { topology, topologyCtx, subjectCtx } = props;
-    const literalRenderer = lrs.getComponentForProperty(
-      rdfs.Literal,
-      rdfFactory.namedNode(p.datatype.value),
-      topology === null ? undefined : topology || topologyCtx,
-    );
+    const t = topology === null ? undefined : topology || topologyCtx;
+    const literalRenderer = lrs.getComponentForProperty(rdfs.Literal, rdf.namedNode(p.datatype.value), t)
+      || lrs.getComponentForProperty(rdfs.Literal, RENDER_CLASS_NAME, t);
 
     if (!literalRenderer) {
       return React.createElement(React.Fragment, null, p.value);
