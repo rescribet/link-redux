@@ -1,8 +1,8 @@
 import rdfFactory, { isNamedNode, Node, Quad } from "@ontologies/core";
 import { id, normalizeType } from "link-lib";
 import React from "react";
-import { reduceDataSubjects } from "../helpers";
 
+import { reduceDataSubjects } from "../helpers";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import ll from "../ontology/ll";

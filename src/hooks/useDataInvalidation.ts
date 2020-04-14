@@ -40,10 +40,12 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 export function useDataInvalidation(subjects: LaxNode | LaxNode[]): number {
     const resources = normalizeType(subjects!).filter<Node>(Boolean as any);
     const lrs = useLRS();
+
+    const highestUpdate = () => Math.max(...resources
+      .map((s) => lrs.store.changeTimestamps[id(lrs.store.canon(s))] || 0));
+
     const subId = resources.length > 0 ? id(lrs.store.canon(resources[0])) : undefined;
-    const [lastUpdate, setInvalidate] = React.useState<number>(
-        subId ? (lrs as any).store.changeTimestamps[subId] : 0,
-    );
+    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate());
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
         setInvalidate(lastUpdateAt!);
@@ -59,6 +61,7 @@ export function useDataInvalidation(subjects: LaxNode | LaxNode[]): number {
         });
     }, [
       subId,
+      resources.length,
       reduceDataSubjects(resources),
     ]);
 

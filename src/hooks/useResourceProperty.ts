@@ -53,7 +53,7 @@ export function useResourceProperty<
   const optsOrDefault = opts || defaultPropertyOptions as T;
 
   const lrs = useLRS();
-  const lastUpdate = useDataInvalidation(subject);
+  const lastUpdate = useDataInvalidation([subject, property]);
   const [
     value,
     setValue,
