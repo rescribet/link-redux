@@ -38,10 +38,10 @@ Say we want to render this bit of linked data:
 In our app we create a `Resource` to render our subject:
 
 ```javascript
-import LinkedResoureContainer from "link-redux"
+import Resource from "link-redux"
 
 <App>
-  <LinkedResoureContainer subject="https://example.com/somePerson" />
+  <Resource subject="https://example.com/somePerson" />
 </App>
 ```
 
@@ -124,7 +124,7 @@ import { TopologyProvider } from 'link-redux';
  * app specific. However, when building a UI library, an iri of that library would be more useful
  * since the layout requirements (css) of each component would be fully documented.
  */
-export const popupTopology = NS.app('topologies/popup');
+export const popupTopology = app('topologies/popup');
 
 /**
 * This component is to set the topology. In the real world, it'd be used in a component which
@@ -171,6 +171,7 @@ as a router, make sure all your resources are resolvable (including the fragment
 will occur.
 
 ```JSX Harmony
+import rdf from '@ontologies/core'
 import { namedNodeByIRI, Resource } from 'link-redux';
 
 class OurTeamPage extends React.PureComponent {
@@ -183,7 +184,7 @@ class OurTeamPage extends React.PureComponent {
     * card with their profile picture, name and a small description.
     *
     * The {Resource} component expects `subject` to be an instance of rdflib/NamedNode. Obtain one by either:
-    * - Using a namespace, e.g. NS.app('person/alice')
+    * - Using a namespace, e.g. app('person/alice')
     * - Using namedNodeByIRI to get one from a string
     *
     * NOTE: Using new NamedNode() from rdflib WILL NOT WORK(!) due to implementation details.
@@ -192,8 +193,8 @@ class OurTeamPage extends React.PureComponent {
       <div>
         <h1>Our team:</h1>
         <Grid>
-            <Resource subject={NS.app('person/alice')} />
-            <Resource subject={namedNodeByIRI('https://example.com/person/bob')} />
+            <Resource subject={app('person/alice')} />
+            <Resource subject={rdf.namedNode('https://example.com/person/bob')} />
         </Grid>
       </div>
     );
@@ -217,8 +218,11 @@ When a property has no view registered, and the resolved value is a NamedNode (a
 automatically mount a Resource so the nested resource is rendered.
 
 ```JSX Harmony
+import foaf from '@ontologies/foaf';
+import schema from '@ontologies/schema';
 import { Property } from 'link-redux';
-const nameTypes = [NS.schema('name'), NS.foaf('name')];
+
+const nameTypes = [schema.name, foaf.name];
 
 class PersonGrid extends React.PureComponent {
   /* details omitted */
@@ -227,7 +231,7 @@ class PersonGrid extends React.PureComponent {
     // The label defines which properties we like to render.
     return (
       <div>
-        <Property label={[NS.schema('name'), NS.foaf('name')]} />
+        <Property label={[schema.name, foaf.name]} />
       </div>
     )
   }
@@ -286,69 +290,80 @@ acceptable for real-world implementations, since you shouldn't need a lot of the
 actions should be handled automatically with the hypermedia API).
 
 ```JSX Harmony
+// src/ontology/popup.js
+import { createNS } from '@ontologies/core';
+
+// Define a new namespace for our popup system
+const ns = createNS("https://mySite.com/ns/popup#");
+
+// Define some classes, properties, and individuals within our ontology.
+export default {
+  ns,
+
+  /* Classes */
+  PopupManager: ns('PopupManager'),
+
+  /* Properties */
+  resource: ns('resource'),
+  open: ns('open'),
+  close: ns('close'),
+
+  /* Individuals */
+  manager: ns('manager'),
+}
+```
+
+```JSX Harmony
 // src/middleware/popup.js
-import { Namespace, NamedNode } from 'link-lib';
-import { Literal, Statement } from 'rdflib';
+import rdf, { createNS } from '@ontologies/core';
+import rdfx from '@ontologies/rdf';
+import { replace } from '@rdfdev/delta';  // See https://github.com/argu-co/linked-delta for the exact meaning
+import popup from '../ontology/popup';
 
 const PopupMiddleware = (store) => {
-  // Define a new namespace for our popup system
-  const popup = Namespace(store.namespaces.app('popup'));
   // Make the namespace available throughout the app
-  store.namespaces.popup = popup;
   // Set up the state in the store, e.g. which resource to render and if it should be shown
   store.processDelta([
-    new Statement(
-      popup('manager'),
-      store.namespaces.rdf('type'),
-      popup('PopupManager'),
-      store.namespaces.ll('replace') // See https://github.com/argu-co/linked-delta for the exact meaning
+    replace(
+      popup.manager,
+      rdfx.type,
+      popup.PopupManager,
     ),
-    new Statement(
-      popup('manager'),
-      popup('resource'),
-      undefined,
-      store.namespaces.ll('replace')
+    replace(
+      popup.manager,
+      popup.resource,
+      popup.null,
     ),
-    new Statement(
-      popup('manager'),
-      popup('open'),
-      Literal.fromBoolean(false),
-      store.namespaces.ll('replace')
+    replace(
+      popup.manager,
+      popup.open,
+      rdf.literal(false),
     ),
   ]);
 
   /**
   * A helper function which defines how the state should be modified.
   */
-  const showPopup = (iri) => {
-    store.processDelta([
-      new Statement(
-        popup('manager'),
-        popup('resource'),
-        new NamedNode(iri),
-        store.namespaces.ll('replace')
+  const showPopup = (iri) => store.processDelta([
+      replace(
+        popup.manager,
+        popup.resource,
+        rdf.namedNode(iri),
       ),
-      new Statement(
-        popup('manager'),
-        popup('open'),
-        Literal.fromBoolean(true),
-        store.namespaces.ll('replace')
+      replace(
+        popup.manager,
+        popup.open,
+        rdf.literal(true),
       ),
     ]);
-    return Promise.resolve();
-  };
 
-  const hidePopup = () => {
-    store.processDelta([
-      new Statement(
-        popup('manager'),
-        popup('open'),
-        Literal.fromBoolean(false),
-        store.namespaces.ll('replace')
+  const hidePopup = () => store.processDelta([
+      replace(
+        popup.manager,
+        popup.open,
+        rdf.literal(false),
       ),
     ]);
-    return Promise.resolve();
-  }
 
   //  It's useful to always return a promise (e.g. use `async` if you have ESnext), so the caller
   //  can do stuff after the middleware is done.
@@ -359,7 +374,7 @@ const PopupMiddleware = (store) => {
     }
 
     // Display a popup
-    if (iri.value.startsWith(iri.value.startsWith(popup('show').value))) {
+    if (iri.value.startsWith(iri.value.startsWith(popup.show.value))) {
       const resource = new URL(iri.value).searchParams.get('resource');
 
       return showPopup(resource);
@@ -375,15 +390,15 @@ After setting up, you can wrap your favorite popup library with the `link` metho
 state from the store;
 
 ```JSX Harmony
-// Mount `<Resource subject={NS.popup('manager')} />` somewhere in your app
+// Mount `<Resource subject={popup.manager} />` somewhere in your app
 
 import { Resource } from 'link-redux';
-import { NS } from '../LRS.jsx';
+import popup from '../ontology/popup';
 
 class PopupManager extends React.PureComponent {
-  static type = NS.popup('PopupManager');
+  static type = popup.PopupManager;
 
-  static mapDataToProps = [NS.popup('resource'), NS.popup('open')];
+  static mapDataToProps = [popup.resource, popup.open];
 
   render() {
     const { open, resource } = this.props;
@@ -398,7 +413,7 @@ class PopupManager extends React.PureComponent {
       <PopupLibrary>
         <Popup>
           <Resource
-            close={this.props.lrs.exec(NS.popup('close'))}
+            close={this.props.lrs.exec(popup.close)}
             subject={resource}
           />
         </Popup>
@@ -417,7 +432,8 @@ Create a helper to set up an instance of [the `LinkedRenderStore`](https://fletc
 to use in your application;
 ```javascript
 // src/LRS.js
-import { createStore, memoizedNamespace } from 'link-lib';
+import { createNS } from '@ontologies/core';
+import { createStore, DEFAULT_TOPOLOGY } from 'link-lib';
 import { FRONTEND_URL } from './config';
 
 /**
@@ -442,7 +458,7 @@ const LRS = createStore({}, [
  * If the app is programmed for a specific backend, it's useful to add it to the namespaces so that
  * it can be used for (hard-coded) entry points.
  */
-LRS.namespaces.api = memoizedNamespace(FRONTEND_URL);
+const api = createNS(FRONTEND_URL);
 
 /**
  * Set up your own namespace for (virtual) app-specific properties (this might be the same as the
@@ -451,9 +467,7 @@ LRS.namespaces.api = memoizedNamespace(FRONTEND_URL);
  * Virtual properties are useful for creating behaviour separate from data-source, while still using
  * the same interface.
  */
-LRS.namespaces.app = memoizedNamespace(FRONTEND_URL);
-
-export const NS = LRS.namespaces;
+const app = createNS(FRONTEND_URL);
 
 /**
 * It's useful to have a central source of valid application topologies. This also provides a
@@ -464,17 +478,16 @@ export const NS = LRS.namespaces;
 * over-registering might cause the wrong view to be rendered rather than none at all.
 */
 export const allTopologies = [
-  // This defaults to the `DEFAULT_TOPOLOGY` from link-lib
   // Generally used to mean that the resource is the main content on the page.
-  undefined,
+  DEFAULT_TOPOLOGY,
   // The resource/property is rendered within the navigation menu (e.g. as a `li`)
-  NS.app('navigation'),
+  app('navigation'),
   // The resource/prop is rendered in a table (e.g. as a single row within the table).
-  NS.app('table'),
+  app('table'),
   // The resource/prop is rendered in a row (e.g. as a single cell within the row).
-  NS.app('row'),
+  app('row'),
   // The resource/prop is rendered in a cell (e.g. as a raw value or some small representation).
-  NS.app('cell'),
+  app('cell'),
 ];
 
 /**
@@ -500,7 +513,8 @@ export default LRS;
 Write some views to render resources:
 
 ```JSX harmony
-import LinkedRenderStore, { RENDER_CLASS_NAME } from 'link-lib';
+import schema from '@ontologies/schema';
+import LinkedRenderStore from 'link-lib';
 import { link, register, Property, Resource } from 'link-redux';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -509,15 +523,15 @@ import FontAwesome from 'react-fontawesome';
 import { NS } from './LRS';
 
 class Thing extends React.PureComponent {
-  static type = NS.schema('Thing');
+  static type = schema.Thing;
 
   /**
   * This function automatically wraps your component with the `link` method to bind your component
   * to store data (like `connect` in redux).
   */
   static mapDataToProps = [
-    NS.schema('text'),
-    NS.schema('creator'),
+    schema.text,
+    schema.creator,
   ];
 
   render() {
@@ -525,7 +539,7 @@ class Thing extends React.PureComponent {
 
     return (
       <div>
-        <Property label={NS.schema('name')}/> // Delegate the rendering of the name to another dynamically resolved component
+        <Property label={schema.name}/> // Delegate the rendering of the name to another dynamically resolved component
         <p>{text.value}</p>
         <Resource subject={creator} />
       </div>
@@ -534,11 +548,11 @@ class Thing extends React.PureComponent {
 }
 
 class ThingNavigation extends React.PureComponent {
-  static type = NS.schema('Thing');
+  static type = schema.Thing;
 
-  static mapDataToProps = [NS.schema('name')];
+  static mapDataToProps = [schema.name];
 
-  static topology = NS.app('navigation');
+  static topology = app('navigation');
 
   static linkOpts = {
     returnType: 'value', // We don't need the objects, just their values for this view, see {link} for all options.
@@ -565,14 +579,14 @@ class ThingNavigation extends React.PureComponent {
 */
 const ThingName = ({ linkedProp }) => <h1>{linkedProp.value}</h1>;
 
-ThingName.type = NS.schema('Thing');
-ThingName.property = NS.schema('name');
+ThingName.type = schema.Thing;
+ThingName.property = schema.name;
 /**
  * We'll bind all known topologies to this component, rather than the larger components since it has
  * less chance to overflow out of bounds.
  * We can use `undefined` here as a shortcut for the default as well (bound to the `Thing` component).
  */
-ThingName.topology = allTopologiesExcept(undefined, NS.app('navigation'), );
+ThingName.topology = allTopologiesExcept(undefined, app('navigation'), );
 
 // We want to show whether it's the users' birthday
 const PersonName = ({ birthDay, name }) => {
@@ -596,12 +610,12 @@ export default [
   */
   LinkedRenderStore.registerRenderer(
     link(
-      [NS.schema('name'), NS.schema('birthDate')],
+      [schema.name, schema.birthDate],
       { returnType: 'value' } // We can adjust whether we get passed (string) values, Nodes, Statements.
     )(PersonName),
-    NS.schema('Person'),
-    NS.schema('name'),
-    NS.app('topologies/preview')
+    schema.Person,
+    schema.name,
+    app('topologies/preview')
   ),
 ];
 ```
@@ -652,7 +666,7 @@ export default () => (
 
 ### 5. Start the application
 It should render (and fetch) resources passed as `subject` to a `Resource` (The
-type of `subject` MUST be a NamedNode instance, e.g. `NS.api('todos/5')`).
+type of `subject` MUST be a NamedNode instance, e.g. `api('todos/5')`).
 
 Note that each `Resource` also acts as a [React error boundary](https://reactjs.org/docs/error-boundaries.html),
 so errors should automatically be contained rather than crash your entire app.
@@ -673,7 +687,7 @@ class ThingNavigation extends React.PureComponent {
   static type = ll.ErrorResource;
 
   // We can switch views so it renders with appropriate formatting for its location.
-  static topology = NS.app('navigation');
+  static topology = app('navigation');
 
   render() {
     // Components rendered when an error occur have some additional props.
@@ -703,18 +717,20 @@ resources dynamically, especially handy when the range of the statement can be m
 maintaining a giant switch statement isn't to your liking;
 
 ```JSX Harmony
+import rdfs from '@ontologies/core';
+
 class DollarTableCell extends React.PureComponent {
   // Set the type to Literal to render individual values.
-  static type = NS.rdfs("Literal");
+  static type = rdfs.Literal;
 
   /**
   * The `property` field now acts to resolve the data type rather than the predicate.
   * In this case, the dbpedia `usDollar` type.
   */
-  static property = NS.dbdt("usDollar");
+  static property = dbdt.usDollar;
 
   // Here too, we can adjust rendering for the appropriate context.
-  static topology = NS.app('tableCell');
+  static topology = app('tableCell');
 
   render() {
     const literalVal = Number(this.props.linkedProp.value)
@@ -738,8 +754,8 @@ for this, since we work around the default RDFlib.js NamedNode constructor for p
 Most components wouldn't be very useful if they can only render one type of term. Therefore, most of the methods accept
 an array of terms as well:
 ```jsx harmony
-LinkedRenderStore.registerRenderer(Thing, [NS.schema('Thing'), NS.owl('Thing')]);
+LinkedRenderStore.registerRenderer(Thing, [schema.Thing, owl.Thing]);
 ```
 ```jsx harmony
-<Property label={[NS.schema('name'), NS.rdfs('label')]} />
+<Property label={[schema.name, rdfs.label]} />
 ```
