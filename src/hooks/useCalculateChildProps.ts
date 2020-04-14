@@ -1,4 +1,4 @@
-import { NamedNode } from "@ontologies/core";
+import { isNamedNode } from "@ontologies/core";
 import { DEFAULT_TOPOLOGY } from "link-lib";
 import React from "react";
 
@@ -51,8 +51,14 @@ export function useCalculateChildProps<P, R = any>(
     }
     if (options.helpers) {
         overrides.reset = options.helpers.reset;
-        overrides.reloadLinkedObject = () =>
-            lrs.queueEntity((props.subject || subject) as NamedNode, { reload: true });
+        overrides.reloadLinkedObject = () => {
+          const toReload = props.subject || subject;
+          if (isNamedNode(toReload)) {
+            lrs.queueEntity(toReload, { reload: true });
+          }
+
+          return Promise.resolve();
+        };
     }
 
     return Object.assign(
