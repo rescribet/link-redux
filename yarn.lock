@@ -4639,10 +4639,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-link-lib@2.0.0-3:
-  version "2.0.0-3"
-  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-2.0.0-3.tgz#85350d750b3514f6b652387a686a0ec8c6ae20de"
-  integrity sha512-QGqqG510abpnEupadyuDpf/s8cqomIAziYhhMwewLh9D8aW8lBK8Mo3p0eltq6Lp5wfqQGQWQRexqTWItWriJA==
+link-lib@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/link-lib/-/link-lib-2.0.0.tgz#71ce9beb1cebd418ff43a6958d320d21f2156208"
+  integrity sha512-4FZOLCg1HvwT5sscrZJ0uiMZtSUtXLqOZWFBbTZEuAndu6igmKGDq5P4q5W4FzOfxfFZCAJmT74NbqJwsuLFMQ==
 
 listr-input@^0.2.0:
   version "0.2.1"
