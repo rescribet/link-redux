@@ -33,6 +33,15 @@ export function useCalculateChildProps<P, R = any>(
     const { subject, topology } = context;
     const overrides: Overrides<R> = {};
 
+    const reloadLinkedObject = React.useCallback(() => {
+      const toReload = props.subject || subject;
+      if (isNamedNode(toReload)) {
+        lrs.queueEntity(toReload, { reload: true });
+      }
+
+      return Promise.resolve();
+    }, [props.subject || subject, lrs]);
+
     if (typeof props.innerRef !== "undefined") {
         overrides.ref = props.innerRef;
         overrides.innerRef = undefined;
@@ -51,14 +60,7 @@ export function useCalculateChildProps<P, R = any>(
     }
     if (options.helpers) {
         overrides.reset = options.helpers.reset;
-        overrides.reloadLinkedObject = () => {
-          const toReload = props.subject || subject;
-          if (isNamedNode(toReload)) {
-            lrs.queueEntity(toReload, { reload: true });
-          }
-
-          return Promise.resolve();
-        };
+        overrides.reloadLinkedObject = reloadLinkedObject;
     }
 
     return Object.assign(
