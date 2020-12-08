@@ -55,10 +55,11 @@ function useCalculatedViewWithState(props: InjectedPropTypes,
 export function LRC<P, R>(props: ResourcePropTypes<R> & P, _?: any): React.ReactElement | null {
     const context = useLinkRenderContext();
     const [error, setError] = React.useState<Error|undefined>(undefined);
+    const reset = React.useCallback(() => setError(undefined), [setError]);
 
     const options = {
         helpers: {
-            reset: () => setError(undefined),
+            reset,
         },
         subject: true,
         topology: true,
