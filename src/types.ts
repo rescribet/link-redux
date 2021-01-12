@@ -169,9 +169,9 @@ export interface PropertyRegistrationOpts<P> extends RegistrationOpts<P> {
   property: LazyNNArgument;
 }
 
-export type TypeFC<P = {}> = TypeRegistrationOpts<P> & React.FC<P & Partial<SubjectProp>>;
+export type TypeFC<P = {}> = TypeRegistrationOpts<P & SubjectProp> & React.FC<P & SubjectProp>;
 
-export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & Partial<SubjectProp> & PropertyProps>;
+export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & SubjectProp & PropertyProps>;
 
 export type FC<P = {}> = P extends InferProperty ? PropertyFC<P> : TypeFC<P>;
 
