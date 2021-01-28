@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
-import schema from "@ontologies/schema";
+import * as schema from "@ontologies/schema";
 import { mount, shallow } from "enzyme";
 import { LinkedRenderStore } from "link-lib";
 import React from "react";

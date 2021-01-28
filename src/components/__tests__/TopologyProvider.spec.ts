@@ -2,7 +2,7 @@
 import "../../__tests__/useHashFactory";
 
 import rdf, { NamedNode } from "@ontologies/core";
-import schema from "@ontologies/schema";
+import * as schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";

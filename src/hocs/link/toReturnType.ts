@@ -1,5 +1,5 @@
 import { isLiteral, Literal, Quad } from "@ontologies/core";
-import xsd from "@ontologies/xsd";
+import * as xsd from "@ontologies/xsd";
 import { equals, normalizeType } from "link-lib";
 
 import {
@@ -10,13 +10,13 @@ import {
 
 const numberTypes = [
     xsd.integer,
-    xsd.int,
+    xsd.xsdint,
     xsd.unsignedInt,
-    xsd.short,
+    xsd.xsdshort,
     xsd.unsignedShort,
-    xsd.byte,
+    xsd.xsdbyte,
     xsd.unsignedByte,
-    xsd.float,
+    xsd.xsdfloat,
     xsd.decimal,
 ];
 
@@ -26,7 +26,7 @@ function toJS(obj: Literal | unknown): ToJSOutputTypes {
         return obj as object;
     }
 
-    if (equals(obj.datatype, xsd.boolean)) {
+    if (equals(obj.datatype, xsd.xsdboolean)) {
         return obj.value === "true" || obj.value === "1" || obj.value === "t";
     }
     if (equals(obj.datatype, xsd.dateTime) ||

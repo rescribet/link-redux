@@ -1,4 +1,4 @@
-import schema from "@ontologies/schema";
+import * as schema from "@ontologies/schema";
 
 import {
   all,

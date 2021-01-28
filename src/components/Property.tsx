@@ -1,5 +1,5 @@
 import { SomeTerm, TermType } from "@ontologies/core";
-import rdf from "@ontologies/rdf";
+import * as rdf from "@ontologies/rdf";
 import { SomeNode } from "link-lib";
 import React from "react";
 

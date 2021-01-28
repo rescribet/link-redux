@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers: 0 */
 import rdfFactory from "@ontologies/core";
-import rdfs from "@ontologies/rdfs";
-import schema from "@ontologies/schema";
+import * as rdfs from "@ontologies/rdfs";
+import * as schema from "@ontologies/schema";
 import { mount } from "enzyme";
 import { LinkedRenderStore } from "link-lib";
 import React from "react";
