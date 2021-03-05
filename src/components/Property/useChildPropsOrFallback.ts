@@ -1,4 +1,4 @@
-import { SomeTerm } from "@ontologies/core";
+import { Quad, SomeTerm } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
 
@@ -35,8 +35,8 @@ export function useChildPropsOrFallback<P extends PropertyPropTypes>(props: P):
     .filter(Boolean)
     .map((l) => l.value);
   const objRaw = subjectData
-    .filter((s) => labels.includes(s.predicate.value))
-    .map((s) => s.object);
+    .filter((s: Quad) => labels.includes(s.predicate.value))
+    .map((s: Quad) => s.object);
 
   if (error) {
     return renderError(childProps, lrs, error);

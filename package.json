@@ -75,7 +75,7 @@
     "http-status-codes": "1.x",
     "jest": "^25.2.4",
     "jest-enzyme": "^7.1.2",
-    "link-lib": "^2.0.0",
+    "link-lib": "0.0.0-890c0509",
     "n-quads-parser": "^2.1.0",
     "prop-types": "^15.x",
     "react": "^16.13.1",

@@ -1,9 +1,11 @@
 import { BlankNode, Literal, NamedNode, Quad, SomeTerm, Term } from "@ontologies/core";
 import {
+  DataProcessor,
   EmptyRequestStatus,
   ErrorReporter,
   FulfilledRequestStatus,
   LazyNNArgument,
+  LinkedDataAPI,
   LinkedRenderStore,
   SomeNode,
 } from "link-lib";
@@ -20,7 +22,10 @@ export type LabelType = NamedNode | NamedNode[];
 
 export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 
-export type LinkReduxLRSType<P = any> = LinkedRenderStore<React.ComponentType<P>>;
+export type LinkReduxLRSType<
+  P = any,
+  API extends LinkedDataAPI = DataProcessor
+> = LinkedRenderStore<React.ComponentType<P>, API>;
 
 /** Data types to which the data can be converted before inserting into a data map */
 export enum ReturnType {
