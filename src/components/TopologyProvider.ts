@@ -23,10 +23,10 @@ import {
  */
 export class TopologyProvider<P = {}, S = {}> extends React.Component<P, S> {
     protected className: string | undefined = undefined;
-    protected elementType = "div";
+    protected elementType: keyof JSX.IntrinsicElements = "div";
     protected topology: TopologyType = null;
 
-    public wrap(children: TopologyRenderer | React.ReactNode | React.ReactNode[]) {
+    public wrap(children: TopologyRenderer | React.ReactNode | React.ReactNode[]): JSX.Element {
         return React.createElement(
             LinkRenderCtx.Consumer,
             null,
