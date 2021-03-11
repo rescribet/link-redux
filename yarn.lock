@@ -1139,52 +1139,59 @@
   dependencies:
     murmurhash-js "^1.0.0"
 
-"@ontologies/as@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@ontologies/as/-/as-1.0.1.tgz#f60489dcb1e3603d33d8bf7df73b325d8868b45e"
-  integrity sha512-EqgREbZegZD2qH7byPLkpEk9cK/PV9ctpTt0qrqK4bMk7rumAdKI0Er4te5tZpejWBrTg+uWR193r+5zWl44dw==
+"@ontologies/as@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/as/-/as-2.0.0-rc.1.tgz#3851ed473570746c4af063fa4642648b9cb7c8b2"
+  integrity sha512-6OV3JvVOSmZtY4DK8pkFr7v3UY/QHaJjMB1OgLBpVUcMk9tjJxuntC7gVRAfnGeHkooE565voQofx3AHb1aH4A==
 
-"@ontologies/core@2.0.0", "@ontologies/core@>=2.0.0":
+"@ontologies/core@>=2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@ontologies/core/-/core-2.0.0.tgz#f2d0ac0882040651e7ad621fa9b075b7f1175b0c"
   integrity sha512-SSBZTvzOFTytls90A89dpzhoiRnDlLNvLDRuOdT8T60bOlYJlI/mdspYOngEZhTzA8UBcHoxgRqQZZONksAFbw==
   dependencies:
     "@ungap/global-this" "^0.3.1"
 
-"@ontologies/ld@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/ld/-/ld-1.0.0.tgz#122e5d0416805a8ab0950f6fd57f74b14f6d00db"
-  integrity sha512-+SI1Q/NF6xcEueACUwhznsFtqE3xWSKrBAgh4xbYSzf/XW9UAkO9y+3xeYFXKLJPS4iwEmt1Wyiq7U13TVa0vw==
+"@ontologies/core@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@ontologies/core/-/core-2.0.2.tgz#b19094ee722f0e46d338af76dbf36c2fdc0a58d7"
+  integrity sha512-bFlN791V5QwlBQ1fT/i2Ybc4Wjkc9TUeqJJPzWWx3aex89nJ5nAyEsNtpUATCdeIhDO+NsVWzFPblSmY3IlUIg==
+  dependencies:
+    "@ungap/global-this" "^0.3.1"
 
-"@ontologies/owl@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/owl/-/owl-1.0.0.tgz#4dfe82af0c9707260c62c8bb6048213ad0341c35"
-  integrity sha512-q/B5IV/JKtTBcIav7VkyPyE8sXwmOdijHwy9pZFIigFQBiODfEOi2HX2TpB+pNAeUygLFbNNzn8ODoRcmHDApQ==
+"@ontologies/ld@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/ld/-/ld-2.0.0-rc.1.tgz#38e7eec594f8bb58fb48d92c2d9f345c314be2bb"
+  integrity sha512-0bLjb0ixtEsl4qkprkJkFAUXqia0m4ZBZ4IKibUb7T/FSJlrcyOsmTXwFxlo/Hk7IngDu+85umItbqoLcf4LEQ==
 
-"@ontologies/rdf@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/rdf/-/rdf-1.0.0.tgz#29943adf704aa6f23aadd2e001c8b8f99b00cb13"
-  integrity sha512-C5AhLIcyqVucn628sERFMeGHFZaW++XGF60ks58OiccwVQaMGuPSzqSbEZkjg2EEk9x2X46oExGqECwjhGO+sg==
+"@ontologies/owl@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/owl/-/owl-2.0.0-rc.1.tgz#f95fb7e05b27a1a42e72c65c8f0aab630632dc10"
+  integrity sha512-USLOOIYg9vMg5ApR/hzv+thm4MGrkUdM3jhBah+bF261Qc5YeJVyqSCsANwPb82FytNw6XGL85l4IMtzH48vyw==
 
-"@ontologies/rdfs@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/rdfs/-/rdfs-1.0.0.tgz#4d1caa7ae263e0a868b229cf9ba82ffe8bae2d80"
-  integrity sha512-ezlqkgsjI1ssSdt9ccpfpEaeIQZ8wC1/boM+gaaFvpbD+7godGq3qHNVpjs8tt+tgHLI0yTFWBmpejoG69Oq8Q==
+"@ontologies/rdf@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/rdf/-/rdf-2.0.0-rc.1.tgz#35ffeee9b3f29ba2537eecb716ec171420c2db33"
+  integrity sha512-J7eqoxgg7TCxcIABhBZvCk8+xQCOdUj1hHvA5cFhmb/v3e+vmEZciVzJ3Gu5DbHCf/RGhn4sLDvElLS7RkfvGA==
 
-"@ontologies/schema@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/schema/-/schema-1.0.0.tgz#4d7259dd74442ed59ecc4b981a089d0f8b4fe712"
-  integrity sha512-s/wqWAPMHctzbOObe65HImvm/JyySRB4H3t4978H8hROJ1HlBHxZLoxW92u0AqQWmQCcAuG/JNrmB/COLQGYlw==
+"@ontologies/rdfs@^2.0.0-rc.2":
+  version "2.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@ontologies/rdfs/-/rdfs-2.0.0-rc.2.tgz#b3970dea26663f0f96b406dddbda06a98ef46809"
+  integrity sha512-6YiNkBXfsyGIHJy3DYpF0zwfyPTOyrbslMMgvPQbp/LkjvBzFfs62s8i0uOlf9dp2aymslaytyZquq7H9qQSsw==
 
-"@ontologies/shacl@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/shacl/-/shacl-1.0.0.tgz#9a3ce21affd7aba954820e85f50867e614ba5efe"
-  integrity sha512-x1h0CF5F3RrvNsGoA6SR2y6iPc5gThslZ5nhrJOCHeurjVryjgAifGwJ7l2UjYdO+dedVkWwemV+acFN1if8Hw==
+"@ontologies/schema@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/schema/-/schema-2.0.0-rc.1.tgz#81da32d581c85207853df26a48850f5addefa91c"
+  integrity sha512-KEqCDiyrMnbJy/BI3p+oy/guK8as8V3Gvb1+gt3FnUYxqT3rrmhyNWjEG+oominW3JiwBDXxV2lJvRKcDcPGGQ==
 
-"@ontologies/xsd@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ontologies/xsd/-/xsd-1.0.0.tgz#07b797562703f39fa88e8cb4e32ce6144a8da280"
-  integrity sha512-Z/mdaxUzuAAvwFCFzhqKvgHGpJd/j0LFsOq2x22KFIfmz09Xs4wjZOOMU4TjZ/rg/6HjWUoMAj0dyKlYiSG0ig==
+"@ontologies/shacl@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/shacl/-/shacl-2.0.0-rc.1.tgz#20fa26ef78fbaf45ec6917c5a4ea9d7dfa2842a5"
+  integrity sha512-lWBx7pv6U0A+uR+kAarBqfHdylbH9znVbcMqn76QTzebjRn/8kLPbKgUS8G5FLXJcgFng1AGHHOY5jayvU/ung==
+
+"@ontologies/xsd@^2.0.0-rc.1":
+  version "2.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@ontologies/xsd/-/xsd-2.0.0-rc.1.tgz#8877b3004e4074089239063ae35b41a676cca24b"
+  integrity sha512-ZkwODNKaelbO+4f3byOFN81LGJdpwjmin5E9TL9zWnDjgyabuJGflFfI6dvIFiuMkjinoxYXE+6jgyksyBI98w==
 
 "@pika/babel-plugin-esm-import-rewrite@^0.6.1":
   version "0.6.1"

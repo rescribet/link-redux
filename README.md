@@ -52,7 +52,7 @@ Currenlty, no views are registered, so we'll need to register one:
 
 ```javascript
 // We don't have to type out the URLs for the ontologies
-import schema from "@ontologies/schema"
+import * as schema from "@ontologies/schema"
 import { Person } from "@ontologies/foaf"
 import { register } from "link-redux"
 
@@ -218,8 +218,8 @@ When a property has no view registered, and the resolved value is a NamedNode (a
 automatically mount a Resource so the nested resource is rendered.
 
 ```JSX Harmony
-import foaf from '@ontologies/foaf';
-import schema from '@ontologies/schema';
+import * as foaf from '@ontologies/foaf';
+import * as schema from '@ontologies/schema';
 import { Property } from 'link-redux';
 
 const nameTypes = [schema.name, foaf.name];
@@ -316,7 +316,7 @@ export default {
 ```JSX Harmony
 // src/middleware/popup.js
 import rdf, { createNS } from '@ontologies/core';
-import rdfx from '@ontologies/rdf';
+import * as rdfx from '@ontologies/rdf';
 import { replace } from '@rdfdev/delta';  // See https://github.com/argu-co/linked-delta for the exact meaning
 import popup from '../ontology/popup';
 
@@ -513,7 +513,7 @@ export default LRS;
 Write some views to render resources:
 
 ```JSX harmony
-import schema from '@ontologies/schema';
+import * as schema from '@ontologies/schema';
 import LinkedRenderStore from 'link-lib';
 import { link, register, Property, Resource } from 'link-redux';
 import React from 'react';
@@ -717,11 +717,11 @@ resources dynamically, especially handy when the range of the statement can be m
 maintaining a giant switch statement isn't to your liking;
 
 ```JSX Harmony
-import rdfs from '@ontologies/core';
+import rdf from '@ontologies/core';
 
 class DollarTableCell extends React.PureComponent {
   // Set the type to Literal to render individual values.
-  static type = rdfs.Literal;
+  static type = rdf.Literal;
 
   /**
   * The `property` field now acts to resolve the data type rather than the predicate.

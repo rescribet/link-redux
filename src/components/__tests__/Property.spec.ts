@@ -1,10 +1,10 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
-import rdf from "@ontologies/rdf";
-import rdfs from "@ontologies/rdfs";
-import schema from "@ontologies/schema";
-import xsd from "@ontologies/xsd";
+import * as rdf from "@ontologies/rdf";
+import * as rdfs from "@ontologies/rdfs";
+import * as schema from "@ontologies/schema";
+import * as xsd from "@ontologies/xsd";
 import { mount } from "enzyme";
 import { ComponentRegistration, LinkedRenderStore } from "link-lib";
 import React from "react";
