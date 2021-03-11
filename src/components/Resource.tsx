@@ -1,5 +1,4 @@
 import React from "react";
-import { useResourceView } from "..";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { useDataFetching } from "../hooks/useDataFetching";
@@ -7,6 +6,7 @@ import { normalizeDataSubjects } from "../hooks/useDataInvalidation";
 import { useLinkRenderContext } from "../hooks/useLinkRenderContext";
 import { useRenderLoadingOrError } from "../hooks/useLoadingOrError";
 import { useLRS } from "../hooks/useLRS";
+import { useResourceView } from "../hooks/useResourceView";
 import {
   DataInvalidationProps,
   LinkReduxLRSType,

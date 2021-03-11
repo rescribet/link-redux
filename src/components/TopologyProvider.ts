@@ -44,7 +44,7 @@ export class TopologyProvider<P = {}, S = {}> extends React.Component<P, S> {
             );
     }
 
-    public render() {
+    public render(): React.ReactNode {
         let children = this.props.children;
 
         if (this.className !== undefined) {
