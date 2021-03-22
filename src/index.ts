@@ -39,6 +39,8 @@ export { useProperty } from "./hooks/useProperty";
 export { useResourceProperty } from "./hooks/useResourceProperty";
 export { useResourceView } from "./hooks/useResourceView";
 export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
+export { useSubject } from "./hooks/useSubject";
+export { useTopology } from "./hooks/useTopology";
 export { useView } from "./hooks/useView";
 
 /* other */
