@@ -36,6 +36,8 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
 
 /**
  * Re-renders when one of the given {resources} changes in the store.
+ *
+ * Should only be necessary when using imperative code.
  */
 export function useDataInvalidation(subjects: LaxNode | LaxNode[]): number {
     const resources = normalizeType(subjects!).filter<Node>(Boolean as any);

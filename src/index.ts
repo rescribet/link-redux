@@ -30,6 +30,8 @@ export { withTopology } from "./hocs/withTopology";
 export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
+export { useDig } from "./hooks/useDig";
+export { useFindSubject } from "./hooks/useFindSubject";
 export { useLinkRenderContext } from "./hooks/useLinkRenderContext";
 export { useLink } from "./hooks/useLink";
 export { useResourceLink } from "./hooks/useResourceLink";
@@ -37,10 +39,12 @@ export { useResourceLinks } from "./hooks/useResourceLinks";
 export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
 export { useResourceProperty } from "./hooks/useResourceProperty";
-export { useResourceView } from "./hooks/useResourceView";
 export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
+export { useResourceView } from "./hooks/useResourceView";
+export { useStatus } from "./hooks/useStatus";
 export { useSubject } from "./hooks/useSubject";
 export { useTopology } from "./hooks/useTopology";
+export { useTryEntity } from "./hooks/useTryEntity";
 export { useView } from "./hooks/useView";
 
 /* other */

@@ -13,6 +13,7 @@ export default {
   /* properties */
   /** Used internally by link to ensure data consistency */
   dataSubject: ll("dataSubject"),
+  meta: ll("meta"),
 
   /* individuals */
   /** No-operation, used internally by link when information is not needed. */

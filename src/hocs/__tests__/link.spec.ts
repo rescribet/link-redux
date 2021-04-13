@@ -178,7 +178,7 @@ describe("link", () => {
                     iri,
                     schema.name,
                     rdfFactory.literal("title"),
-                    example.ns("default"),
+                    rdfFactory.defaultGraph(),
                 ));
             });
         });

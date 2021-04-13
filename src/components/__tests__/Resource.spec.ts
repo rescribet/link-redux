@@ -78,8 +78,8 @@ describe("Resource component", () => {
         const bn = rdfFactory.blankNode();
         const opts = ctx.chargeLRS(
             [
-                rdfFactory.quad(bn, rdfx.type, schema.Thing),
-                rdfFactory.quad(bn, schema.name, rdfFactory.literal("title")),
+                rdfFactory.quadruple(bn, rdfx.type, schema.Thing),
+                rdfFactory.quadruple(bn, schema.name, rdfFactory.literal("title")),
             ],
             bn,
         );
@@ -129,18 +129,25 @@ describe("Resource component", () => {
         expect(elem.find("span").last()).toHaveText("override");
     });
 
+    const renderThroughOpts = () => {
+      const opts = ctx.multipleCW(iri, { second: { id: example.ns("resources/10") } });
+
+      opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+        createTestElement("normalRendered"),
+        schema.CreativeWork,
+      ));
+      opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
+        createTestElement("collectionRendered"),
+        schema.CreativeWork,
+        RENDER_CLASS_NAME,
+        ex.ns("collection"),
+      ));
+
+      return opts;
+    };
+
     it("renders correct topology through children", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: rdfFactory.namedNode("resources/10") } });
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            createTestElement("normalRendered"),
-            schema.CreativeWork,
-        ));
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            createTestElement("collectionRendered"),
-            schema.CreativeWork,
-            RENDER_CLASS_NAME,
-            ex.ns("collection"),
-        ));
+        const opts = renderThroughOpts();
 
         const comp = React.createElement(
             Resource,
@@ -161,17 +168,7 @@ describe("Resource component", () => {
     });
 
     it("renders default topology through children", () => {
-        const opts = ctx.multipleCW(iri, { second: { id: rdfFactory.namedNode("resources/10") } });
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            createTestElement("normalRendered"),
-            schema.CreativeWork,
-        ));
-        opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            createTestElement("collectionRendered"),
-            schema.CreativeWork,
-            RENDER_CLASS_NAME,
-            ex.ns("collection"),
-        ));
+        const opts = renderThroughOpts();
 
         const comp = React.createElement(
             Resource,

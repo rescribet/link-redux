@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import * as ctx from "../../__tests__/helpers/fixtures";
 import { useLink } from "../useLink";
 
-describe("useView", () => {
+describe("useLink", () => {
   let container: HTMLElement | undefined;
 
   beforeEach(() => {

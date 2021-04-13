@@ -1,4 +1,5 @@
-import rdfFactory, { NamedNode, Quad, SomeTerm } from "@ontologies/core";
+import rdfFactory, { NamedNode, Quad, Quadruple, SomeTerm } from "@ontologies/core";
+import * as ld from "@ontologies/ld";
 import * as rdfx from "@ontologies/rdf";
 import * as schema from "@ontologies/schema";
 import {
@@ -20,6 +21,8 @@ import {
 } from "../../index";
 import ex from "../../ontology/ex";
 import example from "../../ontology/example";
+import http from "../../ontology/http";
+import ll from "../../ontology/ll";
 
 import { TestContext } from "./types";
 
@@ -34,24 +37,28 @@ interface CWResource extends CWOpts {
 }
 export type TestCtxCreator = (id?: NamedNode, attrs?: CWOpts) => TestContext<React.ComponentType<any>>;
 
-const typeObject = (id: NamedNode) => [
+const toDelta = (statements: Array<Quad | Quadruple>): Quadruple[] => statements
+  .map<Quadruple>((st) => Array.isArray(st) ? st : [st.subject, st.predicate, st.object, st.graph]);
+
+const typeObject = (id: NamedNode) => toDelta([
     rdfFactory.quad(id, rdfx.type, schema.CreativeWork),
-];
+]);
 
-const sTitle = (id: NamedNode, title: string) => [
+const sTitle = (id: NamedNode, title: string) => toDelta([
     rdfFactory.quad(id, schema.name, rdfFactory.literal(title)),
-];
+]);
 
-const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
-    const createQuad = (predicate: NamedNode, object: SomeTerm) => rdfFactory.quad(
+const sFull = (id: NamedNode, attrs: CWOpts = {}): Quadruple[] => {
+    const createQuad = (predicate: NamedNode, object: SomeTerm, graph = ld.add) => rdfFactory.quad(
         id,
         predicate,
         object,
-        example.ns("default"),
+        graph,
     );
 
-    return [
+    return toDelta([
         typeObject(id)[0],
+        createQuad(http.statusCode, rdfFactory.literal(200), ll.meta),
         createQuad(schema.name, rdfFactory.literal(attrs.title || "title")),
         createQuad(schema.text, rdfFactory.literal(attrs.text || "text")),
         createQuad(schema.author, rdfFactory.namedNode(attrs.author || "http://example.org/people/0")),
@@ -61,7 +68,7 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}) => {
         createQuad(example.ns("tags"), example.ns("tag/1")),
         createQuad(example.ns("tags"), example.ns("tag/2")),
         createQuad(example.ns("tags"), example.ns("tag/3")),
-    ];
+    ].filter(Boolean));
 };
 
 function createComponentWrapper(lrs: LinkReduxLRSType, subject: SubjectType) {
@@ -80,7 +87,7 @@ function createComponentWrapper(lrs: LinkReduxLRSType, subject: SubjectType) {
   };
 }
 
-export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
+export function chargeLRS(delta: Quadruple[] = [], subject: SomeNode): TestContext<React.ComponentType<any>> {
     const store = new RDFStore();
     const s = new Schema(store);
     const lrsOpts = {
@@ -90,7 +97,8 @@ export function chargeLRS(statements: Quad[] = [], subject: SomeNode): TestConte
       store,
     };
     const lrs = new LinkedRenderStore<React.ComponentType>(lrsOpts);
-    store.addQuads(statements);
+    lrs.api.processDelta(delta);
+    store.processDelta(delta);
     store.flush();
 
     return {
@@ -123,19 +131,20 @@ export const fullCW = (id = example.ns("3"), attrs: CWOpts = {}) => chargeLRS(
 );
 
 export const multipleCW = (id = example.ns("3"), attrs: CWOpts & { second?: CWResource } = {}) => {
-    const opts = chargeLRS(sFull(id, attrs), id);
-    const second = attrs.second || { id: example.ns("4") };
-    opts.store.addQuads(sFull(example.ns(second.id.value), second));
-    opts.store.flush();
+    const secondOpts = attrs.second || { id: example.ns("4") };
+    const delta = [
+      ...sFull(secondOpts.id, secondOpts),
+      ...sFull(id, attrs),
+    ];
 
-    return opts;
+    return chargeLRS(delta, id);
 };
 
 export const multipleCWArr = (attrs: CWResource[] = []) => {
     const first = attrs.pop()!;
     const opts = chargeLRS(sFull(first.id, first), first.id);
     attrs.forEach((obj) => {
-        opts.store.addQuads(sFull(obj.id, obj));
+        opts.store.processDelta(sFull(obj.id, obj));
     });
     opts.store.flush();
 
