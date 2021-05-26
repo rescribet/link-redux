@@ -81,6 +81,7 @@ export function useResourceLinks<
   const propSets = React.useMemo(
     () => buildPropSets<D>(lrs, dataSubjects, requestedProperties, defaultedOpts),
     [
+      lrs,
       reduceDataSubjects(dataSubjects),
       requestedProperties,
       lastUpdate,

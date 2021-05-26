@@ -21,6 +21,6 @@ export function useView(type: NamedNode | NamedNode[] | undefined,
             predicate,
             topology || context.topology,
         ),
-        [type, predicate, topology || context.topology],
+        [lrs, type, predicate, topology || context.topology],
     );
 }

@@ -39,6 +39,7 @@ export function useDataFetching(resources: SomeNode | SomeNode[],
             }
         },
         [
+          lrs,
           reduceDataSubjects(resources),
           lastUpdate,
         ],

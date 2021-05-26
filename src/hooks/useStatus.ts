@@ -25,7 +25,7 @@ export function useStatus(
 
   React.useEffect(() => {
     setStatuses(targets.map((t) => isNamedNode(t) ? lrs.getStatus(t) : undefined));
-  }, [targets]);
+  }, [lrs, targets]);
 
   return statuses;
 }

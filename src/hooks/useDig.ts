@@ -36,7 +36,7 @@ export function useDig(
 
     setDigs(resolvedTerms);
     setNestedTargets(Array.from(resolvedTargets));
-  }, [targets, update]);
+  }, [lrs, targets, update]);
 
   return digs;
 }

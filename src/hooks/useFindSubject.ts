@@ -26,7 +26,7 @@ export function useFindSubject(
 
   React.useEffect(() => {
     setDigs(targets.map((s) => lrs.findSubject(s, path, match)));
-  }, [targets]);
+  }, [lrs, targets]);
 
   return digs;
 }

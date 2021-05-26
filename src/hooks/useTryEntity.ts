@@ -22,7 +22,7 @@ export function useTryEntity(
 
   React.useEffect(() => {
     setEntities(targets.map((t) => isNode(t) ? lrs.tryEntity(t) : undefined));
-  }, [targets]);
+  }, [lrs, targets]);
 
   return entities;
 }

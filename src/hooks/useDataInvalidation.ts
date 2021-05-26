@@ -62,6 +62,7 @@ export function useDataInvalidation(subjects: LaxNode | LaxNode[]): number {
             subjectFilter: resources,
         });
     }, [
+      lrs,
       subId,
       resources.length,
       reduceDataSubjects(resources),

@@ -64,6 +64,7 @@ export function useResourceProperty<
 
     setValue(returnValue);
   }, [
+    lrs,
     subject ? id(subject) : undefined,
     property ? id(property) : undefined,
     lastUpdate,
