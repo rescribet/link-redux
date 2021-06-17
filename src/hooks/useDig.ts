@@ -1,8 +1,9 @@
-import { NamedNode, Node, SomeTerm } from "@ontologies/core";
+import { isNamedNode, NamedNode, Node, SomeTerm } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
 
 import { LaxNode } from "../types";
+import { useDataFetching } from "./useDataFetching";
 
 import { useLRS } from "./useLRS";
 import { useSubject } from "./useSubject";
@@ -23,6 +24,7 @@ export function useDig(
   const [nestedTargets, setNestedTargets] = React.useState<LaxNode[]>([]);
   const [targets, update] = useSubject([...normalizeType(subjects), ...nestedTargets]);
   const [digs, setDigs] = React.useState<SomeTerm[][]>([]);
+  const fetchUpdate = useDataFetching(targets.filter(isNamedNode));
 
   React.useEffect(() => {
     const resolvedTerms = [];
@@ -36,7 +38,7 @@ export function useDig(
 
     setDigs(resolvedTerms);
     setNestedTargets(Array.from(resolvedTargets));
-  }, [lrs, targets, update]);
+  }, [lrs, targets, update, fetchUpdate]);
 
   return digs;
 }
