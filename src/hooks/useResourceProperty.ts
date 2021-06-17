@@ -1,4 +1,4 @@
-import { id } from "link-lib";
+import { id, normalizeType } from "link-lib";
 import React from "react";
 
 import { toReturnType } from "../hocs/link/toReturnType";
@@ -8,7 +8,8 @@ import {
   LaxNode,
   LaxProperty,
   LinkReduxLRSType,
-  OutputTypeFromOpts, OutputTypeFromReturnType,
+  OutputTypeFromOpts,
+  OutputTypeFromReturnType,
   ReturnType,
 } from "../types";
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -37,7 +38,7 @@ const calculate = <T extends DataOpts>(
 
   const props = lrs.getResourcePropertyRaw(
     subject,
-    property || [],
+    property,
   );
 
   return toReturnType(opts.returnType, props);
@@ -53,20 +54,23 @@ export function useResourceProperty<
   const optsOrDefault = opts || defaultPropertyOptions as T;
 
   const lrs = useLRS();
-  const lastUpdate = useDataInvalidation([subject, property]);
+  const properties = property ? normalizeType(property) : [];
+  const lastUpdate = useDataInvalidation([subject, ...properties]);
   const [
     value,
     setValue,
-  ] = React.useState(() => calculate<T>(lrs, subject, property, optsOrDefault));
+  ] = React.useState(() => calculate<T>(lrs, subject, properties, optsOrDefault));
 
   React.useEffect(() => {
-    const returnValue = calculate(lrs, subject, property, optsOrDefault);
+    const returnValue = calculate(lrs, subject, properties, optsOrDefault);
 
     setValue(returnValue);
   }, [
     lrs,
     subject ? id(subject) : undefined,
-    property ? id(property) : undefined,
+    properties
+      .map((p) => id(p))
+      .reduce((acc, next) => acc + next, 0),
     lastUpdate,
   ]);
 

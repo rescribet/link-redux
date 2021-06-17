@@ -50,7 +50,7 @@ export enum ReturnType {
 
 export type LaxNode = SomeNode | undefined;
 
-export type LaxProperty = NamedNode | undefined;
+export type LaxProperty = NamedNode | NamedNode[] | undefined;
 
 export type SubjectType = SomeNode;
 
