@@ -3,12 +3,13 @@ import * as ld from "@ontologies/ld";
 import * as rdfx from "@ontologies/rdf";
 import * as schema from "@ontologies/schema";
 import {
-    ComponentStoreTestProxy,
-    LinkedRenderStore,
-    RDFStore,
-    Schema,
-    SomeNode,
+  ComponentStoreTestProxy,
+  createStore,
+  RDFStore,
+  Schema,
+  SomeNode,
 } from "link-lib";
+import { MiddlewareActionHandler } from "link-lib/dist-types/types";
 import React from "react";
 
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
@@ -96,7 +97,18 @@ export function chargeLRS(delta: Quadruple[] = [], subject: SomeNode): TestConte
       schema: s,
       store,
     };
-    const lrs = new LinkedRenderStore<React.ComponentType>(lrsOpts);
+    const middleware = [
+      (_: LinkReduxLRSType) => (next: MiddlewareActionHandler) => (action: NamedNode, args: any) => {
+        switch (action) {
+          case ex.ns("a"): return Promise.resolve("a");
+          case ex.ns("b"): return Promise.resolve("b");
+          default: return next(action, args);
+        }
+      },
+    ];
+    const lrs = createStore(lrsOpts, middleware);
+    lrs.actions.test = {};
+    lrs.actions.test.execB = () => lrs.exec(ex.ns("b"));
     lrs.api.processDelta(delta);
     store.processDelta(delta);
     store.flush();
