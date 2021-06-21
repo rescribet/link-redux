@@ -27,6 +27,7 @@ export { withTopology } from "./hocs/withTopology";
 
 /* hooks */
 
+export { useAction, BoundActionHandler } from "./hooks/useAction";
 export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
