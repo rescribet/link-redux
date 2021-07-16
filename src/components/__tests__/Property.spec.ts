@@ -29,7 +29,6 @@ describe("Property component", () => {
             {
                 forceRender: true,
                 label: ex.ns("nonexistent"),
-                subject,
                 ...opts.contextProps(),
                 ...props,
             },

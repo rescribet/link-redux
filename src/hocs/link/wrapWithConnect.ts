@@ -21,7 +21,7 @@ const createConnectedComponent = <P>(
   requestedProperties: number[],
   opts: LinkOpts,
   wrappedComponent: React.ComponentType<P>,
-) => React.forwardRef((props: P & PropertyWrappedProps, ref: unknown) => {
+) => React.forwardRef((props: P & PropertyWrappedProps, ref: React.Ref<unknown>) => {
   const lrs = useLRS();
   const context = useLinkRenderContext();
   const childProps = useCalculateChildProps({ ...props, innerRef: ref}, context, { lrs: true });
