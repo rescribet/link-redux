@@ -1,11 +1,29 @@
 import { isNode } from "@ontologies/core";
 
-import { LinkOpts, PropParam, ReturnType } from "./types";
+import {
+  AllLiteralsOpts,
+  AllStatementsOpts,
+  AllTermsOpts,
+  AllValuesOpts,
+  LinkOpts,
+  LiteralOpts,
+  MapWithReplacedReturnType,
+  PropParam,
+  ReturnType,
+  StatementOpts,
+  TermOpts,
+  ValueOpts,
+} from "./types";
 
-const mergedMap = (predicate: PropParam): LinkOpts => {
-  return isNode(predicate) || Array.isArray(predicate)
-    ? { label: predicate }
-    : predicate;
+const extendsLinkOpts = (predicate: PropParam): predicate is LinkOpts =>
+  !(isNode(predicate) || Array.isArray(predicate));
+
+const mergedMap = <P extends PropParam>(predicate: P): P extends LinkOpts ? P : LinkOpts => {
+  const t = extendsLinkOpts(predicate)
+  ? predicate
+  : { label: predicate };
+
+  return t as P extends LinkOpts ? P : LinkOpts;
 };
 
 /*                                  Arity                                 */
@@ -31,49 +49,49 @@ export const single = (predicate: PropParam): LinkOpts => ({
 /*                              Return type                               */
 
 /** Sets the return type to `ReturnType.Term`. */
-export const term = (predicate: PropParam): LinkOpts => ({
+export const term = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, TermOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.Term,
 });
 
 /** Sets the return type to `ReturnType.Statement`. */
-export const statement = (predicate: PropParam): LinkOpts => ({
+export const statement = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, StatementOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.Statement,
 });
 
 /** Sets the return type to `ReturnType.Literal`. */
-export const literal = (predicate: PropParam): LinkOpts => ({
+export const literal = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, LiteralOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.Literal,
 });
 
 /** Sets the return type to `ReturnType.Value`. */
-export const value = (predicate: PropParam): LinkOpts => ({
+export const value = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, ValueOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.Value,
 });
 
 /** Sets the return type to `ReturnType.AllTerms`. */
-export const terms = (predicate: PropParam): LinkOpts => ({
+export const terms = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllTermsOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.AllTerms,
 });
 
 /** Sets the return type to `ReturnType.AllStatements`. */
-export const statements = (predicate: PropParam): LinkOpts => ({
+export const statements = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllStatementsOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.AllStatements,
 });
 
 /** Sets the return type to `ReturnType.AllLiterals`. */
-export const literals = (predicate: PropParam): LinkOpts => ({
+export const literals = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllLiteralsOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.AllLiterals,
 });
 
 /** Sets the return type to `ReturnType.AllValues`. */
-export const values = (predicate: PropParam): LinkOpts => ({
+export const values = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllValuesOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.AllValues,
 });

@@ -253,6 +253,13 @@ export interface MapDataToPropsParam {
     [k: string]: PropParam;
 }
 
+export type PropMapOptAsLinkOpts<P extends PropParam> = P extends LinkOpts ? P : LinkOpts;
+
+export type MapWithReplacedReturnType<
+  P extends PropParam,
+  T extends DataOpts,
+  > = Omit<PropMapOptAsLinkOpts<P>, "returnType"> & T;
+
 /**
  * Used to determine if a component is a property component, that is to say it triggers for
  * properties or datatypes and receives the `linkedProp` prop.
