@@ -21,8 +21,8 @@ export const useSubject = (subjects?: LaxNode | LaxNode[]): [LaxNode[], number] 
     () => {
       const next = getSubjects();
 
-      if (!targets.every((t, i) => t === next[i])) {
-        setTargets(getSubjects);
+      if (targets.length !== next.length || !targets.every((t, i) => t === next[i])) {
+        setTargets(next);
       }
     },
     [subjects, subCtx],
