@@ -1,24 +1,24 @@
 # Link-Redux
 *A Link to the Web*
 
-[![CircleCI](https://img.shields.io/circleci/build/gh/fletcher91/link-redux)](https://circleci.com/gh/fletcher91/link-redux)
-[![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://fletcher91.github.io/link-redux/)
-![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/fletcher91/link-redux)
-![Code Climate coverage](https://img.shields.io/codeclimate/coverage/fletcher91/link-redux)
+[![CircleCI](https://img.shields.io/circleci/build/gh/rescribet/link-redux)](https://circleci.com/gh/rescribet/link-redux)
+[![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://rescribet.github.io/link-redux/)
+![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/rescribet/link-redux)
+![Code Climate coverage](https://img.shields.io/codeclimate/coverage/rescribet/link-redux)
 ![npm version](https://img.shields.io/npm/v/link-lib.svg)
 ![npm type definitions](https://img.shields.io/npm/types/link-redux.svg)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
 Link-Redux (or Link) helps you render [Linked Data](https://ontola.io/what-is-linked-data/) (RDF) in React.
 
-## [Docs](https://fletcher91.github.io/link-redux/): functions, classes, methods, types
-## [Reference](https://github.com/fletcher91/link-redux/wiki): how to use Link
+## [Reference](https://github.com/rescribet/link-redux/wiki): how to use Link (cheatsheet)
+## [Docs](https://rescribet.github.io/link-redux/): functions, classes, methods, types
 
 ## Features
-- RDF data fetching & parsing, using [rdflib.js](https://github.com/linkeddata/rdflib.js/)
+- RDF data fetching & parsing
 - View management (error & loading handling, smart lookups, adapts to data)
 - Rule-based inference engine to determine which View is suitable
-- Actions / Data manipulation (in a flux pattern, like redux, but with [server-side actions](https://github.com/fletcher91/link-lib/wiki/Hypermedia-API))
+- Actions / Data manipulation (in a flux pattern, like redux, but with [server-side actions](https://github.com/rescribet/link-lib/wiki/Hypermedia-API))
 
 ## When you'd might want to use Link
 - Embedding Linked Data into your existing app
@@ -81,7 +81,7 @@ You can create custom Property renderers, dispatch actions, and specify which vi
 `npm install link-lib link-redux rdflib` V `yarn add link-lib link-redux rdflib`
 
 ### Example apps & related repositories
-- See the [TODO app](https://fletcher91.github.io/link-redux-todo/#/) for a live example and [the source](https://github.com/fletcher91/link-redux-todo) for the implementation. Mind that it isn't connected to a back-end, so it's only a demo for the view rendering mechanism.
+- See the [TODO app](https://rescribet.github.io/link-redux-todo/#/) for a live example and [the source](https://github.com/rescribet/link-redux-todo) for the implementation. Mind that it isn't connected to a back-end, so it's only a demo for the view rendering mechanism.
 - [ori-search](https://github.com/ontola/ori-search/) uses Link to render Dutch Government meetings.
 - [mash](https://github.com/ontola/mash) is a databrowser, compatible with SOLID
 
@@ -204,7 +204,7 @@ class OurTeamPage extends React.PureComponent {
 
 So all the underlying logic of managing API calls, data fetching, views selecting etc will be
 handled by the `Resource` component. To show a loading indicator (or an error) for
-grid mounted resources while alice and bob are loading, see [Loading and error handling](https://github.com/fletcher91/link-redux#loading-and-error-handling).
+grid mounted resources while alice and bob are loading, see [Loading and error handling](https://github.com/rescribet/link-redux#loading-and-error-handling).
 
 ### Property renderers
 Property renderers are akin to resource renderers, but they work with one or more properties of a
@@ -271,7 +271,7 @@ To execute an action, just call `lrs.exec(iri: NamedNode, payload: any)`. By def
 the store for the resource (`iri`) or fetch it if it doesn't exists, if the resource is some
 [schema:Action](https://schema.org/Action) it will try and fulfill the request, updating the store
 with the changes the server requested (see the the
-[hypermedia API documentation](https://github.com/fletcher91/link-lib/wiki/Hypermedia-API) for more
+[hypermedia API documentation](https://github.com/rescribet/link-lib/wiki/Hypermedia-API) for more
 info).
 
 The exec method is a middleware function with a handler for doing http requests (via schema:Action
@@ -428,7 +428,7 @@ export default register(PopupManager);
 ## Basic Usage
 
 ### 1. Set up the store
-Create a helper to set up an instance of [the `LinkedRenderStore`](https://fletcher91.github.io/link-lib/classes/linkedrenderstore.html)
+Create a helper to set up an instance of [the `LinkedRenderStore`](https://rescribet.github.io/link-lib/classes/linkedrenderstore.html)
 to use in your application;
 ```javascript
 // src/LRS.js
@@ -439,7 +439,7 @@ import { FRONTEND_URL } from './config';
 /**
 * We have a helper function to initialize the store, the first param is config (default should
 * suffice), the second is an array of middleware, the default terminating middleware calls the
-* schema:Action executor [`LRS#execActionByIRI`](https://github.com/fletcher91/link-lib/wiki/Hypermedia-API).
+* schema:Action executor [`LRS#execActionByIRI`](https://github.com/rescribet/link-lib/wiki/Hypermedia-API).
 */
 const LRS = createStore({}, [
   /**
@@ -747,7 +747,7 @@ class DollarTableCell extends React.PureComponent {
 
 ### String IRI to NamedNode
 It sometimes happens that you recieve an IRI in string form (e.g. window.location.href) which needs
-to be converted to a link-enabled NamedNode, you MUST use the [patched version of rdflib](https://github.com/fletcher91/rdfllib.js);
+to be converted to a link-enabled NamedNode, you MUST use the [patched version of rdflib](https://github.com/rescribet/rdfllib.js);
 for this, since we work around the default RDFlib.js NamedNode constructor for performance reasons.
 
 ### Multi-IRI

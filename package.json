@@ -3,7 +3,7 @@
   "version": "2.1.1",
   "description": "React library to make rendering linked data easy",
   "sideEffects": false,
-  "repository": "https://github.com/fletcher91/link-redux.git",
+  "repository": "https://github.com/rescribet/link-redux.git",
   "scripts": {
     "build": "pika build",
     "doc": "rm -rf dist/docs/* && typedoc --tsconfig tsconfig-types.json --exclude **/*.spec.ts --excludeExternals --excludePrivate --mode file --theme minimal --target ES6 --includeDeclarations --out dist/docs/ src/",
@@ -15,7 +15,7 @@
     "test": "jest --coverage",
     "version": "npm run build"
   },
-  "author": "Fletcher91 <thom@argu.co>",
+  "author": "Thom van Kalkeren <thom@argu.co>",
   "license": "LGPL-3.0",
   "@pika/pack": {
     "pipeline": [
