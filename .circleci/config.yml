@@ -19,6 +19,28 @@ jobs:
           paths:
             - cc-test-reporter
 
+  build-node-16:
+    <<: *defaults
+    docker:
+      - image: circleci/node:16
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-16-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-16-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-16-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
   build-node-14:
     <<: *defaults
     docker:
@@ -73,7 +95,7 @@ jobs:
   upload-coverage:
     <<: *defaults
     environment:
-      - CC_TEST_REPORTER_ID: 53c04f7b50a454bb5989fb1adfc71e9a7d2dce7b2bf0d22639576c400891440c
+      CC_TEST_REPORTER_ID: 47706628039d77eb40bc53039ad623c6250d0630bfe723cf3956c5d37d8fd0ff
     steps:
       - attach_workspace:
           at: ~/link-redux/tmp
@@ -88,6 +110,7 @@ workflows:
   commit:
     jobs:
       - build
+      - build-node-16
       - build-node-14:
           requires:
             - build
