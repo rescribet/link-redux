@@ -17,6 +17,7 @@ export interface WithLinkCtxOptions {
     helpers?: Helpers;
 }
 
+/** @deprecated Use `useLinkRenderContext` instead. */
 export function withLinkCtx<P>(
     Component: React.ComponentType<P & LinkRenderContext & Partial<LinkCtxOverrides>>,
     options: WithLinkCtxOptions = { lrs: true }): React.ComponentType<PropsWithOptLinkProps<P>> {
