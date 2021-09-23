@@ -24,7 +24,7 @@ export function useChildPropsOrFallback<P extends PropertyPropTypes>(props: P):
   const childProps = useCalculateChildProps(props, context, options);
   try {
     useDataInvalidation(normalizeDataSubjects(childProps));
-  } catch (e) {
+  } catch (e: any) {
     setError(e);
   }
   if (subjectData.length === 0) {
