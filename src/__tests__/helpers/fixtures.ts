@@ -98,7 +98,7 @@ export function chargeLRS(delta: Quadruple[] = [], subject: SomeNode): TestConte
       store,
     };
     const middleware = [
-      (_: LinkReduxLRSType) => (next: MiddlewareActionHandler) => (action: NamedNode, args: any) => {
+      (_: LinkReduxLRSType) => (next: MiddlewareActionHandler) => (action: SomeNode, args: any) => {
         switch (action) {
           case ex.ns("a"): return Promise.resolve("a");
           case ex.ns("b"): return Promise.resolve("b");
