@@ -61,6 +61,7 @@
     "@pika/plugin-ts-standard-pkg": "^0.8.1",
     "@rdfdev/iri": "^1.0.0",
     "@testing-library/react": "^11.2.6",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/hoist-non-react-statics": "^3.3.1",

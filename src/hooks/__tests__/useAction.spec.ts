@@ -1,12 +1,14 @@
 import "../../__tests__/useHashFactory";
 
+import rdf from "@ontologies/core";
+import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import ex from "../../ontology/ex";
-import { useAction } from "../useAction";
+import { NoActionError, useAction } from "../useAction";
 
 describe("useAction", () => {
     let container: HTMLElement | undefined;
@@ -19,6 +21,18 @@ describe("useAction", () => {
     afterEach(() => {
       document.body.removeChild(container!);
       container = undefined;
+    });
+
+    it("throws when executing undefined", () => {
+      const { result } = renderHook(() => useAction(undefined));
+
+      return expect(result.current()).rejects.toThrow(NoActionError);
+    });
+
+    it("throws when executing literal", () => {
+      const { result } = renderHook(() => useAction(rdf.literal("test")));
+
+      return expect(result.current()).rejects.toThrow(NoActionError);
     });
 
     it("executes by iri", async () => {

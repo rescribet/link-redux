@@ -1,4 +1,4 @@
-import { isNamedNode, NamedNode } from "@ontologies/core";
+import { isNamedNode, SomeTerm } from "@ontologies/core";
 import { ActionMap, DataObject } from "link-lib";
 import React from "react";
 
@@ -15,11 +15,22 @@ const findAction = (lrs: LinkReduxLRSType, actionPath: string) => actionPath
     lrs.actions,
   );
 
+export class NoActionError extends Error {
+  constructor(message?: string | undefined) {
+    super(message);
+    this.name = "NoActionError";
+  }
+}
+
 const createHandler = (
   lrs: LinkReduxLRSType,
-  action: NamedNode | string,
+  action: SomeTerm | string | undefined,
   defaultArgs?: DataObject,
 ) => {
+  if (typeof action !== "string" && !isNamedNode(action)) {
+    return () => Promise.reject(new NoActionError(action?.toString()));
+  }
+
   if (isNamedNode(action)) {
     return (args?: DataObject) => lrs.exec(action, args ?? defaultArgs);
   }
@@ -34,6 +45,7 @@ const createHandler = (
 
 /**
  * Returns a handler which executes the {action} from the current store.
+ * If `action` is `undefined` or a {Literal}, it rejects with {NoActionError}.
  *
  * This function uses {exec}, so called handlers will pass through the middleware.
  *
@@ -41,7 +53,7 @@ const createHandler = (
  * @param defaultArgs Will be passed if the handler calling site doesn't provide any args.
  */
 export const useAction = (
-  action: NamedNode | string,
+  action: SomeTerm | string | undefined,
   defaultArgs?: DataObject,
 ): (args?: DataObject) => Promise<any> => {
   const lrs = useLRS();
