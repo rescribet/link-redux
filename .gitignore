@@ -3,3 +3,10 @@ node_modules/*
 pkg/
 dist/docs
 coverage/**
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
