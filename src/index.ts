@@ -39,6 +39,7 @@ export { useResourceLink } from "./hooks/useResourceLink";
 export { useResourceLinks } from "./hooks/useResourceLinks";
 export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
+export { useQuads } from "./hooks/useQuads";
 export { useResourceProperty } from "./hooks/useResourceProperty";
 export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
 export { useResourceView } from "./hooks/useResourceView";
