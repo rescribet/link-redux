@@ -1723,7 +1723,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/as@npm:^2.0.0-rc.1":
+"@ontologies/as@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/as@npm:2.0.0"
   peerDependencies:
@@ -1743,7 +1743,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/ld@npm:^2.0.0-rc.1":
+"@ontologies/ld@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/ld@npm:2.0.0"
   peerDependencies:
@@ -1752,7 +1752,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/owl@npm:^2.0.0-rc.1":
+"@ontologies/owl@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/owl@npm:2.0.0"
   peerDependencies:
@@ -1761,7 +1761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/rdf@npm:^2.0.0-rc.1":
+"@ontologies/rdf@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/rdf@npm:2.0.0"
   peerDependencies:
@@ -1770,16 +1770,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/rdfs@npm:^2.0.0-rc.2":
-  version: 2.0.0
-  resolution: "@ontologies/rdfs@npm:2.0.0"
+"@ontologies/rdfs@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@ontologies/rdfs@npm:2.0.1"
   peerDependencies:
     "@ontologies/core": ">1.5.0"
-  checksum: 8b8f8e51d8b8bf1f75c376f0341a65fc67dc11d6b52b6f35321c4ae1e50bc7f614c91f6a7a137b24b8393587edd2d9f3ab2a2f0be4a9c8df728e8606aace5ba4
+  checksum: 1bcc1a30fe105c086a23dcf77dbf58e95d785869418dc5fa9e71fb0b3f3a274abffe3717c9a2e1b74a7732f88b765b8102648cdd078caffbadf75b6fb35ada49
   languageName: node
   linkType: hard
 
-"@ontologies/schema@npm:^2.0.0-rc.1":
+"@ontologies/schema@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/schema@npm:2.0.0"
   peerDependencies:
@@ -1788,7 +1788,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/shacl@npm:^2.0.0-rc.1":
+"@ontologies/shacl@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/shacl@npm:2.0.0"
   peerDependencies:
@@ -1797,7 +1797,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontologies/xsd@npm:^2.0.0-rc.1":
+"@ontologies/xsd@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ontologies/xsd@npm:2.0.0"
   peerDependencies:
@@ -6889,15 +6889,15 @@ fsevents@^2.1.2:
   dependencies:
     "@babel/preset-react": ^7.9.4
     "@ontola/memoized-hash-factory": ^2.0.0
-    "@ontologies/as": ^2.0.0-rc.1
+    "@ontologies/as": ^2.0.0
     "@ontologies/core": ^2.0.2
-    "@ontologies/ld": ^2.0.0-rc.1
-    "@ontologies/owl": ^2.0.0-rc.1
-    "@ontologies/rdf": ^2.0.0-rc.1
-    "@ontologies/rdfs": ^2.0.0-rc.2
-    "@ontologies/schema": ^2.0.0-rc.1
-    "@ontologies/shacl": ^2.0.0-rc.1
-    "@ontologies/xsd": ^2.0.0-rc.1
+    "@ontologies/ld": ^2.0.0
+    "@ontologies/owl": ^2.0.0
+    "@ontologies/rdf": ^2.0.0
+    "@ontologies/rdfs": ^2.0.1
+    "@ontologies/schema": ^2.0.0
+    "@ontologies/shacl": ^2.0.0
+    "@ontologies/xsd": ^2.0.0
     "@pika/pack": ^0.5.0
     "@pika/plugin-build-node": ^0.8.1
     "@pika/plugin-build-web": ^0.8.1
