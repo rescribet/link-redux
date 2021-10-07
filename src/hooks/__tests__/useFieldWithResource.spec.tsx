@@ -4,10 +4,9 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { ReturnType } from "../../types";
-import { useResourceProperty } from "../useResourceProperty";
+import { useField, useQuad } from "../useParsedField";
 
-describe("useResourceProperty", () => {
+describe("useField with resource", () => {
   let container: HTMLElement | undefined;
 
   beforeEach(() => {
@@ -24,7 +23,7 @@ describe("useResourceProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useResourceProperty(opts.subject, schema.name);
+      const [test] = useField(schema.name, opts.subject);
 
       return <div id="test">{test?.value}</div>;
     };
@@ -41,10 +40,9 @@ describe("useResourceProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useResourceProperty(
-        opts.subject,
+      const [test] = useQuad(
         schema.name,
-        { returnType: ReturnType.AllStatements },
+        opts.subject,
       );
 
       return (
@@ -75,7 +73,7 @@ describe("useResourceProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useResourceProperty(undefined, schema.name);
+      const [test] = useField(undefined, schema.name);
 
       return <div id="test">{test}</div>;
     };
@@ -95,7 +93,7 @@ describe("useResourceProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useResourceProperty(opts.subject, undefined);
+      const [test] = useField(undefined, opts.subject);
 
       return <div id="test">{test}</div>;
     };

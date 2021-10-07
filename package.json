@@ -37,6 +37,7 @@
   },
   "peerDependencies": {
     "@ontologies/core": ">= 2.0.0",
+    "base64-arraybuffer": "^1.0.1",
     "hoist-non-react-statics": ">=3.x",
     "http-status-codes": ">= 1.x",
     "link-lib": ">=2.1.1",
@@ -70,6 +71,7 @@
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "base64-arraybuffer": "^1.0.1",
     "core-js": "^3.6.4",
     "enzyme": "^3.11.0",
     "gh-pages": "^2.0.1",

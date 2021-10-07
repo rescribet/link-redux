@@ -5,10 +5,9 @@ import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import example from "../../ontology/example";
-import { ReturnType } from "../../types";
-import { useProperty } from "../useProperty";
+import { useField, useQuad } from "../useParsedField";
 
-describe("useProperty", () => {
+describe("useField", () => {
   let container: HTMLElement | undefined;
 
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe("useProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useProperty(schema.name);
+      const [test] = useField(schema.name);
 
       return <div id="test">{test?.value}</div>;
     };
@@ -42,9 +41,8 @@ describe("useProperty", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [first, second] = useProperty(
+      const [first, second] = useQuad(
         example.ns("tags"),
-        { returnType: ReturnType.AllStatements },
       );
 
       return (
@@ -73,13 +71,13 @@ describe("useProperty", () => {
   });
 
   /**
-   * This makes it a lot easier to use the hook chained with others like useProperty.
+   * This makes it a lot easier to use the hook chained with others like useField.
    */
   it("allows undefined property", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useProperty(undefined);
+      const [test] = useField(undefined);
 
       return <div id="test">{test}</div>;
     };

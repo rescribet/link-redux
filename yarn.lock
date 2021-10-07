@@ -2938,6 +2938,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"base64-arraybuffer@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "base64-arraybuffer@npm:1.0.1"
+  checksum: 04b6fe6818b1c79774fa8aea169063521ad177f2ba04d2a4a0f00fca297d516319b551a3cda76050263da751b4ffb07d939fc1b5eb155f0e429659733e60afb0
+  languageName: node
+  linkType: hard
+
 "base@npm:^0.11.1":
   version: 0.11.2
   resolution: "base@npm:0.11.2"
@@ -6913,6 +6920,7 @@ fsevents@^2.1.2:
     "@types/react": ^17.0.24
     "@types/react-dom": ^17.0.9
     "@wojtekmaj/enzyme-adapter-react-17": ^0.6.3
+    base64-arraybuffer: ^1.0.1
     core-js: ^3.6.4
     enzyme: ^3.11.0
     gh-pages: ^2.0.1

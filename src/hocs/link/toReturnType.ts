@@ -8,10 +8,23 @@ import {
   ToJSOutputTypes,
 } from "../../types";
 
-const numberTypes = [
-    xsd.integer,
-    xsd.xsdint,
-    xsd.unsignedInt,
+export const integerTypes = [
+  xsd.integer,
+  xsd.xsdlong,
+  xsd.xsdint,
+  xsd.unsignedInt,
+  xsd.unsignedLong,
+];
+
+export const bigIntTypes = [
+  xsd.positiveInteger,
+  xsd.nonNegativeInteger,
+  xsd.negativeInteger,
+  xsd.nonPositiveInteger,
+];
+
+export const numberTypes = [
+    ...integerTypes,
     xsd.xsdshort,
     xsd.unsignedShort,
     xsd.xsdbyte,
@@ -33,6 +46,9 @@ function toJS(obj: Literal | unknown): ToJSOutputTypes {
         equals(obj.datatype, xsd.date)) {
         return new Date(obj.value);
     }
+    if (bigIntTypes.some((type) => equals(obj.datatype, type))) {
+        return BigInt(obj.value);
+    }
     if (numberTypes.some((type) => equals(obj.datatype, type))) {
         return Number(obj.value);
     }
@@ -45,8 +61,9 @@ export function toReturnType<
   R = OutputTypeFromReturnType<D, never>,
 >(
   returnType: ReturnType,
-  p: Quad | Quad[],
+  p: Quad | ReadonlyArray<Quad>,
 ): R {
+    // @ts-ignore
     const stmts = normalizeType(p);
     switch (returnType) {
         case ReturnType.Literal:

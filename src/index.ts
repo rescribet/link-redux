@@ -27,6 +27,32 @@ export { withTopology } from "./hocs/withTopology";
 
 /* hooks */
 
+export {
+  makeParsedField,
+  useQuad,
+  useField,
+  useIdentifier,
+  useAnonymousId,
+  useLocator,
+  useLiteral,
+  useValue,
+  useLiteralValue,
+  useBase64,
+  useBigInt,
+  useBoolean,
+  useDate,
+  RegularOrString,
+  useAnyString,
+  LangString,
+  useLangString,
+  useRegularString,
+  useString,
+  useNumber,
+  useUrl,
+} from "./hooks/useParsedField";
+export {
+  useArray,
+} from "./hooks/makeAsyncParsedField";
 export { useAction, BoundActionHandler, NoActionError } from "./hooks/useAction";
 export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
@@ -46,7 +72,6 @@ export { useResourceView } from "./hooks/useResourceView";
 export { useStatus } from "./hooks/useStatus";
 export { useSubject } from "./hooks/useSubject";
 export { useTopology } from "./hooks/useTopology";
-export { useTryEntity } from "./hooks/useTryEntity";
 export { useView } from "./hooks/useView";
 
 /* other */

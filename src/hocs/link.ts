@@ -33,6 +33,7 @@ import { wrapWithSubject } from "./link/wrapWithSubject";
  * ```
  * @param {NamedNode[]} mapDataToProps The properties to bind to the component, only NamedNode[] is currently supported.
  * @param {LinkOpts} opts Adjust the default behaviour, these are not yet guaranteed.
+ * @deprecated See {useLink}
  */
 export function link(
   mapDataToProps: MapDataToPropsParam = {},

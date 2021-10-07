@@ -48,9 +48,15 @@ export enum ReturnType {
   AllValues,
 }
 
+export type Identifier = SomeNode;
+export type OptionalIdentifiers = SomeNode | SomeNode[] | undefined;
+
+export type OptionalFields = NamedNode | NamedNode[] | undefined;
+
 export type LaxNode = SomeNode | undefined;
 
-export type LaxProperty = NamedNode | NamedNode[] | undefined;
+/** @deprecated Use {OptionalFields} */
+export type LaxProperty = OptionalFields;
 
 export type SubjectType = SomeNode;
 
@@ -60,8 +66,8 @@ export type TopologyRenderer = (subject: SomeNode) => React.ReactNode | React.Re
 
 export type TopologyType = TopologyContextType | null;
 
-export type ToJSOutputTypes = string | number | Date | boolean | object |
-  string[] | number[] | Date[] | boolean[] | object[];
+export type ToJSOutputTypes = string | number | BigInt | Date | boolean | object |
+  string[] | number[] | BigInt[] | Date[] | boolean[] | object[];
 
 export interface DataOpts {
   returnType: ReturnType;

@@ -5,6 +5,7 @@ import { useDataFetching } from "./useDataFetching";
 
 import { useLinkRenderContext } from "./useLinkRenderContext";
 import { useLRS } from "./useLRS";
+import { toNum } from "./useParsedField";
 
 const EMPTY_LIST: SomeNode[] = [];
 
@@ -23,14 +24,14 @@ export const useQuads = (except: SomeNode[] = EMPTY_LIST, resource?: SomeNode): 
   const invalidation = useDataFetching(target);
   const calc = React.useCallback(
     () => lrs.tryEntity(target).filter((q) => except.every((p) => !equals(p, q.predicate))),
-    [lrs, target, except],
+    [lrs, target, toNum(except)],
   );
 
   const [data, setData] = React.useState<Quad[]>(calc());
 
   React.useEffect(() => {
     setData(calc());
-  }, [lrs, target, except, invalidation]);
+  }, [lrs, target, toNum(except), invalidation]);
 
   return data;
 };
