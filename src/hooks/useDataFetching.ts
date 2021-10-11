@@ -1,7 +1,8 @@
 import { isBlankNode } from "@ontologies/core";
-import { normalizeType, SomeNode } from "link-lib";
+import { normalizeType } from "link-lib";
 import React from "react";
 import { reduceDataSubjects } from "../helpers";
+import { LaxNode } from "../types";
 
 import { useDataInvalidation } from "./useDataInvalidation";
 
@@ -18,8 +19,10 @@ const blankNodeWarn = "Cannot load a blank node since it has no defined way to b
  *
  * @see {LinkedRenderStore#shouldLoadResource} for the triggering mechanism.
  */
-export function useDataFetching(resources: SomeNode | SomeNode[],
-                                setError?: (e: Error) => void): number {
+export function useDataFetching(
+  resources: LaxNode | LaxNode[],
+  setError?: (e: Error) => void,
+): number {
     const lrs = useLRS();
     const lastUpdate = useDataInvalidation(resources);
 

@@ -25,7 +25,7 @@ describe("useSubject", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [[subject]] = useSubject();
+      const [subject] = useSubject();
 
       return (
           <span id="subject">{subject!.value}</span>
@@ -44,7 +44,8 @@ describe("useSubject", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = ({ subjects }: { subjects?: LaxNode[] }) => {
-      const [[subject]] = useSubject(subjects);
+      const [result] = useSubject(subjects);
+      const subject = Array.isArray(result) ? result[0] : result;
 
       return (
           <span data-testid="subject">{subject!.value}</span>

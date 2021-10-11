@@ -16,7 +16,6 @@ import * as rdfx from "@ontologies/rdf";
 import * as xsd from "@ontologies/xsd";
 import { decode } from "base64-arraybuffer";
 import { equals, id, normalizeType } from "link-lib";
-import React from "react";
 
 import { bigIntTypes, numberTypes } from "../hocs/link/toReturnType";
 import {
@@ -25,19 +24,19 @@ import {
   OptionalFields,
   OptionalIdentifiers,
 } from "../types";
+import { useCalculatedValue } from "./useCalculatedValue";
 import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLinkRenderContext } from "./useLinkRenderContext";
-import { useLRS } from "./useLRS";
 
-type ArityPreservingValues<K, T> = K extends Node[]
-    ? Array<Required<T[]>>
-    : Required<T[]>;
+export type ArityPreservingValues<K, T> = K extends any[]
+    ? Array<Required<T>>
+    : Required<T>;
 
 const EMPTY_ARRAY: any[] = [];
 
 export const toNum = (v: ReadonlyArray<Identifier|undefined>): number => v.length * v
-  .map((p) => id(p))
+  .map((p) => p ? id(p) : 1)
   .reduce((acc, next) => acc + next, 0);
 
 export const useInvalidatingFields = (
@@ -59,13 +58,13 @@ export const calculate = <T, K extends OptionalIdentifiers = undefined>(
   parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
   subject: K,
   property: Readonly<OptionalFields>,
-): ArityPreservingValues<K, T> => {
+): ArityPreservingValues<K, T[]> => {
   if (!subject) {
     return EMPTY_ARRAY;
   }
 
   const boundParser = parser(lrs);
-  const calc = (s: Identifier, p: Readonly<OptionalFields>): T[] => lrs.getResourcePropertyRaw(s, p as any)
+  const calc = (s: Identifier | undefined, p: Readonly<OptionalFields>): T[] => lrs.getResourcePropertyRaw(s, p as any)
     .map(boundParser)
     .filter((it): it is T => typeof it !== "undefined");
 
@@ -77,51 +76,24 @@ export const calculate = <T, K extends OptionalIdentifiers = undefined>(
       values.push(t);
     }
 
-    return values as ArityPreservingValues<K, T>;
+    return values as ArityPreservingValues<K, T[]>;
   }
 
-  return calc(subject, property) as ArityPreservingValues<K, T>;
+  return calc(subject, property) as ArityPreservingValues<K, T[]>;
 };
 
 export const makeParsedField = <T = Term | undefined>(
   parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
 ) => <K extends Node | Node[] | undefined = undefined>(
   fields: OptionalFields,
-  resource?: K,
-): ArityPreservingValues<K, T> => {
-  const lrs = useLRS();
-  const isMountRef = React.useRef(true);
+  ...resource: K[]
+): ArityPreservingValues<K, T[]> => {
   const { subject } = useLinkRenderContext();
-  const target = (resource ?? subject) as K;
-  const [lastUpdate, subSum, fieldSum] = useInvalidatingFields(target, fields);
+  const resourcePassed = resource.length > 0;
+  const target = (resourcePassed ? resource[0] : subject) as K;
+  const invalidations = useInvalidatingFields(target, fields);
 
-  const [
-    value,
-    setValue,
-  ] = React.useState(() => calculate(lrs, parser, target, fields));
-
-  React.useEffect(() => {
-    if (isMountRef.current) {
-      isMountRef.current = false;
-
-      return;
-    }
-
-    const returnValue = calculate(lrs, parser, target, fields);
-    const hasChanged = returnValue.length !== value.length ||
-      returnValue.some((q, i) => !equals(q, value[i]));
-
-    if (hasChanged) {
-      setValue(returnValue);
-    }
-  }, [
-    lrs,
-    lastUpdate,
-    subSum,
-    fieldSum,
-  ]);
-
-  return value;
+  return useCalculatedValue(calculate, invalidations, parser, target, fields);
 };
 
 /**

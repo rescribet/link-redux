@@ -2,11 +2,13 @@ import "../../__tests__/useHashFactory";
 
 import rdf from "@ontologies/core";
 import { renderHook } from "@testing-library/react-hooks";
-import React from "react";
+import { createStore } from "link-lib";
+import React, { PropsWithChildren } from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
+import { RenderStoreProvider } from "../../components/RenderStoreProvider";
 import ex from "../../ontology/ex";
 import { NoActionError, useAction } from "../useAction";
 
@@ -23,14 +25,20 @@ describe("useAction", () => {
       container = undefined;
     });
 
+    const wrapper = ({ children }: PropsWithChildren<never>) => (
+      <RenderStoreProvider value={createStore()}>
+        {children}
+      </RenderStoreProvider>
+    );
+
     it("throws when executing undefined", () => {
-      const { result } = renderHook(() => useAction(undefined));
+      const { result } = renderHook(() => useAction(undefined), { wrapper });
 
       return expect(result.current()).rejects.toThrow(NoActionError);
     });
 
     it("throws when executing literal", () => {
-      const { result } = renderHook(() => useAction(rdf.literal("test")));
+      const { result } = renderHook(() => useAction(rdf.literal("test")), { wrapper });
 
       return expect(result.current()).rejects.toThrow(NoActionError);
     });

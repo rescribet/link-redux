@@ -23,7 +23,7 @@ describe("useStatus", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [status] = useStatus();
+      const status = useStatus();
 
       return (
           <>

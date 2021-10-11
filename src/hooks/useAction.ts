@@ -5,6 +5,7 @@ import React from "react";
 import { LinkReduxLRSType } from "../types";
 
 import { useLRS } from "./useLRS";
+import { useSubject } from "./useSubject";
 
 export type BoundActionHandler = (...args: any[]) => Promise<any>;
 
@@ -44,7 +45,7 @@ const createHandler = (
 };
 
 /**
- * Returns a handler which executes the {action} from the current store.
+ * Returns a handler which executes the context subject or {action} from the current store.
  * If `action` is `undefined` or a {Literal}, it rejects with {NoActionError}.
  *
  * This function uses {exec}, so called handlers will pass through the middleware.
@@ -53,16 +54,17 @@ const createHandler = (
  * @param defaultArgs Will be passed if the handler calling site doesn't provide any args.
  */
 export const useAction = (
-  action: SomeTerm | string | undefined,
+  action?: SomeTerm | string | undefined,
   defaultArgs?: DataObject,
 ): (args?: DataObject) => Promise<any> => {
   const lrs = useLRS();
-  const [handler, setHandler] = React.useState(() => createHandler(lrs, action, defaultArgs));
+  const [subject, update] = useSubject();
+  const [handler, setHandler] = React.useState(() => createHandler(lrs, action ?? subject, defaultArgs));
 
   React.useEffect(() => {
-    const newHandler = createHandler(lrs, action, defaultArgs);
+    const newHandler = createHandler(lrs, action ?? subject, defaultArgs);
     setHandler(() => newHandler);
-  }, [lrs, action, defaultArgs]);
+  }, [lrs, action, subject, update, defaultArgs]);
 
   return handler;
 };

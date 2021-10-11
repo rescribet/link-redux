@@ -2,7 +2,7 @@ import rdf, { Node, Quad, SomeTerm, Term } from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
 import React from "react";
 
-import { LaxNode, LaxProperty, LinkReduxLRSType } from "../types";
+import { LaxProperty, LinkReduxLRSType } from "../types";
 
 import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
@@ -52,7 +52,7 @@ export const useArray = <I extends Term = SomeTerm>(
 ): ResolvedField<I> => {
   const lrs = useLRS();
   const targets = useIdentifier(property, resource);
-  const lastUpdate = useDataInvalidation(targets as LaxNode[]);
+  const lastUpdate = useDataInvalidation(targets);
 
   return React.useMemo(() => {
     if (!targets) {

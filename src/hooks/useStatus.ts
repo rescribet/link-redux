@@ -1,11 +1,25 @@
 import { isNamedNode } from "@ontologies/core";
-import { RequestStatus } from "link-lib";
-import React from "react";
+import { RequestStatus, SomeRequestStatus } from "link-lib";
 
-import { LaxNode } from "../types";
+import { LaxNode, LinkReduxLRSType } from "../types";
+import { useCalculatedValue } from "./useCalculatedValue";
 
 import { useLRS } from "./useLRS";
+import { ArityPreservingValues } from "./useParsedField";
 import { useSubject } from "./useSubject";
+
+const calculator = <T extends LaxNode | LaxNode[]>(lrs: LinkReduxLRSType, targets: T):
+  ArityPreservingValues<T, SomeRequestStatus | undefined> => {
+  if (Array.isArray(targets)) {
+    return targets.map((t) => isNamedNode(t) ? lrs.getStatus(t) : undefined) as
+      ArityPreservingValues<T, SomeRequestStatus | undefined>;
+  }
+  if (!isNamedNode(targets)) {
+    return undefined as ArityPreservingValues<T, SomeRequestStatus | undefined>;
+  }
+
+  return lrs.getStatus(targets) as ArityPreservingValues<T, SomeRequestStatus | undefined>;
+};
 
 /**
  *  Retrieve the fetching status of {subject}. Will return the status of the context subject if no subject was passed.
@@ -16,16 +30,12 @@ import { useSubject } from "./useSubject";
  *  @return A list of statuses. Cardinality with {subjects} is kept,
  *    where the first item matches {subjects} if that is not an array.
  */
-export function useStatus(
-  subjects?: LaxNode | LaxNode[],
-): Array<RequestStatus | undefined> {
+export function useStatus<T extends LaxNode | LaxNode[] = undefined>(
+  subjects?: T,
+): ArityPreservingValues<T, RequestStatus | undefined> {
   const lrs = useLRS();
   const [targets] = useSubject(subjects);
-  const [statuses, setStatuses] = React.useState<Array<RequestStatus | undefined>>([]);
 
-  React.useEffect(() => {
-    setStatuses(targets.map((t) => isNamedNode(t) ? lrs.getStatus(t) : undefined));
-  }, [lrs, targets]);
-
-  return statuses;
+  return useCalculatedValue(calculator, [lrs, targets], targets) as
+    ArityPreservingValues<T, RequestStatus | undefined>;
 }

@@ -104,6 +104,42 @@ describe("useParsedField", () => {
       expect(container!.querySelector("#ov")!.textContent).toBe("Second title");
     });
 
+    it("Does not use context subject if second argument is given", () => {
+      const secondId = example.ns("second");
+      const opts = ctx.multipleCW(
+        example.ns("3"),
+        {
+          second: {
+            id: secondId,
+            title: "Second title",
+          },
+        },
+      );
+
+      const parser = jest.fn((v: Quad) => v);
+      const parserWrapper = jest.fn(() => parser);
+      const useParsedField = makeParsedField(parserWrapper);
+
+      const FieldComp = () => {
+        const fields = useParsedField(schema.name, undefined);
+
+        return (
+          <div>
+            <div id="len">{fields.length}</div>
+          </div>
+        );
+      };
+
+      act(() => {
+        // @ts-ignore
+        ReactDOM.render(opts.wrapComponent(<FieldComp />), container);
+      });
+
+      expect(parserWrapper).toHaveBeenCalledTimes(0);
+      expect(parser).toHaveBeenCalledTimes(0);
+      expect(container!.querySelector("#len")!.textContent).toBe("0");
+    });
+
     it("Allows passing multiple resources", () => {
       const firstId = example.ns("3");
       const secondId = example.ns("second");
