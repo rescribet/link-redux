@@ -1,5 +1,5 @@
-import { isNamedNode, SomeTerm } from "@ontologies/core";
-import { ActionMap, DataObject } from "link-lib";
+import { isNamedNode, isTerm, SomeTerm } from "@ontologies/core";
+import { ActionMap, DataObject, SomeNode } from "link-lib";
 import React from "react";
 
 import { LinkReduxLRSType } from "../types";
@@ -44,6 +44,18 @@ const createHandler = (
   return (args?: DataObject) => preBoundAction(args);
 };
 
+export const extractParams = (
+  ctxSubject: SomeNode | undefined,
+  args: Array<SomeTerm | string | undefined | DataObject>,
+): [SomeTerm | undefined, DataObject | undefined] => {
+  const first = args[0];
+  if (args.length === 0 || (args.length === 1 && first !== undefined && typeof first !== "string" && !isTerm(first))) {
+    return [ctxSubject, args[0] as DataObject | undefined];
+  }
+
+  return args as [SomeTerm, DataObject | undefined];
+};
+
 /**
  * Returns a handler which executes the context subject or {action} from the current store.
  * If `action` is `undefined` or a {Literal}, it rejects with {NoActionError}.
@@ -53,18 +65,22 @@ const createHandler = (
  * @param action Can be the IRI of an action, or a dot separated property path on {lrs.actions}.
  * @param defaultArgs Will be passed if the handler calling site doesn't provide any args.
  */
-export const useAction = (
-  action?: SomeTerm | string | undefined,
+export function useAction(
+  action: SomeTerm | string | undefined,
   defaultArgs?: DataObject,
-): (args?: DataObject) => Promise<any> => {
+): (args?: DataObject) => Promise<any>;
+export function useAction(defaultArgs?: DataObject): (args?: DataObject) => Promise<any>;
+export function useAction(...args: Array<SomeTerm | string | undefined | DataObject>):
+  (args?: DataObject) => Promise<any> {
   const lrs = useLRS();
   const [subject, update] = useSubject();
-  const [handler, setHandler] = React.useState(() => createHandler(lrs, action ?? subject, defaultArgs));
+  const [target, defaultArgs] = extractParams(subject, args);
+  const [handler, setHandler] = React.useState(() => createHandler(lrs, target, defaultArgs));
 
   React.useEffect(() => {
-    const newHandler = createHandler(lrs, action ?? subject, defaultArgs);
+    const newHandler = createHandler(lrs, target, defaultArgs);
     setHandler(() => newHandler);
-  }, [lrs, action, subject, update, defaultArgs]);
+  }, [lrs, target, update, defaultArgs]);
 
   return handler;
-};
+}

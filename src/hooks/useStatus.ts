@@ -1,24 +1,27 @@
-import { isNamedNode } from "@ontologies/core";
+import { isNamedNode, Node } from "@ontologies/core";
 import { RequestStatus, SomeRequestStatus } from "link-lib";
 
 import { LaxNode, LinkReduxLRSType } from "../types";
-import { useCalculatedValue } from "./useCalculatedValue";
 
-import { useLRS } from "./useLRS";
-import { ArityPreservingValues } from "./useParsedField";
+import { EMPTY_ARRAY } from "./makeParsedField/emptyArray";
+import { ArityPreservingValues } from "./makeParsedField/types";
+import { useCalculatedValue } from "./useCalculatedValue";
 import { useSubject } from "./useSubject";
 
 const calculator = <T extends LaxNode | LaxNode[]>(lrs: LinkReduxLRSType, targets: T):
-  ArityPreservingValues<T, SomeRequestStatus | undefined> => {
+  [result: ArityPreservingValues<T, SomeRequestStatus | undefined>, subjects: Node[]] => {
   if (Array.isArray(targets)) {
-    return targets.map((t) => isNamedNode(t) ? lrs.getStatus(t) : undefined) as
-      ArityPreservingValues<T, SomeRequestStatus | undefined>;
+    return [
+      targets.map((t) => isNamedNode(t) ? lrs.getStatus(t) : undefined) as
+        ArityPreservingValues<T, SomeRequestStatus | undefined>,
+      EMPTY_ARRAY,
+    ];
   }
   if (!isNamedNode(targets)) {
-    return undefined as ArityPreservingValues<T, SomeRequestStatus | undefined>;
+    return [undefined as ArityPreservingValues<T, SomeRequestStatus | undefined>, EMPTY_ARRAY];
   }
 
-  return lrs.getStatus(targets) as ArityPreservingValues<T, SomeRequestStatus | undefined>;
+  return [lrs.getStatus(targets) as ArityPreservingValues<T, SomeRequestStatus | undefined>, EMPTY_ARRAY];
 };
 
 /**
@@ -33,9 +36,8 @@ const calculator = <T extends LaxNode | LaxNode[]>(lrs: LinkReduxLRSType, target
 export function useStatus<T extends LaxNode | LaxNode[] = undefined>(
   subjects?: T,
 ): ArityPreservingValues<T, RequestStatus | undefined> {
-  const lrs = useLRS();
-  const [targets] = useSubject(subjects);
+  const [targets, inv] = useSubject(subjects);
 
-  return useCalculatedValue(calculator, [lrs, targets], targets) as
+  return useCalculatedValue(calculator, [inv], targets) as
     ArityPreservingValues<T, RequestStatus | undefined>;
 }

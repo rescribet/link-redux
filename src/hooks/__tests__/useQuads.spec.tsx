@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import example from "../../ontology/example";
-import { useQuads } from "../useQuads";
+import { except, useQuads } from "../useParsedField";
 
 describe("useQuads", () => {
   let container: HTMLElement | undefined;
@@ -21,11 +21,11 @@ describe("useQuads", () => {
     container = undefined;
   });
 
-  it("retrieves a statement", () => {
+  it("retrieves all statements", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const quads = useQuads();
+      const quads = useQuads(except());
       const [first, second] = quads;
 
       return (
@@ -46,7 +46,7 @@ describe("useQuads", () => {
       ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
     });
 
-    expect(container!.querySelector("#len")!.textContent).toBe("10");
+    expect(container!.querySelector("#len")!.textContent).toBe("11");
     expect(container!.querySelector("#subject_0")!.textContent).toBe(opts.subject!.value);
     expect(container!.querySelector("#predicate_0")!.textContent).toBe(rdfx.type.value);
     expect(container!.querySelector("#object_0")!.textContent).toBe(schema.CreativeWork.value);
@@ -55,11 +55,11 @@ describe("useQuads", () => {
     expect(container!.querySelector("#object_1")!.textContent).toBe("title");
   });
 
-  it("retrieves a statement", () => {
+  it("excludes items", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const quads = useQuads([rdfx.type, example.ns("tags")]);
+      const quads = useQuads(except(rdfx.type, example.ns("tags")));
       const [first, second] = quads;
 
       return (
@@ -80,7 +80,7 @@ describe("useQuads", () => {
       ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
     });
 
-    expect(container!.querySelector("#len")!.textContent).toBe("5");
+    expect(container!.querySelector("#len")!.textContent).toBe("6");
     expect(container!.querySelector("#subject_0")!.textContent).toBe(opts.subject!.value);
     expect(container!.querySelector("#predicate_0")!.textContent).toBe(schema.name.value);
     expect(container!.querySelector("#object_0")!.textContent).toBe("title");

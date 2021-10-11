@@ -1,24 +1,28 @@
 /* eslint no-magic-numbers: 0 */
 import "../../__tests__/useHashFactory";
 
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
+
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import { LinkedRenderStoreContext } from "../../types";
 import { withLRS } from "../withLRS";
 
-const TestComponent: React.FC<LinkedRenderStoreContext> = () => React.createElement("div", null, null);
-const WrappedComp = withLRS(TestComponent);
-
 describe("withLRS hoc", () => {
     it("sets the lrs prop", () => {
         const opts = ctx.fullCW();
 
-        const elem = React.createElement(WrappedComp);
-        const tree = mount(opts.wrapComponent(elem));
-        const node = tree.find("TestComponent");
+        let given;
+        const TestComponent: React.FC<LinkedRenderStoreContext> = ({ lrs }): null => {
+          given = lrs;
 
-        expect((node.props() as any).lrs).toEqual(opts.lrs);
+          return null;
+        };
+        const WrappedComp = withLRS(TestComponent);
+        const elem = React.createElement(WrappedComp);
+        render(opts.wrapComponent(elem));
+
+        expect(given).toEqual(opts.lrs);
     });
 });

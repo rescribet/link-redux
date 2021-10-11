@@ -1,7 +1,9 @@
+import { Node } from "@ontologies/core";
 import { equals } from "link-lib";
 import React from "react";
 import { LinkReduxLRSType } from "../types";
 import { useLRS } from "./useLRS";
+import { useSubject } from "./useSubject";
 
 const hasChanged = (old: any, next: any): boolean => {
   const isArray = Array.isArray(next);
@@ -17,8 +19,11 @@ const hasChanged = (old: any, next: any): boolean => {
     old.some((q: unknown, i: number) => !equals(q, next[i]));
 };
 
+/**
+ * Runs the applicable {calculator} only once while also giving the result on the first render.
+ */
 export const useCalculatedValue = <T, K extends any[]>(
-  calculator: (lrs: LinkReduxLRSType, ...args: K) => T,
+  calculator: (lrs: LinkReduxLRSType, ...args: K) => [result: T, subjects: Node[]],
   invalidations: unknown[],
   ...args: K
 ): T => {
@@ -28,7 +33,8 @@ export const useCalculatedValue = <T, K extends any[]>(
   const [
     value,
     setValue,
-  ] = React.useState<T>((): T => calculator(lrs, ...args));
+  ] = React.useState<[result: T, subjects: Node[]]>(() => calculator(lrs, ...args));
+  const invalidation = useSubject(value[1]);
 
   React.useEffect(() => {
     if (isMountRef.current) {
@@ -38,13 +44,14 @@ export const useCalculatedValue = <T, K extends any[]>(
     }
 
     const nextValue = calculator(lrs, ...args);
-    if (hasChanged(value, nextValue)) {
+    if (hasChanged(value[0], nextValue[0]) || hasChanged(value[1], nextValue[1])) {
       setValue(nextValue);
     }
   }, [
     lrs,
+    invalidation,
     ...invalidations,
   ]);
 
-  return value;
+  return value[0];
 };

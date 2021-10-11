@@ -1,13 +1,14 @@
 import * as schema from "@ontologies/schema";
+import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import example from "../../ontology/example";
-import { useField, useQuad } from "../useParsedField";
+import { useFields, useQuads } from "../useParsedField";
 
-describe("useField", () => {
+describe("useFields", () => {
   let container: HTMLElement | undefined;
 
   beforeEach(() => {
@@ -24,7 +25,7 @@ describe("useField", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useField(schema.name);
+      const [test] = useFields(schema.name);
 
       return <div id="test">{test?.value}</div>;
     };
@@ -41,7 +42,7 @@ describe("useField", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [first, second] = useQuad(
+      const [first, second] = useQuads(
         example.ns("tags"),
       );
 
@@ -71,13 +72,13 @@ describe("useField", () => {
   });
 
   /**
-   * This makes it a lot easier to use the hook chained with others like useField.
+   * This makes it a lot easier to use the hook chained with others like useFields.
    */
   it("allows undefined property", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const [test] = useField(undefined);
+      const [test] = useFields(undefined);
 
       return <div id="test">{test}</div>;
     };

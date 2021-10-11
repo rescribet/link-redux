@@ -38,7 +38,7 @@ const createConnectedComponent = <P>(
 
   const linkVersion = useDataInvalidation(normalizeDataSubjects(mappedProps));
 
-  if ((props.forceRender || opts.forceRender) !== true && subjProps.length === 0) {
+  if ((props.forceRender || opts.forceRender) !== true && subjProps.length <= 1) {
     return null;
   }
 

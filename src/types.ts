@@ -27,7 +27,10 @@ export type LinkReduxLRSType<
   API extends LinkedDataAPI = DataProcessor
 > = LinkedRenderStore<React.ComponentType<P>, API>;
 
-/** Data types to which the data can be converted before inserting into a data map */
+/**
+ * Data types to which the data can be converted before inserting into a data map
+ * @deprecated
+ */
 export enum ReturnType {
   /** Return the `object`, keeping the underlying rdf data model. */
   Term,
@@ -50,12 +53,12 @@ export enum ReturnType {
 
 export type Identifier = SomeNode;
 export type Locator = NamedNode;
-export type LaxIdentifer = Identifier | undefined;
-export type OptionalIdentifiers = LaxIdentifer | LaxIdentifer[];
+export type LaxIdentifier = Identifier | undefined;
+export type OptionalIdentifiers = LaxIdentifier | LaxIdentifier[];
 
 export type OptionalFields = NamedNode | NamedNode[] | undefined;
 
-export type LaxNode = LaxIdentifer;
+export type LaxNode = LaxIdentifier;
 
 /** @deprecated Use {OptionalFields} */
 export type LaxProperty = OptionalFields;

@@ -1,10 +1,11 @@
-import { NamedNode, Term } from "@ontologies/core";
+import { NamedNode, Node, Term } from "@ontologies/core";
 import { SomeNode } from "link-lib";
 
 import { LinkReduxLRSType, OptionalIdentifiers } from "../types";
+import { EMPTY_ARRAY, NESTED_EMPTY_ARRAY } from "./makeParsedField/emptyArray";
+import { ArityPreservingValues } from "./makeParsedField/types";
 import { useCalculatedValue } from "./useCalculatedValue";
 
-import { ArityPreservingValues } from "./useParsedField";
 import { useSubject } from "./useSubject";
 
 const calculator = <T extends OptionalIdentifiers = undefined>(
@@ -12,14 +13,14 @@ const calculator = <T extends OptionalIdentifiers = undefined>(
   targets: T,
   path: NamedNode[],
   match: Term | Term[],
-): ArityPreservingValues<T, SomeNode[]> => {
+): [ArityPreservingValues<T, SomeNode[]>, Node[]] => {
   if (targets === undefined) {
-    return [];
+    return NESTED_EMPTY_ARRAY;
   } else if (Array.isArray(targets)) {
-    return targets.map((s) => lrs.findSubject(s, path, match)) as ArityPreservingValues<T, SomeNode[]>;
+    return [targets.map((s) => lrs.findSubject(s, path, match)) as ArityPreservingValues<T, SomeNode[]>, EMPTY_ARRAY];
   }
 
-  return lrs.findSubject(targets, path, match) as ArityPreservingValues<T, SomeNode[]>;
+  return [lrs.findSubject(targets, path, match) as ArityPreservingValues<T, SomeNode[]>, EMPTY_ARRAY];
 };
 
 /**

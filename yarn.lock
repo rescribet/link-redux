@@ -3231,6 +3231,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"can-namespace@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "can-namespace@npm:1.0.0"
+  checksum: 93a27be2c89bde52941bc18b606399c0cbbed596ac525f611a6fc66b7f684e678f4675ac9a53d0e25457159762e656505d23b55fdb1d116c30a7d78d18723577
+  languageName: node
+  linkType: hard
+
+"can-ndjson-stream@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "can-ndjson-stream@npm:1.0.2"
+  dependencies:
+    can-namespace: ^1.0.0
+  checksum: 5aa9871c5e21c3ad007d3045aa13f80a804d5cd919c457d4402bd4a3b29276b608c071783a85c20f5ef03d562a224f7beccff499debaa5f16d05f70bfe58e0b9
+  languageName: node
+  linkType: hard
+
 "caniuse-lite@npm:^1.0.30001259":
   version: 1.0.30001261
   resolution: "caniuse-lite@npm:1.0.30001261"
@@ -6874,9 +6890,9 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"link-lib@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "link-lib@npm:2.1.1"
+"link-lib@npm:^3.0.0-3":
+  version: 3.0.0-3
+  resolution: "link-lib@npm:3.0.0-3"
   peerDependencies:
     "@ontologies/as": ">=1.0.1"
     "@ontologies/core": ">=2.0.0"
@@ -6884,9 +6900,10 @@ fsevents@^2.1.2:
     "@ontologies/schema": ">=1.0.0"
     "@ontologies/shacl": ">=1.0.0"
     "@ontologies/xsd": ">=1.0.0"
+    can-ndjson-stream: ^1.0.2
     http-status-codes: ">= 1.x"
     n-quads-parser: ^2.1.0-3
-  checksum: 239b4c9f9f45868990c320f7074279ab4bafff3ab7ea24791c8c30baab88e660d9ee0d00fdb4ca853e26b2de763c671b0bf46916d2471317cc6fe7977d77d190
+  checksum: 93cc86a37c2dbdaa4012812203352d22b81c089ff77722f5a86239573af0f5385d4d800b3edfc067c31961a9a7c79cb5e01c2e15ee99a13f9a0416b797fcec48
   languageName: node
   linkType: hard
 
@@ -6921,6 +6938,7 @@ fsevents@^2.1.2:
     "@types/react-dom": ^17.0.9
     "@wojtekmaj/enzyme-adapter-react-17": ^0.6.3
     base64-arraybuffer: ^1.0.1
+    can-ndjson-stream: ^1.0.2
     core-js: ^3.6.4
     enzyme: ^3.11.0
     gh-pages: ^2.0.1
@@ -6928,7 +6946,7 @@ fsevents@^2.1.2:
     http-status-codes: 1.x
     jest: ^25.2.4
     jest-enzyme: ^7.1.2
-    link-lib: ^2.1.1
+    link-lib: ^3.0.0-3
     n-quads-parser: ^2.1.0
     prop-types: ^15.x
     react: ^17.0.2
@@ -6943,9 +6961,10 @@ fsevents@^2.1.2:
     whatwg-url: ^7.0.0
   peerDependencies:
     "@ontologies/core": ">= 2.0.0"
+    base64-arraybuffer: ^1.0.1
     hoist-non-react-statics: ">=3.x"
     http-status-codes: ">= 1.x"
-    link-lib: ">=2.1.1"
+    link-lib: ">=3.0.0-1"
     prop-types: ">= 15.x"
     react: ">= 16.10.x"
   languageName: unknown

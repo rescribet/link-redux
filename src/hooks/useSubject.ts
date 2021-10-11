@@ -2,10 +2,10 @@ import { equals } from "link-lib";
 import React from "react";
 
 import { LaxNode } from "../types";
+import { ArityPreservingValues } from "./makeParsedField/types";
+import { useDataFetching } from "./useDataFetching";
 
-import { useDataInvalidation } from "./useDataInvalidation";
 import { useLinkRenderContext } from "./useLinkRenderContext";
-import { ArityPreservingValues } from "./useParsedField";
 
 /**
  * Keeps track of zero or more subjects with fallback to the context subject if nothing is given.
@@ -34,7 +34,7 @@ export const useSubject = <T extends LaxNode | LaxNode[] = undefined>(subjects?:
     },
     [subjects, subCtx],
   );
-  const lastUpdate = useDataInvalidation(targets);
+  const lastUpdate = useDataFetching(targets);
 
   return [
     targets,

@@ -21,43 +21,44 @@ export { LinkRenderCtx } from "./contexts/LinkRenderCtx";
 /* HOCs */
 
 export { link } from "./hocs/link";
-export { withLinkCtx } from "./hocs/withLinkCtx";
 export { withLRS } from "./hocs/withLRS";
 export { withTopology } from "./hocs/withTopology";
 
 /* hooks */
 
 export {
-  makeParsedField,
-  useQuad,
-  useField,
-  useIdentifier,
-  useAnonymousId,
-  useLocator,
-  useLiteral,
-  useValue,
-  useLiteralValue,
-  useBase64,
-  useBigInt,
-  useBoolean,
-  useDate,
+  array,
+  dig,
+  except,
+  useQuads,
+  useFields,
+  useIds,
+  useLocalIds,
+  useGlobalIds,
+  useLiterals,
+  useValues,
+  useLiteralValues,
+  useBase64s,
+  useBigInts,
+  useBooleans,
+  useDates,
   RegularOrString,
-  useAnyString,
+  useAnyStrings,
   LangString,
-  useLangString,
-  useRegularString,
-  useString,
-  useNumber,
-  useUrl,
+  useLangStrings,
+  useRegularStrings,
+  useStrings,
+  useNumbers,
+  useUrls,
 } from "./hooks/useParsedField";
 export {
-  useArray,
-} from "./hooks/makeAsyncParsedField";
-export { useAction, BoundActionHandler, NoActionError } from "./hooks/useAction";
+  useAction,
+  BoundActionHandler,
+  NoActionError,
+} from "./hooks/useAction";
 export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
-export { useDig } from "./hooks/useDig";
 export { useFindSubject } from "./hooks/useFindSubject";
 export { useLinkRenderContext } from "./hooks/useLinkRenderContext";
 export { useLink } from "./hooks/useLink";
@@ -65,7 +66,6 @@ export { useResourceLink } from "./hooks/useResourceLink";
 export { useResourceLinks } from "./hooks/useResourceLinks";
 export { useLRS } from "./hooks/useLRS";
 export { useProperty } from "./hooks/useProperty";
-export { useQuads } from "./hooks/useQuads";
 export { useResourceProperty } from "./hooks/useResourceProperty";
 export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
 export { useResourceView } from "./hooks/useResourceView";
@@ -80,3 +80,17 @@ export * from "./dsl";
 export { register, registerExotic } from "./register";
 export * from "./types";
 export * from "./propTypes";
+export { makeParsedField } from "./hooks/makeParsedField/index";
+export {
+  Resolver,
+  DataMapper,
+  Query,
+  FieldQuery,
+  EmptyQuery,
+  ComplexQuery,
+  DigQuery,
+  ExceptQuery,
+  QueryType,
+  FieldLookupOverloads,
+  ArityPreservingValues,
+} from "./hooks/makeParsedField/types";

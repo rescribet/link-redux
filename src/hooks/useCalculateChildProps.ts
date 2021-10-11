@@ -2,9 +2,9 @@ import { isNamedNode } from "@ontologies/core";
 import { DEFAULT_TOPOLOGY } from "link-lib";
 import React from "react";
 
-import { WithLinkCtxOptions } from "../hocs/withLinkCtx";
 import {
   CalculatedChildProps,
+  Helpers,
   LinkCtxOverrides,
   LinkedRenderStoreContext,
   LinkRenderContext,
@@ -14,6 +14,11 @@ import {
 } from "../types";
 
 import { useLRS } from "./useLRS";
+
+export interface UseCalculateChildPropsOptions {
+  [k: string]: boolean | object | undefined;
+  helpers?: Helpers;
+}
 
 type Overrides<R> = Partial<
     LinkRenderContext
@@ -26,7 +31,7 @@ type Overrides<R> = Partial<
 export function useCalculateChildProps<P, R = any>(
     props: P & Partial<SubjectProp & TopologyProp & PassableRef<R>>,
     context: LinkRenderContext,
-    options: WithLinkCtxOptions = {},
+    options: UseCalculateChildPropsOptions = {},
 ): CalculatedChildProps<P> {
 
     const lrs = useLRS();

@@ -3,7 +3,7 @@ import { equals, id, normalizeType } from "link-lib";
 import React from "react";
 
 import { reduceDataSubjects } from "../helpers";
-import { DataInvalidationProps, LaxIdentifer, SubjectType } from "../types";
+import { DataInvalidationProps, LaxIdentifier, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
 
@@ -39,7 +39,7 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
  *
  * Should only be necessary when using imperative code.
  */
-export function useDataInvalidation(subjects: LaxIdentifer | LaxIdentifer[]): number {
+export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): number {
     const resources = normalizeType(subjects!).filter<Node>(Boolean as any);
     const lrs = useLRS();
 

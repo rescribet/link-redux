@@ -10,97 +10,52 @@ import {
   Node,
   Quad,
   SomeTerm,
-  Term,
 } from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
 import * as xsd from "@ontologies/xsd";
 import { decode } from "base64-arraybuffer";
-import { equals, id, normalizeType } from "link-lib";
+import { equals } from "link-lib";
 
 import { bigIntTypes, numberTypes } from "../hocs/link/toReturnType";
+import { makeParsedField } from "./makeParsedField/index";
 import {
-  Identifier,
-  LinkReduxLRSType,
-  OptionalFields,
-  OptionalIdentifiers,
-} from "../types";
-import { useCalculatedValue } from "./useCalculatedValue";
-import { useDataInvalidation } from "./useDataInvalidation";
+  ArrayQuery,
+  DigQuery,
+  ExceptQuery,
+  QueryType,
+} from "./makeParsedField/types";
 
-import { useLinkRenderContext } from "./useLinkRenderContext";
+/**
+ * Will resolve all fields except those passed.
+ */
+export const except = (...fields: NamedNode[]): ExceptQuery => ({
+  fields,
+  type: QueryType.Except,
+});
 
-export type ArityPreservingValues<K, T> = K extends any[]
-    ? Array<Required<T>>
-    : Required<T>;
+/**
+ * Will resolve fields at the end of {path}, traversing intermediate records.
+ */
+export const dig = (...path: Array<NamedNode | NamedNode[]>): DigQuery => ({
+  path,
+  type: QueryType.Dig,
+});
 
-const EMPTY_ARRAY: any[] = [];
-
-export const toNum = (v: ReadonlyArray<Identifier|undefined>): number => v.length * v
-  .map((p) => p ? id(p) : 1)
-  .reduce((acc, next) => acc + next, 0);
-
-export const useInvalidatingFields = (
-  subject: OptionalIdentifiers,
-  field: OptionalFields,
-): [lastUpdate: number, subjects: number, fields: number] => {
-  const subjects = field ? normalizeType(subject) : EMPTY_ARRAY;
-  const fields = field ? normalizeType(field) : EMPTY_ARRAY;
-  const lastUpdate = useDataInvalidation([
-    ...subjects,
-    ...fields,
-  ]);
-
-  return [lastUpdate, toNum(subjects), toNum(fields)];
-};
-
-export const calculate = <T, K extends OptionalIdentifiers = undefined>(
-  lrs: LinkReduxLRSType,
-  parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
-  subject: K,
-  property: Readonly<OptionalFields>,
-): ArityPreservingValues<K, T[]> => {
-  if (!subject) {
-    return EMPTY_ARRAY;
-  }
-
-  const boundParser = parser(lrs);
-  const calc = (s: Identifier | undefined, p: Readonly<OptionalFields>): T[] => lrs.getResourcePropertyRaw(s, p as any)
-    .map(boundParser)
-    .filter((it): it is T => typeof it !== "undefined");
-
-  if (Array.isArray(subject)) {
-    const values = [];
-
-    for (let i = 0, iLen = subject.length; i < iLen; i++) {
-      const t = calc(subject[i], property);
-      values.push(t);
-    }
-
-    return values as ArityPreservingValues<K, T[]>;
-  }
-
-  return calc(subject, property) as ArityPreservingValues<K, T[]>;
-};
-
-export const makeParsedField = <T = Term | undefined>(
-  parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
-) => <K extends Node | Node[] | undefined = undefined>(
-  fields: OptionalFields,
-  ...resource: K[]
-): ArityPreservingValues<K, T[]> => {
-  const { subject } = useLinkRenderContext();
-  const resourcePassed = resource.length > 0;
-  const target = (resourcePassed ? resource[0] : subject) as K;
-  const invalidations = useInvalidatingFields(target, fields);
-
-  return useCalculatedValue(calculate, invalidations, parser, target, fields);
-};
+/**
+ * Experimental. Will unpack {fields} if their value refers to rdf:Seq, rdf:List, rdf:Container, rdf:Bag.
+ * Note that their values will be returned top-level, rather than nested.
+ * Has undefined behaviour with regards to multimap values.
+ */
+export const array = (...fields: NamedNode[]): ArrayQuery => ({
+  fields,
+  type: QueryType.Array,
+});
 
 /**
  * Retrieves fields of any type as raw terms.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useQuad = makeParsedField<Quad>(
+export const useQuads = makeParsedField<Quad>(
   (_) => (it) => it,
 );
 
@@ -108,7 +63,7 @@ export const useQuad = makeParsedField<Quad>(
  * Retrieves all fields as internal representation.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useField = makeParsedField<SomeTerm>(
+export const useFields = makeParsedField<SomeTerm>(
   (_) => (it) => isTerm(it.object) ? it.object : undefined,
 );
 
@@ -117,7 +72,7 @@ export const useField = makeParsedField<SomeTerm>(
  * @param {fields} {Node} - The field to retrieve from the record.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useIdentifier = makeParsedField<Node>(
+export const useIds = makeParsedField<Node>(
   (_) => (it) => isNode(it.object) ? it.object : undefined,
 );
 
@@ -126,7 +81,7 @@ export const useIdentifier = makeParsedField<Node>(
  * @param {fields} {Node} - The field to retrieve from the record.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useLocator = makeParsedField<NamedNode>(
+export const useGlobalIds = makeParsedField<NamedNode>(
   (_) => (it) => isNamedNode(it.object) ? it.object : undefined,
 );
 
@@ -137,7 +92,7 @@ export const useLocator = makeParsedField<NamedNode>(
  * @param {fields} {Node} - The field to retrieve from the record.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useAnonymousId = makeParsedField<BlankNode>(
+export const useLocalIds = makeParsedField<BlankNode>(
   (_) => (it) => isBlankNode(it.object) ? it.object : undefined,
 );
 
@@ -146,7 +101,7 @@ export const useAnonymousId = makeParsedField<BlankNode>(
  * @param {fields} {Node} - The field to retrieve from the record.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useLiteral = makeParsedField<Literal>(
+export const useLiterals = makeParsedField<Literal>(
   (_) => (it) => isLiteral(it.object) ? it.object : undefined,
 );
 
@@ -154,7 +109,7 @@ export const useLiteral = makeParsedField<Literal>(
  * Retrieves all value {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useValue = makeParsedField<string>(
+export const useValues = makeParsedField<string>(
   (_) => (it) => it.object.value,
 );
 
@@ -162,7 +117,7 @@ export const useValue = makeParsedField<string>(
  * Retrieves all literalValue {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useLiteralValue = makeParsedField<string>(
+export const useLiteralValues = makeParsedField<string>(
   (_) => (it) => isLiteral(it.object) ? it.object.value : undefined,
 );
 
@@ -170,7 +125,7 @@ export const useLiteralValue = makeParsedField<string>(
  * Retrieves all base64 {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useBase64 = makeParsedField<ArrayBuffer>((_) => (quad) => {
+export const useBase64s = makeParsedField<ArrayBuffer>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !equals(it.datatype, xsd.base64Binary)) {
     return undefined;
@@ -183,7 +138,7 @@ export const useBase64 = makeParsedField<ArrayBuffer>((_) => (quad) => {
  * Retrieves all bigInt {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useBigInt = makeParsedField<BigInt>((_) => (quad) => {
+export const useBigInts = makeParsedField<BigInt>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !bigIntTypes.some((type) => equals(it.datatype, type))) {
     return undefined;
@@ -196,7 +151,7 @@ export const useBigInt = makeParsedField<BigInt>((_) => (quad) => {
  * Retrieves all boolean {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useBoolean = makeParsedField<boolean>((_) => (quad) => {
+export const useBooleans = makeParsedField<boolean>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !equals(it.datatype, xsd.xsdboolean)) {
     return undefined;
@@ -209,7 +164,7 @@ export const useBoolean = makeParsedField<boolean>((_) => (quad) => {
  * Retrieves all date {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useDate = makeParsedField<Date>((_) => (quad) => {
+export const useDates = makeParsedField<Date>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !(equals(it.datatype, xsd.dateTime) || equals(it.datatype, xsd.date))) {
     return undefined;
@@ -224,7 +179,7 @@ export type RegularOrString = [value: string, language: string | undefined];
  * Retrieves all langString and string {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useAnyString = makeParsedField<RegularOrString>((_) => (quad) => {
+export const useAnyStrings = makeParsedField<RegularOrString>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !equals(it.datatype, rdfx.langString) || !equals(it.datatype, xsd.string)) {
     return undefined;
@@ -239,7 +194,7 @@ export type LangString = [value: string, language: string];
  * Retrieves all langString {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useLangString = makeParsedField<LangString>((_) => (quad) => {
+export const useLangStrings = makeParsedField<LangString>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !equals(it.datatype, rdfx.langString)) {
     return undefined;
@@ -252,7 +207,7 @@ export const useLangString = makeParsedField<LangString>((_) => (quad) => {
  * Retrieves all string {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useRegularString = makeParsedField<string>((_) => (quad) => {
+export const useRegularStrings = makeParsedField<string>((_) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !equals(it.datatype, xsd.string)) {
     return undefined;
@@ -265,9 +220,9 @@ export const useRegularString = makeParsedField<string>((_) => (quad) => {
  * Retrieves all string and lang string {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useString = makeParsedField<string>((_) => (quad) => {
+export const useStrings = makeParsedField<string>((_) => (quad) => {
   const it = quad.object;
-  if (!isLiteral(it) || !equals(it.datatype, rdfx.langString) || !equals(it.datatype, xsd.string)) {
+  if (!isLiteral(it) || !(equals(it.datatype, rdfx.langString) || equals(it.datatype, xsd.string))) {
     return undefined;
   }
 
@@ -278,7 +233,7 @@ export const useString = makeParsedField<string>((_) => (quad) => {
  * Retrieves all number {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useNumber = makeParsedField<number>((lrs) => (quad) => {
+export const useNumbers = makeParsedField<number>((lrs) => (quad) => {
   const it = quad.object;
   if (!isLiteral(it) || !numberTypes.some((type) => equals(it.datatype, type))) {
     return undefined;
@@ -299,7 +254,7 @@ export const useNumber = makeParsedField<number>((lrs) => (quad) => {
  * Retrieves all url {fields}.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useUrl = makeParsedField<URL>((lrs) => (quad) => {
+export const useUrls = makeParsedField<URL>((lrs) => (quad) => {
   const it = quad.object;
   if (!isNamedNode(it)) {
     return undefined;
