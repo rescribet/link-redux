@@ -9,7 +9,7 @@ import {
   LinkedRenderStore,
   SomeNode,
 } from "link-lib";
-import React from "react";
+import React, { ExoticComponent } from "react";
 import { Overwrite } from "type-zoo";
 
 import { higherOrderWrapper } from "./register";
@@ -49,11 +49,13 @@ export enum ReturnType {
 }
 
 export type Identifier = SomeNode;
-export type OptionalIdentifiers = SomeNode | SomeNode[] | undefined;
+export type Locator = NamedNode;
+export type LaxIdentifer = Identifier | undefined;
+export type OptionalIdentifiers = LaxIdentifer | LaxIdentifer[];
 
 export type OptionalFields = NamedNode | NamedNode[] | undefined;
 
-export type LaxNode = SomeNode | undefined;
+export type LaxNode = LaxIdentifer;
 
 /** @deprecated Use {OptionalFields} */
 export type LaxProperty = OptionalFields;
@@ -184,9 +186,21 @@ export type TypeFC<P = {}> = TypeRegistrationOpts<P & SubjectProp> & React.FC<P 
 
 export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & SubjectProp & PropertyProps>;
 
-export type FC<P = {}> = P extends InferProperty ? PropertyFC<P> : TypeFC<P>;
+export type FC<P = {}> = P extends InferProperty
+  ? PropertyFC<P>
+  : TypeFC<P>;
 
-export type RegistrableComponent<P = {}> = Component<P> | FC<P>;
+export type ExoticTypeFC<P = {}> = TypeRegistrationOpts<P & SubjectProp>
+  & ExoticComponent<P & SubjectProp & PropertyProps>;
+
+export type ExoticPropertyFC<P = {}> = PropertyRegistrationOpts<P>
+  & ExoticComponent<P & SubjectProp & PropertyProps>;
+
+export type ExoticFC<P = {}> = P extends InferProperty
+  ? ExoticPropertyFC<P>
+  : ExoticTypeFC<P>;
+
+export type RegistrableComponent<P = {}> = Component<P> | FC<P> | ExoticFC<P>;
 
 export type Component<P = {}> = React.ComponentType<P & SubjectProp> & RegistrationOpts<P>;
 

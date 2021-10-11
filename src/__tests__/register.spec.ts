@@ -10,7 +10,7 @@ import React from "react";
 
 import { Component } from "../components/Component";
 import ex from "../ontology/ex";
-import { register } from "../register";
+import { register, registerExotic } from "../register";
 import { FC } from "../types";
 
 describe("register.spec.ts", () => {
@@ -44,6 +44,19 @@ describe("register.spec.ts", () => {
             public render() { return null; }
         }
         const [ registration ] = register(Comp);
+
+        expect(registration).toHaveProperty("component");
+        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
+        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
+        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
+    });
+
+    it("registers an exotic component", () => {
+        const Comp = React.forwardRef((_, __) => {
+          return null;
+        });
+
+        const [ registration ] = registerExotic(Comp, ex.ns("TestClass"));
 
         expect(registration).toHaveProperty("component");
         expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));

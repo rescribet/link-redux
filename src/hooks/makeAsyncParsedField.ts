@@ -8,7 +8,7 @@ import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
 import { useIdentifier } from "./useParsedField";
 
-export type ResolvedField<I> = [array: I[] | undefined, loading: boolean]; // TODO: done/isLoaded?
+export type ResolvedField<I> = [array: I[], loading: boolean]; // TODO: done/isLoaded?
 
 const base = "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
 export const sequenceFilter = /^http:\/\/www\.w3\.org\/1999\/02\/22-rdf-syntax-ns#_[\d]+$/;

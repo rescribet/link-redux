@@ -77,6 +77,6 @@ export { useView } from "./hooks/useView";
 /* other */
 
 export * from "./dsl";
-export { register } from "./register";
+export { register, registerExotic } from "./register";
 export * from "./types";
 export * from "./propTypes";
