@@ -2,7 +2,7 @@
 import "../../__tests__/useHashFactory";
 
 import * as schema from "@ontologies/schema";
-import { mount, shallow } from "enzyme";
+import { render } from "@testing-library/react";
 import { LinkedRenderStore } from "link-lib";
 import React from "react";
 
@@ -11,25 +11,25 @@ import example from "../../ontology/example";
 import ll from "../../ontology/ll";
 import { Type } from "../Type";
 
-function createComponent(className: string): React.ComponentType {
-    return () => React.createElement("span", { className });
+function createComponent(id: string): React.ComponentType {
+    return () => React.createElement("span", { "data-testid": id });
 }
 
 describe("Type component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty();
 
-        const elem = shallow(opts.wrapComponent(React.createElement(Type)));
+        const { container } = render(opts.wrapComponent(React.createElement(Type)));
 
-        expect(elem.find("span")).not.toExist();
+        expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
     });
 
     it("renders no view when no class matches", () => {
         const opts = ctx.fullCW(undefined);
 
-        const elem = mount(opts.wrapComponent(React.createElement(Type)));
+        const { getByTestId } = render(opts.wrapComponent(React.createElement(Type)));
 
-        expect(elem.find("div.no-view")).toExist();
+        expect(getByTestId("no-view")).toBeVisible();
     });
 
     it("renders error on server errors", () => {
@@ -41,9 +41,9 @@ describe("Type component", () => {
         ));
         (opts.lrs.api as any).setStatus(subj, 500);
 
-        const elem = mount(opts.wrapComponent(React.createElement(Type)));
+        const { getByTestId } = render(opts.wrapComponent(React.createElement(Type)));
 
-        expect(elem.find("span")).toHaveClassName("loading");
+        expect(getByTestId("loading")).toBeVisible();
     });
 
     it("renders default when set", () => {
@@ -53,9 +53,9 @@ describe("Type component", () => {
             schema.Thing,
         ));
 
-        const elem = mount(opts.wrapComponent(React.createElement(Type)));
+        const { getByTestId } = render(opts.wrapComponent(React.createElement(Type)));
 
-        expect(elem.find("span")).toHaveClassName("thing");
+        expect(getByTestId("thing")).toBeVisible();
     });
 
     it("renders the registered class", () => {
@@ -65,8 +65,8 @@ describe("Type component", () => {
             schema.CreativeWork,
         ));
 
-        const elem = mount(opts.wrapComponent(React.createElement(Type)));
+        const { getByTestId } = render(opts.wrapComponent(React.createElement(Type)));
 
-        expect(elem.find(".creativeWork")).toExist();
+        expect(getByTestId("creativeWork")).toBeVisible();
     });
 });

@@ -1,8 +1,9 @@
 /* eslint no-magic-numbers: 0 */
 import rdfFactory from "@ontologies/core";
+import * as rdfx from "@ontologies/rdf";
 import * as rdfs from "@ontologies/rdfs";
 import * as schema from "@ontologies/schema";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import { LinkedRenderStore } from "link-lib";
 import React from "react";
 
@@ -16,26 +17,34 @@ import { link } from "../link";
 const id = "resources/5";
 const iri = example.ns(id);
 
-class TestComponent extends React.Component {
-    public render() {
-        return React.createElement("span", { className: "testComponent" });
-    }
-}
-
 describe("link", () => {
     describe("link HOC", () => {
+        let props: any;
+
+        beforeEach(() => {
+          props = undefined;
+        });
+
+        class TestComponent extends React.Component {
+            public render() {
+                props = this.props;
+
+                return React.createElement("span");
+            }
+        }
+
         const renderWithProps = (
-          props: MapDataToPropsParam,
+          propMap: MapDataToPropsParam,
           renderOpts?: LinkOpts,
           data: ctx.TestCtxCreator = ctx.fullCW,
           resourceProps?: Partial<ResourcePropTypes<any>>,
         ) => {
             const opts = data(iri);
 
-            const comp = link(props, renderOpts)(TestComponent);
+            const comp = link(propMap, renderOpts)(TestComponent);
             opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
 
-            return mount(opts.wrapComponent(
+            return render(opts.wrapComponent(
               undefined,
               undefined,
               undefined,
@@ -44,38 +53,36 @@ describe("link", () => {
         };
 
         it("passes object as terms", () => {
-            const elem = renderWithProps({
+            renderWithProps({
                 author: schema.author,
                 name: schema.name,
                 tags: example.ns("tags"),
                 text: schema.text,
             });
 
-            expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", example.ns("tag/0"));
+            expect(props.name).toEqual(rdfFactory.literal("title"));
+            expect(props.text).toEqual(rdfFactory.literal("text"));
+            expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
+            expect(props.tags).toEqual(example.ns("tag/0"));
         });
 
         it("passes object as terms under custom keys", () => {
-            const elem = renderWithProps({
+            renderWithProps({
                 author: schema.author,
                 tags: example.ns("tags"),
                 text: schema.text,
                 title: schema.name,
             });
 
-            expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).toHaveProp("title", rdfFactory.literal("title"));
-            expect(elem.find(TestComponent)).not.toHaveProp("name", rdfFactory.literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", example.ns("tag/0"));
+            expect(props.title).toEqual(rdfFactory.literal("title"));
+            expect(props.name).not.toEqual(rdfFactory.literal("title"));
+            expect(props.text).toEqual(rdfFactory.literal("text", rdfx.langString));
+            expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
+            expect(props.tags).toEqual(example.ns("tag/0"));
         });
 
         it("passes object with custom options", () => {
-            const elem = renderWithProps({
+            renderWithProps({
                 author: schema.author,
                 name: [schema.name, rdfs.label],
                 tags: {
@@ -85,12 +92,11 @@ describe("link", () => {
                 text: schema.text,
             });
 
-            expect(elem.find(TestComponent)).toHaveLength(1);
-            expect(elem.find(TestComponent)).not.toHaveProp("label");
-            expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
-            expect(elem.find(TestComponent)).toHaveProp("text", rdfFactory.literal("text"));
-            expect(elem.find(TestComponent)).toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
-            expect(elem.find(TestComponent)).toHaveProp("tags", [
+            expect(props.label).not.toBeDefined();
+            expect(props.name).toEqual(rdfFactory.literal("title"));
+            expect(props.text).toEqual(rdfFactory.literal("text"));
+            expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
+            expect(props.tags).toEqual([
                 example.ns("tag/0"),
                 example.ns("tag/1"),
                 example.ns("tag/2"),
@@ -99,19 +105,19 @@ describe("link", () => {
         });
 
         it("renders null without data nor forced rendering", () => {
-          const elem = renderWithProps(
+          expect(props).toEqual(undefined);
+
+          renderWithProps(
             { author: schema.author },
             undefined,
               ctx.empty,
             { forceRender: false },
             );
 
-          expect(elem.find(TestComponent)).toHaveLength(1);
-          expect(elem.find(TestComponent)).toEqual({});
+          expect(props).toEqual(undefined);
         });
 
         it("throws without properties and custom opts", () => {
-
           expect(() => {
             renderWithProps({}, {});
           }).toThrowError("Bind at least one prop to use render opts");
@@ -119,7 +125,7 @@ describe("link", () => {
 
         describe("returnType option", () => {
             it("can return JS native objects", () => {
-                const elem = renderWithProps(
+                renderWithProps(
                     {
                         author: schema.author,
                         dateCreated: schema.dateCreated,
@@ -129,52 +135,46 @@ describe("link", () => {
                     { returnType: ReturnType.Literal },
                 );
 
-                expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", "title");
-                expect(elem.find(TestComponent)).toHaveProp("timesRead", 5);
-                expect(elem.find(TestComponent)).toHaveProp("dateCreated", new Date("2019-01-01"));
-                expect(elem.find(TestComponent))
-                  .toHaveProp("author", rdfFactory.namedNode("http://example.org/people/0"));
+                expect(props.name).toEqual("title");
+                expect(props.timesRead).toEqual(5);
+                expect(props.dateCreated).toEqual(new Date("2019-01-01"));
+                expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
             });
 
             it("can return values", () => {
-                const elem = renderWithProps(
+                renderWithProps(
                     { name: schema.name },
                     { returnType: ReturnType.Value },
                 );
 
-                expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", "title");
+                expect(props.name).toEqual("title");
             });
 
             it("can return terms", () => {
-                const elem = renderWithProps(
+                renderWithProps(
                     { name: schema.name },
                     { returnType: ReturnType.Term },
                 );
 
-                expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+                expect(props.name).toEqual(rdfFactory.literal("title"));
             });
 
             it("defaults to terms", () => {
-                const elem = renderWithProps(
+                renderWithProps(
                     { name: schema.name },
                   {},
                 );
 
-                expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.literal("title"));
+                expect(props.name).toEqual(rdfFactory.literal("title"));
             });
 
             it("can return statements", () => {
-                const elem = renderWithProps(
+                renderWithProps(
                     { name: schema.name },
                     { returnType: ReturnType.Statement },
                 );
 
-                expect(elem.find(TestComponent)).toHaveLength(1);
-                expect(elem.find(TestComponent)).toHaveProp("name", rdfFactory.quad(
+                expect(props.name).toEqual(rdfFactory.quad(
                     iri,
                     schema.name,
                     rdfFactory.literal("title"),

@@ -1,8 +1,4 @@
-import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import Enzyme from "enzyme";
-import "jest-enzyme";
-
-Enzyme.configure({ adapter: new Adapter() });
+import "@testing-library/jest-dom";
 
 // Suppress errors due to the fetcher binding on undefined.
 (global as unknown as any).fetch = () => Promise.resolve();

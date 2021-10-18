@@ -10,7 +10,7 @@ import { act } from "react-dom/test-utils";
 import * as ctx from "../../__tests__/helpers/fixtures";
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
 import ex from "../../ontology/ex";
-import { NoActionError, useAction } from "../useAction";
+import { extractParams, NoActionError, useAction } from "../useAction";
 
 describe("useAction", () => {
   let container: HTMLElement | undefined;
@@ -30,6 +30,67 @@ describe("useAction", () => {
       {children}
     </RenderStoreProvider>
   );
+
+  describe("extractParams", () => {
+    const fb = ex.ns("fb");
+    const defaults = {};
+
+    it("falls back to context", () => {
+      const [target, def] = extractParams(fb, []);
+
+      expect(target).toBe(fb);
+      expect(def).toBeUndefined();
+    });
+
+    it("falls back to context with defaults", () => {
+      const [target, def] = extractParams(fb, [defaults]);
+
+      expect(target).toBe(fb);
+      expect(def).toBe(defaults);
+    });
+
+    it("keeps undefined subject", () => {
+      const [target, def] = extractParams(fb, [undefined]);
+
+      expect(target).toBe(undefined);
+      expect(def).toBeUndefined();
+    });
+
+    it("keeps undefined subject with defaults", () => {
+      const [target, def] = extractParams(fb, [undefined, defaults]);
+
+      expect(target).toBe(undefined);
+      expect(def).toBe(defaults);
+    });
+
+    it("keeps string target", () => {
+      const [target, def] = extractParams(fb, ["actions.foo"]);
+
+      expect(target).toBe("actions.foo");
+      expect(def).toBeUndefined();
+    });
+
+    it("keeps string target with defaults", () => {
+      const [target, def] = extractParams(fb, ["actions.foo", defaults]);
+
+      expect(target).toBe("actions.foo");
+      expect(def).toBe(defaults);
+    });
+
+    it("keeps id target", () => {
+      const [target, def] = extractParams(fb, [ex.ns("a")]);
+
+      expect(target).toBe(ex.ns("a"));
+      expect(def).toBeUndefined();
+    });
+
+    it("keeps id target with defaults", () => {
+      const [target, def] = extractParams(fb, [ex.ns("a"), defaults]);
+
+      expect(target).toBe(ex.ns("a"));
+      expect(def).toBe(defaults);
+    });
+  });
 
   it("throws when executing undefined", () => {
     const { result } = renderHook(() => useAction(undefined), { wrapper });

@@ -56,12 +56,13 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}): Quadruple[] => {
         object,
         graph,
     );
+    const comments = rdfFactory.blankNode();
 
     return toDelta([
         typeObject(id)[0],
         createQuad(http.statusCode, rdfFactory.literal(200), ll.meta),
         createQuad(schema.name, rdfFactory.literal(attrs.title || "title")),
-        createQuad(schema.text, rdfFactory.literal(attrs.text || "text")),
+        createQuad(schema.text, rdfFactory.literal(attrs.text || "text", rdfx.langString)),
         createQuad(schema.author, rdfFactory.namedNode(attrs.author || "http://example.org/people/0")),
         createQuad(schema.dateCreated, rdfFactory.literal(new Date("2019-01-01"))),
         createQuad(ex.ns("timesRead"), rdfFactory.literal(5)),
@@ -69,6 +70,12 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}): Quadruple[] => {
         createQuad(example.ns("tags"), example.ns("tag/1")),
         createQuad(example.ns("tags"), example.ns("tag/2")),
         createQuad(example.ns("tags"), example.ns("tag/3")),
+        createQuad(schema.comment, comments),
+        rdfFactory.quad(comments, rdfx.type, rdfx.Seq, ld.add),
+        rdfFactory.quad(comments, rdfx.ns("_2"), rdfFactory.literal("e2"), ld.add),
+        rdfFactory.quad(comments, rdfx.ns("_1"), rdfFactory.literal("e1"), ld.add),
+        rdfFactory.quad(comments, rdfx.ns("_4"), rdfFactory.literal("e4"), ld.add),
+        rdfFactory.quad(comments, rdfx.ns("_3"), rdfFactory.literal("e3"), ld.add),
     ].filter(Boolean));
 };
 
@@ -79,7 +86,7 @@ function createComponentWrapper(lrs: LinkReduxLRSType, subject: SubjectType) {
           resourceProps?: Partial<ResourcePropTypes<any>>): React.ReactElement<any> => {
 
     return React.createElement(RenderStoreProvider, { value: lrsOverride || lrs },
-      React.createElement("div", { className: "root" },
+      React.createElement("div", { "data-testid": "root" },
         React.createElement(
           Resource,
           { forceRender: true, subject, topology, ...resourceProps },

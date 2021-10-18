@@ -3,7 +3,7 @@ import "../../__tests__/useHashFactory";
 
 import rdf, { NamedNode } from "@ontologies/core";
 import * as schema from "@ontologies/schema";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
@@ -15,9 +15,9 @@ import { TopologyProvider } from "../TopologyProvider";
 const id = "resources/5";
 const iri = example.ns(id);
 
-const createTestElement = (className = "testComponent") => () => React.createElement(
+const createTestElement = (testId = "testComponent") => () => React.createElement(
     "span",
-    { className },
+    { "data-testid": testId },
 );
 
 describe("TopologyProvider component", () => {
@@ -50,9 +50,9 @@ describe("TopologyProvider component", () => {
             ),
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("span").last()).toHaveClassName("collectionRendered");
+        expect(getByTestId("collectionRendered")).toBeVisible();
     });
 
     it("sets a class name", () => {
@@ -76,9 +76,9 @@ describe("TopologyProvider component", () => {
             React.createElement("span", null),
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { container } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("div").last()).toHaveClassName("test-class");
+        expect(container.querySelector(".test-class")).toBeVisible();
     });
 
     describe("#wrap", () => {
@@ -97,14 +97,14 @@ describe("TopologyProvider component", () => {
           null,
           (subject: NamedNode) => React.createElement(
             "span",
-            { dataTest: subject.value },
+            { "data-testid": subject.value },
             null,
           ),
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("span").last()).toHaveProp({ dataTest: iri.value });
+        expect(getByTestId(iri.value)).toBeVisible();
       });
     });
 });

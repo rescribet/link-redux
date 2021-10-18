@@ -1,3 +1,4 @@
+import { render } from "@testing-library/react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
@@ -49,6 +50,35 @@ describe("useStatus", () => {
     expect(container!.querySelector("#lastRequested")!.textContent)
       .toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/);
     expect(container!.querySelector("#timesRequested")!.textContent).toBe("1");
+  });
+
+  it("accepts undefined", () => {
+    const opts = ctx.fullCW();
+
+    const UpdateComp = () => {
+      const status = useStatus(undefined);
+
+      return (
+        <>
+          <span data-testid="type">{typeof status}</span>
+          <span data-testid="subject">{status?.subject.value}</span>
+          <span data-testid="status">{status?.status}</span>
+          <span data-testid="requested">{status?.requested?.toString()}</span>
+          <span data-testid="lastRequested">{status?.lastRequested?.toISOString()}</span>
+          <span data-testid="timesRequested">{status?.timesRequested}</span>
+        </>
+      );
+    };
+
+    const { getByTestId } = render(opts.wrapComponent(<UpdateComp />));
+
+    expect(getByTestId("type")!.textContent).toBe("object");
+    expect(getByTestId("subject")!.textContent).toBe(opts.subject!.value);
+    expect(getByTestId("status")!.textContent).toBe("200");
+    expect(getByTestId("requested")!.textContent).toBe("true");
+    expect(getByTestId("lastRequested")!.textContent)
+      .toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/);
+    expect(getByTestId("timesRequested")!.textContent).toBe("1");
   });
 
   it("updates with many subject", () => {

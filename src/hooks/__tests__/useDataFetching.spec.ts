@@ -1,27 +1,55 @@
 import "../../__tests__/useHashFactory";
 
-import { mount } from "enzyme";
+import rdfFactory from "@ontologies/core";
+import { render } from "@testing-library/react";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { useCalculateChildProps } from "../useCalculateChildProps";
-import { useLinkRenderContext } from "../useLinkRenderContext";
+import { useDataFetching } from "../useDataFetching";
 
-describe("useCalculateChildProps", () => {
-    it("allows an empty defaults", () => {
+describe("useDataFetching", () => {
+    it("allows an empty subject", () => {
       const opts = ctx.fullCW();
 
       opts.lrs.queueEntity = jest.fn();
       const comp = () => {
-        const context = useLinkRenderContext();
-        const childProps = useCalculateChildProps({}, context);
+        useDataFetching([]);
 
-        return Object.keys(childProps).join();
+        return null;
       };
 
-      // @ts-ignore
-      const elem = mount(opts.wrapComponent(React.createElement(comp)));
+      render(opts.wrapComponent(React.createElement(comp)));
 
-      expect(elem).toHaveText("subject,topology");
+      expect(opts.lrs.queueEntity).not.toHaveBeenCalledTimes(1);
+    });
+
+    it("sets an error for blank node subjects", () => {
+      const opts = ctx.fullCW();
+
+      const setError = jest.fn();
+      const comp = () => {
+          useDataFetching(rdfFactory.blankNode(), setError);
+
+          return null;
+      };
+
+      render(opts.wrapComponent(React.createElement(comp)));
+
+      expect(setError).toHaveBeenCalledTimes(1);
+    });
+
+    it("uses lrs reporter if no override was given", () => {
+      const opts = ctx.fullCW();
+
+      opts.lrs.report = jest.fn();
+      const comp = () => {
+          useDataFetching(rdfFactory.blankNode());
+
+          return null;
+      };
+
+      render(opts.wrapComponent(React.createElement(comp)));
+
+      expect(opts.lrs.report).toHaveBeenCalledTimes(1);
     });
 });

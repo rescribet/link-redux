@@ -5,7 +5,7 @@ import * as rdf from "@ontologies/rdf";
 import * as rdfs from "@ontologies/rdfs";
 import * as schema from "@ontologies/schema";
 import * as xsd from "@ontologies/xsd";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import { ComponentRegistration, LinkedRenderStore } from "link-lib";
 import React from "react";
 
@@ -20,50 +20,56 @@ import { Property } from "../Property";
 const subject = example.ns("41");
 
 describe("Property component", () => {
-    const render = (props: object = {}, registrations: Array<ComponentRegistration<any>> = []) => {
+    const renderProp = (props: object = {}, registrations: Array<ComponentRegistration<any>> = []) => {
         const opts = ctx.fullCW();
         opts.lrs.registerAll(registrations);
+        const element = React.createElement(
+          Property,
+          {
+            "data-testid": "id",
+            "forceRender": true,
+            "label": ex.ns("nonexistent"),
+            ...opts.contextProps(),
+            ...props,
+          },
+        );
 
-        return mount(opts.wrapComponent(React.createElement(
-            Property,
-            {
-                forceRender: true,
-                label: ex.ns("nonexistent"),
-                ...opts.contextProps(),
-                ...props,
-            },
-        )));
+        return render(opts.wrapComponent(element));
     };
 
     it("renders null when label and data are not present", () => {
-        const elem = render({
+        const { container } = renderProp({
             forceRender: false,
             label: undefined,
         });
-        expect(elem.find(Property).children()).toHaveLength(0);
+
+        expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
     });
 
     it("renders null when data is not present with forceRender", () => {
-        const elem = render();
-        expect(elem.find(Property).children()).toHaveLength(0);
+        const { container } = renderProp();
+
+        expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
     });
 
     it("renders the children when data is not present with forceRender and children", () => {
-        const elem = render({ children: React.createElement("span", { className: "child-elem" }) });
+        const { getByTestId } = renderProp({ children: React.createElement("span", { "data-testid": "child-elem" }) });
 
-        expect(elem).toContainMatchingElement(".child-elem");
+        expect(getByTestId("child-elem")).toBeVisible();
     });
 
     it("renders the children and association renderer when data is not present with forceRender and children", () => {
         const regs = LinkedRenderStore.registerRenderer(
-            ({ children }: any) => React.createElement("div", { className: "association" }, children),
+            ({ children }: any) => React.createElement("div", { "data-testid": "association" }, children),
             schema.CreativeWork,
             rdf.predicate,
         );
-        const elem = render({ children: React.createElement("span", { className: "association-child" }) }, regs);
+        const { getByTestId } = renderProp({
+          children: React.createElement("span", { "data-testid": "association-child" }),
+        }, regs);
 
-        expect(elem).toContainMatchingElement(".association");
-        expect(elem).toContainMatchingElement(".association-child");
+        expect(getByTestId("association")).toBeVisible();
+        expect(getByTestId("association-child")).toBeVisible();
     });
 
     it("renders null when the given property is not present", () => {
@@ -73,9 +79,9 @@ describe("Property component", () => {
             Property,
             { label: schema.title, ...opts.contextProps() },
         );
-        const elem = mount(opts.wrapComponent(comp));
+        const { container } = render(opts.wrapComponent(comp));
 
-        expect(elem.find(Property).children()).toHaveLength(0);
+        expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
     });
 
     it("renders the value when no view is registered", () => {
@@ -86,16 +92,16 @@ describe("Property component", () => {
             Property,
             { label: schema.name, ...opts.contextProps() },
         );
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByText } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("div").last()).toHaveText(title);
+        expect(getByText(title)).toBeVisible();
     });
 
     it("renders the view", () => {
         const title = "The title";
         const opts = ctx.name(subject, title);
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(
-            () => React.createElement("div", { className: "nameProp" }),
+            () => React.createElement("div", { "data-testid": "nameProp" }),
             schema.Thing,
             schema.name,
         ));
@@ -104,10 +110,9 @@ describe("Property component", () => {
             Property,
             { label: schema.name, ...opts.contextProps() },
         );
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem.find(Property).children()).toHaveLength(1);
-        expect(elem.find(".nameProp")).toExist();
+        expect(getByTestId("nameProp")).toBeVisible();
     });
 
     it("renders a LRC when rendering a NamedNode", () => {
@@ -123,9 +128,9 @@ describe("Property component", () => {
             Property,
             { label: schema.author, ...opts.contextProps() },
         );
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByText } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("Property")).toHaveText("loading");
+        expect(getByText("loading")).toBeVisible();
     });
 
     it("renders the literal renderer", () => {
@@ -133,7 +138,7 @@ describe("Property component", () => {
         const component: FC<PropertyProps> = ({ linkedProp }) => {
           return React.createElement(
             "div",
-            { className: "integerRenderer", children: linkedProp.value },
+            { "data-testid": "integerRenderer", "children": linkedProp.value },
           );
         };
         component.type = rdfs.Literal;
@@ -145,23 +150,26 @@ describe("Property component", () => {
             Property,
             { label: ex.ns("timesRead"), ...opts.contextProps() },
         );
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem).toContainMatchingElement(".integerRenderer");
-        expect(elem.find(".integerRenderer")).toHaveText("5");
+        expect(getByTestId("integerRenderer")).toBeVisible();
+        expect(getByTestId("integerRenderer")).toHaveTextContent("5");
     });
 
     describe("limit", () => {
         it("renders two components", () => {
-            const opts = ctx.fullCW(subject);
-            const comp = React.createElement(
-                Property,
-                { label: example.ns("tags"), limit: 2, ...opts.contextProps() },
+            const regs = LinkedRenderStore.registerRenderer(
+              ({ children }: any) => React.createElement("div", { "data-testid": "id" }, children),
+              schema.CreativeWork,
+              example.ns("tags"),
             );
 
-            const elem = mount(opts.wrapComponent(comp));
+            const { getAllByTestId } = renderProp({
+              label: example.ns("tags"),
+              limit: 2,
+            }, regs);
 
-            expect(elem.find(Property).find("Resource")).toHaveLength(2);
+            expect(getAllByTestId("id")).toHaveLength(2);
         });
 
         it("renders all components", () => {
@@ -171,9 +179,9 @@ describe("Property component", () => {
                 { label: example.ns("tags"), limit: Infinity, ...opts.contextProps() },
             );
 
-            const elem = mount(opts.wrapComponent(comp));
+            const { container } = render(opts.wrapComponent(comp));
 
-            expect(elem.find(Property).find("Resource")).toHaveLength(4);
+            expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
         });
     });
 
@@ -185,28 +193,28 @@ describe("Property component", () => {
             const comp = React.createElement(
                 Property,
                 { forceRender: true, label: schema.name, ...opts.contextProps() },
-                React.createElement("p", { className: "childComponent" }, null),
+                React.createElement("p", { "data-testid": "childComponent" }, null),
             );
             opts.lrs.registerAll(registrations);
 
-            return mount(opts.wrapComponent(comp));
+            return render(opts.wrapComponent(comp));
         };
 
         it("renders the children", () => {
-            const elem = renderWithChildren();
+            const { getByTestId } = renderWithChildren();
 
-            expect(elem.find("p.childComponent")).toExist();
+            expect(getByTestId("childComponent")).toBeVisible();
         });
 
         it("renders the children when a component was found", () => {
             const regs = LinkedRenderStore.registerRenderer(
-                (props: any) => React.createElement("div", { className: "nameProp" }, props.children),
+                (props: any) => React.createElement("div", { "data-testid": "nameProp" }, props.children),
                 schema.Thing,
                 schema.name,
             );
-            const elem = renderWithChildren(regs);
+            const { getByTestId } = renderWithChildren(regs);
 
-            expect(elem.find("p.childComponent")).toExist();
+            expect(getByTestId("nameProp")).toBeVisible();
         });
     });
 });

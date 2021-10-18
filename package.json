@@ -61,25 +61,21 @@
     "@pika/plugin-build-web": "^0.8.1",
     "@pika/plugin-ts-standard-pkg": "^0.8.1",
     "@rdfdev/iri": "^1.0.0",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@testing-library/react-hooks": "^7.0.2",
-    "@types/enzyme": "^3.10.5",
-    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/hoist-non-react-statics": "^3.3.1",
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^27.0.2",
     "@types/prop-types": "^15.7.4",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "base64-arraybuffer": "^1.0.1",
     "can-ndjson-stream": "^1.0.2",
     "core-js": "^3.6.4",
-    "enzyme": "^3.11.0",
     "gh-pages": "^2.0.1",
     "hoist-non-react-statics": "^3.3.2",
     "http-status-codes": "1.x",
-    "jest": "^25.2.4",
-    "jest-enzyme": "^7.1.2",
+    "jest": "^27.3.0",
     "link-lib": "^3.0.0-3",
     "n-quads-parser": "^2.1.0",
     "prop-types": "^15.x",
@@ -98,35 +94,5 @@
     "presets": [
       "@babel/preset-typescript"
     ]
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/__tests__/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
-      }
-    },
-    "setupFiles": [
-      "core-js"
-    ],
-    "testMatch": [
-      "**/*.spec.ts",
-      "**/*.spec.tsx"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "ts",
-      "tsx"
-    ],
-    "setupFilesAfterEnv": [
-      "./src/__tests__/helpers/setup.ts"
-    ],
-    "testURL": "http://example.org/resources/5"
   }
 }

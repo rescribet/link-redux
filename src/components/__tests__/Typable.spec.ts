@@ -1,7 +1,7 @@
 import "../../__tests__/useHashFactory";
 
 import rdfFactory from "@ontologies/core";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
@@ -24,15 +24,15 @@ describe("Typable", () => {
     describe("renderNoView", () => {
         it("renders a registered no-view component", () => {
             const opts = ctx.empty();
-            const errorComp = () => React.createElement("span", { className: "custom-no-view" });
+            const errorComp = () => React.createElement("span", { "data-testid": "custom-no-view" });
             errorComp.type = ll.NoView;
             errorComp.topology = ex.ns("t");
             opts.lrs.registerAll(register(errorComp));
             const element = renderNoView(props, opts.lrs);
 
-            const tree = mount(element);
+            const { getByTestId } = render(element);
 
-            expect(tree).toContainMatchingElement(".custom-no-view");
+            expect(getByTestId("custom-no-view")).toBeVisible();
         });
     });
 
@@ -45,7 +45,7 @@ describe("Typable", () => {
 
         it("renders the passed error component", () => {
             const opts = ctx.empty();
-            const errorComp = () => React.createElement("span", { className: "error-comp" });
+            const errorComp = () => React.createElement("span", { "data-testid": "error-comp" });
             const element = renderError({
               onError: errorComp,
               subject: undefined!,
@@ -57,9 +57,9 @@ describe("Typable", () => {
                 throw new Error();
             }
 
-            const tree = mount(element);
+            const { getByTestId } = render(element);
 
-            expect(tree).toContainMatchingElement(".error-comp");
+            expect(getByTestId("error-comp")).toBeVisible();
         });
     });
 

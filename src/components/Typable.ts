@@ -53,7 +53,7 @@ export function renderNoView(props: TypableInjectedProps & { label?: LabelType }
 
     return React.createElement(
         "div",
-        { className: "no-view" },
+        { "className": "no-view", "data-testid": "no-view" },
         React.createElement("p", null, message),
     );
 }

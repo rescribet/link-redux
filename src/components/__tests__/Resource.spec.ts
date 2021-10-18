@@ -4,7 +4,7 @@ import "../../__tests__/useHashFactory";
 import rdfFactory from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
 import * as schema from "@ontologies/schema";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import { LinkedRenderStore, RENDER_CLASS_NAME } from "link-lib";
 import React from "react";
 
@@ -17,9 +17,9 @@ import { Resource } from "../Resource";
 const id = "resources/5";
 const iri = example.ns(id);
 
-const createTestElement = (className = "testComponent") => () => React.createElement(
+const createTestElement = (testId = "testComponent") => () => React.createElement(
     "span",
-    { className },
+    { "data-testid": testId },
 );
 const loadLinkedObject = () => undefined;
 
@@ -27,15 +27,14 @@ describe("Resource component", () => {
     it("renders null when type is not present", () => {
         const opts = ctx.empty(iri);
         const comp = React.createElement(Resource, {
-            className: "testmarker",
+            "data-testid": "testmarker",
             loadLinkedObject,
-            subject: iri,
+            "subject": iri,
         });
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { container } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("Resource.testmarker").children())
-            .toHaveLength(0);
+        expect(container.querySelectorAll("[data-testid=\"testmarker\"] > *")).toHaveLength(0);
     });
 
     it("loads the reference when no data is present", () => {
@@ -43,7 +42,7 @@ describe("Resource component", () => {
         const opts = ctx.empty();
         opts.lrs.queueEntity = spy;
 
-        mount(opts.wrapComponent());
+        render(opts.wrapComponent());
 
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -57,21 +56,20 @@ describe("Resource component", () => {
             opts.contextProps(),
         );
 
-        mount(opts.wrapComponent(comp));
+        render(opts.wrapComponent(comp));
 
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it("renders the renderer when an subject is present", () => {
+    it("renders the renderer when a subject is present", () => {
         const opts = ctx.fullCW(iri);
 
         const comp = createTestElement();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
 
-        const elem = mount(opts.wrapComponent());
+        const { getByTestId } = render(opts.wrapComponent());
 
-        expect(elem.find(Resource)).toExist();
-        expect(elem.find("span.testComponent")).toHaveLength(1);
+        expect(getByTestId("testComponent")).toBeVisible();
     });
 
     it("renders blank nodes", () => {
@@ -86,14 +84,14 @@ describe("Resource component", () => {
 
         const comp = createTestElement();
         opts.lrs.registerAll(LinkedRenderStore.registerRenderer(comp, schema.Thing));
-        const elem = mount(
+        const { getByTestId } = render(
             opts.wrapComponent(React.createElement(Resource, {
                 loadLinkedObject,
                 subject: bn,
             })),
         );
 
-        expect(elem.find("span.testComponent")).toExist();
+        expect(getByTestId("testComponent")).toBeVisible();
     });
 
     it("renders error component when mounting unfetched blank node", () => {
@@ -107,14 +105,14 @@ describe("Resource component", () => {
           LinkedRenderStore.registerRenderer(createTestElement(), schema.Thing),
           LinkedRenderStore.registerRenderer(createTestElement("error"), ll.ErrorResource),
         );
-        const elem = mount(
+        const { getByTestId } = render(
             opts.wrapComponent(React.createElement(Resource, {
               loadLinkedObject,
               subject: bn,
             })),
         );
 
-        expect(elem.find("span.error")).toExist();
+        expect(getByTestId("error")).toBeVisible();
     });
 
     it("renders children when present", () => {
@@ -124,9 +122,9 @@ describe("Resource component", () => {
             { loadLinkedObject, subject: iri },
             React.createElement("span", null, "override"),
         );
-        const elem = mount(opts.wrapComponent(loc));
+        const { getByText } = render(opts.wrapComponent(loc));
 
-        expect(elem.find("span").last()).toHaveText("override");
+        expect(getByText("override")).toBeVisible();
     });
 
     const renderThroughOpts = () => {
@@ -162,9 +160,9 @@ describe("Resource component", () => {
             ),
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("span").last()).toHaveClassName("collectionRendered");
+        expect(getByTestId("collectionRendered")).toBeVisible();
     });
 
     it("renders default topology through children", () => {
@@ -183,8 +181,8 @@ describe("Resource component", () => {
             ),
         );
 
-        const elem = mount(opts.wrapComponent(comp));
+        const { getByTestId } = render(opts.wrapComponent(comp));
 
-        expect(elem.find("span").last()).toHaveClassName("normalRendered");
+        expect(getByTestId("normalRendered")).toBeVisible();
     });
 });

@@ -1,7 +1,7 @@
 import "./useHashFactory";
 
 import rdfFactory from "@ontologies/core";
-import { mount } from "enzyme";
+import { render } from "@testing-library/react";
 import {
     DEFAULT_TOPOLOGY,
     RENDER_CLASS_NAME,
@@ -76,13 +76,14 @@ describe("register.spec.ts", () => {
         };
 
         const Comp: FC<{ prop1: string, prop2: string }> = (props) =>
-            React.createElement("p", null, `value.${props.prop1}.${props.prop2}`);
+            React.createElement("p", { "data-testid": "id" }, `value.${props.prop1}.${props.prop2}`);
         Comp.type = ex.ns("TestClass");
         Comp.hocs = [hoc1, hoc2];
 
         const [ registration ] = register(Comp);
 
-        const elem = mount(React.createElement(registration.component, null, null));
-        expect(elem.find(registration.component)).toHaveText("value.hoc1.hoc2");
+        const { getByTestId } = render(React.createElement(registration.component, null, null));
+
+        expect(getByTestId("id")).toHaveTextContent("value.hoc1.hoc2");
     });
 });

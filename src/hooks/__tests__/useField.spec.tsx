@@ -38,6 +38,34 @@ describe("useFields", () => {
     expect(container!.querySelector("#test")!.textContent).toBe("title");
   });
 
+  it("memoized between renders", () => {
+    const opts = ctx.fullCW();
+    const values: any[] = [];
+
+    const UpdateComp = () => {
+      const tags = useFields(example.ns("tags"));
+      values.push(tags);
+
+      const [s, setS] = React.useState(0);
+
+      return (
+        <div
+          data-testid="id"
+          onClick={() => setS(s + 1)}
+        >
+          {s}
+        </div>
+      );
+    };
+
+    const { getByTestId } = render(opts.wrapComponent(<UpdateComp />));
+
+    fireEvent.click(getByTestId("id"));
+
+    expect(values).toHaveLength(2);
+    expect(values[0]).toStrictEqual(values[1]);
+  });
+
   it("retrieves a statement", () => {
     const opts = ctx.fullCW();
 
