@@ -5,7 +5,7 @@ import { useCalculatedValue } from "../useCalculatedValue";
 import { useDataFetching } from "../useDataFetching";
 
 import { NESTED_EMPTY_ARRAY } from "./emptyArray";
-import { resolver } from "./query";
+import { resolver } from "./Query";
 import { ArityPreservingValues, FieldLookupOverloads, Query } from "./types";
 import { useTargetedQuery } from "./useTargetedQuery";
 
@@ -52,7 +52,7 @@ export const makeParsedField = <
 >(
   parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
 ): R => {
-  const test: unknown = (
+  const dataHook: unknown = (
     resource: LaxIdentifier | LaxIdentifier[] | Query,
     field: Query | null = null,
   ): ReturnType<R> => {
@@ -62,5 +62,5 @@ export const makeParsedField = <
     return useCalculatedValue(calculate, [invalidation], parser, targets, query) as ReturnType<R>;
   };
 
-  return test as R;
+  return dataHook as R;
 };

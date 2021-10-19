@@ -34,7 +34,7 @@ export function orderedElementsOfList(store: LinkedRenderStore<any>, listEntry: 
 
     list.push(item);
     const rest = store.getResourceProperty(next, rdfx.rest);
-    if (isLiteral(rest) || nodes.includes(next)) {
+    if (!rest || isLiteral(rest) || nodes.includes(rest)) {
       break;
     }
     nodes.push(next);

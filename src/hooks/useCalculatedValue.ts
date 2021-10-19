@@ -1,18 +1,20 @@
 import { Node } from "@ontologies/core";
 import { equals } from "link-lib";
 import React from "react";
+
 import { LinkReduxLRSType } from "../types";
+
 import { useLRS } from "./useLRS";
 import { useSubject } from "./useSubject";
 
-const hasChanged = (old: any, next: any): boolean => {
+export const hasChanged = (old: any, next: any): boolean => {
   const isArray = Array.isArray(next);
   if (!isArray) {
-    return equals(old, next);
+    return !equals(old, next);
   }
 
-  if (typeof old !== typeof next && (isArray && !Array.isArray(old))) {
-    return false;
+  if (typeof old !== typeof next || (isArray && !Array.isArray(old))) {
+    return true;
   }
 
   return old.length !== next.length ||

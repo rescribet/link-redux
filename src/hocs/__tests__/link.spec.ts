@@ -61,7 +61,7 @@ describe("link", () => {
             });
 
             expect(props.name).toEqual(rdfFactory.literal("title"));
-            expect(props.text).toEqual(rdfFactory.literal("text"));
+            expect(props.text).toEqual(rdfFactory.literal("text", rdfx.langString));
             expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
             expect(props.tags).toEqual(example.ns("tag/0"));
         });
@@ -94,7 +94,7 @@ describe("link", () => {
 
             expect(props.label).not.toBeDefined();
             expect(props.name).toEqual(rdfFactory.literal("title"));
-            expect(props.text).toEqual(rdfFactory.literal("text"));
+            expect(props.text).toEqual(rdfFactory.literal("text", rdfx.langString));
             expect(props.author).toEqual(rdfFactory.namedNode("http://example.org/people/0"));
             expect(props.tags).toEqual([
                 example.ns("tag/0"),

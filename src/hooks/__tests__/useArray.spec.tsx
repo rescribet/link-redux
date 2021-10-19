@@ -76,7 +76,7 @@ describe("array", () => {
       ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
     });
 
-    expect(container!.querySelector("#len")!.textContent).toBe("6");
+    expect(container!.querySelector("#len")!.textContent).toBe("12");
     expect(container!.querySelector("#subject_0")!.textContent).toBe(opts.subject!.value);
     expect(container!.querySelector("#predicate_0")!.textContent).toBe(schema.name.value);
     expect(container!.querySelector("#object_0")!.textContent).toBe("title");

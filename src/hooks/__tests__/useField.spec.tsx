@@ -47,11 +47,12 @@ describe("useFields", () => {
       values.push(tags);
 
       const [s, setS] = React.useState(0);
+      const handleClick = () => setS(s + 1);
 
       return (
         <div
           data-testid="id"
-          onClick={() => setS(s + 1)}
+          onClick={handleClick}
         >
           {s}
         </div>

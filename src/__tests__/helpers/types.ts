@@ -1,4 +1,3 @@
-import "jest-enzyme";
 import {
     ComponentStoreTestProxy,
     LinkedRenderStore,
@@ -30,4 +29,5 @@ export interface TestContext<T> {
         lrsOverride?: unknown,
         resourceProps?: Partial<ResourcePropTypes<any>>,
     ) => React.ReactElement<any>;
+    wrapper: ({ children }: { children: React.ReactChild }) => JSX.Element;
 }

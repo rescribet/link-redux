@@ -4,7 +4,6 @@ import {
   isLiteral,
   isNamedNode,
   isNode,
-  isTerm,
   Literal,
   NamedNode,
   Node,
@@ -64,7 +63,7 @@ export const useQuads = makeParsedField<Quad>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useFields = makeParsedField<SomeTerm>(
-  (_) => (it) => isTerm(it.object) ? it.object : undefined,
+  (_) => (it) => it.object,
 );
 
 /**
@@ -181,7 +180,7 @@ export type RegularOrString = [value: string, language: string | undefined];
  */
 export const useAnyStrings = makeParsedField<RegularOrString>((_) => (quad) => {
   const it = quad.object;
-  if (!isLiteral(it) || !equals(it.datatype, rdfx.langString) || !equals(it.datatype, xsd.string)) {
+  if (!isLiteral(it) || !(equals(it.datatype, rdfx.langString) || equals(it.datatype, xsd.string))) {
     return undefined;
   }
 
