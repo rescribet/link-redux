@@ -18,6 +18,6 @@
   },
   "include": [
     "src",
-    "./jest-setup.ts"
+    "./src/__tests__/helpers/jest-setup.ts"
   ]
 }

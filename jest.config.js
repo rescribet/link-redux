@@ -25,7 +25,7 @@ module.exports = {
     "tsx"
   ],
   setupFilesAfterEnv: [
-    "./jest-setup.ts"
+    "./src/__tests__/helpers/jest-setup.ts"
   ],
   testURL: "http://example.org/resources/5"
 };

@@ -23,7 +23,6 @@
         "@pika/plugin-ts-standard-pkg",
         {
           "exclude": [
-            "jest-setup.ts",
             "jest.config.js",
             "__tests__/**/*"
           ]
