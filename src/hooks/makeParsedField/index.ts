@@ -59,7 +59,7 @@ export const makeParsedField = <
     const [targets, query] = useTargetedQuery(resource, field);
     const invalidation = useDataFetching(targets);
 
-    return useCalculatedValue(calculate, [invalidation], parser, targets, query) as ReturnType<R>;
+    return useCalculatedValue(calculate, [targets, query, invalidation], parser, targets, query) as ReturnType<R>;
   };
 
   return dataHook as R;

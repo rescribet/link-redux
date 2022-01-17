@@ -1,5 +1,6 @@
 import rdfFactory from "@ontologies/core";
 import { render } from "@testing-library/react";
+import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
@@ -81,6 +82,13 @@ describe("useStatus", () => {
     const { getByTestId } = render(opts.wrapComponent(<UpdateComp />));
 
     expect(getByTestId("type")!.textContent).toBe("undefined");
+  });
+
+  it("handles literals", () => {
+    const { wrapper } = ctx.fullCW();
+    const { result: { current } } = renderHook(() => useStatus(rdfFactory.literal("")), { wrapper });
+
+    expect(current).toEqual(undefined);
   });
 
   it("updates with many subject", () => {

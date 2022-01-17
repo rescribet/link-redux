@@ -1,5 +1,8 @@
 import "../../__tests__/useHashFactory";
 
+import rdfFactory, { NamedNode } from "@ontologies/core";
+import { render } from "@testing-library/react";
+import { renderHook } from "@testing-library/react-hooks";
 import { SubscriptionRegistrationBase } from "link-lib/dist-types/types";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -56,6 +59,13 @@ describe("useDataInvalidation", () => {
         container = undefined;
       });
 
+      it("handles literals", () => {
+        const { wrapper } = ctx.fullCW();
+        const { result: { current } } = renderHook(() => useDataInvalidation(rdfFactory.literal("")), { wrapper });
+
+        expect(current).toEqual(0);
+      });
+
       it("updates with data updates", () => {
         const iri = example.ns("");
         const opts = ctx.fullCW();
@@ -83,6 +93,39 @@ describe("useDataInvalidation", () => {
           cb.map((f) => f(undefined, 1234));
         });
         expect(container!.querySelector("#update")!.textContent).toBe("1234");
+      });
+
+      it("invalidates after resource removal", () => {
+        const firstId = example.ns("3");
+        let idCounter = 1;
+        const opts = ctx.fullCW(firstId);
+
+        const Comp = ({ resource }: { resource: NamedNode | undefined }) => {
+          const id = React.useRef(idCounter++);
+          const lastUpdate = useDataInvalidation(resource);
+
+          return (
+            <div>
+              <div data-testid="update">{lastUpdate}</div>
+              <span data-testid="instance-id">{id.current}</span>
+            </div>
+          );
+        };
+
+        const { getByTestId, rerender } = render(<Comp resource={firstId} />, { wrapper: opts.wrapper });
+
+        const firstUpdate = Number(getByTestId("update").textContent);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+        act(() => {
+          opts.lrs.removeResource(firstId, true);
+        });
+
+        rerender(<Comp resource={firstId} />);
+
+        const secondUpdate = Number(getByTestId("update").textContent);
+        expect(secondUpdate).toBeGreaterThan(firstUpdate);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
       });
     });
 });

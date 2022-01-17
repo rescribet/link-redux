@@ -29,5 +29,5 @@ export interface TestContext<T> {
         lrsOverride?: unknown,
         resourceProps?: Partial<ResourcePropTypes<any>>,
     ) => React.ReactElement<any>;
-    wrapper: ({ children }: { children: React.ReactChild }) => JSX.Element;
+    wrapper: React.ComponentType;
 }

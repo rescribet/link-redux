@@ -92,6 +92,15 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}): Quadruple[] => {
         createQuad(example.ns("broken"), brokenList),
         createQuad(example.ns("endless"), endlessList),
         createQuad(example.ns("circular"), circularList),
+
+        rdfFactory.quad(rdfFactory.namedNode(`${id.value}#fragment`), rdfx.type, schema.BedType, ld.add),
+        rdfFactory.quad(rdfFactory.namedNode(
+          `${id.value}#fragment`),
+          schema.name,
+          rdfFactory.literal("Royal bed"),
+          ld.add,
+        ),
+
         rdfFactory.quad(comments, rdfx.type, rdfx.Seq, ld.add),
         rdfFactory.quad(comments, rdfx.ns("_2"), rdfFactory.literal("e2"), ld.add),
         rdfFactory.quad(comments, rdfx.ns("_1"), rdfFactory.literal("e1"), ld.add),

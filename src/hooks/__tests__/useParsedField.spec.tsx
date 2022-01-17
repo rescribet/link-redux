@@ -1,16 +1,19 @@
-import rdfFactory, { Quad } from "@ontologies/core";
+import rdfFactory, { NamedNode, Quad } from "@ontologies/core";
 import * as schema from "@ontologies/schema";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import * as util from "util";
 import {
-  alt2BooleanLiteral, altBooleanLiteral,
-  b64Literal, badUrl,
+  alt2BooleanLiteral,
+  altBooleanLiteral,
+  b64Literal,
+  badUrl,
   bigIntLiteral,
   booleanLiteral,
   dateLiteral,
-  doubleLiteral, falseBooleanLiteral,
+  doubleLiteral,
+  falseBooleanLiteral,
   globalId,
   integerLiteral,
   langStringLiteral,
@@ -244,6 +247,77 @@ describe("useParsedField", () => {
 
       expect(parser).toHaveBeenCalledTimes(0);
       expect(current).toEqual([]);
+    });
+
+    it("invalidates from undefined to subject", () => {
+      const firstId = example.ns("3");
+      let idCounter = 1;
+
+      const parser = jest.fn((v: Quad) => v);
+      const parserWrapper = jest.fn(() => parser);
+
+      const opts = ctx.fullCW();
+      const useHook = makeParsedField(parserWrapper);
+
+      const Comp = ({ resource }: { resource: NamedNode | undefined }) => {
+        const id = React.useRef(idCounter++); // to ensure we don't remount a different instance
+        const [data] = useHook(resource, [schema.name]);
+
+        return (
+          <div>
+            <span data-testid="data-display">{data?.object?.value}</span>
+            <span data-testid="instance-id">{id.current}</span>
+          </div>
+        );
+      };
+
+      const { getByTestId, rerender } = render(opts.wrapComponent(<Comp resource={undefined} />));
+
+      expect(getByTestId("data-display")).toHaveTextContent("");
+      expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+      rerender(opts.wrapComponent(<Comp resource={firstId} />));
+
+      expect(getByTestId("data-display")).toHaveTextContent("title");
+      expect(getByTestId("instance-id")).toHaveTextContent("1");
+    });
+
+    it("invalidates from undefined to subject2", () => {
+      const firstId = example.ns("3");
+      let idCounter = 1;
+
+      const parser = jest.fn((v: Quad) => v);
+      const parserWrapper = jest.fn(() => parser);
+
+      const opts = ctx.fullCW();
+      const useHook = makeParsedField(parserWrapper);
+
+      const Comp = ({ resource }: { resource: NamedNode | undefined }) => {
+        const id = React.useRef(idCounter++); // to ensure we don't remount a different instance
+        const [data] = useHook(resource, [schema.name]);
+
+        return (
+          <div>
+            <span data-testid="data-display">{data?.object?.value}</span>
+            <span data-testid="instance-id">{id.current}</span>
+          </div>
+        );
+      };
+
+      const { getByTestId, rerender } = render(<Comp resource={firstId} />, { wrapper: opts.wrapper });
+
+      expect(getByTestId("data-display")).toHaveTextContent("title");
+      expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+      act(() => {
+        // opts.lrs.api.invalidate(firstId);
+        opts.lrs.removeResource(firstId, true);
+      });
+
+      rerender(<Comp resource={firstId} />);
+
+      expect(getByTestId("data-display")).toBeEmptyDOMElement();
+      expect(getByTestId("instance-id")).toHaveTextContent("1");
     });
   });
 

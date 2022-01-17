@@ -64,7 +64,7 @@ describe("useFields", () => {
     fireEvent.click(getByTestId("id"));
 
     expect(values).toHaveLength(2);
-    expect(values[0]).toStrictEqual(values[1]);
+    expect(values[0] === values[1]).toBeTruthy();
   });
 
   it("retrieves a statement", () => {

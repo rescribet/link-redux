@@ -36,7 +36,7 @@ export const useCalculatedValue = <T, K extends any[]>(
     value,
     setValue,
   ] = React.useState<[result: T, subjects: Node[]]>(() => calculator(lrs, ...args));
-  const invalidation = useSubject(value[1]);
+  const [, invalidation] = useSubject(value[1]);
 
   React.useEffect(() => {
     if (isMountRef.current) {
