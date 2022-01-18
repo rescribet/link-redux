@@ -4259,6 +4259,17 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"hextuples@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "hextuples@npm:2.0.0"
+  dependencies:
+    "@ontologies/core": ">=2.0.0"
+  peerDependencies:
+    can-ndjson-stream: ^1.0.2
+  checksum: 1088309acf8cc0542653e99f3a0986b9e66062179d94f109b6d40328a093fed0cd75d468b39091c40a840916a307bcfeb3ceba8188cd7b9514cb508e4f2965bb
+  languageName: node
+  linkType: hard
+
 "highlight.js@npm:^9.17.1":
   version: 9.18.5
   resolution: "highlight.js@npm:9.18.5"
@@ -5583,9 +5594,9 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"link-lib@npm:^3.0.0-3":
-  version: 3.0.0-3
-  resolution: "link-lib@npm:3.0.0-3"
+"link-lib@npm:^3.0.0-5":
+  version: 3.0.0-5
+  resolution: "link-lib@npm:3.0.0-5"
   peerDependencies:
     "@ontologies/as": ">=1.0.1"
     "@ontologies/core": ">=2.0.0"
@@ -5593,10 +5604,10 @@ fsevents@^2.3.2:
     "@ontologies/schema": ">=1.0.0"
     "@ontologies/shacl": ">=1.0.0"
     "@ontologies/xsd": ">=1.0.0"
-    can-ndjson-stream: ^1.0.2
+    hextuples: ">=2.0.0"
     http-status-codes: ">= 1.x"
-    n-quads-parser: ^2.1.0-3
-  checksum: 93cc86a37c2dbdaa4012812203352d22b81c089ff77722f5a86239573af0f5385d4d800b3edfc067c31961a9a7c79cb5e01c2e15ee99a13f9a0416b797fcec48
+    n-quads-parser: ^2.1.1
+  checksum: 137e697bc056ac491318ddde207fa2373be6d9931ce573b4ad389a7f4ff24bf1b772783b7ed609754f673d65a94b8464c9c1c0ba61d7ef5f777d7e97ca25785d
   languageName: node
   linkType: hard
 
@@ -5632,10 +5643,11 @@ fsevents@^2.3.2:
     can-ndjson-stream: ^1.0.2
     core-js: ^3.6.4
     gh-pages: ^2.0.1
+    hextuples: ^2.0.0
     hoist-non-react-statics: ^3.3.2
     http-status-codes: 1.x
     jest: ^27.3.0
-    link-lib: ^3.0.0-3
+    link-lib: ^3.0.0-5
     n-quads-parser: ^2.1.0
     prop-types: ^15.x
     react: ^17.0.2
@@ -5653,7 +5665,7 @@ fsevents@^2.3.2:
     base64-arraybuffer: ^1.0.1
     hoist-non-react-statics: ">=3.x"
     http-status-codes: ">= 1.x"
-    link-lib: ">=3.0.0-1"
+    link-lib: ">=3.0.0-5"
     prop-types: ">= 15.x"
     react: ">= 16.10.x"
   languageName: unknown
