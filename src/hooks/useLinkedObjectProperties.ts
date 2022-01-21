@@ -1,4 +1,4 @@
-import { Quad } from "@ontologies/core";
+import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
 
 import {
   DataToPropsMapping,
@@ -12,11 +12,11 @@ export function useLinkedObjectProperties<
   T extends DataToPropsMapping = DataToPropsMapping,
   D extends ReturnType = ReturnType,
 >(
-    subjProps: Quad[],
+    subjProps: Array<[Id, DataRecord]>,
     propMap: T,
     returnType: D,
 ): LinkedDataObject<T, D> | undefined {
-    const [data] = useManyLinkedObjectProperties([subjProps], propMap, returnType);
+    const [data] = useManyLinkedObjectProperties(subjProps, propMap, returnType);
 
     return data;
 }

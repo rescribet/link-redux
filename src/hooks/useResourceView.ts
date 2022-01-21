@@ -12,5 +12,5 @@ export function useResourceView(
       subject,
       RENDER_CLASS_NAME,
       topology,
-    );
+    ) ?? undefined;
 }

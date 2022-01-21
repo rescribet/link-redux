@@ -2,7 +2,6 @@ import { isNode } from "@ontologies/core";
 
 import {
   AllLiteralsOpts,
-  AllStatementsOpts,
   AllTermsOpts,
   AllValuesOpts,
   LinkOpts,
@@ -10,7 +9,6 @@ import {
   MapWithReplacedReturnType,
   PropParam,
   ReturnType,
-  StatementOpts,
   TermOpts,
   ValueOpts,
 } from "./types";
@@ -54,12 +52,6 @@ export const term = <P extends PropParam>(predicate: P): MapWithReplacedReturnTy
   returnType: ReturnType.Term,
 });
 
-/** Sets the return type to `ReturnType.Statement`. */
-export const statement = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, StatementOpts> => ({
-  ...mergedMap(predicate),
-  returnType: ReturnType.Statement,
-});
-
 /** Sets the return type to `ReturnType.Literal`. */
 export const literal = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, LiteralOpts> => ({
   ...mergedMap(predicate),
@@ -76,12 +68,6 @@ export const value = <P extends PropParam>(predicate: P): MapWithReplacedReturnT
 export const terms = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllTermsOpts> => ({
   ...mergedMap(predicate),
   returnType: ReturnType.AllTerms,
-});
-
-/** Sets the return type to `ReturnType.AllStatements`. */
-export const statements = <P extends PropParam>(predicate: P): MapWithReplacedReturnType<P, AllStatementsOpts> => ({
-  ...mergedMap(predicate),
-  returnType: ReturnType.AllStatements,
 });
 
 /** Sets the return type to `ReturnType.AllLiterals`. */

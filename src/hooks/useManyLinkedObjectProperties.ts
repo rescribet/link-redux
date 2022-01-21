@@ -1,5 +1,6 @@
-import rdf, { Quad } from "@ontologies/core";
-import { equals, getPropBestLangRaw } from "link-lib";
+import rdf, { NamedNode, Quadruple } from "@ontologies/core";
+import { getPropBestLangRaw, normalizeType } from "link-lib";
+import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
 import React from "react";
 
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
@@ -14,34 +15,36 @@ import {
 
 import { useLRS } from "./useLRS";
 
+const defaultGraph: NamedNode = rdf.defaultGraph();
+
 export function useManyLinkedObjectProperties<
   T extends DataToPropsMapping = {},
   D extends ReturnType = ReturnType.Term,
   OutVal = LinkedDataObject<T, D>,
 >(
-  subjPropsArr: Quad[][],
+  propSets: Array<[Id | undefined, DataRecord]>,
   propMap: T,
   returnType?: D,
 ): OutVal[] {
-  type DataObjectType = OutVal;
-
-  const returnTypeOrDefault = returnType || globalLinkOptsDefaults.returnType;
+  const returnTypeOrDefault = returnType ?? globalLinkOptsDefaults.returnType;
   const lrs = useLRS();
   const values = React.useMemo(() => Object.values(propMap), [propMap]);
-  const length = subjPropsArr.length;
 
   return React.useMemo(
     () => {
       const propMaps: OutVal[] = [];
 
-      for (let h = 0; h < length; h++) {
-        const subjProps = subjPropsArr[h];
-        const subject = subjProps[0]?.subject;
+      for (const [s, record] of propSets) {
         const acc: any = {};
 
+        const subject = s === undefined
+          ? undefined
+          : s.includes(":")
+            ? rdf.namedNode(s)
+            : rdf.blankNode(s);
         acc.subject = toReturnType(
           returnTypeOrDefault,
-          subject ? [rdf.quad(subject, ll.dataSubject, subject)] : [],
+          subject ? [[subject, ll.dataSubject, subject, rdf.defaultGraph()]] : [],
         );
 
         for (let i = 0, ilen = values.length; i < ilen; i++) {
@@ -53,29 +56,33 @@ export function useManyLinkedObjectProperties<
               continue;
             }
 
-            const data: Quad[] = [];
-            for (let k = 0, klen = subjProps.length; k < klen; k++) {
-              if (equals(subjProps[k].predicate, cur)) {
-                data.push(subjProps[k]);
-              }
+            const field = record[cur.value];
+            if (field === undefined) {
+              acc[propOpts.name] = toReturnType(propOpts.returnType ?? returnTypeOrDefault, []);
+              continue;
             }
+
+            const data: Quadruple[] = normalizeType(field).map((value) => [
+              subject,
+              cur,
+              value,
+              defaultGraph,
+            ]);
+
             const best = data.length === 1 ? data[0] : getPropBestLangRaw(data, (lrs.store as any).langPrefs);
             if (data[0] !== best) {
               data[data.indexOf(best)] = data[0];
               data[0] = best;
             }
 
-            acc[propOpts.name] = toReturnType(
-              propOpts.returnType ?? returnTypeOrDefault,
-              propOpts.limit !== Infinity  ? data.slice(0, propOpts.limit) : data,
-            );
+            acc[propOpts.name] = toReturnType(propOpts.returnType ?? returnTypeOrDefault, data);
           }
         }
-        propMaps.push(acc as DataObjectType);
+        propMaps.push(acc);
       }
 
       return propMaps;
     },
-    [lrs, subjPropsArr, values],
+    [lrs, propSets, values],
   );
 }

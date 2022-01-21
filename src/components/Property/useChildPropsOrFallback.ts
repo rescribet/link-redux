@@ -1,5 +1,4 @@
-import { Quad, SomeTerm } from "@ontologies/core";
-import { normalizeType } from "link-lib";
+import { SomeTerm } from "@ontologies/core";
 import React from "react";
 
 import { useCalculateChildProps } from "../../hooks/useCalculateChildProps";
@@ -19,7 +18,7 @@ export function useChildPropsOrFallback<P extends PropertyPropTypes>(props: P):
   const lrs = useLRS();
   const [error, setError] = React.useState<Error|undefined>(undefined);
   const context = useLinkRenderContext();
-  const subjectData = lrs.tryEntity(context.subject);
+  const subjectData = lrs.tryRecord(context.subject);
 
   const childProps = useCalculateChildProps(props, context, options);
   try {
@@ -27,24 +26,38 @@ export function useChildPropsOrFallback<P extends PropertyPropTypes>(props: P):
   } catch (e: any) {
     setError(e);
   }
-  if (subjectData.length === 0) {
+  if (subjectData === undefined || childProps.label === undefined) {
     return null;
   }
 
-  const labels = normalizeType(childProps.label)
-    .filter(Boolean)
-    .map((l) => l.value);
-  const objRaw = subjectData
-    .filter((s: Quad) => labels.includes(s.predicate.value))
-    .map((s: Quad) => s.object);
+  let values: SomeTerm[] = [];
+  if (Array.isArray(childProps.label)) {
+    values = childProps.label.reduce<SomeTerm[]>((acc, l) => {
+      const v = subjectData[l.value];
+      if (Array.isArray(v)) {
+        return [...acc, ...v];
+      } else if (v !== undefined) {
+        return [...acc, v];
+      } else {
+        return acc;
+      }
+    }, []);
+  } else {
+    const v = subjectData[childProps.label.value];
+    if (Array.isArray(v)) {
+      values = v;
+    } else if (v !== undefined) {
+      values = [v];
+    }
+  }
 
   if (error) {
     return renderError(childProps, lrs, error);
   }
 
-  if (objRaw.length === 0 && !childProps.forceRender) {
+  if (values.length === 0 && !childProps.forceRender) {
     return null;
   }
 
-  return [childProps, objRaw];
+  return [childProps, values];
 }

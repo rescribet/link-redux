@@ -10,8 +10,6 @@ import {
   renderPartial,
   single,
   some,
-  statement,
-  statements,
   term,
   terms,
   value,
@@ -67,16 +65,12 @@ describe("DSL", () => {
   describe("return types", () => {
     it("sets Term", () => expect(term(schema.name))
       .toHaveProperty("returnType"), ReturnType.Term);
-    it("sets Statement", () => expect(statement(schema.name))
-      .toHaveProperty("returnType"), ReturnType.Statement);
     it("sets Literal", () => expect(literal(schema.name))
       .toHaveProperty("returnType"), ReturnType.Literal);
     it("sets Value", () => expect(value(schema.name))
       .toHaveProperty("returnType"), ReturnType.Value);
     it("sets AllTerms", () => expect(terms(schema.name))
       .toHaveProperty("returnType"), ReturnType.AllTerms);
-    it("sets AllStatements", () => expect(statements(schema.name))
-      .toHaveProperty("returnType"), ReturnType.AllStatements);
     it("sets AllLiterals", () => expect(literals(schema.name))
       .toHaveProperty("returnType"), ReturnType.AllLiterals);
     it("sets AllValues", () => expect(values(schema.name))

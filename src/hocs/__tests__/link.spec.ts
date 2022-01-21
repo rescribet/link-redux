@@ -167,20 +167,6 @@ describe("link", () => {
 
                 expect(props.name).toEqual(rdfFactory.literal("title"));
             });
-
-            it("can return statements", () => {
-                renderWithProps(
-                    { name: schema.name },
-                    { returnType: ReturnType.Statement },
-                );
-
-                expect(props.name).toEqual(rdfFactory.quad(
-                    iri,
-                    schema.name,
-                    rdfFactory.literal("title"),
-                    rdfFactory.defaultGraph(),
-                ));
-            });
         });
     });
 });

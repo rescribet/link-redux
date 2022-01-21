@@ -42,7 +42,7 @@ export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null 
         return notReadyComponent;
     }
 
-    if (component !== undefined) {
+    if (component !== undefined && component !== null) {
         const {
             children,
             ...rest // tslint:disable-line trailing-comma

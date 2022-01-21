@@ -11,5 +11,5 @@ export function getLinkedObjectClass({ label, subject, topology, topologyCtx }: 
     subject,
     labelOverride || label,
     topology === null ? undefined : topology || topologyCtx,
-  );
+  ) ?? undefined;
 }

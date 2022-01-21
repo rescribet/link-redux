@@ -1,6 +1,5 @@
 import "../../../__tests__/useHashFactory";
 
-import rdfFactory from "@ontologies/core";
 import ex from "../../../ontology/ex";
 import { ReturnType } from "../../../types";
 
@@ -21,8 +20,8 @@ describe("dataPropsToPropMap", () => {
 
         expect(propMap).toHaveProperty("cLabel");
         expect(requestedProperties).toEqual([
-            rdfFactory.id(ex.ns("p")),
-            rdfFactory.id(ex.ns("q")),
+            ex.ns("p"),
+            ex.ns("q"),
         ]);
 
         const { cLabel } = propMap;
@@ -44,7 +43,7 @@ describe("dataPropsToPropMap", () => {
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
+        expect(requestedProperties).toEqual([ex.ns("p")]);
 
         const { cLabel } = propMap;
         expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
@@ -59,7 +58,7 @@ describe("dataPropsToPropMap", () => {
 
         expect(propMap).toHaveProperty("cLabel");
         expect(propMap).not.toHaveProperty("oLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
+        expect(requestedProperties).toEqual([ex.ns("p")]);
 
         const { cLabel } = propMap;
         expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
@@ -74,7 +73,7 @@ describe("dataPropsToPropMap", () => {
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
+        expect(requestedProperties).toEqual([ex.ns("p")]);
 
         const { cLabel } = propMap;
         expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
@@ -106,16 +105,16 @@ describe("dataPropsToPropMap", () => {
         const [ propMap, requestedProperties ] = dataPropsToPropMap({
             cLabel: {
                 label: ex.ns("p"),
-                returnType: ReturnType.Statement,
+                returnType: ReturnType.Value,
             },
         }, {});
 
         expect(propMap).toHaveProperty("cLabel");
-        expect(requestedProperties).toEqual([rdfFactory.id(ex.ns("p"))]);
+        expect(requestedProperties).toEqual([ex.ns("p")]);
 
         const { cLabel } = propMap;
         expect(cLabel).toHaveProperty("label", [ex.ns("p")]);
         expect(cLabel).toHaveProperty("name", "cLabel");
-        expect(cLabel).toHaveProperty("returnType", ReturnType.Statement);
+        expect(cLabel).toHaveProperty("returnType", ReturnType.Value);
     });
 });

@@ -51,7 +51,7 @@ export function link(
       return wrapWithSubject;
     }
 
-    return wrapWithConnect(propMap, requestedProperties, opts);
+    return wrapWithConnect(propMap, opts);
 }
 
 export { globalLinkOptsDefaults } from "./link/globalLinkOptsDefaults";

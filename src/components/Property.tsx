@@ -14,8 +14,8 @@ import {
   TopologyProp,
 } from "../types";
 
+import { createPropertyRenderer } from "./Property/createPropertyRenderer";
 import { getLinkedObjectClass } from "./Property/getLinkedObjectClass";
-import { createLimitTimes } from "./Property/limitTimes";
 import { renderChildrenOrValue } from "./Property/renderChildrenOrValue";
 import { useChildPropsOrFallback } from "./Property/useChildPropsOrFallback";
 import { Resource } from "./Resource";
@@ -70,11 +70,11 @@ export const Property: React.ComponentType<PropertyPropTypes & any> = (props): R
         return React.createElement(associationRenderer, associationProps, childComp);
     }
 
-    const limitTimes = createLimitTimes(childProps, objRaw, lrs);
+    const propertyRenderer = createPropertyRenderer(childProps, objRaw, lrs);
 
     const component = getLinkedObjectClass(childProps, lrs);
     if (component) {
-        const toRender = limitTimes(
+        const toRender = propertyRenderer(
             (p) => React.createElement(component, { ...childProps, linkedProp: p }, childComp),
             associationRenderer,
         );
@@ -98,10 +98,10 @@ export const Property: React.ComponentType<PropertyPropTypes & any> = (props): R
                 return <Resource {...lrcProps}>{childComp}</Resource>;
             };
 
-            return limitTimes(wrapLOC, associationRenderer);
+            return propertyRenderer(wrapLOC, associationRenderer);
         }
 
-        return limitTimes(
+        return propertyRenderer(
             renderChildrenOrValue(childProps, lrs),
             associationRenderer,
         );

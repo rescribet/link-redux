@@ -1,4 +1,4 @@
-import { isNamedNode, isNode } from "@ontologies/core";
+import { isNamedNode, isNode, QuadPosition } from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
 import { equals } from "link-lib";
 
@@ -36,7 +36,7 @@ const exceptResolver: Resolver<ExceptQuery> = (lrs: LinkReduxLRSType, query: Exc
   const fields = query.fields;
 
   return [
-    lrs.tryEntity(s).filter((q) => fields.every((p) => !equals(p, q.predicate))),
+    lrs.tryEntity(s).filter((q) => fields.every((p) => !equals(p, q[QuadPosition.predicate]))),
     EMPTY_ARRAY,
   ];
 };

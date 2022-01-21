@@ -17,7 +17,6 @@ import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
 
 const arrayReturnTypes = [
-  ReturnType.AllStatements,
   ReturnType.AllTerms,
   ReturnType.AllValues,
   ReturnType.AllLiterals,

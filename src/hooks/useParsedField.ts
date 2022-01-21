@@ -7,7 +7,8 @@ import {
   Literal,
   NamedNode,
   Node,
-  Quad,
+  QuadPosition,
+  Quadruple,
   SomeTerm,
 } from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
@@ -54,7 +55,7 @@ export const array = (...fields: NamedNode[]): ArrayQuery => ({
  * Retrieves fields of any type as raw terms.
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
-export const useQuads = makeParsedField<Quad>(
+export const useQuadruples = makeParsedField<Quadruple>(
   (_) => (it) => it,
 );
 
@@ -63,7 +64,7 @@ export const useQuads = makeParsedField<Quad>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useFields = makeParsedField<SomeTerm>(
-  (_) => (it) => it.object,
+  (_) => (it) => it[QuadPosition.object],
 );
 
 /**
@@ -72,7 +73,9 @@ export const useFields = makeParsedField<SomeTerm>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useIds = makeParsedField<Node>(
-  (_) => (it) => isNode(it.object) ? it.object : undefined,
+  (_) => (it) => isNode(it[QuadPosition.object])
+    ? it[QuadPosition.object] as Node
+    : undefined,
 );
 
 /**
@@ -81,7 +84,9 @@ export const useIds = makeParsedField<Node>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useGlobalIds = makeParsedField<NamedNode>(
-  (_) => (it) => isNamedNode(it.object) ? it.object : undefined,
+  (_) => (it) => isNamedNode(it[QuadPosition.object])
+    ? it[QuadPosition.object] as NamedNode
+    : undefined,
 );
 
 // TODO: Different hook which filters on on- and off-site?
@@ -92,7 +97,9 @@ export const useGlobalIds = makeParsedField<NamedNode>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useLocalIds = makeParsedField<BlankNode>(
-  (_) => (it) => isBlankNode(it.object) ? it.object : undefined,
+  (_) => (it) => isBlankNode(it[QuadPosition.object])
+    ? it[QuadPosition.object] as BlankNode
+    : undefined,
 );
 
 /**
@@ -101,7 +108,9 @@ export const useLocalIds = makeParsedField<BlankNode>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useLiterals = makeParsedField<Literal>(
-  (_) => (it) => isLiteral(it.object) ? it.object : undefined,
+  (_) => (it) => isLiteral(it[QuadPosition.object])
+    ? it[QuadPosition.object] as Literal
+    : undefined,
 );
 
 /**
@@ -109,7 +118,7 @@ export const useLiterals = makeParsedField<Literal>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useValues = makeParsedField<string>(
-  (_) => (it) => it.object.value,
+  (_) => (it) => it[QuadPosition.object].value,
 );
 
 /**
@@ -117,7 +126,9 @@ export const useValues = makeParsedField<string>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useLiteralValues = makeParsedField<string>(
-  (_) => (it) => isLiteral(it.object) ? it.object.value : undefined,
+  (_) => (it) => isLiteral(it[QuadPosition.object])
+    ? it[QuadPosition.object].value as string
+    : undefined,
 );
 
 /**
@@ -125,7 +136,7 @@ export const useLiteralValues = makeParsedField<string>(
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useBase64s = makeParsedField<ArrayBuffer>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !equals(it.datatype, xsd.base64Binary)) {
     return undefined;
   }
@@ -138,7 +149,7 @@ export const useBase64s = makeParsedField<ArrayBuffer>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useBigInts = makeParsedField<BigInt>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !bigIntTypes.some((type) => equals(it.datatype, type))) {
     return undefined;
   }
@@ -151,7 +162,7 @@ export const useBigInts = makeParsedField<BigInt>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useBooleans = makeParsedField<boolean>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !equals(it.datatype, xsd.xsdboolean)) {
     return undefined;
   }
@@ -164,7 +175,7 @@ export const useBooleans = makeParsedField<boolean>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useDates = makeParsedField<Date>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !(equals(it.datatype, xsd.dateTime) || equals(it.datatype, xsd.date))) {
     return undefined;
   }
@@ -179,7 +190,7 @@ export type RegularOrString = [value: string, language: string | undefined];
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useAnyStrings = makeParsedField<RegularOrString>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !(equals(it.datatype, rdfx.langString) || equals(it.datatype, xsd.string))) {
     return undefined;
   }
@@ -194,7 +205,7 @@ export type LangString = [value: string, language: string];
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useLangStrings = makeParsedField<LangString>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !equals(it.datatype, rdfx.langString)) {
     return undefined;
   }
@@ -207,7 +218,7 @@ export const useLangStrings = makeParsedField<LangString>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useRegularStrings = makeParsedField<string>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !equals(it.datatype, xsd.string)) {
     return undefined;
   }
@@ -220,7 +231,7 @@ export const useRegularStrings = makeParsedField<string>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useStrings = makeParsedField<string>((_) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !(equals(it.datatype, rdfx.langString) || equals(it.datatype, xsd.string))) {
     return undefined;
   }
@@ -233,7 +244,7 @@ export const useStrings = makeParsedField<string>((_) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useNumbers = makeParsedField<number>((lrs) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isLiteral(it) || !numberTypes.some((type) => equals(it.datatype, type))) {
     return undefined;
   }
@@ -254,7 +265,7 @@ export const useNumbers = makeParsedField<number>((lrs) => (quad) => {
  * @param resource {Node} - The resource to look up. Defaults to the context subject.
  */
 export const useUrls = makeParsedField<URL>((lrs) => (quad) => {
-  const it = quad.object;
+  const it = quad[QuadPosition.object];
   if (!isNamedNode(it)) {
     return undefined;
   }

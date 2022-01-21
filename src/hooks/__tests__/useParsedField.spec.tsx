@@ -1,4 +1,4 @@
-import rdfFactory, { NamedNode, Quad } from "@ontologies/core";
+import rdfFactory, { NamedNode, QuadPosition, Quadruple } from "@ontologies/core";
 import * as schema from "@ontologies/schema";
 import { act, render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
@@ -40,17 +40,18 @@ import {
   useLiteralValues,
   useLocalIds,
   useNumbers,
-  useQuads,
   useRegularStrings,
   useStrings,
   useUrls,
   useValues,
 } from "../useParsedField";
 
+const defaultGraph = rdfFactory.defaultGraph();
+
 describe("useParsedField", () => {
   describe("makeParsedField", () => {
     it("filters on predicate", () => {
-      const parser = jest.fn((v: Quad) => {
+      const parser = jest.fn((v: Quadruple) => {
         return v;
       });
       const parserWrapper = jest.fn(() => parser);
@@ -63,10 +64,10 @@ describe("useParsedField", () => {
         return (
           <div>
             <div data-testid="len">{fields.length}</div>
-            <div data-testid="s">{q1?.subject?.value}</div>
-            <div data-testid="p">{q1?.predicate?.value}</div>
-            <div data-testid="ott">{q1?.object?.termType}</div>
-            <div data-testid="ov">{q1?.object?.value}</div>
+            <div data-testid="s">{q1?.[QuadPosition.subject]?.value}</div>
+            <div data-testid="p">{q1?.[QuadPosition.predicate]?.value}</div>
+            <div data-testid="ott">{q1?.[QuadPosition.object]?.termType}</div>
+            <div data-testid="ov">{q1?.[QuadPosition.object]?.value}</div>
           </div>
         );
       };
@@ -95,7 +96,7 @@ describe("useParsedField", () => {
         },
       );
 
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
       const useParsedField = makeParsedField(parserWrapper);
 
@@ -106,10 +107,10 @@ describe("useParsedField", () => {
         return (
           <div>
             <div data-testid="len">{fields.length}</div>
-            <div data-testid="s">{q1?.subject?.value}</div>
-            <div data-testid="p">{q1?.predicate?.value}</div>
-            <div data-testid="ott">{q1?.object?.termType}</div>
-            <div data-testid="ov">{q1?.object?.value}</div>
+            <div data-testid="s">{q1?.[QuadPosition.subject]?.value}</div>
+            <div data-testid="p">{q1?.[QuadPosition.predicate]?.value}</div>
+            <div data-testid="ott">{q1?.[QuadPosition.object]?.termType}</div>
+            <div data-testid="ov">{q1?.[QuadPosition.object]?.value}</div>
           </div>
         );
       };
@@ -137,7 +138,7 @@ describe("useParsedField", () => {
         },
       );
 
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
       const useParsedField = makeParsedField(parserWrapper);
 
@@ -171,7 +172,7 @@ describe("useParsedField", () => {
         },
       );
 
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
       const useParsedField = makeParsedField(parserWrapper);
 
@@ -186,16 +187,16 @@ describe("useParsedField", () => {
             <div data-testid="lenS">{fieldSets.length}</div>
 
             <div data-testid="len0">{fields0.length}</div>
-            <div data-testid="s0">{q0?.subject?.value}</div>
-            <div data-testid="p0">{q0?.predicate?.value}</div>
-            <div data-testid="ott0">{q0?.object?.termType}</div>
-            <div data-testid="ov0">{q0?.object?.value}</div>
+            <div data-testid="s0">{q0?.[QuadPosition.subject]?.value}</div>
+            <div data-testid="p0">{q0?.[QuadPosition.predicate]?.value}</div>
+            <div data-testid="ott0">{q0?.[QuadPosition.object]?.termType}</div>
+            <div data-testid="ov0">{q0?.[QuadPosition.object]?.value}</div>
 
             <div data-testid="len1">{fields1.length}</div>
-            <div data-testid="s1">{q1?.subject?.value}</div>
-            <div data-testid="p1">{q1?.predicate?.value}</div>
-            <div data-testid="ott1">{q1?.object?.termType}</div>
-            <div data-testid="ov1">{q1?.object?.value}</div>
+            <div data-testid="s1">{q1?.[QuadPosition.subject]?.value}</div>
+            <div data-testid="p1">{q1?.[QuadPosition.predicate]?.value}</div>
+            <div data-testid="ott1">{q1?.[QuadPosition.object]?.termType}</div>
+            <div data-testid="ov1">{q1?.[QuadPosition.object]?.value}</div>
           </div>
         );
       };
@@ -220,7 +221,7 @@ describe("useParsedField", () => {
     });
 
     it("handles null case", () => {
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
       const useParsedField = makeParsedField(parserWrapper);
 
@@ -238,7 +239,7 @@ describe("useParsedField", () => {
     });
 
     it("handles empty array case", () => {
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
 
       const { wrapper } = ctx.fullCW();
@@ -253,7 +254,7 @@ describe("useParsedField", () => {
       const firstId = example.ns("3");
       let idCounter = 1;
 
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
 
       const opts = ctx.fullCW();
@@ -265,7 +266,7 @@ describe("useParsedField", () => {
 
         return (
           <div>
-            <span data-testid="data-display">{data?.object?.value}</span>
+            <span data-testid="data-display">{data?.[QuadPosition.object]?.value}</span>
             <span data-testid="instance-id">{id.current}</span>
           </div>
         );
@@ -286,7 +287,7 @@ describe("useParsedField", () => {
       const firstId = example.ns("3");
       let idCounter = 1;
 
-      const parser = jest.fn((v: Quad) => v);
+      const parser = jest.fn((v: Quadruple) => v);
       const parserWrapper = jest.fn(() => parser);
 
       const opts = ctx.fullCW();
@@ -298,7 +299,7 @@ describe("useParsedField", () => {
 
         return (
           <div>
-            <span data-testid="data-display">{data?.object?.value}</span>
+            <span data-testid="data-display">{data?.[QuadPosition.object]?.value}</span>
             <span data-testid="instance-id">{id.current}</span>
           </div>
         );
@@ -403,21 +404,21 @@ describe("useParsedField", () => {
       const wrapper = opts.wrapper;
 
       const quads = [
-        rdfFactory.quad(id, prop, langStringLiteral),
-        rdfFactory.quad(id, prop, globalId),
-        rdfFactory.quad(id, prop, badUrl),
-        rdfFactory.quad(id, prop, localId),
-        rdfFactory.quad(id, prop, b64Literal),
-        rdfFactory.quad(id, prop, bigIntLiteral),
-        rdfFactory.quad(id, prop, booleanLiteral),
-        rdfFactory.quad(id, prop, falseBooleanLiteral),
-        rdfFactory.quad(id, prop, altBooleanLiteral),
-        rdfFactory.quad(id, prop, alt2BooleanLiteral),
-        rdfFactory.quad(id, prop, dateLiteral),
-        rdfFactory.quad(id, prop, stringLiteral),
-        rdfFactory.quad(id, prop, integerLiteral),
-        rdfFactory.quad(id, prop, nanIntegerLiteral),
-        rdfFactory.quad(id, prop, doubleLiteral),
+        [id, prop, langStringLiteral, defaultGraph],
+        [id, prop, globalId, defaultGraph],
+        [id, prop, badUrl, defaultGraph],
+        [id, prop, localId, defaultGraph],
+        [id, prop, b64Literal, defaultGraph],
+        [id, prop, bigIntLiteral, defaultGraph],
+        [id, prop, booleanLiteral, defaultGraph],
+        [id, prop, falseBooleanLiteral, defaultGraph],
+        [id, prop, altBooleanLiteral, defaultGraph],
+        [id, prop, alt2BooleanLiteral, defaultGraph],
+        [id, prop, dateLiteral, defaultGraph],
+        [id, prop, stringLiteral, defaultGraph],
+        [id, prop, integerLiteral, defaultGraph],
+        [id, prop, nanIntegerLiteral, defaultGraph],
+        [id, prop, doubleLiteral, defaultGraph],
       ];
       const allLiterals = [
         langStringLiteral,
@@ -434,18 +435,8 @@ describe("useParsedField", () => {
         doubleLiteral,
       ];
 
-      describe("useQuads", () => {
-        const result = quads;
-
-        it("returns a parsed value", () => {
-          const value = renderHook(() => useQuads(prop), { wrapper });
-
-          expect(value.result.current).toEqual(result);
-        });
-      });
-
       describe("useFields", () => {
-        const result = quads.map((q) => q.object);
+        const result = quads.map((q) => q[QuadPosition.object]);
 
         it("returns a parsed value", () => {
           const value = renderHook(() => useFields(prop), { wrapper });
@@ -495,7 +486,7 @@ describe("useParsedField", () => {
       });
 
       describe("useValues", () => {
-        const result = quads.map((q) => q.object.value);
+        const result = quads.map((q) => q[QuadPosition.object].value);
 
         it("returns a parsed value", () => {
           const value = renderHook(() => useValues(prop), { wrapper });

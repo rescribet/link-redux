@@ -45,7 +45,7 @@ function useCalculatedViewWithState(props: InjectedPropTypes,
         return notReadyComponent;
     }
 
-    if (component !== undefined) {
+    if (component !== undefined && component != null) {
         return React.createElement(component, props);
     }
 

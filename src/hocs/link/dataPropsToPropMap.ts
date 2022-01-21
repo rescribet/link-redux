@@ -1,5 +1,5 @@
 import { isNamedNode, NamedNode } from "@ontologies/core";
-import { id, normalizeType } from "link-lib";
+import { normalizeType } from "link-lib";
 
 import {
   DataToPropsMapping,
@@ -17,7 +17,7 @@ function mapMultiLabelMap<K>(propKey: K, predObj: NamedNode[], opts: LinkOpts): 
     }
 
     return [
-        predObj.map(id),
+        predObj,
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -31,7 +31,7 @@ function mapMultiLabelMap<K>(propKey: K, predObj: NamedNode[], opts: LinkOpts): 
 
 function mapLabelMap<K>(propKey: K, predObj: NamedNode, opts: LinkOpts): PropMapTuple<K> {
     return [
-        [id(predObj)],
+        [predObj],
         {
             fetch: opts.fetch || globalLinkOptsDefaults.fetch,
             forceRender: opts.forceRender || globalLinkOptsDefaults.forceRender,
@@ -51,7 +51,7 @@ function mapLinkOptsMap<K>(propKey: K, predObj: LinkOpts, opts: LinkOpts): PropM
     }
 
     return [
-        labels.map(id),
+        labels,
         {
             fetch: predObj.fetch ?? opts.fetch ?? globalLinkOptsDefaults.fetch,
             forceRender: predObj.forceRender ?? opts.forceRender ?? globalLinkOptsDefaults.forceRender,
@@ -79,8 +79,8 @@ export function dataPropsToPropMap<
 >(
   mapDataToProps: T,
   opts: LinkOpts,
-): [DataToPropsMapping<T>, number[]] {
-    let requestedProperties: number[] = [];
+): [DataToPropsMapping<T>, NamedNode[]] {
+    let requestedProperties: NamedNode[] = [];
 
     const propMap = Object
       .keys(mapDataToProps)
@@ -98,5 +98,5 @@ export function dataPropsToPropMap<
         };
       }, {} as any);
 
-    return [ propMap, requestedProperties ];
+    return [ propMap, Array.from(new Set(requestedProperties)) ];
 }

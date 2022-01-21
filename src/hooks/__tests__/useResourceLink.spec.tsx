@@ -1,3 +1,4 @@
+import rdf, { QuadPosition } from "@ontologies/core";
 import * as schema from "@ontologies/schema";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -54,11 +55,11 @@ describe("useResourceLink", () => {
         <div>
           <p id="id0">{(props.read as number)?.toFixed(2)}</p>
           <p id="id1">{props.name?.termType}</p>
-          <p id="id2">{props.creation?.subject.value}</p>
-          <p id="id3">{props.taggings[0]?.object?.value}</p>
-          <p id="id4">{props.taggings[1]?.object?.value}</p>
+          <p id="id2">{props.creation?.[QuadPosition.subject].value}</p>
+          <p id="id3">{props.taggings[0]?.[QuadPosition.object]?.value}</p>
+          <p id="id4">{props.taggings[1]?.[QuadPosition.object]?.value}</p>
           <p id="id5">{props.whatever?.charAt(4)}</p>
-          <p id="id6">{props.subject?.predicate.value}</p>
+          <p id="id6">{props.subject?.[QuadPosition.predicate].value}</p>
         </div>
       );
     };
@@ -75,5 +76,33 @@ describe("useResourceLink", () => {
     expect(container!.querySelector("#id4")!.textContent).toBe(example.ns("tag/1").value);
     expect(container!.querySelector("#id5")!.textContent).toBe("e");
     expect(container!.querySelector("#id6")!.textContent).toBe("http://purl.org/link-lib/dataSubject");
+  });
+
+  it("returns empty object when resource doesn't exists", () => {
+    const opts = ctx.fullCW();
+
+    const UpdateComp = () => {
+      const props = useResourceLink(
+        rdf.blankNode("empty"),
+        {
+          creation: schema.dateCreated,
+        },
+      );
+
+      return (
+        <div>
+          <p id="id0">{props.subject?.value}</p>
+          <p id="id1">{Object.keys(props).length}</p>
+        </div>
+      );
+    };
+
+    act(() => {
+      // @ts-ignore
+      ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
+    });
+
+    expect(container!.querySelector("#id0")!.textContent).toBe("empty");
+    expect(container!.querySelector("#id1")!.textContent).toBe("1");
   });
 });

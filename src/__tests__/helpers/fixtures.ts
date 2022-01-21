@@ -61,7 +61,7 @@ const sFull = (id: NamedNode, attrs: CWOpts = {}): Quadruple[] => {
     const comments = rdfFactory.blankNode();
     const reviews = rdfFactory.blankNode();
     const reviews1 = rdfFactory.blankNode();
-    const reviews2 = rdfFactory.blankNode();
+    const reviews2 = rdfFactory.blankNode("reviews2");
     const reviews3 = rdfFactory.blankNode();
     const reviews4 = rdfFactory.blankNode();
     const brokenList = rdfFactory.blankNode();

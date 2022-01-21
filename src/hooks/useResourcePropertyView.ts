@@ -17,5 +17,5 @@ export function useResourcePropertyView(
       subject || context.subject,
       predicate,
       topology || context.topology,
-    );
+    ) ?? undefined;
 }

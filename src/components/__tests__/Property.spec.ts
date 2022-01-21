@@ -156,35 +156,6 @@ describe("Property component", () => {
         expect(getByTestId("integerRenderer")).toHaveTextContent("5");
     });
 
-    describe("limit", () => {
-        it("renders two components", () => {
-            const regs = LinkedRenderStore.registerRenderer(
-              ({ children }: any) => React.createElement("div", { "data-testid": "id" }, children),
-              schema.CreativeWork,
-              example.ns("tags"),
-            );
-
-            const { getAllByTestId } = renderProp({
-              label: example.ns("tags"),
-              limit: 2,
-            }, regs);
-
-            expect(getAllByTestId("id")).toHaveLength(2);
-        });
-
-        it("renders all components", () => {
-            const opts = ctx.fullCW(subject);
-            const comp = React.createElement(
-                Property,
-                { label: example.ns("tags"), limit: Infinity, ...opts.contextProps() },
-            );
-
-            const { container } = render(opts.wrapComponent(comp));
-
-            expect(container.querySelectorAll("[data-testid=\"root\"] > *")).toHaveLength(0);
-        });
-    });
-
     describe("with children", () => {
         const title = "The title";
         const renderWithChildren = (registrations: Array<ComponentRegistration<any>> = []) => {

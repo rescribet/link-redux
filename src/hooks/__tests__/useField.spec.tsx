@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import example from "../../ontology/example";
-import { useFields, useQuads } from "../useParsedField";
+import { useFields } from "../useParsedField";
 
 describe("useFields", () => {
   let container: HTMLElement | undefined;
@@ -65,39 +65,6 @@ describe("useFields", () => {
 
     expect(values).toHaveLength(2);
     expect(values[0] === values[1]).toBeTruthy();
-  });
-
-  it("retrieves a statement", () => {
-    const opts = ctx.fullCW();
-
-    const UpdateComp = () => {
-      const [first, second] = useQuads(
-        example.ns("tags"),
-      );
-
-      return (
-        <div>
-          <div id="subject_0">{first?.subject?.value}</div>
-          <div id="predicate_0">{first?.predicate?.value}</div>
-          <div id="object_0">{first?.object?.value}</div>
-          <div id="subject_1">{second?.subject?.value}</div>
-          <div id="predicate_1">{second?.predicate?.value}</div>
-          <div id="object_1">{second?.object?.value}</div>
-        </div>
-      );
-    };
-
-    act(() => {
-      // @ts-ignore
-      ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
-    });
-
-    expect(container!.querySelector("#subject_0")!.textContent).toBe(opts.subject!.value);
-    expect(container!.querySelector("#predicate_0")!.textContent).toBe(example.ns("tags").value);
-    expect(container!.querySelector("#object_0")!.textContent).toBe("http://example.com/tag/0");
-    expect(container!.querySelector("#subject_1")!.textContent).toBe(opts.subject!.value);
-    expect(container!.querySelector("#predicate_1")!.textContent).toBe(example.ns("tags").value);
-    expect(container!.querySelector("#object_1")!.textContent).toBe("http://example.com/tag/1");
   });
 
   /**

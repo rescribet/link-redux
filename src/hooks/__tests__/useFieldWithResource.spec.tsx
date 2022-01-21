@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
-import { useFields, useQuads } from "../useParsedField";
+import { useFields } from "../useParsedField";
 
 describe("useFields with resource", () => {
   let container: HTMLElement | undefined;
@@ -34,34 +34,6 @@ describe("useFields with resource", () => {
     });
 
     expect(container!.querySelector("#test")!.textContent).toBe("title");
-  });
-
-  it("retrieves a statement", () => {
-    const opts = ctx.fullCW();
-
-    const UpdateComp = () => {
-      const [test] = useQuads(
-        opts.subject,
-        schema.name,
-      );
-
-      return (
-        <div>
-          <div id="subject">{test?.subject?.value}</div>;
-          <div id="predicate">{test?.predicate?.value}</div>;
-          <div id="object">{test?.object?.value}</div>;
-        </div>
-      );
-    };
-
-    act(() => {
-      // @ts-ignore
-      ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
-    });
-
-    expect(container!.querySelector("#subject")!.textContent).toBe(opts.subject!.value);
-    expect(container!.querySelector("#predicate")!.textContent).toBe(schema.name.value);
-    expect(container!.querySelector("#object")!.textContent).toBe("title");
   });
 
   /**

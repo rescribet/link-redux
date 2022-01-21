@@ -1,4 +1,4 @@
-import { BlankNode, Literal, NamedNode, Quad, SomeTerm, Term } from "@ontologies/core";
+import { BlankNode, Literal, NamedNode, Quadruple, SomeTerm, Term } from "@ontologies/core";
 import {
   DataProcessor,
   EmptyRequestStatus,
@@ -34,7 +34,10 @@ export type LinkReduxLRSType<
 export enum ReturnType {
   /** Return the `object`, keeping the underlying rdf data model. */
   Term,
-  /** Keep the underlying rdf data model */
+  /**
+   * Keep the underlying rdf data model
+   * @deprecated
+   */
   Statement,
   /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
   Literal,
@@ -43,7 +46,10 @@ export enum ReturnType {
 
   /** Return the `object`, keeping the underlying rdf data model. */
   AllTerms,
-  /** Keep the underlying rdf data model */
+  /**
+   * Keep the underlying rdf data model
+   * @deprecated
+   */
   AllStatements,
   /** Return the `object` converted to the nearest matching JS type, or a plain string if not possible. */
   AllLiterals,
@@ -113,16 +119,23 @@ export const defaultLinkOptions: DataOpts = {
 };
 
 /** All possible return types from data mapping functions */
-export type ReturnValueTypes = Quad | Quad[] | SomeTerm | SomeTerm[] | string | string[] | ToJSOutputTypes | undefined;
+export type ReturnValueTypes = Quadruple
+  | Quadruple[]
+  | SomeTerm
+  | SomeTerm[]
+  | string
+  | string[]
+  | ToJSOutputTypes
+  | undefined;
 
 export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
   T extends ValueOpts ? string | undefined :
   T extends LiteralOpts ? ToJSOutputTypes | undefined :
-  T extends StatementOpts ? Quad | undefined :
+  T extends StatementOpts ? Quadruple | undefined :
   T extends TermOpts ? SomeTerm | undefined :
   T extends AllValuesOpts ? string[] :
   T extends AllLiteralsOpts ? ToJSOutputTypes[] :
-  T extends AllStatementsOpts ? Quad[] :
+  T extends AllStatementsOpts ? Quadruple[] :
   T extends AllTermsOpts ? SomeTerm[] :
   Default;
 
@@ -132,10 +145,10 @@ export type OutputTypeFromReturnType<
 > = T extends ReturnType.Term ? SomeTerm | undefined :
   T extends ReturnType.Value ? string | undefined :
   T extends ReturnType.Literal ? ToJSOutputTypes | undefined :
-  T extends ReturnType.Statement ? Quad | undefined :
+  T extends ReturnType.Statement ? Quadruple | undefined :
   T extends ReturnType.AllValues ? string[] :
   T extends ReturnType.AllLiterals ? ToJSOutputTypes[] :
-  T extends ReturnType.AllStatements ? Quad[] :
+  T extends ReturnType.AllStatements ? Quadruple[] :
   T extends ReturnType.AllTerms ? SomeTerm[] :
   Default;
 
@@ -241,7 +254,7 @@ export type CalculatedChildProps<P> = P &
   Partial<LinkedRenderStoreContext> &
   Partial<LinkCtxOverrides>;
 
-export type DataHookReturnType = Quad[] | Term[] | string[] | ToJSOutputTypes[];
+export type DataHookReturnType = Quadruple[] | Term[] | string[] | ToJSOutputTypes[];
 
 export interface GlobalLinkOpts extends DataOpts {
     fetch: boolean;
@@ -268,7 +281,7 @@ export interface ProcessedLinkOpts<T = string> extends LinkOpts {
 
 export type DataToPropsMapping<P = {}> = { [T in keyof P]: ProcessedLinkOpts<T> };
 
-export type PropMapTuple<K> = [number[], ProcessedLinkOpts<K>];
+export type PropMapTuple<K> = [NamedNode[], ProcessedLinkOpts<K>];
 
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;
 

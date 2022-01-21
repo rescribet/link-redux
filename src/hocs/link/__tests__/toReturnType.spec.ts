@@ -14,7 +14,9 @@ describe("toReturnType", () => {
       const testBool = (value: string, res: boolean) => {
         const parsed = toReturnType(
           ReturnType.Literal,
-          rdf.quad(ex.ns(""), ex.ns(""), rdf.literal(value, xsdboolean)),
+          [
+            [ex.ns(""), ex.ns(""), rdf.literal(value, xsdboolean), rdf.defaultGraph()],
+          ],
         );
 
         expect(parsed).toEqual(res);

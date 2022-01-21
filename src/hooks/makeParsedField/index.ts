@@ -1,4 +1,4 @@
-import { Node, Quad, Term } from "@ontologies/core";
+import { Node, Quadruple, Term } from "@ontologies/core";
 
 import { Identifier, LaxIdentifier, LinkReduxLRSType, OptionalIdentifiers } from "../../types";
 import { useCalculatedValue } from "../useCalculatedValue";
@@ -11,7 +11,7 @@ import { useTargetedQuery } from "./useTargetedQuery";
 
 export const calculate = <T, K extends OptionalIdentifiers = undefined>(
   lrs: LinkReduxLRSType,
-  parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
+  parser: (lrs: LinkReduxLRSType) => (v: Quadruple) => T | undefined,
   subject: K,
   query: Query,
 ): [result: ArityPreservingValues<K, T[]>, subjects: Node[]] => {
@@ -50,7 +50,7 @@ export const makeParsedField = <
   T = Term | undefined,
   R extends FieldLookupOverloads<T> = FieldLookupOverloads<T>,
 >(
-  parser: (lrs: LinkReduxLRSType) => (v: Quad) => T | undefined,
+  parser: (lrs: LinkReduxLRSType) => (v: Quadruple) => T | undefined,
 ): R => {
   const dataHook: unknown = (
     resource: LaxIdentifier | LaxIdentifier[] | Query,

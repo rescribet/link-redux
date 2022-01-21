@@ -5594,9 +5594,9 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"link-lib@npm:^3.0.0-5":
-  version: 3.0.0-5
-  resolution: "link-lib@npm:3.0.0-5"
+"link-lib@npm:0.0.0-0b1c2b7f":
+  version: 0.0.0-0b1c2b7f
+  resolution: "link-lib@npm:0.0.0-0b1c2b7f"
   peerDependencies:
     "@ontologies/as": ">=1.0.1"
     "@ontologies/core": ">=2.0.0"
@@ -5607,7 +5607,7 @@ fsevents@^2.3.2:
     hextuples: ">=2.0.0"
     http-status-codes: ">= 1.x"
     n-quads-parser: ^2.1.1
-  checksum: 137e697bc056ac491318ddde207fa2373be6d9931ce573b4ad389a7f4ff24bf1b772783b7ed609754f673d65a94b8464c9c1c0ba61d7ef5f777d7e97ca25785d
+  checksum: 1c12093d8b1a8eaabf1ead319d14b416f4f70b204fc22791b4cebaf1d1bd21663270696515d32215aa2d4fb18fd13c8461e955a5ca16832a507979a580c813a7
   languageName: node
   linkType: hard
 
@@ -5647,7 +5647,7 @@ fsevents@^2.3.2:
     hoist-non-react-statics: ^3.3.2
     http-status-codes: 1.x
     jest: ^27.3.0
-    link-lib: ^3.0.0-5
+    link-lib: 0.0.0-0b1c2b7f
     n-quads-parser: ^2.1.0
     prop-types: ^15.x
     react: ^17.0.2

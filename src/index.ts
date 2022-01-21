@@ -30,7 +30,7 @@ export {
   array,
   dig,
   except,
-  useQuads,
+  useQuadruples,
   useFields,
   useIds,
   useLocalIds,

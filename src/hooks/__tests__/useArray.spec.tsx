@@ -1,4 +1,4 @@
-import rdfFactory from "@ontologies/core";
+import rdfFactory, { QuadPosition } from "@ontologies/core";
 import * as ld from "@ontologies/ld";
 import * as rdfx from "@ontologies/rdf";
 import * as schema from "@ontologies/schema";
@@ -7,7 +7,7 @@ import React from "react";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
 import example from "../../ontology/example";
-import { array, except, useQuads, useValues } from "../useParsedField";
+import { array, except, useQuadruples, useValues } from "../useParsedField";
 
 describe("array", () => {
   it("maps sequence to values", () => {
@@ -41,18 +41,18 @@ describe("array", () => {
     const opts = ctx.fullCW();
 
     const UpdateComp = () => {
-      const quads = useQuads(except(rdfx.type, example.ns("tags")));
+      const quads = useQuadruples(except(rdfx.type, example.ns("tags")));
       const [first, second] = quads;
 
       return (
         <div>
           <div data-testid="len">{quads.length}</div>
-          <div data-testid="subject_0">{first?.subject?.value}</div>
-          <div data-testid="predicate_0">{first?.predicate?.value}</div>
-          <div data-testid="object_0">{first?.object?.value}</div>
-          <div data-testid="subject_1">{second?.subject?.value}</div>
-          <div data-testid="predicate_1">{second?.predicate?.value}</div>
-          <div data-testid="object_1">{second?.object?.value}</div>
+          <div data-testid="subject_0">{first[QuadPosition.subject]?.value}</div>
+          <div data-testid="predicate_0">{first[QuadPosition.predicate]?.value}</div>
+          <div data-testid="object_0">{first[QuadPosition.object]?.value}</div>
+          <div data-testid="subject_1">{second[QuadPosition.subject]?.value}</div>
+          <div data-testid="predicate_1">{second[QuadPosition.predicate]?.value}</div>
+          <div data-testid="object_1">{second[QuadPosition.object]?.value}</div>
         </div>
       );
     };
@@ -96,9 +96,9 @@ describe("array", () => {
 
     act(() => {
       opts.lrs.processDelta([
-        rdfFactory.quad(subject, schema.comment, seq, ld.replace),
-        rdfFactory.quad(seq, rdfx.type, rdfx.Seq, ld.replace),
-        rdfFactory.quad(seq, rdfx.ns("_01"), rdfFactory.literal("e1"), ld.replace),
+        [subject, schema.comment, seq, ld.replace],
+        [seq, rdfx.type, rdfx.Seq, ld.replace],
+        [seq, rdfx.ns("_01"), rdfFactory.literal("e1"), ld.replace],
       ], true);
     });
 
@@ -115,12 +115,12 @@ describe("array", () => {
 
     act(() => {
       opts.lrs.processDelta([
-        rdfFactory.quad(subject, schema.comment, seq, ld.replace),
-        rdfFactory.quad(seq, rdfx.type, rdfx.Seq, ld.replace),
-        rdfFactory.quad(seq, rdfx.ns("_01"), rdfFactory.literal("e1"), ld.replace),
-        rdfFactory.quad(seq, rdfx.ns("_02"), rdfFactory.literal("e2"), ld.replace),
-        rdfFactory.quad(seq, rdfx.ns("_03"), rdfFactory.literal("e3"), ld.replace),
-        rdfFactory.quad(seq, rdfx.ns("_04"), rdfFactory.literal("e4"), ld.replace),
+        [subject, schema.comment, seq, ld.replace],
+        [seq, rdfx.type, rdfx.Seq, ld.replace],
+        [seq, rdfx.ns("_01"), rdfFactory.literal("e1"), ld.replace],
+        [seq, rdfx.ns("_02"), rdfFactory.literal("e2"), ld.replace],
+        [seq, rdfx.ns("_03"), rdfFactory.literal("e3"), ld.replace],
+        [seq, rdfx.ns("_04"), rdfFactory.literal("e4"), ld.replace],
       ], true);
     });
 

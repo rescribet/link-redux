@@ -20,7 +20,7 @@ export function useView(type: NamedNode | NamedNode[] | undefined,
             type,
             predicate,
             topology || context.topology,
-        ),
+        ) ?? undefined,
         [lrs, type, predicate, topology || context.topology],
     );
 }

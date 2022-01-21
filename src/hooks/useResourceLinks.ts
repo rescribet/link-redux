@@ -1,15 +1,15 @@
-import rdfFactory, { isNamedNode, Node, Quad } from "@ontologies/core";
-import { id, normalizeType } from "link-lib";
+import { Node } from "@ontologies/core";
+import { normalizeType } from "link-lib";
+import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
 import React from "react";
 
 import { reduceDataSubjects } from "../helpers";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
-import ll from "../ontology/ll";
 import {
   LaxNode,
   LinkedDataObject,
-  LinkOpts, LinkReduxLRSType,
+  LinkOpts,
   MapDataToPropsParam,
   TermOpts,
 } from "../types";
@@ -18,46 +18,7 @@ import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
 import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
 
-const buildPropSets = <D extends LinkOpts>(
-  lrs: LinkReduxLRSType,
-  dataSubjects: Array<Node | undefined>,
-  requestedProperties: number[],
-  opts: D,
-): Quad[][] => {
-  const sets: Quad[][] = [];
-  const len = dataSubjects.length;
-
-  for (let i = 0; i < len; i++) {
-    const subject = dataSubjects[i];
-    if (!subject) {
-      // Preserve arity
-      sets.push([]);
-      continue;
-    }
-
-    if ((opts.fetch ?? globalLinkOptsDefaults.fetch)
-      && isNamedNode(subject)
-      && lrs.shouldLoadResource(subject)) {
-      lrs.queueEntity(subject);
-    }
-
-    const subjectData = lrs.tryEntity(subject);
-    const subjProps = [
-      // Ensure the first item's subject is always the data subject
-      rdfFactory.quad(subject, ll.dataSubject, subject),
-    ];
-
-    for (let j = 0; j < subjectData.length; j++) {
-      if (requestedProperties.includes(id(subjectData[j].predicate))) {
-        subjProps.push(subjectData[j]);
-      }
-    }
-
-    sets.push(subjProps);
-  }
-
-  return sets;
-};
+const EMPTY_DATA_RECORD: DataRecord = Object.freeze({});
 
 export function useResourceLinks<
   T extends MapDataToPropsParam = {},
@@ -78,8 +39,14 @@ export function useResourceLinks<
     [mapDataToProps, opts],
   );
 
-  const propSets = React.useMemo(
-    () => buildPropSets<D>(lrs, dataSubjects, requestedProperties, defaultedOpts),
+  const propSets: Array<[Id | undefined, DataRecord]> = React.useMemo(
+    () => dataSubjects.map((subject) => {
+      if (!subject) { return [subject, EMPTY_DATA_RECORD]; }
+
+      const record = lrs.tryRecord(subject);
+
+      return [subject.value, record ?? EMPTY_DATA_RECORD];
+    }),
     [
       lrs,
       reduceDataSubjects(dataSubjects),

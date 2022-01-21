@@ -1,4 +1,4 @@
-import { isLiteral, Literal, Quad } from "@ontologies/core";
+import { isLiteral, Literal, QuadPosition, Quadruple } from "@ontologies/core";
 import * as xsd from "@ontologies/xsd";
 import { equals, normalizeType } from "link-lib";
 
@@ -61,26 +61,26 @@ export function toReturnType<
   R = OutputTypeFromReturnType<D, never>,
 >(
   returnType: ReturnType,
-  p: Quad | ReadonlyArray<Quad>,
+  p: ReadonlyArray<Quadruple>,
 ): R {
     // @ts-ignore
     const stmts = normalizeType(p);
     switch (returnType) {
         case ReturnType.Literal:
-            return toJS(stmts[0]?.object) as unknown as R;
+            return toJS(stmts[0]?.[QuadPosition.object]) as unknown as R;
         case ReturnType.Value:
-            return stmts[0]?.object.value as unknown as R;
+            return stmts[0]?.[QuadPosition.object].value as unknown as R;
         case ReturnType.Term:
-            return stmts[0]?.object as unknown as R;
-        case ReturnType.Statement:
-            return stmts[0] as unknown as R;
+            return stmts[0]?.[QuadPosition.object] as unknown as R;
+      case ReturnType.Statement:
+        return stmts[0] as unknown as R;
 
         case ReturnType.AllLiterals:
-          return stmts.map((s) => toJS(s.object)) as unknown as R;
+          return stmts.map((s) => toJS(s[QuadPosition.object])) as unknown as R;
         case ReturnType.AllValues:
-          return stmts.map((s) => s.object.value) as unknown as R;
+          return stmts.map((s) => s[QuadPosition.object].value) as unknown as R;
         case ReturnType.AllTerms:
-          return stmts.map((s) => s.object) as unknown as R;
+          return stmts.map((s) => s[QuadPosition.object]) as unknown as R;
         case ReturnType.AllStatements:
           return stmts as unknown as R;
 

@@ -17,7 +17,7 @@ export function useResourceLink<
   dataToProps: T,
   opts?: D,
 ): LinkedDataObject<T, typeof opts> {
-  const [data] = useResourceLinks(subject, dataToProps, opts || defaultLinkOptions as D);
+  const [data] = useResourceLinks(subject, dataToProps, opts ?? defaultLinkOptions as D);
 
   return data;
 }
