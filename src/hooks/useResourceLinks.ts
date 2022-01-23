@@ -1,6 +1,5 @@
 import { Node } from "@ontologies/core";
-import { normalizeType } from "link-lib";
-import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
+import { DataRecord, Id, normalizeType} from "link-lib";
 import React from "react";
 
 import { reduceDataSubjects } from "../helpers";

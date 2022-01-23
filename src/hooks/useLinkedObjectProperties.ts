@@ -1,4 +1,4 @@
-import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
+import { DataRecord, Id } from "link-lib";
 
 import {
   DataToPropsMapping,

@@ -1,5 +1,5 @@
 import hoistNonReactStatics from "hoist-non-react-statics";
-import { DataRecord } from "link-lib/dist-types/store/StructuredStore";
+import { DataRecord } from "link-lib";
 import React from "react";
 
 import { PropertyWrappedProps } from "../../components/Property";

@@ -3,7 +3,7 @@ import "../../__tests__/useHashFactory";
 import rdfFactory, { NamedNode } from "@ontologies/core";
 import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
-import { SubscriptionRegistrationBase } from "link-lib/dist-types/types";
+import { SubscriptionRegistrationBase } from "link-lib";
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";

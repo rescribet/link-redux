@@ -1,4 +1,5 @@
-import { ACCEPTED, BAD_REQUEST } from "http-status-codes";
+import { BAD_REQUEST } from "http-status-codes";
+import { RecordState } from "link-lib";
 import React from "react";
 import {
     loadingComponent,
@@ -10,18 +11,25 @@ import {
 
 import { useLRS } from "./useLRS";
 
-export function useRenderLoadingOrError(props: TypableProps & TypableInjectedProps,
-                                        error?: Error): React.ReactElement<any> | null | undefined {
+const LOADING_STATES = [
+    RecordState.Queued,
+    RecordState.Requested,
+    RecordState.Receiving,
+];
 
+export function useRenderLoadingOrError(
+  props: TypableProps & TypableInjectedProps,
+  error?: Error,
+): React.ReactElement<any> | null | undefined {
     const lrs = useLRS();
 
     if (error) {
         return renderError(props, lrs, error);
     }
 
-    const status = lrs.getStatus(props.subject);
-    if (status.status === ACCEPTED
-      || (lrs.shouldLoadResource(props.subject) || (status.status === null && status.requested))) {
+    const t = lrs.getState(props.subject.value).current;
+
+    if (t === RecordState.Absent || LOADING_STATES.includes(t)) {
         const loadComp = loadingComponent(props, lrs);
 
         return loadComp === null
@@ -29,6 +37,7 @@ export function useRenderLoadingOrError(props: TypableProps & TypableInjectedPro
             : wrapRenderContext(props, React.createElement(loadComp, props));
     }
 
+    const status = lrs.getStatus(props.subject);
     if (status.status! >= BAD_REQUEST) {
         return renderError(props, lrs, error);
     }

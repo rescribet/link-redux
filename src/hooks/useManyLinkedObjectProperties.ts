@@ -1,6 +1,5 @@
 import rdf, { NamedNode, Quadruple } from "@ontologies/core";
-import { getPropBestLangRaw, normalizeType } from "link-lib";
-import { DataRecord, Id } from "link-lib/dist-types/store/StructuredStore";
+import { DataRecord, getPropBestLangRaw, Id, normalizeType } from "link-lib";
 import React from "react";
 
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";

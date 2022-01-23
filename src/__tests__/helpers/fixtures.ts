@@ -6,11 +6,11 @@ import * as xsd from "@ontologies/xsd";
 import {
   ComponentStoreTestProxy,
   createStore,
+  MiddlewareActionHandler,
   RDFStore,
   Schema,
   SomeNode,
 } from "link-lib";
-import { MiddlewareActionHandler } from "link-lib/dist-types/types";
 import React from "react";
 
 import { RenderStoreProvider } from "../../components/RenderStoreProvider";
