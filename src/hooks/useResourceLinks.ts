@@ -1,11 +1,12 @@
 import { Node } from "@ontologies/core";
-import { DataRecord, Id, normalizeType} from "link-lib";
+import { normalizeType} from "link-lib";
 import React from "react";
 
 import { reduceDataSubjects } from "../helpers";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import {
+  ArityPreservingPropSet,
   LaxNode,
   LinkedDataObject,
   LinkOpts,
@@ -16,8 +17,6 @@ import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLRS } from "./useLRS";
 import { useManyLinkedObjectProperties } from "./useManyLinkedObjectProperties";
-
-const EMPTY_DATA_RECORD: DataRecord = Object.freeze({});
 
 export function useResourceLinks<
   T extends MapDataToPropsParam = {},
@@ -38,13 +37,13 @@ export function useResourceLinks<
     [mapDataToProps, opts],
   );
 
-  const propSets: Array<[Id | undefined, DataRecord]> = React.useMemo(
+  const propSets: ArityPreservingPropSet[] = React.useMemo(
     () => dataSubjects.map((subject) => {
-      if (!subject) { return [subject, EMPTY_DATA_RECORD]; }
+      if (!subject) { return [subject, undefined]; }
 
       const record = lrs.tryRecord(subject);
 
-      return [subject.value, record ?? EMPTY_DATA_RECORD];
+      return [subject.value, record ?? { _id: subject }];
     }),
     [
       lrs,

@@ -1,11 +1,12 @@
 import rdf, { NamedNode, Quadruple } from "@ontologies/core";
-import { DataRecord, getPropBestLangRaw, Id, normalizeType } from "link-lib";
+import { getPropBestLangRaw, normalizeType } from "link-lib";
 import React from "react";
 
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import { toReturnType } from "../hocs/link/toReturnType";
 import ll from "../ontology/ll";
 import {
+  ArityPreservingPropSet,
   DataToPropsMapping,
   LinkedDataObject,
   ProcessedLinkOpts,
@@ -21,7 +22,7 @@ export function useManyLinkedObjectProperties<
   D extends ReturnType = ReturnType.Term,
   OutVal = LinkedDataObject<T, D>,
 >(
-  propSets: Array<[Id | undefined, DataRecord]>,
+  propSets: ArityPreservingPropSet[],
   propMap: T,
   returnType?: D,
 ): OutVal[] {
@@ -33,17 +34,22 @@ export function useManyLinkedObjectProperties<
     () => {
       const propMaps: OutVal[] = [];
 
-      for (const [s, record] of propSets) {
+      for (const set of propSets) {
         const acc: any = {};
 
-        const subject = s === undefined
-          ? undefined
-          : s.includes(":")
+        if (set === undefined || set[0] === undefined) {
+          acc.subject = toReturnType(returnTypeOrDefault, []);
+          propMaps.push(acc);
+          continue;
+        }
+        const [s, record] = set as ArityPreservingPropSet<string>;
+
+        const subject = s.includes(":")
             ? rdf.namedNode(s)
             : rdf.blankNode(s);
         acc.subject = toReturnType(
           returnTypeOrDefault,
-          subject ? [[subject, ll.dataSubject, subject, rdf.defaultGraph()]] : [],
+          [[subject, ll.dataSubject, subject, rdf.defaultGraph()]],
         );
 
         for (let i = 0, ilen = values.length; i < ilen; i++) {

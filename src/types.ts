@@ -1,9 +1,11 @@
 import { BlankNode, Literal, NamedNode, Quadruple, SomeTerm, Term } from "@ontologies/core";
 import {
   DataProcessor,
+  DataRecord,
   EmptyRequestStatus,
   ErrorReporter,
   FulfilledRequestStatus,
+  Id,
   LazyNNArgument,
   LinkedDataAPI,
   LinkedRenderStore,
@@ -347,3 +349,6 @@ export interface TopologyProp {
 export interface PassableRef<T> {
   innerRef: React.Ref<T>;
 }
+
+export type ArityPreservingPropSet<T extends Id | undefined = Id | undefined> =
+  [T, T extends undefined ? undefined : DataRecord];

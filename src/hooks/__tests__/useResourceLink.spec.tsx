@@ -105,4 +105,32 @@ describe("useResourceLink", () => {
     expect(container!.querySelector("#id0")!.textContent).toBe("empty");
     expect(container!.querySelector("#id1")!.textContent).toBe("1");
   });
+
+  it("returns empty object when subject is undefined", () => {
+    const opts = ctx.fullCW();
+
+    const UpdateComp = () => {
+      const props = useResourceLink(
+        undefined,
+        {
+          creation: schema.dateCreated,
+        },
+      );
+
+      return (
+        <div>
+          <p id="id0">{props.subject?.value}</p>
+          <p id="id1">{Object.keys(props).length}</p>
+        </div>
+      );
+    };
+
+    act(() => {
+      // @ts-ignore
+      ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
+    });
+
+    expect(container!.querySelector("#id0")!.textContent).toBe("");
+    expect(container!.querySelector("#id1")!.textContent).toBe("1");
+  });
 });

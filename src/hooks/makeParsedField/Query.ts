@@ -1,4 +1,9 @@
-import { isNamedNode, isNode, QuadPosition } from "@ontologies/core";
+import rdfFactory, {
+  isNamedNode,
+  isNode,
+  NamedNode,
+  Quadruple,
+} from "@ontologies/core";
 import * as rdfx from "@ontologies/rdf";
 import { equals } from "link-lib";
 
@@ -17,6 +22,8 @@ import {
   Resolver,
 } from "./types";
 
+const defaultGraph: NamedNode = rdfFactory.defaultGraph();
+
 const isFieldQuery = (v: unknown): v is FieldQuery => Array.isArray(v) || isNamedNode(v);
 
 const undefinedResolver: Resolver<EmptyQuery> = () => () => NESTED_EMPTY_ARRAY;
@@ -34,9 +41,31 @@ const exceptResolver: Resolver<ExceptQuery> = (lrs: LinkReduxLRSType, query: Exc
   }
 
   const fields = query.fields;
+  const record = lrs.tryRecord(s);
+
+  if (record === undefined) {
+    return [[], EMPTY_ARRAY];
+  }
+
+  const quads: Quadruple[] = [];
+  // tslint:disable-next-line:forin
+  for (const f in record) {
+    const field = rdfFactory.namedNode(f);
+    if (!record.hasOwnProperty(f) || fields.includes(field)) {
+      continue;
+    }
+    const values = record[field];
+    if (Array.isArray(values)) {
+      for (const v of values) {
+        quads.push([s, field, v, defaultGraph]);
+      }
+    } else {
+      quads.push([s, field, values, defaultGraph]);
+    }
+  }
 
   return [
-    lrs.tryEntity(s).filter((q) => fields.every((p) => !equals(p, q[QuadPosition.predicate]))),
+    quads,
     EMPTY_ARRAY,
   ];
 };
