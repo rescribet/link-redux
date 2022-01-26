@@ -1,10 +1,23 @@
-import { BlankNode, NamedNode } from "@ontologies/core";
-import { id, normalizeType, SomeNode } from "link-lib";
+import React from "react";
 
-/** Reduces a set of resources to a number. Useful for using as a hook update dependency. */
-export function reduceDataSubjects(subjects: Array<SomeNode | undefined> | SomeNode | undefined): number {
-  return normalizeType(subjects)
-    .filter<NamedNode | BlankNode>(Boolean as any)
-    .map<number>((n: NamedNode | BlankNode) => id(n))
-    .reduce((a: number, b: number) => a + b, 0);
+/** Useful for using as a hook update dependency. */
+export function useMemoizedDataSubjects<T, K extends T | T[] | undefined>(subjects: K): K {
+  const [memoized, setMemoized] = React.useState(subjects);
+
+  React.useEffect(() => {
+    const aIsArray = Array.isArray(memoized);
+    const bIsArray = Array.isArray(subjects);
+
+    if (aIsArray && bIsArray) {
+      if (memoized.length !== subjects.length || memoized.some((v, i) => v !== subjects[i])) {
+        setMemoized(subjects);
+      }
+    } else if (aIsArray !== bIsArray) {
+        setMemoized(subjects);
+    } else if (memoized !== subjects) {
+      setMemoized(subjects);
+    }
+  }, [subjects]);
+
+  return memoized;
 }

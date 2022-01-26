@@ -2,7 +2,7 @@ import { Node } from "@ontologies/core";
 import { normalizeType} from "link-lib";
 import React from "react";
 
-import { reduceDataSubjects } from "../helpers";
+import { useMemoizedDataSubjects } from "../helpers";
 import { dataPropsToPropMap } from "../hocs/link/dataPropsToPropMap";
 import { globalLinkOptsDefaults } from "../hocs/link/globalLinkOptsDefaults";
 import {
@@ -47,7 +47,7 @@ export function useResourceLinks<
     }),
     [
       lrs,
-      reduceDataSubjects(dataSubjects),
+      useMemoizedDataSubjects(dataSubjects),
       requestedProperties,
       lastUpdate,
     ],

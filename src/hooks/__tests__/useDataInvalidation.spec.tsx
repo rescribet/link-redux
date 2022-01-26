@@ -63,7 +63,7 @@ describe("useDataInvalidation", () => {
         const { wrapper } = ctx.fullCW();
         const { result: { current } } = renderHook(() => useDataInvalidation(rdfFactory.literal("")), { wrapper });
 
-        expect(current).toEqual(0);
+        expect(current).toEqual(-1);
       });
 
       it("updates with data updates", () => {

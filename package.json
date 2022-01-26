@@ -78,7 +78,7 @@
     "hoist-non-react-statics": "^3.3.2",
     "http-status-codes": "1.x",
     "jest": "^27.3.0",
-    "link-lib": "0.0.0-841d4362",
+    "link-lib": "0.0.0-02b2fc21",
     "n-quads-parser": "^2.1.0",
     "prop-types": "^15.x",
     "react": "^17.0.2",

@@ -1,7 +1,7 @@
 import { isBlankNode } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
-import { reduceDataSubjects } from "../helpers";
+import { useMemoizedDataSubjects } from "../helpers";
 import { LaxNode } from "../types";
 
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -43,7 +43,7 @@ export function useDataFetching(
         },
         [
           lrs,
-          reduceDataSubjects(resources),
+          useMemoizedDataSubjects(resources),
           lastUpdate,
         ],
     );

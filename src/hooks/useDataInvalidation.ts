@@ -1,8 +1,8 @@
 import rdfFactory, { doc, Node, TermType } from "@ontologies/core";
-import { equals, id, normalizeType } from "link-lib";
+import { normalizeType } from "link-lib";
 import React from "react";
 
-import { reduceDataSubjects } from "../helpers";
+import { useMemoizedDataSubjects } from "../helpers";
 import { DataInvalidationProps, LaxIdentifier, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
@@ -25,9 +25,9 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
     }
 
     if (props.subject?.termType === TermType.NamedNode) {
-        const document = rdfFactory.namedNode(doc(props.subject));
-        if (!equals(document, props.subject)) {
-            result.push(document);
+        const document = doc(props.subject);
+        if (document !== props.subject.value) {
+            result.push(rdfFactory.namedNode(document));
         }
     }
 
@@ -40,13 +40,14 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
  * Should only be necessary when using imperative code.
  */
 export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): number {
-    const resources = normalizeType(subjects!).filter<Node>(Boolean as any);
+    const resources = normalizeType(subjects!).filter<Node>(Boolean as any).map((n) => n.value);
     const lrs = useLRS();
 
+    const store = lrs.store.getInternalStore().store;
     const highestUpdate = () => Math.max(...resources
-      .map((s) => lrs.store.changeTimestamps[id(lrs.store.canon(s))] || 0));
+      .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0));
 
-    const subId = resources.length > 0 ? id(lrs.store.canon(resources[0])) : undefined;
+    const subId = resources.length > 0 ? store.primary(resources[0]) : undefined;
     const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate());
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
@@ -58,14 +59,13 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
             callback: handleStatusChange,
             lastUpdateAt: undefined,
             markedForDelete: false,
-            onlySubjects: true,
             subjectFilter: resources,
         });
     }, [
       lrs,
       subId,
       resources.length,
-      reduceDataSubjects(resources),
+      useMemoizedDataSubjects(resources),
     ]);
 
     return lastUpdate;
