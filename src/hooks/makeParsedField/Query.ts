@@ -40,7 +40,7 @@ const exceptResolver: Resolver<ExceptQuery> = (lrs: LinkReduxLRSType, query: Exc
     return NESTED_EMPTY_ARRAY;
   }
 
-  const fields = query.fields;
+  const fields = query.fields.map((f) => f.value);
   const record = lrs.tryRecord(s);
 
   if (record === undefined) {
@@ -51,10 +51,10 @@ const exceptResolver: Resolver<ExceptQuery> = (lrs: LinkReduxLRSType, query: Exc
   // tslint:disable-next-line:forin
   for (const f in record) {
     const field = rdfFactory.namedNode(f);
-    if (!record.hasOwnProperty(f) || fields.includes(field)) {
+    if (!record.hasOwnProperty(f) || f === "_id" || fields.includes(f)) {
       continue;
     }
-    const values = record[field];
+    const values = record[f];
     if (Array.isArray(values)) {
       for (const v of values) {
         quads.push([s, field, v, defaultGraph]);

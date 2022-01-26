@@ -103,7 +103,7 @@ describe("useResourceLink", () => {
     });
 
     expect(container!.querySelector("#id0")!.textContent).toBe("empty");
-    expect(container!.querySelector("#id1")!.textContent).toBe("1");
+    expect(container!.querySelector("#id1")!.textContent).toBe("2");
   });
 
   it("returns empty object when subject is undefined", () => {

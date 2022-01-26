@@ -28,9 +28,11 @@ export interface ResourcePropTypes<R = any> extends TypableProps {
 
 export interface InjectedPropTypes extends ResourcePropTypes, DataInvalidationProps, TypableInjectedProps {}
 
-function useCalculatedViewWithState(props: InjectedPropTypes,
-                                    lrs: LinkReduxLRSType,
-                                    error?: Error): React.ReactElement | null {
+function useCalculatedViewWithState(
+    props: InjectedPropTypes,
+    lrs: LinkReduxLRSType,
+    error?: Error,
+): React.ReactElement | null {
     const notReadyComponent = useRenderLoadingOrError(props, error);
     const component = useResourceView(
       props.subject,
