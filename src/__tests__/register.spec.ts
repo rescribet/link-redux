@@ -1,6 +1,5 @@
 import "./useHashFactory";
 
-import rdfFactory from "@ontologies/core";
 import { render } from "@testing-library/react";
 import {
     DEFAULT_TOPOLOGY,
@@ -21,9 +20,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component");
-        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
-        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
+        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.value);
+        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.value);
+        expect(registration).toHaveProperty("type", ex.ns("TestClass").value);
     });
 
     it("registers a functional component", () => {
@@ -32,9 +31,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component");
-        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
-        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
+        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.value);
+        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.value);
+        expect(registration).toHaveProperty("type", ex.ns("TestClass").value);
     });
 
     it("registers a class component", () => {
@@ -46,9 +45,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = register(Comp);
 
         expect(registration).toHaveProperty("component");
-        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
-        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
+        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.value);
+        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.value);
+        expect(registration).toHaveProperty("type", ex.ns("TestClass").value);
     });
 
     it("registers an exotic component", () => {
@@ -59,9 +58,9 @@ describe("register.spec.ts", () => {
         const [ registration ] = registerExotic(Comp, ex.ns("TestClass"));
 
         expect(registration).toHaveProperty("component");
-        expect(registration).toHaveProperty("property", rdfFactory.id(RENDER_CLASS_NAME));
-        expect(registration).toHaveProperty("topology", rdfFactory.id(DEFAULT_TOPOLOGY));
-        expect(registration).toHaveProperty("type", rdfFactory.id(ex.ns("TestClass")));
+        expect(registration).toHaveProperty("property", RENDER_CLASS_NAME.value);
+        expect(registration).toHaveProperty("topology", DEFAULT_TOPOLOGY.value);
+        expect(registration).toHaveProperty("type", ex.ns("TestClass").value);
     });
 
     it("wraps passed hocs", () => {
