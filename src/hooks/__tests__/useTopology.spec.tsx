@@ -39,7 +39,7 @@ describe("useProperty", () => {
     };
 
     class Provider extends TopologyProvider {
-      topology = rdf.namedNode("https://example.com/topology");
+      public topology = rdf.namedNode("https://example.com/topology");
     }
 
     const { getByTestId } = render(opts.wrapComponent((
