@@ -1,5 +1,4 @@
 import { Node } from "@ontologies/core";
-import { equals } from "link-lib";
 import React from "react";
 
 import { LaxIdentifier } from "../../types";
@@ -7,6 +6,7 @@ import { useLinkRenderContext } from "../useLinkRenderContext";
 
 import { Query } from "./types";
 import { queryChanged } from "./useTargetedQuery/queryChanged";
+import { targetsChanged } from "./useTargetedQuery/targetsChanged";
 
 export type TargetTuple = [targets: LaxIdentifier | LaxIdentifier[], fields: Query];
 
@@ -43,11 +43,7 @@ export const useTargetedQuery = (
   React.useEffect(() => {
     const [nextTargets, nextFields] = calculate(subject, resource, query);
 
-    const targetsChanged = Array.isArray(nextTargets)
-      ? Array.isArray(targets) && (nextTargets.some((t, i) => !equals(t, targets[i])))
-      : !equals(nextTargets, targets);
-
-    if (targetsChanged) {
+    if (targetsChanged(targets, nextTargets)) {
       setTargets(nextTargets);
     }
 
