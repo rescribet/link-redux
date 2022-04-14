@@ -1,5 +1,5 @@
 import rdfFactory, { doc, Node, TermType } from "@ontologies/core";
-import { normalizeType } from "link-lib";
+import { equals, normalizeType } from "link-lib";
 import React from "react";
 
 import { useMemoizedDataSubjects } from "../helpers";
@@ -34,6 +34,8 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
     return result;
 }
 
+const highestUpdate = (timestamps: number[]) => Math.max(...timestamps);
+
 /**
  * Re-renders when one of the given {resources} changes in the store.
  *
@@ -44,17 +46,36 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
     const lrs = useLRS();
 
     const store = lrs.store.getInternalStore().store;
-    const highestUpdate = () => Math.max(...resources
-      .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0));
+
+    const getTimestamps = () => resources
+        .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0);
+    const [timestamps, setTimestamps] = React.useState<number[]>(getTimestamps);
+    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate(timestamps));
 
     const subId = resources.length > 0 ? store.primary(resources[0]) : undefined;
-    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate());
 
-    function handleStatusChange(_: unknown, lastUpdateAt?: number) {
-        setInvalidate(lastUpdateAt!);
+    function calculateTimestamp() {
+        const nextTimestamps = getTimestamps();
+        if (timestamps.length !== nextTimestamps.length || timestamps.some((p, i) => !equals(p, nextTimestamps[i]))) {
+            const newHighest = highestUpdate(nextTimestamps);
+            const newTimestamp = newHighest !== lastUpdate ?
+              newHighest :
+              (nextTimestamps.find((val) => !timestamps.includes(val)));
+
+            if (newTimestamp) {
+                setInvalidate(newTimestamp);
+            }
+            setTimestamps(nextTimestamps);
+        }
+    }
+
+    function handleStatusChange(_: unknown, __?: number) {
+        calculateTimestamp();
     }
 
     React.useEffect(() => {
+        calculateTimestamp();
+
         return lrs.subscribe({
             callback: handleStatusChange,
             lastUpdateAt: undefined,

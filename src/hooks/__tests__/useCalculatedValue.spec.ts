@@ -33,6 +33,14 @@ describe("useCalculatedValue", () => {
         expect(hasChanged([id1, id2, id3], [id2, id1, id3])).toBeTruthy();
       });
 
+      it("handles unequal arity array", () => {
+        const id1 = rdfFactory.blankNode();
+        const id2 = rdfFactory.blankNode();
+        const id3 = rdfFactory.blankNode();
+        expect(hasChanged([id1, id2], [id2, id1, id3])).toBeTruthy();
+        expect(hasChanged([id1, id2, id3], [id2, id1])).toBeTruthy();
+      });
+
       it("handles unequal types", () => {
         const id1 = rdfFactory.blankNode();
         const id2 = rdfFactory.blankNode();

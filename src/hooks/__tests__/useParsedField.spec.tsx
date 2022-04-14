@@ -333,6 +333,33 @@ describe("useParsedField", () => {
 
         expect(current).toEqual(["Roy"]);
       });
+
+      it("resolves through associations changing target", () => {
+        let idCounter = 1;
+
+        const Comp = ({ targets }: { targets: NamedNode[] }) => {
+          const id = React.useRef(idCounter++); // to ensure we don't remount a different instance
+          const data = useValues(targets, dig(schema.accountablePerson, schema.name));
+
+          return (
+            <div>
+              <span data-testid="data-display">{data.length}</span>
+              <span data-testid="instance-id">{id.current}</span>
+            </div>
+          );
+        };
+        const opts = ctx.fullCW();
+
+        const { getByTestId, rerender } = render(<Comp targets={[schema.name]} />, { wrapper: opts.wrapper });
+
+        expect(getByTestId("data-display")).toHaveTextContent("1");
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+        rerender(<Comp targets={[schema.name, schema.text]} />);
+
+        expect(getByTestId("data-display")).toHaveTextContent("2");
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+      });
     });
 
     describe("array", () => {

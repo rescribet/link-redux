@@ -5,7 +5,6 @@ import { render } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { SubscriptionRegistrationBase } from "link-lib";
 import React from "react";
-import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import * as ctx from "../../__tests__/helpers/fixtures";
@@ -81,18 +80,21 @@ describe("useDataInvalidation", () => {
         const UpdateComp = () => {
           const lastUpdate = useDataInvalidation(iri);
 
-          return <div id="update">{lastUpdate}</div>;
+          return <div data-testid="update">{lastUpdate}</div>;
         };
 
-        act(() => {
-          // @ts-ignore
-          ReactDOM.render(opts.wrapComponent(<UpdateComp />), container);
-        });
+        const { getByTestId, rerender } = render(<UpdateComp />, { wrapper: opts.wrapper });
+
+        expect(Number(getByTestId("update").textContent)).toBe(-1);
 
         act(() => {
-          cb.map((f) => f(undefined, 1234));
+          opts.lrs.store.getInternalStore().store.touch(iri.value);
+          cb.map((f) => f(undefined, 0));
         });
-        expect(container!.querySelector("#update")!.textContent).toBe("1234");
+
+        rerender(<UpdateComp />);
+
+        expect(Number(getByTestId("update").textContent)).toBeGreaterThan(0);
       });
 
       it("invalidates after resource removal", () => {
@@ -125,6 +127,86 @@ describe("useDataInvalidation", () => {
 
         const secondUpdate = Number(getByTestId("update").textContent);
         expect(secondUpdate).toBeGreaterThan(firstUpdate);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+      });
+
+      it("invalidates when adding newer item", () => {
+        const firstId = example.ns("3");
+        const secondId = example.ns("4");
+        let idCounter = 1;
+        const opts = ctx.fullCW(firstId);
+        const store = opts.lrs.store.getInternalStore().store;
+
+        ctx.fullCW(secondId);
+        act(() => {
+          store.touch(secondId.value);
+        });
+        const firstResourceUpdate = store.getStatus(firstId.value).lastUpdate;
+        const secondResourceUpdate = store.getStatus(secondId.value).lastUpdate;
+        expect(secondResourceUpdate).toBeGreaterThan(firstResourceUpdate);
+
+        const Comp = ({ resources }: { resources: NamedNode[] | undefined }) => {
+          const id = React.useRef(idCounter++);
+          const lastUpdate = useDataInvalidation(resources);
+
+          return (
+            <div>
+              <div data-testid="update">{lastUpdate}</div>
+              <span data-testid="instance-id">{id.current}</span>
+            </div>
+          );
+        };
+
+        const { getByTestId, rerender } = render(<Comp resources={[firstId]} />, { wrapper: opts.wrapper });
+
+        const firstUpdate = Number(getByTestId("update").textContent);
+        expect(firstUpdate).toEqual(firstResourceUpdate);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+        rerender(<Comp resources={[firstId, secondId]} />);
+
+        const secondUpdate = Number(getByTestId("update").textContent);
+        expect(secondUpdate).toEqual(secondResourceUpdate);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+      });
+
+      it("invalidates when adding older item", () => {
+        const firstId = example.ns("3");
+        const secondId = example.ns("4");
+        let idCounter = 1;
+        const opts = ctx.fullCW(firstId);
+        const store = opts.lrs.store.getInternalStore().store;
+
+        ctx.fullCW(secondId);
+        act(() => {
+          store.touch(secondId.value);
+        });
+        const firstResourceUpdate = store.getStatus(firstId.value).lastUpdate;
+        const secondResourceUpdate = store.getStatus(secondId.value).lastUpdate;
+        expect(secondResourceUpdate).toBeGreaterThan(firstResourceUpdate);
+
+        const Comp = ({ resources }: { resources: NamedNode[] | undefined }) => {
+          const id = React.useRef(idCounter++);
+          const lastUpdate = useDataInvalidation(resources);
+
+          return (
+            <div>
+              <div data-testid="update">{lastUpdate}</div>
+              <span data-testid="instance-id">{id.current}</span>
+            </div>
+          );
+        };
+
+        const { getByTestId, rerender } = render(<Comp resources={[secondId]} />, { wrapper: opts.wrapper });
+
+        const firstUpdate = Number(getByTestId("update").textContent);
+        expect(firstUpdate).toEqual(secondResourceUpdate);
+        expect(getByTestId("instance-id")).toHaveTextContent("1");
+
+        rerender(<Comp resources={[firstId, secondId]} />);
+
+        const secondUpdate = Number(getByTestId("update").textContent);
+        expect(secondUpdate).toEqual(firstResourceUpdate);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
       });
     });
