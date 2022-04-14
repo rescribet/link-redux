@@ -41,6 +41,7 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
  */
 export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): number {
     const resources = normalizeType(subjects!).filter<Node>(Boolean as any).map((n) => n.value);
+    const memoisedResources = useMemoizedDataSubjects(resources);
     const lrs = useLRS();
 
     const store = lrs.store.getInternalStore().store;
@@ -48,11 +49,19 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
       .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0));
 
     const subId = resources.length > 0 ? store.primary(resources[0]) : undefined;
-    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate());
+    const [mounted, setMounted] = React.useState<boolean>(false);
+    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate);
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
         setInvalidate(lastUpdateAt!);
     }
+
+    React.useEffect(() => {
+        if (mounted) {
+            setInvalidate(Date.now());
+        }
+        setMounted(true);
+    }, [memoisedResources]);
 
     React.useEffect(() => {
         return lrs.subscribe({
@@ -64,8 +73,7 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
     }, [
       lrs,
       subId,
-      resources.length,
-      useMemoizedDataSubjects(resources),
+      memoisedResources,
     ]);
 
     return lastUpdate;
