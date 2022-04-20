@@ -49,7 +49,7 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
       .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0));
 
     const subId = resources.length > 0 ? store.primary(resources[0]) : undefined;
-    const [mounted, setMounted] = React.useState<boolean>(false);
+    const isMountedRef = React.useRef<boolean>(false);
     const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate);
 
     function handleStatusChange(_: unknown, lastUpdateAt?: number) {
@@ -57,10 +57,11 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
     }
 
     React.useEffect(() => {
-        if (mounted) {
+        if (isMountedRef.current) {
             setInvalidate(Date.now());
+        } else {
+            isMountedRef.current = true;
         }
-        setMounted(true);
     }, [memoisedResources]);
 
     React.useEffect(() => {

@@ -19,18 +19,22 @@ export const useSubject = <T extends LaxNode | LaxNode[] = undefined>(subjects?:
   const getSubjects = () => (subjects !== undefined ? subjects : subCtx) as
     unknown as ArityPreservingValues<T, LaxNode>;
 
-  const [targets, setTargets] = React.useState(getSubjects);
+  const targetsRef = React.useRef([] as unknown as ArityPreservingValues<T, LaxNode>);
 
-  React.useEffect(
+  const targets = React.useMemo(
     () => {
       const next = getSubjects();
-      const changed = (Array.isArray(targets) && Array.isArray(next))
-        ? targets.length !== next.length || !targets.every((t, i) => t === next[i])
-        : !equals(targets, next);
+      const changed = (Array.isArray(targetsRef.current) && Array.isArray(next))
+        ? targetsRef.current.length !== next.length || !targetsRef.current.every((t, i) => t === next[i])
+        : !equals(targetsRef.current, next);
 
       if (changed) {
-        setTargets(next);
+        targetsRef.current = next;
+
+        return next;
       }
+
+      return targetsRef.current;
     },
     [subjects, subCtx],
   );

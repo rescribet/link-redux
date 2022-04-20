@@ -11,8 +11,8 @@ import { useTargetedQuery } from "./useTargetedQuery";
 
 export const calculate = <T, K extends OptionalIdentifiers = undefined>(
   lrs: LinkReduxLRSType,
-  parser: (lrs: LinkReduxLRSType) => (v: Quadruple) => T | undefined,
   subject: K,
+  parser: (lrs: LinkReduxLRSType) => (v: Quadruple) => T | undefined,
   query: Query,
 ): [result: ArityPreservingValues<K, T[]>, subjects: Node[]] => {
   if (!subject) {
@@ -59,7 +59,7 @@ export const makeParsedField = <
     const [targets, query] = useTargetedQuery(resource, field);
     const invalidation = useDataFetching(targets);
 
-    return useCalculatedValue(calculate, [targets, query, invalidation], parser, targets, query) as ReturnType<R>;
+    return useCalculatedValue(calculate, [query, invalidation], targets, parser, query) as ReturnType<R>;
   };
 
   return dataHook as R;

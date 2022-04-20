@@ -36,21 +36,20 @@ export const useTargetedQuery = (
   query: Query | null,
 ): TargetTuple => {
   const { subject } = useLinkRenderContext();
-  const [targets, setTargets] = React.useState<LaxIdentifier | LaxIdentifier[]>(() =>
-    calculate(subject, resource, query)[0]);
-  const [fields, setFields] = React.useState<Query>(() => calculate(subject, resource, query)[1]);
+  const targetsRef = React.useRef<LaxIdentifier | LaxIdentifier[]>(undefined);
+  const fieldsRef = React.useRef<Query>(undefined);
 
-  React.useEffect(() => {
+  return React.useMemo(() => {
     const [nextTargets, nextFields] = calculate(subject, resource, query);
 
-    if (targetsChanged(targets, nextTargets)) {
-      setTargets(nextTargets);
+    if (targetsChanged(targetsRef.current, nextTargets)) {
+      targetsRef.current = nextTargets;
     }
 
-    if (queryChanged(fields, nextFields)) {
-      setFields(nextFields);
+    if (queryChanged(fieldsRef.current, nextFields)) {
+      fieldsRef.current = nextFields;
     }
+
+    return [targetsRef.current, fieldsRef.current];
   }, [subject, resource, query]);
-
-  return [targets, fields];
 };
