@@ -44,7 +44,7 @@ export function useManyLinkedObjectProperties<
         }
         const [s, record] = set as ArityPreservingPropSet<string>;
 
-        const subject = s.includes(":")
+        const subject = s.includes(":") && !s.startsWith("_:")
             ? rdf.namedNode(s)
             : rdf.blankNode(s);
         acc.subject = toReturnType(
