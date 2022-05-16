@@ -27,7 +27,7 @@ export type LinkedPropType = NamedNode | BlankNode | Literal | SomeTerm[];
 export type LinkReduxLRSType<
   P = any,
   API extends LinkedDataAPI = DataProcessor
-> = LinkedRenderStore<React.ComponentType<P>, API>;
+  > = LinkedRenderStore<React.ComponentType<P>, API>;
 
 /**
  * Data types to which the data can be converted before inserting into a data map
@@ -144,7 +144,7 @@ export type OutputTypeFromOpts<T extends Partial<DataOpts>, Default = never> =
 export type OutputTypeFromReturnType<
   T extends ReturnType,
   Default = never
-> = T extends ReturnType.Term ? SomeTerm | undefined :
+  > = T extends ReturnType.Term ? SomeTerm | undefined :
   T extends ReturnType.Value ? string | undefined :
   T extends ReturnType.Literal ? ToJSOutputTypes | undefined :
   T extends ReturnType.Statement ? Quadruple | undefined :
@@ -178,8 +178,8 @@ export type LinkedDataObject<
   T,
   D,
   Out extends ReturnValueTypes = OutputTypeFromOpts<D>
-> = PropertyBoundProps<T, Out>
-  & { subject: Out extends never ? ReturnType.Term : Out };
+  > = PropertyBoundProps<T, Out>
+  & { subject: Out extends never ? ReturnType.Term : Out; };
 
 /****** Property registration ******/
 
@@ -225,30 +225,30 @@ export type Component<P = {}> = React.ComponentType<P & SubjectProp> & Registrat
 export type UninheritableLinkCtxProps = LinkCtxOverrides & LinkedRenderStoreContext;
 
 export type PropsWithOptLinkProps<P extends Partial<UninheritableLinkCtxProps>> = Overwrite<
-    Omit<P, keyof UninheritableLinkCtxProps>,
-    Partial<SubjectProp & TopologyProp>
+  Omit<P, keyof UninheritableLinkCtxProps>,
+  Partial<SubjectProp & TopologyProp>
 >;
 
 export interface LinkRenderContext {
-    subject: SubjectType;
-    topology: NamedNode | undefined;
+  subject: SubjectType;
+  topology: NamedNode | undefined;
 }
 
 export interface LinkedRenderStoreContext {
-    lrs: LinkReduxLRSType;
+  lrs: LinkReduxLRSType;
 }
 
 export type LinkContext = LinkRenderContext & LinkedRenderStoreContext;
 
 export interface Helpers {
-    reset: () => void;
+  reset: () => void;
 }
 
 export interface LinkCtxOverrides {
-    reloadLinkedObject?: () => void;
-    reset?: () => void;
-    subjectCtx: SubjectType;
-    topologyCtx: TopologyContextType;
+  reloadLinkedObject?: () => void;
+  reset?: () => void;
+  subjectCtx: SubjectType;
+  topologyCtx: TopologyContextType;
 }
 
 export type CalculatedChildProps<P> = P &
@@ -259,18 +259,18 @@ export type CalculatedChildProps<P> = P &
 export type DataHookReturnType = Quadruple[] | Term[] | string[] | ToJSOutputTypes[];
 
 export interface GlobalLinkOpts extends DataOpts {
-    fetch: boolean;
-    forceRender: boolean;
-    limit: number;
+  fetch: boolean;
+  forceRender: boolean;
+  limit: number;
 }
 
 export interface LinkOpts extends Partial<GlobalLinkOpts>, Partial<DataOpts> {
-    fetch?: boolean;
-    forceRender?: boolean;
-    label?: LabelType;
-    limit?: number;
-    returnType?: ReturnType;
-    linkedProp?: LinkedPropType;
+  fetch?: boolean;
+  forceRender?: boolean;
+  label?: LabelType;
+  limit?: number;
+  returnType?: ReturnType;
+  linkedProp?: LinkedPropType;
 }
 
 export interface ProcessedLinkOpts<T = string> extends LinkOpts {
@@ -287,8 +287,10 @@ export type PropMapTuple<K> = [NamedNode[], ProcessedLinkOpts<K>];
 
 export type PropParam = NamedNode | NamedNode[] | LinkOpts;
 
+export type FCWithChildren = React.FC<React.PropsWithChildren<{}>>;
+
 export interface MapDataToPropsParam {
-    [k: string]: PropParam;
+  [k: string]: PropParam;
 }
 
 export type PropMapOptAsLinkOpts<P extends PropParam> = P extends LinkOpts ? P : LinkOpts;
@@ -322,28 +324,28 @@ export interface ErrorProps extends SubjectProp {
 }
 
 export interface URLConverter {
-    convert: (iri: string) => string;
-    match: string | RegExp;
+  convert: (iri: string) => string;
+  match: string | RegExp;
 }
 
 export interface URLConverterSet {
-    [k: string]: URLConverter;
+  [k: string]: URLConverter;
 }
 
 export interface SubjectProp {
-    subject: SubjectType;
+  subject: SubjectType;
 }
 
 export interface DataInvalidationProps extends SubjectProp {
-    dataSubjects?: SubjectType[];
+  dataSubjects?: SubjectType[];
 }
 
 export interface TopologyContextProp {
-    topology: TopologyContextType;
+  topology: TopologyContextType;
 }
 
 export interface TopologyProp {
-    topology: TopologyType;
+  topology: TopologyType;
 }
 
 export interface PassableRef<T> {
