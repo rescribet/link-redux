@@ -9,6 +9,14 @@ describe("targetsChanged", () => {
     expect(targetsChanged(obj, obj)).toBeFalsy();
   });
 
+  it("handles equal nodes", () => {
+    expect(targetsChanged(schema.name, schema.name)).toBeFalsy();
+  });
+
+  it("handles unequal nodes", () => {
+    expect(targetsChanged(schema.name, schema.text)).toBeTruthy();
+  });
+
   it("handles undefined values", () => {
     expect(targetsChanged(undefined, undefined)).toBeFalsy();
     expect(targetsChanged(undefined, [])).toBeTruthy();
