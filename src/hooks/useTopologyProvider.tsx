@@ -1,13 +1,12 @@
-import { termStr } from "@rdfdev/iri";
 import { SomeNode } from "link-lib";
 import React from "react";
 import { LinkRenderCtx } from "../contexts/LinkRenderCtx";
 import { FCWithChildren, TopologyType } from "../types";
 
 const toDisplayName = (topology: TopologyType) => {
-  const name = termStr(topology?.value ?? "");
+  const name = topology?.value?.split(/[\/#]/)?.pop()?.split("?")?.shift() || "";
 
-  return name[0].toUpperCase() + name.slice(1);
+  return `TP(${name[0].toUpperCase()}${name.slice(1)})`;
 };
 
 /**
