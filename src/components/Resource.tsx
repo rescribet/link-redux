@@ -68,7 +68,7 @@ export function LRC<P, R>(props: ResourcePropTypes<R> & P, _?: any): React.React
     };
     const lrs = useLRS();
     const childProps = useCalculateChildProps<P>(props, context, options);
-    useDataFetching(normalizeDataSubjects(childProps), setError);
+    useDataFetching(normalizeDataSubjects(childProps));
 
     const comp = useCalculatedViewWithState(childProps, lrs, error);
 

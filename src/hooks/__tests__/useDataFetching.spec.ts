@@ -1,6 +1,5 @@
 import "../../__tests__/useHashFactory";
 
-import rdfFactory from "@ontologies/core";
 import { render } from "@testing-library/react";
 import React from "react";
 
@@ -21,35 +20,5 @@ describe("useDataFetching", () => {
       render(opts.wrapComponent(React.createElement(comp)));
 
       expect(opts.lrs.queueEntity).not.toHaveBeenCalledTimes(1);
-    });
-
-    it("sets an error for blank node subjects", () => {
-      const opts = ctx.fullCW();
-
-      const setError = jest.fn();
-      const comp = () => {
-          useDataFetching(rdfFactory.blankNode(), setError);
-
-          return null;
-      };
-
-      render(opts.wrapComponent(React.createElement(comp)));
-
-      expect(setError).toHaveBeenCalledTimes(1);
-    });
-
-    it("uses lrs reporter if no override was given", () => {
-      const opts = ctx.fullCW();
-
-      opts.lrs.report = jest.fn();
-      const comp = () => {
-          useDataFetching(rdfFactory.blankNode());
-
-          return null;
-      };
-
-      render(opts.wrapComponent(React.createElement(comp)));
-
-      expect(opts.lrs.report).toHaveBeenCalledTimes(1);
     });
 });

@@ -11,7 +11,6 @@ import React from "react";
 import * as ctx from "../../__tests__/helpers/fixtures";
 import ex from "../../ontology/ex";
 import example from "../../ontology/example";
-import ll from "../../ontology/ll";
 import { Resource } from "../Resource";
 
 const id = "resources/5";
@@ -92,27 +91,6 @@ describe("Resource component", () => {
         );
 
         expect(getByTestId("testComponent")).toBeVisible();
-    });
-
-    it("renders error component when mounting unfetched blank node", () => {
-        const bn = rdfFactory.blankNode();
-        const opts = ctx.chargeLRS(
-            [],
-            bn,
-        );
-
-        opts.lrs.registerAll(
-          LinkedRenderStore.registerRenderer(createTestElement(), schema.Thing),
-          LinkedRenderStore.registerRenderer(createTestElement("error"), ll.ErrorResource),
-        );
-        const { getByTestId } = render(
-            opts.wrapComponent(React.createElement(Resource, {
-              loadLinkedObject,
-              subject: bn,
-            })),
-        );
-
-        expect(getByTestId("error")).toBeVisible();
     });
 
     it("renders children when present", () => {
