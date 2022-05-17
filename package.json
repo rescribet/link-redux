@@ -5,7 +5,7 @@
   "sideEffects": false,
   "repository": "https://github.com/rescribet/link-redux.git",
   "scripts": {
-    "build": "pika build",
+    "build": "./node_modules/.bin/pika build",
     "doc": "rm -rf dist/docs/* && typedoc --tsconfig tsconfig-types.json --exclude **/*.spec.ts --excludeExternals --excludePrivate --mode file --theme minimal --target ES6 --includeDeclarations --out dist/docs/ src/",
     "doc:deploy": "gh-pages -d ./dist/docs",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
@@ -96,5 +96,6 @@
     "presets": [
       "@babel/preset-typescript"
     ]
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
