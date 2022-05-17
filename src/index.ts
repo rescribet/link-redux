@@ -72,6 +72,7 @@ export { useResourceView } from "./hooks/useResourceView";
 export { useStatus } from "./hooks/useStatus";
 export { useSubject } from "./hooks/useSubject";
 export { useTopology } from "./hooks/useTopology";
+export { useTopologyProvider } from "./hooks/useTopologyProvider";
 export { useView } from "./hooks/useView";
 
 /* other */
