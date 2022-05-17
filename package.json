@@ -12,7 +12,7 @@
     "prebuild": "rm -rf dist/*",
     "prepublish": "npm run build",
     "pretest": "npm run lint",
-    "test": "jest --coverage",
+    "test": "jest --coverage -w 2",
     "version": "npm run build"
   },
   "author": "Thom van Kalkeren <thom@argu.co>",
