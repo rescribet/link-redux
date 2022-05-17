@@ -25,22 +25,26 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/link-redux/tmp
       - restore_cache:
           keys:
-            - v1-dependencies-lts-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-lts-
+            - v1-dependencies-lts
 
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-lts-{{ checksum "package.json" }}
+          key: v1-dependencies-lts
       - run: yarn lint
       - run: yarn test
+      - run: ./tmp/cc-test-reporter format-coverage -t lcov -o ~/link-redux/tmp/codeclimate.node-lts.json coverage/lcov.info
       - run: yarn build
-
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - codeclimate.node-lts.json
 
   build-node-18:
     <<: *defaults
@@ -50,16 +54,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-18-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-18-
+            - v1-dependencies-18
 
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-18-{{ checksum "package.json" }}
+          key: v1-dependencies-18
       - run: yarn lint
       - run: yarn test
       - run: yarn build
@@ -72,16 +74,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-16-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-16-
+            - v1-dependencies-16
 
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-16-{{ checksum "package.json" }}
+          key: v1-dependencies-16
       - run: yarn lint
       - run: yarn test
       - run: yarn build
@@ -92,28 +92,19 @@ jobs:
       - image: cimg/node:14.19
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/link-redux/tmp
       - restore_cache:
           keys:
-            - v1-dependencies-14-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-14-
+            - v1-dependencies-14
 
       - run: yarn install
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-14-{{ checksum "package.json" }}
+          key: v1-dependencies-14
       - run: yarn lint
       - run: yarn test
-      - run: ./tmp/cc-test-reporter format-coverage -t lcov -o ~/link-redux/tmp/codeclimate.node-14.json coverage/lcov.info
       - run: yarn build
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - codeclimate.node-14.json
 
   upload-coverage:
     <<: *defaults
@@ -125,19 +116,20 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./tmp/cc-test-reporter sum-coverage tmp/codeclimate.*.json -p 1 -o tmp/codeclimate.total.json
-            ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.total.json
+            ~/link-redux/tmp/cc-test-reporter sum-coverage tmp/codeclimate.*.json -p 1 -o tmp/codeclimate.total.json
+            ~/link-redux/tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.total.json
 
 workflows:
   version: 2
   commit:
     jobs:
       - build
-      - build-node-18
-      - build-node-16
-      - build-node-14:
+      - build-node-lts:
           requires:
             - build
+      - build-node-18
+      - build-node-16
+      - build-node-14
       - upload-coverage:
           requires:
-            - build-node-18
+            - build-node-lts
