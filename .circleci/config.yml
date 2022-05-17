@@ -1,7 +1,7 @@
 version: 2
 defaults: &defaults
   docker:
-    - image: circleci/node:13
+    - image: cimg/node:16.15
   working_directory: ~/link-redux
 
 jobs:
@@ -19,10 +19,55 @@ jobs:
           paths:
             - cc-test-reporter
 
+  build-node-lts:
+    <<: *defaults
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-lts-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-lts-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-lts-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
+
+  build-node-18:
+    <<: *defaults
+    docker:
+      - image: cimg/node:18.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-18-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-18-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-18-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn build
+
   build-node-16:
     <<: *defaults
     docker:
-      - image: circleci/node:16
+      - image: cimg/node:16.15
     steps:
       - checkout
       - restore_cache:
@@ -44,7 +89,7 @@ jobs:
   build-node-14:
     <<: *defaults
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:14.19
     steps:
       - checkout
       - attach_workspace:
@@ -70,28 +115,6 @@ jobs:
           paths:
             - codeclimate.node-14.json
 
-  build-node-12:
-    <<: *defaults
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-12-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-12-
-
-      - run: yarn install
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-12-{{ checksum "package.json" }}
-      - run: yarn lint
-      - run: yarn test
-      - run: yarn build
-
   upload-coverage:
     <<: *defaults
     environment:
@@ -110,11 +133,11 @@ workflows:
   commit:
     jobs:
       - build
+      - build-node-18
       - build-node-16
       - build-node-14:
           requires:
             - build
-      - build-node-12
       - upload-coverage:
           requires:
-            - build-node-14
+            - build-node-18
