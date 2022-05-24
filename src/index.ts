@@ -52,10 +52,9 @@ export {
   useUrls,
 } from "./hooks/useParsedField";
 export {
-  useAction,
+  useActionById,
   BoundActionHandler,
-  NoActionError,
-} from "./hooks/useAction";
+} from "./hooks/useActionById";
 export { useCalculateChildProps } from "./hooks/useCalculateChildProps";
 export { useDataFetching } from "./hooks/useDataFetching";
 export { useDataInvalidation } from "./hooks/useDataInvalidation";
