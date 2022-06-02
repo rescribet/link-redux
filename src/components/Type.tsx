@@ -1,6 +1,6 @@
 import { NamedNode } from "@ontologies/core";
 import { RENDER_CLASS_NAME } from "link-lib";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { useCalculateChildProps } from "../hooks/useCalculateChildProps";
 import { normalizeDataSubjects, useDataInvalidation } from "../hooks/useDataInvalidation";
@@ -17,7 +17,7 @@ import {
 } from "./Typable";
 
 export interface PropTypes extends Partial<TypableProps> {
-    children?: React.ComponentType;
+    children?: ReactNode | undefined;
     label?: NamedNode;
 }
 
@@ -26,7 +26,10 @@ export interface PropTypesWithInjected extends
     SubjectProp,
     Omit<TypableInjectedProps, "subject"> {}
 
-export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null {
+export const Type = React.forwardRef((
+  props: PropTypes,
+  ref: React.Ref<unknown>,
+): React.ReactElement | null => {
     const lrs = useLRS();
     const context = useLinkRenderContext();
     const childProps = useCalculateChildProps(props, context) as PropTypesWithInjected;
@@ -50,10 +53,10 @@ export function Type(props: PropTypes, _?: any): React.ReactElement<any> | null 
 
         return React.createElement(
             component,
-            rest,
+          { ...rest, innerRef: ref },
             children,
         );
     }
 
     return renderNoView(childProps, lrs);
-}
+});
