@@ -70,6 +70,8 @@ export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
 export { useResourceView } from "./hooks/useResourceView";
 export { useStatus } from "./hooks/useStatus";
 export { useSubject } from "./hooks/useSubject";
+export { useTempClones } from "./hooks/useTempClones";
+export { useTempRecord } from "./hooks/useTempRecord";
 export { useTopology } from "./hooks/useTopology";
 export { useTopologyProvider } from "./hooks/useTopologyProvider";
 export { useView } from "./hooks/useView";
