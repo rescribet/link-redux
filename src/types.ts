@@ -11,7 +11,7 @@ import {
   LinkedRenderStore,
   SomeNode,
 } from "link-lib";
-import React, { ExoticComponent } from "react";
+import React, { ExoticComponent, ReactNode } from "react";
 import { Overwrite } from "type-zoo";
 
 import { higherOrderWrapper } from "./register";
@@ -204,9 +204,15 @@ export interface ForwardedRef {
   innerRef?: React.Ref<any>;
 }
 
-export type TypeFC<P = {}> = TypeRegistrationOpts<P & SubjectProp> & React.FC<P & SubjectProp & ForwardedRef>;
+export interface ChildrenProp {
+  children?: ReactNode;
+}
 
-export type PropertyFC<P = {}> = PropertyRegistrationOpts<P> & React.FC<P & SubjectProp & PropertyProps & ForwardedRef>;
+export type TypeFC<P = {}> = TypeRegistrationOpts<P & SubjectProp>
+  & React.FC<P & SubjectProp & ForwardedRef & ChildrenProp>;
+
+export type PropertyFC<P = {}> = PropertyRegistrationOpts<P>
+  & React.FC<P & SubjectProp & PropertyProps & ForwardedRef & ChildrenProp>;
 
 export type FC<P = {}> = P extends InferProperty
   ? PropertyFC<P>
