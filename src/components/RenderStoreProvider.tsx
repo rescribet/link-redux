@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { LRSCtx } from "../contexts/LRSCtx";
 import { LinkReduxLRSType } from "../types";
 
 export interface RenderStoreProviderProps {
+    children?: ReactNode;
     value: LinkReduxLRSType;
 }
 
