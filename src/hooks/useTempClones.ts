@@ -1,6 +1,7 @@
 import rdf, { isLiteral, SomeTerm } from "@ontologies/core";
-import { SomeNode } from "link-lib";
+import { FieldSet, SomeNode } from "link-lib";
 import React from "react";
+import ll from "../ontology/ll";
 
 import { useLRS } from "./useLRS";
 
@@ -36,16 +37,24 @@ export const useTempClones = (ids: SomeNode[]): SomeNode[] => {
     const replaceReference = updatedReference(ids, newIds);
 
     newIds.map((id, i) => {
-      const { _id: __, ...fields } = store.getRecord(ids[i].value)!;
+      const current = store.getRecord(ids[i].value);
+      const next: FieldSet = {
+        [ll.clonedFrom.value]: ids[i],
+      };
 
-      const updatedFields = Object.entries(fields).reduce((acc, [field, value]) => {
-        return ({
-          ...acc,
-          [field]: Array.isArray(value) ? value.map(replaceReference) : replaceReference(value),
-        });
-      }, {});
+      if (current) {
+        const { _id: oldId, ...fields } = current;
+        const updatedFields = Object.entries(fields).reduce((acc, [field, value]) => {
+          return ({
+            ...acc,
+            [field]: Array.isArray(value) ? value.map(replaceReference) : replaceReference(value),
+          });
+        }, next);
 
-      store.setRecord(id.value, updatedFields);
+        store.setRecord(id.value, updatedFields);
+      } else {
+        store.setRecord(id.value, next);
+      }
     });
 
     return () => newIds.forEach((id) => store.deleteRecord(id.value));

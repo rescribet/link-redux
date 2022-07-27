@@ -1686,14 +1686,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ontola/memoized-hash-factory@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "@ontola/memoized-hash-factory@npm:2.0.1"
+"@ontola/memoized-hash-factory@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@ontola/memoized-hash-factory@npm:2.1.0"
   dependencies:
     murmurhash-js: ^1.0.0
   peerDependencies:
     "@ontologies/core": ">= 2.0.0"
-  checksum: f0ea03e6c17d885af6dc515e10b1f17b6b4f2095ca838cc440b04980c321c4c6bac883e1407b8014560c502922645c25574289c55743420101941da7c1a24d20
+  checksum: dfde781483a4bbabb514eeeafd0192c3cc7e2846e5dd9022fda14ceee653b8ce7393bdae8db5b827f3d2875695d87976f2ac96c591ca087ca7579465f851f88f
   languageName: node
   linkType: hard
 
@@ -5617,7 +5617,7 @@ fsevents@^2.3.2:
   resolution: "link-redux@workspace:."
   dependencies:
     "@babel/preset-react": ^7.9.4
-    "@ontola/memoized-hash-factory": ^2.0.0
+    "@ontola/memoized-hash-factory": ^2.1.0
     "@ontologies/as": ^2.0.0
     "@ontologies/core": ^2.0.2
     "@ontologies/ld": ^2.0.0

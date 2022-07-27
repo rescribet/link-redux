@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.9.4",
-    "@ontola/memoized-hash-factory": "^2.0.0",
+    "@ontola/memoized-hash-factory": "^2.1.0",
     "@ontologies/as": "^2.0.0",
     "@ontologies/core": "^2.0.2",
     "@ontologies/ld": "^2.0.0",

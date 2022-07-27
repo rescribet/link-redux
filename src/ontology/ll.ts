@@ -11,6 +11,7 @@ export default {
   NoView: ll("NoView"),
 
   /* properties */
+  clonedFrom: ll("clonedFrom"),
   /** Used internally by link to ensure data consistency */
   dataSubject: ll("dataSubject"),
   meta: ll("meta"),
