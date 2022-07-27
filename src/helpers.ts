@@ -1,23 +1,12 @@
-import React from "react";
+import { equals } from "link-lib";
 
-/** Useful for using as a hook update dependency. */
-export function useMemoizedDataSubjects<T, K extends T | T[] | undefined>(subjects: K): K {
-  const [memoized, setMemoized] = React.useState(subjects);
-
-  React.useEffect(() => {
-    const aIsArray = Array.isArray(memoized);
-    const bIsArray = Array.isArray(subjects);
-
-    if (aIsArray && bIsArray) {
-      if (memoized.length !== subjects.length || memoized.some((v, i) => v !== subjects[i])) {
-        setMemoized(subjects);
-      }
-    } else if (aIsArray !== bIsArray) {
-        setMemoized(subjects);
-    } else if (memoized !== subjects) {
-      setMemoized(subjects);
-    }
-  }, [subjects]);
-
-  return memoized;
+/**
+ * Useful for using as a hook update dependency.
+ */
+export function useMemoizedDataSubjects<T, K extends T | T[] | undefined>(subjects: K): string {
+  return JSON.stringify(subjects);
 }
+
+export const calculatedValueChanged = (a: unknown, b: unknown): boolean => (Array.isArray(a) && Array.isArray(b))
+  ? a.length !== b.length || !a.every((t, i) => t === b[i])
+  : !equals(a, b);

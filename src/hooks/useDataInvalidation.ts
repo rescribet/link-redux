@@ -41,7 +41,7 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
  */
 export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): number {
     const resources = normalizeType(subjects!).filter<Node>(Boolean as any).map((n) => n.value);
-    const memoisedResources = useMemoizedDataSubjects(resources);
+    const memoizedResources = useMemoizedDataSubjects(resources);
     const lrs = useLRS();
 
     const store = lrs.store.getInternalStore().store;
@@ -62,7 +62,7 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
         } else {
             isMountedRef.current = true;
         }
-    }, [memoisedResources]);
+    }, [memoizedResources]);
 
     React.useEffect(() => {
         return lrs.subscribe({
@@ -74,7 +74,7 @@ export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): 
     }, [
       lrs,
       subId,
-      memoisedResources,
+      memoizedResources,
     ]);
 
     return lastUpdate;

@@ -1,10 +1,10 @@
-import { equals } from "link-lib";
 import React from "react";
 
+import { calculatedValueChanged } from "../helpers";
 import { LaxNode } from "../types";
+
 import { ArityPreservingValues } from "./makeParsedField/types";
 import { useDataFetching } from "./useDataFetching";
-
 import { useLinkRenderContext } from "./useLinkRenderContext";
 
 /**
@@ -24,9 +24,7 @@ export const useSubject = <T extends LaxNode | LaxNode[] = undefined>(subjects?:
   const targets = React.useMemo(
     () => {
       const next = getSubjects();
-      const changed = (Array.isArray(targetsRef.current) && Array.isArray(next))
-        ? targetsRef.current.length !== next.length || !targetsRef.current.every((t, i) => t === next[i])
-        : !equals(targetsRef.current, next);
+      const changed = calculatedValueChanged(targetsRef.current, next);
 
       if (changed) {
         targetsRef.current = next;

@@ -1,6 +1,7 @@
 import { id, normalizeType } from "link-lib";
 import React from "react";
 
+import { calculatedValueChanged } from "../helpers";
 import { toReturnType } from "../hocs/link/toReturnType";
 import {
   DataOpts,
@@ -12,8 +13,8 @@ import {
   OutputTypeFromReturnType,
   ReturnType,
 } from "../types";
-import { useDataInvalidation } from "./useDataInvalidation";
 
+import { useDataInvalidation } from "./useDataInvalidation";
 import { useLRS } from "./useLRS";
 
 const arrayReturnTypes = [
@@ -63,7 +64,9 @@ export function useResourceProperty<
   React.useEffect(() => {
     const returnValue = calculate(lrs, subject, properties, optsOrDefault);
 
-    setValue(returnValue);
+    if (calculatedValueChanged(value, returnValue)) {
+      setValue(returnValue);
+    }
   }, [
     lrs,
     subject ? id(subject) : undefined,
