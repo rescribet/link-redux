@@ -20,9 +20,9 @@ describe("useDataInvalidation", () => {
                 .toHaveLength(0);
         });
 
-        it("makes an array from the subject", () => {
+        it("keeps the reference", () => {
             expect(normalizeDataSubjects({ subject: example.ns("Tim") }))
-                .toEqual([example.ns("Tim")]);
+                .toStrictEqual(example.ns("Tim"));
         });
 
         it("merges dataSubjects with the subject", () => {
