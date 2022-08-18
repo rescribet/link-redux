@@ -74,8 +74,8 @@ export { useTempClones } from "./hooks/useTempClones";
 export { useTempRecord, FieldBuilder } from "./hooks/useTempRecord";
 export { useTempRecords, FieldSetter, ItemFieldBuilder } from "./hooks/useTempRecords";
 export { useTopology } from "./hooks/useTopology";
-export { useTopologyProvider } from "./hooks/useTopologyProvider";
 export { useView } from "./hooks/useView";
+export { createTopologyProvider, TopologyFC } from "./lib/createTopologyProvider";
 
 /* other */
 
