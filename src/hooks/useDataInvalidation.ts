@@ -7,13 +7,15 @@ import { DataInvalidationProps, LaxIdentifier, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
 
+const NO_SUBJECTS: SubjectType[] = [];
+
 /**
  * The subjects this component subscribes to.
  * Includes the subject by default.
  */
 export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): SubjectType[] {
     if (!(props.subject || props.dataSubjects)) {
-        return [];
+        return NO_SUBJECTS;
     }
 
     const result = [];
@@ -31,11 +33,18 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
         }
     }
 
+    if (result.length === 0) {
+        return NO_SUBJECTS;
+    }
+    if (result.length === 1) {
+        return result[0];
+    }
+
     return result;
 }
 
 /**
- * Re-renders when one of the given {resources} changes in the store.
+ * Re-renders when one of the given {subjects} changes in the store.
  *
  * Should only be necessary when using imperative code.
  */
