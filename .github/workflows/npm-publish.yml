@@ -1,0 +1,61 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - "*"
+    tags:
+      - v*
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn test
+        continue-on-error: true
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: npm version --no-git-tag-version prerelease --preid=dev.$GITHUB_SHA
+        working-directory: ./pkg
+      - run: npm publish
+        working-directory: ./pkg
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  pre-publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: npm version --no-git-tag-version prerelease --preid=dev.$GITHUB_SHA
+        working-directory: ./pkg
+      - run: npm publish --tag dev
+        working-directory: ./pkg
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
