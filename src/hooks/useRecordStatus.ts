@@ -1,4 +1,4 @@
-import { RecordState, RecordStatus } from "link-lib";
+import { RecordState, RecordStatus, SomeNode } from "link-lib";
 import React from "react";
 
 import { useDataInvalidation } from "./useDataInvalidation";
@@ -15,15 +15,17 @@ export function isFullyLoaded(status: RecordStatus): boolean {
   return status.current === RecordState.Present;
 }
 
-export const useRecordStatus = (): RecordStatus => {
+export const useRecordStatus = (id: SomeNode | undefined = undefined): RecordStatus => {
   const lrs = useLRS();
   const { subject } = useLinkRenderContext();
-  const [status, setStatus] = React.useState(() => lrs.getState(subject.value));
-  const update = useDataInvalidation(subject);
+  const target = id ?? subject;
+
+  const [status, setStatus] = React.useState(() => lrs.getState(target.value));
+  const update = useDataInvalidation(target);
 
   React.useEffect(() => {
-    setStatus(lrs.getState(subject.value));
-  }, [subject, update]);
+    setStatus(lrs.getState(target.value));
+  }, [target, update]);
 
   return status;
 };

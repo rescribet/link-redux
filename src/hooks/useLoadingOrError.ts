@@ -27,9 +27,15 @@ export function useRenderLoadingOrError(
         return renderError(props, lrs, error);
     }
 
-    const t = lrs.getState(props.subject.value).current;
+    const { current, previous } = lrs.getState(props.subject.value);
+    const status = lrs.getStatus(props.subject);
+    const hasError = status.status! >= BAD_REQUEST;
 
-    if (t === RecordState.Absent || LOADING_STATES.includes(t)) {
+    if (previous === RecordState.Present && current !== RecordState.Absent && !hasError) {
+        return undefined;
+    }
+
+    if (current === RecordState.Absent || LOADING_STATES.includes(current)) {
         const loadComp = loadingComponent(props, lrs);
 
         return loadComp === null
@@ -37,8 +43,7 @@ export function useRenderLoadingOrError(
             : wrapRenderContext(props, React.createElement(loadComp, props));
     }
 
-    const status = lrs.getStatus(props.subject);
-    if (status.status! >= BAD_REQUEST) {
+    if (hasError) {
         return renderError(props, lrs, error);
     }
 
