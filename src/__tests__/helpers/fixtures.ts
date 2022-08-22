@@ -224,8 +224,6 @@ export function chargeLRS(delta: Quadruple[] = [], subject: SomeNode): TestConte
       },
     ];
     const lrs = createStore(lrsOpts, middleware);
-    lrs.actions.test = {};
-    lrs.actions.test.execB = () => lrs.exec(ex.ns("b"));
     lrs.api.processDelta(delta);
     store.processDelta(delta);
     store.flush();
