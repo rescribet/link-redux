@@ -68,6 +68,7 @@ export { useProperty } from "./hooks/useProperty";
 export { useResourceProperty } from "./hooks/useResourceProperty";
 export { useResourcePropertyView } from "./hooks/useResourcePropertyView";
 export { useResourceView } from "./hooks/useResourceView";
+export { useRecordStatus, isFullyLoaded, isBackgroundLoading } from "./hooks/useRecordStatus";
 export { useStatus } from "./hooks/useStatus";
 export { useSubject } from "./hooks/useSubject";
 export { useTempClones } from "./hooks/useTempClones";
