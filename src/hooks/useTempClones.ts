@@ -1,8 +1,9 @@
 import rdf, { isLiteral, SomeTerm } from "@ontologies/core";
-import { FieldSet, SomeNode } from "link-lib";
+import { FieldSet, RecordState, SomeNode } from "link-lib";
 import React from "react";
 import ll from "../ontology/ll";
 import { LinkReduxLRSType } from "../types";
+import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLRS } from "./useLRS";
 
@@ -20,7 +21,7 @@ const updatedReference = (originalIds: SomeNode[], newIds: SomeNode[]) => (term:
   return term;
 };
 
-const cloneRecords = (lrs: LinkReduxLRSType, ids: SomeNode[]) => (): [SomeNode[], () => void] => {
+const cloneRecords = (lrs: LinkReduxLRSType, ids: SomeNode[]) => (): [clones: SomeNode[], cleanup: () => void] => {
   const cloneIds = ids.map(() => rdf.blankNode());
 
   const store = lrs.store.getInternalStore().store;
@@ -54,17 +55,21 @@ const cloneRecords = (lrs: LinkReduxLRSType, ids: SomeNode[]) => (): [SomeNode[]
   return [cloneIds, cleanupClones];
 };
 
+const filterIncomplete = (lrs: LinkReduxLRSType, ids: SomeNode[]) =>
+  ids.filter((id) => lrs.getState(id.value).current !== RecordState.Present);
+
 /**
  * Makes temporary copies of the given [ids] with internal references updated.
  * Will clear the resource when the component is unmounted.
- * @return List of cloned ids, keeps idempotency.
+ * @return List of cloned ids, keeps ordinality.
  */
 export const useTempClones = (ids: SomeNode[]): SomeNode[] => {
   const lrs = useLRS();
   const isMountedRef = React.useRef<boolean>(false);
   const idCheck = JSON.stringify(ids);
 
-  const [[clonedIds, cleanup], setCloneState] = React.useState(cloneRecords(lrs, ids));
+  const [incomplete, setIncomplete] = React.useState(filterIncomplete(lrs, ids));
+  const [[cloneIds, cleanup], setCloneState] = React.useState(cloneRecords(lrs, ids));
 
   React.useEffect(() => {
     if (isMountedRef.current) {
@@ -74,7 +79,32 @@ export const useTempClones = (ids: SomeNode[]): SomeNode[] => {
     }
 
     return cleanup;
+  }, [lrs, idCheck]);
+
+  const updated = useDataInvalidation(incomplete);
+
+  React.useEffect(() => {
+    setIncomplete(Array.from(new Set([...incomplete, ...filterIncomplete(lrs, ids)])));
   }, [idCheck]);
 
-  return clonedIds;
+  React.useEffect(() => {
+    const completed = incomplete
+      .filter((id) => lrs.getState(id.value).current === RecordState.Present);
+
+    if (completed.length > 0) {
+      const store = lrs.store.getInternalStore().store;
+      for (const id of completed) {
+        const clone = cloneIds[ids.indexOf(id)];
+
+        store.setRecord(clone.value, {
+          ...store.getRecord(id.value)!,
+          [ll.clonedFrom.value]: id,
+        });
+      }
+
+      setIncomplete((prev) => filterIncomplete(lrs, prev));
+    }
+  }, [lrs, idCheck, updated]);
+
+  return cloneIds;
 };
