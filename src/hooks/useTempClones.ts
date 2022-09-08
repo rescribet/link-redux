@@ -7,7 +7,9 @@ import { useDataInvalidation } from "./useDataInvalidation";
 
 import { useLRS } from "./useLRS";
 
-const updatedReference = (originalIds: SomeNode[], newIds: SomeNode[]) => (term: SomeTerm): SomeTerm => {
+type ReferenceUpdater = (term: SomeTerm) => SomeTerm;
+
+const updatedReference = (originalIds: SomeNode[], newIds: SomeNode[]): ReferenceUpdater => (term) => {
   if (isLiteral(term)) {
     return term;
   }
@@ -27,25 +29,8 @@ const cloneRecords = (lrs: LinkReduxLRSType, ids: SomeNode[]) => (): [clones: So
   const store = lrs.store.getInternalStore().store;
   const replaceReference = updatedReference(ids, cloneIds);
 
-  cloneIds.map((id, i) => {
-    const current = store.getRecord(ids[i].value);
-    const next: FieldSet = {
-      [ll.clonedFrom.value]: ids[i],
-    };
-
-    if (current) {
-      const { _id: oldId, ...fields } = current;
-      const updatedFields = Object.entries(fields).reduce((acc, [field, value]) => {
-        return ({
-          ...acc,
-          [field]: Array.isArray(value) ? value.map(replaceReference) : replaceReference(value),
-        });
-      }, next);
-
-      store.setRecord(id.value, updatedFields);
-    } else {
-      store.setRecord(id.value, next);
-    }
+  cloneIds.forEach((_, i) => {
+    cloneRecord(lrs, ids, cloneIds, i, replaceReference);
   });
 
   const cleanupClones = () => {
@@ -92,14 +77,10 @@ export const useTempClones = (ids: SomeNode[]): SomeNode[] => {
       .filter((id) => lrs.getState(id.value).current === RecordState.Present);
 
     if (completed.length > 0) {
-      const store = lrs.store.getInternalStore().store;
-      for (const id of completed) {
-        const clone = cloneIds[ids.indexOf(id)];
+      const replaceReference = updatedReference(ids, cloneIds);
 
-        store.setRecord(clone.value, {
-          ...store.getRecord(id.value)!,
-          [ll.clonedFrom.value]: id,
-        });
+      for (const id of completed) {
+        cloneRecord(lrs, ids, cloneIds, ids.indexOf(id), replaceReference);
       }
 
       setIncomplete((prev) => filterIncomplete(lrs, prev));
@@ -107,4 +88,35 @@ export const useTempClones = (ids: SomeNode[]): SomeNode[] => {
   }, [lrs, idCheck, updated]);
 
   return cloneIds;
+};
+
+const cloneRecord = (
+  lrs: LinkReduxLRSType,
+  ids: SomeNode[],
+  cloneIds: SomeNode[],
+  i: number,
+  replaceReference: ReferenceUpdater,
+) => {
+  const store = lrs.store.getInternalStore().store;
+  const id = ids[i];
+  const cloneId = cloneIds[i];
+
+  const current = store.getRecord(id.value);
+  const next: FieldSet = {
+    [ll.clonedFrom.value]: id,
+  };
+
+  if (current) {
+    const { _id: oldId, ...fields } = current;
+    const updatedFields = Object.entries(fields).reduce((acc, [field, value]) => {
+      return ({
+        ...acc,
+        [field]: Array.isArray(value) ? value.map(replaceReference) : replaceReference(value),
+      });
+    }, next);
+
+    store.setRecord(cloneId.value, updatedFields);
+  } else {
+    store.setRecord(cloneId.value, next);
+  }
 };
