@@ -16,7 +16,7 @@ import { useLRS } from "./useLRS";
  *
  * @see {LinkedRenderStore#shouldLoadResource} for the triggering mechanism.
  */
-export function useDataFetching(resources: LaxNode | LaxNode[]): number {
+export function useDataFetching(resources: LaxNode | LaxNode[]): string {
     const lrs = useLRS();
     const lastUpdate = useDataInvalidation(resources);
 

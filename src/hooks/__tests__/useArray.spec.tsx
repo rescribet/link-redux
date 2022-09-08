@@ -1,3 +1,5 @@
+import "../../__tests__/useHashFactory";
+
 import rdfFactory, { QuadPosition } from "@ontologies/core";
 import * as ld from "@ontologies/ld";
 import * as rdfx from "@ontologies/rdf";
@@ -102,6 +104,12 @@ describe("array", () => {
       ], true);
     });
 
+    rerender(<UpdateComp />);
+
+    await waitFor(() => {
+      expect(getByTestId("len")!.textContent).toBe("1");
+    });
+
     act(() => {
       opts.lrs.api.invalidate(subject);
       opts.lrs.store.removeResource(subject);
@@ -111,7 +119,7 @@ describe("array", () => {
 
     rerender(<UpdateComp />);
 
-    expect(getByTestId("len")!.textContent).toBe("1");
+    expect(getByTestId("len")!.textContent).toBe("0");
 
     act(() => {
       opts.lrs.processDelta([

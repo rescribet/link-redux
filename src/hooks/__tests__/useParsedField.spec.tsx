@@ -283,7 +283,7 @@ describe("useParsedField", () => {
       expect(getByTestId("instance-id")).toHaveTextContent("1");
     });
 
-    it("invalidates from undefined to subject2", () => {
+    it("invalidates from undefined to subject2", async () => {
       const firstId = example.ns("3");
       let idCounter = 1;
 
@@ -310,9 +310,8 @@ describe("useParsedField", () => {
       expect(getByTestId("data-display")).toHaveTextContent("title");
       expect(getByTestId("instance-id")).toHaveTextContent("1");
 
-      act(() => {
-        // opts.lrs.api.invalidate(firstId);
-        opts.lrs.removeResource(firstId, true);
+      await act(async () => {
+        await opts.lrs.removeResource(firstId, true);
       });
 
       rerender(<Comp resource={firstId} />);

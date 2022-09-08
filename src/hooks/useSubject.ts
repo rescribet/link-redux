@@ -13,7 +13,7 @@ import { useLinkRenderContext } from "./useLinkRenderContext";
  * @return The subjects which have been invalidated on, and the last update time of all resources.
  */
 export const useSubject = <T extends LaxNode | LaxNode[] = undefined>(subjects?: T):
-  [ArityPreservingValues<T, LaxNode>, number] => {
+  [ArityPreservingValues<T, LaxNode>, string] => {
 
   const { subject: subCtx } = useLinkRenderContext();
   const getSubjects = () => (subjects !== undefined ? subjects : subCtx) as

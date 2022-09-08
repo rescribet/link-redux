@@ -62,7 +62,7 @@ describe("useDataInvalidation", () => {
         const { wrapper } = ctx.fullCW();
         const { result: { current } } = renderHook(() => useDataInvalidation(rdfFactory.literal("")), { wrapper });
 
-        expect(current).toEqual(-1);
+        expect(current).toEqual("[-1]");
       });
 
       it("updates with data updates", () => {
@@ -85,19 +85,19 @@ describe("useDataInvalidation", () => {
 
         const { getByTestId, rerender } = render(<UpdateComp />, { wrapper: opts.wrapper });
 
-        expect(Number(getByTestId("update").textContent)).toBe(-1);
+        const firstUpdate = getByTestId("update").textContent;
+        expect(firstUpdate).toBe("[-1]");
 
         act(() => {
           opts.lrs.store.getInternalStore().store.touch(iri.value);
-          cb.map((f) => f(undefined, 1234));
         });
 
         rerender(<UpdateComp />);
 
-        expect(Number(getByTestId("update").textContent)).toBe(1234);
+        expect(getByTestId("update").textContent).not.toEqual(firstUpdate);
       });
 
-      it("invalidates after resource removal", () => {
+      it("invalidates after resource removal", async () => {
         const firstId = example.ns("3");
         let idCounter = 1;
         const opts = ctx.fullCW(firstId);
@@ -116,17 +116,17 @@ describe("useDataInvalidation", () => {
 
         const { getByTestId, rerender } = render(<Comp resource={firstId} />, { wrapper: opts.wrapper });
 
-        const firstUpdate = Number(getByTestId("update").textContent);
+        const firstUpdate = getByTestId("update").textContent;
         expect(getByTestId("instance-id")).toHaveTextContent("1");
 
-        act(() => {
-          opts.lrs.removeResource(firstId, true);
+        await act(async () => {
+          await opts.lrs.removeResource(firstId, true);
         });
 
         rerender(<Comp resource={firstId} />);
 
-        const secondUpdate = Number(getByTestId("update").textContent);
-        expect(secondUpdate).toBeGreaterThan(firstUpdate);
+        const secondUpdate = getByTestId("update").textContent;
+        expect(secondUpdate).not.toEqual(firstUpdate);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
       });
 
@@ -159,15 +159,14 @@ describe("useDataInvalidation", () => {
 
         const { getByTestId, rerender } = render(<Comp resources={[firstId]} />, { wrapper: opts.wrapper });
 
-        const firstUpdate = Number(getByTestId("update").textContent);
-        expect(firstUpdate).toEqual(firstResourceUpdate);
+        const firstUpdate = getByTestId("update").textContent;
+        expect(firstUpdate).toEqual(`[${firstResourceUpdate}]`);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
 
         rerender(<Comp resources={[firstId, secondId]} />);
 
-        const secondUpdate = Number(getByTestId("update").textContent);
-        expect(secondUpdate).toBeGreaterThan(firstResourceUpdate);
-        expect(secondUpdate).toBeGreaterThan(secondResourceUpdate);
+        const secondUpdate = getByTestId("update").textContent;
+        expect(secondUpdate).toEqual(`[${firstResourceUpdate},${secondResourceUpdate}]`);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
       });
 
@@ -200,15 +199,14 @@ describe("useDataInvalidation", () => {
 
         const { getByTestId, rerender } = render(<Comp resources={[secondId]} />, { wrapper: opts.wrapper });
 
-        const firstUpdate = Number(getByTestId("update").textContent);
-        expect(firstUpdate).toEqual(secondResourceUpdate);
+        const firstUpdate = getByTestId("update").textContent;
+        expect(firstUpdate).toEqual(`[${secondResourceUpdate}]`);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
 
         rerender(<Comp resources={[firstId, secondId]} />);
 
-        const secondUpdate = Number(getByTestId("update").textContent);
-        expect(secondUpdate).toBeGreaterThan(firstResourceUpdate);
-        expect(secondUpdate).toBeGreaterThan(secondResourceUpdate);
+        const secondUpdate = getByTestId("update").textContent;
+        expect(secondUpdate).not.toEqual(firstUpdate);
         expect(getByTestId("instance-id")).toHaveTextContent("1");
       });
     });

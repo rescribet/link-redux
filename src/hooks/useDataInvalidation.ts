@@ -2,7 +2,6 @@ import rdfFactory, { doc, Node, TermType } from "@ontologies/core";
 import { normalizeType } from "link-lib";
 import React from "react";
 
-import { useMemoizedDataSubjects } from "../helpers";
 import { DataInvalidationProps, LaxIdentifier, SubjectType } from "../types";
 
 import { useLRS } from "./useLRS";
@@ -39,43 +38,26 @@ export function normalizeDataSubjects(props: Partial<DataInvalidationProps>): Su
  *
  * Should only be necessary when using imperative code.
  */
-export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): number {
-    const resources = normalizeType(subjects!).filter<Node>(Boolean as any).map((n) => n.value);
-    const memoizedResources = useMemoizedDataSubjects(resources);
+export function useDataInvalidation(subjects: LaxIdentifier | LaxIdentifier[]): string {
     const lrs = useLRS();
+    const invalidations = () => normalizeType(subjects).filter<Node>(Boolean as any).map((n) => n.value);
+    const calculateString = () => JSON.stringify(invalidations().map((id) => lrs.getState(id).lastUpdate));
 
-    const store = lrs.store.getInternalStore().store;
-    const highestUpdate = () => Math.max(...resources
-      .map((s) => store.journal.get(store.primary(s)).lastUpdate ?? 0));
-
-    const subId = resources.length > 0 ? store.primary(resources[0]) : undefined;
-    const isMountedRef = React.useRef<boolean>(false);
-    const [lastUpdate, setInvalidate] = React.useState<number>(highestUpdate);
-
-    function handleStatusChange(_: unknown, lastUpdateAt?: number) {
-        setInvalidate(lastUpdateAt!);
-    }
-
-    React.useEffect(() => {
-        if (isMountedRef.current) {
-            setInvalidate(Date.now());
-        } else {
-            isMountedRef.current = true;
-        }
-    }, [memoizedResources]);
+    const [, setValue] = React.useState(calculateString);
+    const ids = normalizeType(subjects).filter<Node>(Boolean as any).map((n) => n.value);
+    const idsDep = JSON.stringify(ids);
 
     React.useEffect(() => {
         return lrs.subscribe({
-            callback: handleStatusChange,
+            callback: () => setValue(calculateString()),
             lastUpdateAt: undefined,
             markedForDelete: false,
-            subjectFilter: resources,
+            subjectFilter: ids,
         });
     }, [
-      lrs,
-      subId,
-      memoizedResources,
+        lrs,
+        idsDep,
     ]);
 
-    return lastUpdate;
+    return calculateString();
 }
